@@ -25,7 +25,7 @@ class Splash extends StatelessWidget {
             child:ListView(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 200),
+                  padding: const EdgeInsets.only(top: 150),
                   child: Center(
                     child: Container(
                       width: 129.7,
