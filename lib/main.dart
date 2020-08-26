@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'Splash.dart';
+import 'adminscreens/faultsadmin.dart';
+import 'adminscreens/sparepartsadmin.dart';
 
 void main() {
   runApp(MyApp());
