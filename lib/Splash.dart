@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/gradient_xd_transform.dart';
+import 'package:priceme/screens/signin.dart';
 
 class Splash extends StatelessWidget {
   final ImageProvider ic_logo;
@@ -42,35 +43,47 @@ class Splash extends StatelessWidget {
 
                 Padding(
                   padding: const EdgeInsets.only(top: 350,left: 20,right: 20),
-                  child: Container(
-                    width: 308.0,
-                    height: 47.0,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(9.0),
-                      gradient: RadialGradient(
-                        center: Alignment(-0.93, 0.0),
-                        radius: 1.092,
-                        colors: [
-                          const Color(0xffff2121),
-                          const Color(0xffff5423),
-                          const Color(0xffff7024),
-                          const Color(0xffff904a)
-                        ],
-                        stops: [0.0, 0.562, 0.867, 1.0],
-                        transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837, 0.0,
-                            -0.419, Alignment(-0.93, 0.0)),
-                      ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        'تسجيل الدخول',
-                        style: TextStyle(
-                          fontFamily: 'Helvetica',
-                          fontSize: 15,
-                          color: const Color(0xffffffff),
-                          height: 1,
+                  child: InkWell(
+
+                    onTap: ()  {
+
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignIn()));
+                    },
+                    child: Container(
+
+                      width: 308.0,
+                      height: 47.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(9.0),
+                        gradient: RadialGradient(
+                          center: Alignment(-0.93, 0.0),
+                          radius: 1.092,
+                          colors: [
+                            const Color(0xffff2121),
+                            const Color(0xffff5423),
+                            const Color(0xffff7024),
+                            const Color(0xffff904a)
+                          ],
+                          stops: [0.0, 0.562, 0.867, 1.0],
+                          transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837, 0.0,
+                              -0.419, Alignment(-0.93, 0.0)),
                         ),
-                        textAlign: TextAlign.center,
+                      ),
+
+                      child: Center(
+                       child: Text(
+                         'تسجيل الدخول',
+                         style: TextStyle(
+                           fontFamily: 'Helvetica',
+                           fontSize: 15,
+                           color: const Color(0xffffffff),
+                           height: 1,
+                         ),
+                         textAlign: TextAlign.center,
+                       ),
                       ),
                     ),
                   ),
