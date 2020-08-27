@@ -2,6 +2,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:priceme/screens/network_connection.dart';
 import 'package:priceme/trader/signuptrader.dart';
 import 'package:toast/toast.dart';
@@ -36,14 +37,6 @@ class _MyLogInState extends State<MyLogIn> {
       body: Container(
         child: Stack(
           children: <Widget>[
-            new Container(
-              decoration: new BoxDecoration(
-                image: new DecorationImage(
-                  image: new AssetImage("assets/images/app_bg.jpg"),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
             Form(
               key: _formKey1,
               child: Padding(
@@ -356,6 +349,8 @@ class _MyLogInState extends State<MyLogIn> {
         .signInWithEmailAndPassword(
             email: _emailController.text, password: _passwordController.text)
         .then((signedInUser) {
+      SessionManager prefs =  SessionManager();
+      prefs.setAuthType("trader");
       Navigator.push(
           context,
           MaterialPageRoute(

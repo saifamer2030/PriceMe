@@ -7,6 +7,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:priceme/screens/cur_loc.dart';
 import 'package:priceme/screens/network_connection.dart';
 import 'dart:io';
@@ -635,6 +636,8 @@ class _SignUptraderState extends State<SignUptrader> {
       'workshopname': workshopnameController.text,
       'cType': "trader",
     }).whenComplete(() {
+      SessionManager prefs =  SessionManager();
+      prefs.setAuthType("trader");
       Navigator.push(
           context,
           MaterialPageRoute(

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:toast/toast.dart';
 
 import 'network_connection.dart';
@@ -199,7 +200,7 @@ class _SignInPhoneState extends State<SignInPhone> {
           AuthResult result = await _auth.signInWithCredential(credential);
           print(result.user.photoUrl.toString()+"////"+result.user.displayName.toString()+"/////"+result.user.phoneNumber.toString()+"/////"+result.user.email.toString());
           //createRecord(result.user.uid);
-          adduser(result.user);
+          updateuser(result.user);
 
           Navigator.pushReplacement(
               context,
@@ -286,7 +287,7 @@ class _SignInPhoneState extends State<SignInPhone> {
                         await result.user.reload();
                         print(result.user.photoUrl.toString()+"////"+result.user.displayName.toString()+"/////"+result.user.phoneNumber.toString()+"/////"+result.user.email.toString());
                         //createRecord(result.user.uid);
-                        adduser(result.user);
+                        updateuser(result.user);
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -314,6 +315,13 @@ class _SignInPhoneState extends State<SignInPhone> {
       'cType': "trader",
 
     });
+    void updateuser(FirebaseUser signedInUser) {
+      Firestore.instance.collection('users')
+          .document(signedInUser.uid)
+          .updateData({
+        'cType': "user",
+      });
+    }
 //        .whenComplete(() {
 //      Navigator.push(
 //          context,
@@ -321,7 +329,15 @@ class _SignInPhoneState extends State<SignInPhone> {
 //              builder: (context) => Home(4)));
 //    });
   }
-
+  void updateuser(FirebaseUser signedInUser) {
+    SessionManager prefs =  SessionManager();
+    prefs.setAuthType("user");
+    Firestore.instance.collection('users')
+        .document(signedInUser.uid)
+        .updateData({
+      'cType': "user",
+    });
+  }
   /**void createRecord(signedInUserid) {
     setState(() {
       _load = false;

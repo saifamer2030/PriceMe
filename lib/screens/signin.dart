@@ -7,6 +7,7 @@ import 'dart:ui' as ui;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:priceme/screens/signinphone.dart';
 import 'package:priceme/trader/login.dart';
 import 'package:toast/toast.dart';
@@ -412,7 +413,8 @@ class _SignInState extends State<SignIn> {
 //
 //    await user.updateProfile(_updateData);
 //    await user.reload();
-    adduser(user);
+    updateuser(user);
+
     return 'signInWithGoogle succeeded: $user';
   }
   void adduser(FirebaseUser signedInUser) {
@@ -433,6 +435,15 @@ class _SignInState extends State<SignIn> {
 //          MaterialPageRoute(
 //              builder: (context) => Home(4)));
 //    });
+  }
+  void updateuser(FirebaseUser signedInUser) {
+    SessionManager prefs =  SessionManager();
+    prefs.setAuthType("user");
+    Firestore.instance.collection('users')
+        .document(signedInUser.uid)
+        .updateData({
+      'cType': "user",
+    });
   }
 
 
