@@ -8,6 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:priceme/screens/signinphone.dart';
+import 'package:priceme/trader/login.dart';
 import 'package:toast/toast.dart';
 
 import 'network_connection.dart';
@@ -217,120 +218,33 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: FlatButton(
+               // color: Colors.blue,
+                textColor: Colors.white,
+                disabledColor: Colors.grey,
+                disabledTextColor: Colors.black,
+                padding: EdgeInsets.all(8.0),
+                splashColor: Colors.orangeAccent,
+                onPressed: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return MyLogIn();}));
+                },
+                child: Text(
+                  "هل انت تاجر؟...",
+                  style: TextStyle(fontSize: 15.0),
+                ),
+              ),
+            )
 
 
           ],
         ),
 
-      /**  Stack(
-          children: <Widget>[
 
-            Form(
-              key: _formKey,
-              child: Padding(
-                  padding: EdgeInsets.only(
-                      top: _minimumPadding * 50,
-                      bottom: _minimumPadding * 2,
-                      right: _minimumPadding * 2,
-                      left: _minimumPadding * 2),
-                  child: ListView(
-                    physics: BouncingScrollPhysics(),
-                    children: <Widget>[
-                      Padding(
-                          padding: EdgeInsets.only(
-                              top: _minimumPadding, bottom: _minimumPadding),
-                          child: Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: TextFormField(
-                              textAlign: TextAlign.right,
-                              keyboardType: TextInputType.number,
-                              style: textStyle,
-                              //textDirection: TextDirection.rtl,
-                              controller: _phoneController,
-                              validator: (String value) {
-                                if (value.isEmpty) {
-                                  return "برجاء إدخال رقم الجوال"; //Translations.of(context).translate('please_enter_the_phone_number');
-                                }
-                                if (value.length < 9) {
-                                  return "رقم هاتف غير صحيح"; //Translations.of(context).translate('phone_number_is_incorrect');
-                                }
-                              },
-                              decoration: InputDecoration(
-                                labelText: "رقم الجوال",
-                                //Translations.of(context).translate('telephone_number'),
-                                hintText: 'مثل:512345678',
-                                prefixIcon: Icon(Icons.phone_android),
-                                labelStyle: textStyle,
-                                errorStyle: TextStyle(
-                                    color: Colors.red, fontSize: 15.0),
-                                // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
-                              ),
-                            ),
-                          )),
-                      Padding(
-                        padding: const EdgeInsets.all(30.0),
-                        child: Container(
-                          width: 300 /*MediaQuery.of(context).size.width*/,
-                          height: 40,
-                          child: new RaisedButton(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                new Text("دخول"),
-                                SizedBox(
-                                  height: _minimumPadding,
-                                  width: _minimumPadding,
-                                ),
-                                Icon(
-                                  Icons.check,
-                                  color: Colors.white,
-                                ),
-                              ],
-                            ),
-                            textColor: Colors.white,
-                            color: const Color(0xff171732),
-                            onPressed: () async {
-                              if (_formKey.currentState.validate()) {
-                                try {
-                                  final result = await InternetAddress.lookup(
-                                      'google.com');
-                                  if (result.isNotEmpty &&
-                                      result[0].rawAddress.isNotEmpty) {
-                                    //  print('connected');
-                                    loginUserphone(
-                                        _phoneController.text.trim(), context);
-                                    setState(() {
-                                      _load = true;
-                                    });
-                                  }
-                                } on SocketException catch (_) {
-                                  //  print('not connected');
-                                  Toast.show(
-                                      "برجاء مراجعة الاتصال بالشبكة", context,
-                                      duration: Toast.LENGTH_LONG,
-                                      gravity: Toast.BOTTOM);
-                                }
-                                //loginUserphone(_phoneController.text.trim(), context);
-
-                              } else
-                                print('correct');
-                            },
-//
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(100.0)),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )),
-            ),
-            new Align(
-              child: loadingIndicator,
-              alignment: FractionalOffset.center,
-            ),
-            // new Align(child: loadingIndicator,alignment: FractionalOffset.center,),
-          ],
-        ),**/
       ),
     );
   }
@@ -498,7 +412,7 @@ class _SignInState extends State<SignIn> {
 //
 //    await user.updateProfile(_updateData);
 //    await user.reload();
-    //adduser(user);
+    adduser(user);
     return 'signInWithGoogle succeeded: $user';
   }
   void adduser(FirebaseUser signedInUser) {
@@ -510,6 +424,7 @@ class _SignInState extends State<SignIn> {
       'phone': signedInUser.phoneNumber,
       'photourl': signedInUser.photoUrl,
       "provider": signedInUser.providerData[1].providerId,
+      'cType': "user",
 
     });
 //        .whenComplete(() {

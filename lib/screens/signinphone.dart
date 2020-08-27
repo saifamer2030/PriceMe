@@ -199,7 +199,7 @@ class _SignInPhoneState extends State<SignInPhone> {
           AuthResult result = await _auth.signInWithCredential(credential);
           print(result.user.photoUrl.toString()+"////"+result.user.displayName.toString()+"/////"+result.user.phoneNumber.toString()+"/////"+result.user.email.toString());
           //createRecord(result.user.uid);
-         // adduser(result.user);
+          adduser(result.user);
 
           Navigator.pushReplacement(
               context,
@@ -286,7 +286,7 @@ class _SignInPhoneState extends State<SignInPhone> {
                         await result.user.reload();
                         print(result.user.photoUrl.toString()+"////"+result.user.displayName.toString()+"/////"+result.user.phoneNumber.toString()+"/////"+result.user.email.toString());
                         //createRecord(result.user.uid);
-                        //adduser(result.user);
+                        adduser(result.user);
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
@@ -311,6 +311,7 @@ class _SignInPhoneState extends State<SignInPhone> {
       'phone': signedInUser.phoneNumber,
       'photourl': signedInUser.photoUrl,
       "provider": signedInUser.providerData[1].providerId,
+      'cType': "trader",
 
     });
 //        .whenComplete(() {

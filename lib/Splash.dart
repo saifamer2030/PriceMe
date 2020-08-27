@@ -100,7 +100,7 @@ class Splash extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        'تخطي الدخول',
+                        ' الدخول كزائر',
                         style: TextStyle(
                           fontFamily: 'Helvetica',
                           fontSize: 15,

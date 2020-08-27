@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:priceme/trader/signuptrader.dart';
 
 import 'Splash.dart';
 import 'adminscreens/faultsadmin.dart';
