@@ -54,6 +54,11 @@ dependencies:
   location: ^2.3.5
   google_maps_flutter: ^0.4.0
   shared_preferences: ^0.5.10
+  persian_number_utility: ^0.1.2
+  flutter_audio_recorder: ^0.5.5
+  audioplayers: ^0.16.0
+  file: ^5.2.1
+
 
 dev_dependencies:
   flutter_test:

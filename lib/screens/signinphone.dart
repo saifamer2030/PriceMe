@@ -44,7 +44,7 @@ class _SignInPhoneState extends State<SignInPhone> {
     Widget loadingIndicator = _load
         ? new Container(
             child: SpinKitCircle(
-              color: const Color(0xff171732),
+              color: const Color(0xff5500ff),
             ),
           )
         : new Container();

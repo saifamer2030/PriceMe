@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:priceme/screens/network_connection.dart';
 import 'package:priceme/trader/signuptrader.dart';
@@ -18,6 +20,7 @@ class _MyLogInState extends State<MyLogIn> {
 
   bool _load = false;
   var _formKey1 = GlobalKey<FormState>();
+  List<String> faultsList = [];
 
   final double _minimumPadding = 5.0;
 
@@ -289,10 +292,29 @@ class _MyLogInState extends State<MyLogIn> {
                                   bottom: _minimumPadding),
                               child: FlatButton(
                                 onPressed: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => SignUptrader()));
+                                  final SparePartsReference = Firestore.instance;
+
+                                  SparePartsReference.collection("faults")
+                                      .getDocuments()
+                                      .then((QuerySnapshot snapshot) {
+                                    snapshot.documents.forEach((sparepart) {
+                                      SparePartsClass spc = SparePartsClass(
+                                        sparepart.data['sid'],
+                                        sparepart.data['sName'],
+                                        sparepart.data['surl'],
+                                      );
+                                      setState(() {
+                                        faultsList.add(sparepart.data['sName']);
+                                       // print(sparepartsList.length.toString() + "llll");
+                                      });
+                                    });
+                                  }).whenComplete(() {
+
+                                    Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                    builder: (context) => SignUptrader(faultsList)));
+                                  });
                                   },
                                 child: Text(
                                   "حساب جديد",

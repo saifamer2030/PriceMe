@@ -16,6 +16,8 @@ import 'package:path_provider/path_provider.dart';
 import 'dart:math' as Math;
 
 class SignUptrader extends StatefulWidget {
+  List<String> faultsList = [];
+  SignUptrader(this.faultsList);
   @override
   _SignUptraderState createState() => _SignUptraderState();
 }
@@ -33,7 +35,6 @@ class _SignUptraderState extends State<SignUptrader> {
   String fromPlaceLat , fromPlaceLng , fPlaceName ;
   Map <String , dynamic > sendData = Map();
 
-  var _workarray = ["كهربائى","ميكانيكى"];
 
   //var _typearray = DefConstants.countriesArray;
 
@@ -58,7 +59,7 @@ class _SignUptraderState extends State<SignUptrader> {
     super.initState();
 
     // _typecurrentItemSelected = _typearray[0];
-    _workcurrentItemSelected = _workarray[0];
+    _workcurrentItemSelected = widget.faultsList[0];
   }
 
   @override
@@ -367,7 +368,7 @@ class _SignUptraderState extends State<SignUptrader> {
                               child: Align(
                                 alignment: Alignment.centerRight,
                                 child: DropdownButton<String>(
-                                  items: _workarray.map((String value) {
+                                  items: widget.faultsList.map((String value) {
                                     return DropdownMenuItem<String>(
                                         value: value,
                                         child: Text(

@@ -30,12 +30,7 @@ class _SplashState extends State<Splash> {
             context,
             MaterialPageRoute(
                 builder: (context) => ConnectionScreen()));
-      }else if (data.toString()=="admin"){
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ConnectionScreen()));
-      }else{}
+      }
     },onError: (e) {
       print(e);
     });
