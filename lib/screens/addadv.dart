@@ -13,7 +13,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
+import 'package:priceme/classes/FaultStringClass.dart';
+import 'package:priceme/classes/FaultsClass.dart';
 import 'package:priceme/classes/ModelClass.dart';
+import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:priceme/screens/cur_loc.dart';
 import 'package:priceme/screens/network_connection.dart';
@@ -26,9 +29,11 @@ import 'dart:math' as Math;
 
 class AddAdv extends StatefulWidget {
   final LocalFileSystem localFileSystem;
-
-  AddAdv({localFileSystem})
+  List<String> sparepartsList;
+ // AddAdv(sparepartsList);
+  AddAdv(this.sparepartsList,  {localFileSystem})
       : this.localFileSystem = localFileSystem ?? LocalFileSystem();
+
   @override
   _AddAdvState createState() => _AddAdvState();
 }
@@ -38,9 +43,12 @@ class _AddAdvState extends State<AddAdv> {
   String url1;
   String imagepathes = '';
   List<String> urlList = [];
-  List<String> sparesList = ["11","22"];
+  List<String> proplemtype = ["اعطال","قطع غيار"];
   List<String> indyearlist = [];
-
+  List<String> subfaultsList = [];
+  List<FaultStringClass> faultsList = [];
+  List<SparePartsClass> mainfaultsList = [];
+  String subfault="";
   List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
   var _formKey = GlobalKey<FormState>();
@@ -68,23 +76,92 @@ class _AddAdvState extends State<AddAdv> {
   TextEditingController bodyController = TextEditingController();
   var _indyearcurrentItemSelected="";
 
-  //var _typecurrentItemSelected = '';
+  var _probtypecurrentItemSelected = '';
   var _sparecurrentItemSelected = '';
   FlutterAudioRecorder _recorder;
   Recording _current;
   RecordingStatus _currentStatus = RecordingStatus.Unset;
+  void getData() {
+    setState(() {
+      print("ooooooo${widget.sparepartsList[0]}");
+      final SparePartsReference = Firestore.instance;
+      final SparePartsReference1 = Firestore.instance;
+
+      mainfaultsList.clear;
+
+      SparePartsReference.collection("faults")
+          .getDocuments()
+          .then((QuerySnapshot snapshot) {
+        snapshot.documents.forEach((sparepart) {
+          SparePartsClass spc = SparePartsClass(
+            sparepart.data['sid'],
+            sparepart.data['sName'],
+            sparepart.data['surl'],
+
+          );
+
+
+        setState(() {
+
+          mainfaultsList.add(spc);
+          // print(sparepartsList.length.toString() + "llll");
+        });
+
+        });
+      }).whenComplete(() {
+        faultsList.clear();
+          for(var mfaults in mainfaultsList){
+            //setState(() {  subfaultsList.clear;});
+
+            SparePartsReference1.collection("subfaults").document(mfaults.sid).collection(mfaults.sName)
+              .getDocuments()
+              .then((QuerySnapshot snapshot) {
+            snapshot.documents.forEach((fault) {
+              FaultsClass fp = FaultsClass(
+                fault.data['fid'],
+                fault.data['fName'],
+                fault.data['fsubId'],
+                fault.data['fsubName'],
+                fault.data['fsubDesc'],
+                fault.data['fsubUrl'],
+              );
+              setState(() {
+                subfaultsList.add(fault.data['fsubName']);
+                subfault=subfault+fault.data['fsubName']+",";
+                print(fault.data['fsubName'] + "llll"+mfaults.sName);
+
+              });
+            });
+          }).whenComplete(() {
+              setState(() {
+                print(mfaults.sName+"////"+subfaultsList.length.toString());
+                faultsList.add(new FaultStringClass(mfaults.sName,subfault));
+                subfault="";
+                subfaultsList.clear();
+
+              });
+            });
+
+        }//////
+
+      });
+    });
+
+  }
 
   @override
   void initState() {
     super.initState();
     _init();
-
     DateTime now = DateTime.now();
     indyearlist=new List<String>.generate(50, (i) =>  NumberUtility.changeDigit((now.year+1 -i).toString(), NumStrLanguage.English));
     indyearlist[0]=("الموديل");
     _indyearcurrentItemSelected=indyearlist[0];
     // _typecurrentItemSelected = _typearray[0];
-    _sparecurrentItemSelected = sparesList[0];
+    _sparecurrentItemSelected = widget.sparepartsList[0];
+    _probtypecurrentItemSelected=proplemtype[0];
+    getData();
+
   }
 
   @override
@@ -111,6 +188,40 @@ class _AddAdvState extends State<AddAdv> {
                   child: ListView(
                     physics: BouncingScrollPhysics(),
                     children: <Widget>[
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: _minimumPadding, bottom: _minimumPadding),
+                        child: Container(
+                          height: 40.0,
+                          child: Material(
+                              borderRadius: BorderRadius.circular(5.0),
+                              shadowColor: const Color(0xffdddddd),
+                              color: const Color(0xffe7e7e7),
+                              elevation: 2.0,
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child: DropdownButton<String>(
+                                  items: proplemtype.map((String value) {
+                                    return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(
+                                          value,
+                                          style: TextStyle(
+                                              color: const Color(0xffF1AB37),
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold),
+                                        ));
+                                  }).toList(),
+                                  value: _probtypecurrentItemSelected,
+                                  onChanged: (String newValueSelected) {
+                                    // Your code to execute, when a menu item is selected from dropdown
+                                    _onDropDownItemSelectedproblem(
+                                        newValueSelected);
+                                  },
+                                ),
+                              )),
+                        ),
+                      ),
 
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -204,12 +315,12 @@ class _AddAdvState extends State<AddAdv> {
                         color: Colors.grey,
                         child: InkWell(
                           onTap: () {
-//                            Navigator.push(
-//                                context,
-//                                MaterialPageRoute(
-//                                    builder: (context) => MyForm4(
-//                                        "widget.department",
-//                                        onSubmit4: onSubmit4)));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MyForm4(
+                                        faultsList,
+                                        onSubmit4: onSubmit4)));
 
                           },
                           child: Card(
@@ -341,7 +452,7 @@ class _AddAdvState extends State<AddAdv> {
                               child: Align(
                                 alignment: Alignment.centerRight,
                                 child: DropdownButton<String>(
-                                  items: sparesList.map((String value) {
+                                  items: widget.sparepartsList.map((String value) {
                                     return DropdownMenuItem<String>(
                                         value: value,
                                         child: Text(
@@ -685,6 +796,12 @@ class _AddAdvState extends State<AddAdv> {
   void _onDropDownItemSelectedindyear(String newValueSelected) {
     setState(() {
       this._indyearcurrentItemSelected = newValueSelected;
+    });
+  }
+
+  void _onDropDownItemSelectedproblem(String newValueSelected) {
+    setState(() {
+      this._probtypecurrentItemSelected = newValueSelected;
     });
   }
 
@@ -1129,80 +1246,34 @@ class _MyForm3State extends State<MyForm3> {
     );
   }
 }
-//////////////////////////////////
+////////////////////////////////
 
-//typedef void MyFormCallback4(String result);
-//
-//class MyForm4 extends StatefulWidget {
-//  final MyFormCallback4 onSubmit4;
-//  String dep;
-//
-//  MyForm4(this.dep, {this.onSubmit4});
-//
-//  @override
-//  _MyForm4State createState() => _MyForm4State();
-//}
-//
-//class _MyForm4State extends State<MyForm4> {
-//  String _currentValue = '';
-//  String _currentValue1 = '';
-//
-//  List<DepartmentClass> departlist1 = [];
-//
-//  @override
-//  void initState() {
-//    super.initState();
-//    _currentValue = widget.dep;
-//
-//    final departments1databaseReference = FirebaseDatabase.instance
-//        .reference()
-//        .child("Departments1")
-//        .child(widget.dep);
-//    // print("##########${widget.dep}");
-//    departments1databaseReference.once().then((DataSnapshot snapshot) {
-//      var KEYS = snapshot.value.keys;
-//      var DATA = snapshot.value;
-//      //Toast.show("${snapshot.value.keys}",context,duration: Toast.LENGTH_LONG,gravity:  Toast.BOTTOM);
-//      //  print("kkkk${DATA.toString()}");
-//
-//      departlist1.clear();
-//      for (var individualkey in KEYS) {
-//        // if (!blockList.contains(individualkey) &&user.uid != individualkey) {
-//        DepartmentClass departmentclass = new DepartmentClass(
-//          DATA[individualkey]['id'],
-//          DATA[individualkey]['title'],
-//          DATA[individualkey]['subtitle'],
-//          DATA[individualkey]['uri'],
-//          Colors.white,
-//          false,
-//          DATA[individualkey]['arrange'],
-//        );
-//        //  print("kkkkkkkkk"+ctitle+ DATA[individualkey]['title']);
-//        setState(() {
-//          if (DATA[individualkey]['arrange'] == null)
-//            departmentclass = new DepartmentClass(
-//              DATA[individualkey]['id'],
-//              DATA[individualkey]['title'],
-//              DATA[individualkey]['subtitle'],
-//              DATA[individualkey]['uri'],
-//              const Color(0xff8C8C96),
-//              false,
-//              100,
-//            );
-//          departlist1.add(departmentclass);
-//          setState(() {
-////            print("size of list : 5");
-//            departlist1.sort((depart1, depart2) =>
-//                depart1.arrange.compareTo(depart2.arrange));
-//          });
-//        });
-//        // }
-//      }
-//    });
-//  }
-//
-//  @override
-//  Widget build(BuildContext context) {
+//////////////////////////////////
+typedef void MyFormCallback4(String result);
+class MyForm4 extends StatefulWidget {
+  final MyFormCallback4 onSubmit4;
+ // String model;
+  List<FaultStringClass> faultsList = [];
+
+  MyForm4(this.faultsList, {this.onSubmit4});
+  @override
+  _MyForm4State createState() => _MyForm4State();
+}
+class _MyForm4State extends State<MyForm4> {
+  String _currentValue = '';
+  String _currentValue1 = '';
+
+  List<ModelClass> modelList = [];
+
+  @override
+  void initState() {
+    super.initState();
+   // _currentValue = widget.model;
+   // modelList = widget.faultsList;
+  }
+
+  @override
+  Widget build(BuildContext context) {
 //    Widget cancelButton = FlatButton(
 //      child: Text(
 //        "إلغاء",
@@ -1222,93 +1293,79 @@ class _MyForm3State extends State<MyForm3> {
 //      onPressed: () {
 //        setState(() {
 //          Navigator.pop(context);
-//          widget.onSubmit4(
-//              _currentValue1.toString() + "," + _currentValue.toString());
+//          widget.onSubmit3(_currentValue1.toString() + "," + _currentValue.toString());
 //        });
 //      },
 //    );
-//    return Scaffold(
-//      appBar: AppBar(
-//        backgroundColor: const Color(0xff171732),
-//        centerTitle:true ,
-//        title: Text(
-//          widget.dep,
-//          style: TextStyle(fontWeight: FontWeight.bold),
-//          textDirection: TextDirection.rtl,
-//        ),
-//
-//      ),
-//      body: new ListView.builder(
-//        itemCount: departlist1.length,
-//        itemBuilder: (context, i) {
-//          return new ExpansionTile(
-//            title: new Text(
-//              departlist1[i].title,
-//              style: new TextStyle(
-//                  fontSize: 20.0,
-//                  fontWeight: FontWeight.bold,
-//                  fontStyle: FontStyle.italic),
-//            ),
-//            children: <Widget>[
-//              Column(
-//                // padding: EdgeInsets.all(8.0),
-//                children: departlist1[i].subtitle != null
-//                    ? departlist1[i]
-//                    .subtitle
-//                    .split(",")
-//                    .map((value) => RadioListTile(
-//                  groupValue: _currentValue,
-//                  title: Text(
-//                    value,
-//                    textDirection: TextDirection.rtl,
-//                  ),
-//                  value: value,
-//                  onChanged: (val) {
-//                    setState(() {
-//                      // debugPrint('VAL = $val');
-//                      _currentValue = val;
-//                      _currentValue1 = departlist1[i].title;
-//                    });
-//                  },
-//                ))
-//                    .toList()
-//                    : departlist1[i]
-//                    .title
-//                    .split(",")
-//                    .map((value) => RadioListTile(
-//                  groupValue: _currentValue,
-//                  title: Text(
-//                    value,
-//                    textDirection: TextDirection.rtl,
-//                  ),
-//                  value: value,
-//                  onChanged: (val) {
-//                    setState(() {
-//                      debugPrint('VAL = $val');
-//                      _currentValue = val;
-//                      _currentValue1 = departlist1[i].title;
-//                    });
-//                  },
-//                ))
-//                    .toList(),
-//              ),
-////              new Column(
-////                children:
-////                _buildExpandableContent(regionlist[i]),
-////              ),
-//              Row(
-//                mainAxisAlignment: MainAxisAlignment.spaceAround,
-//                children: <Widget>[
-//                  cancelButton,
-//                  continueButton,
-//                ],
-//              )
-//            ],
-//          );
-//        },
-//      ),
-//    );
-//  }
-//}
-//
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xff171732),
+        centerTitle:true ,
+        title: Text(
+         "اختر العطل",
+          style: TextStyle(fontWeight: FontWeight.bold),
+          textDirection: TextDirection.rtl,
+        ),
 
+      ),
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top:18.0),
+            child: ListView.builder(
+              itemCount: widget.faultsList.length,
+              itemBuilder: (context, i) {
+                return new ExpansionTile(
+                  title: new Text(
+                    widget.faultsList[i].title,
+                    style: new TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
+                        fontStyle: FontStyle.italic),
+                  ),
+                  children: <Widget>[
+                    Column(
+                      // padding: EdgeInsets.all(8.0),widget.faultsList[i].subtitle.substring(0, widget.faultsList[i].subtitle.length() - 1)
+                      children:  widget.faultsList[i].subtitle.split(",")
+                          .map((value) =>value==""?Container(): RadioListTile(
+                        groupValue: _currentValue,
+                        title: Text(
+                          value,
+                          textDirection: TextDirection.rtl,
+                        ),
+                        value: value,
+                        onChanged: (val) {
+                          setState(() {
+                            debugPrint('VAL = $val');
+                            _currentValue = val;
+                            _currentValue1 =  widget.faultsList[i].title;
+                            Navigator.pop(context);
+                            widget.onSubmit4(_currentValue1.toString() + "," + _currentValue.toString());
+                          });
+                        },
+                      ))
+                          .toList(),
+                    ),
+//              new Column(
+//                children:
+//                _buildExpandableContent(regionlist[i]),
+//              ),
+                  ],
+                );
+              },
+            ),
+          ),
+//          Row(
+//            mainAxisAlignment: MainAxisAlignment.spaceAround,
+//            children: <Widget>[
+//              cancelButton,
+//              continueButton,
+//            ],
+//          )
+
+        ],
+      ),
+    );
+  }
+}
+////////////////////////////////

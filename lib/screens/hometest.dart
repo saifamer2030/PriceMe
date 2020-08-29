@@ -1,8 +1,12 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:priceme/adminscreens/sparepartsadmin.dart';
+import 'package:priceme/classes/FaultsClass.dart';
+import 'package:priceme/classes/ModelClass.dart';
+import 'package:priceme/classes/SparePartsClass.dart';
 
 import 'addadv.dart';
 
@@ -12,10 +16,15 @@ class HomeTest extends StatefulWidget {
   _HomeTestState createState() => _HomeTestState();
 }
 class _HomeTestState extends State<HomeTest > {
+  List<String> subfaultsList = [];
+  List<ModelClass> faultsList = [];
+  List<String> sparepartsList = [];
+
 
 @override
 void initState() {
   super.initState();
+  getData();
 
   FirebaseAuth.instance.currentUser().then((user) => user != null
         ?
@@ -59,7 +68,7 @@ setState((){})
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => AddAdv()));
+                          builder: (context) => AddAdv(sparepartsList)));
                 },
                 child: Center(
                   child: Row(
@@ -89,4 +98,26 @@ setState((){})
       ),
     );
   }
+  void getData() {
+    setState(() {
+      final SparePartsReference = Firestore.instance;
+      SparePartsReference.collection("spareparts")
+          .getDocuments()
+          .then((QuerySnapshot snapshot) {
+        snapshot.documents.forEach((sparepart) {
+          SparePartsClass spc = SparePartsClass(
+            sparepart.data['sid'],
+            sparepart.data['sName'],
+            sparepart.data['surl'],
+          );
+          setState(() {
+            sparepartsList.add(sparepart.data['sName']);
+           // print(sparepartsList.length.toString() + "llll");
+          });
+        });
+      });
+    });
+
+  }
+
 }
