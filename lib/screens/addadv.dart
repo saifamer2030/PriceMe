@@ -30,13 +30,13 @@ import 'dart:math' as Math;
 class AddAdv extends StatefulWidget {
   final LocalFileSystem localFileSystem;
   List<String> sparepartsList;
- // AddAdv(sparepartsList);
   AddAdv(this.sparepartsList,  {localFileSystem})
       : this.localFileSystem = localFileSystem ?? LocalFileSystem();
 
   @override
   _AddAdvState createState() => _AddAdvState();
 }
+enum SingingCharacter4 { used, New, NO }
 
 class _AddAdvState extends State<AddAdv> {
   bool _load1 = false;
@@ -59,19 +59,15 @@ class _AddAdvState extends State<AddAdv> {
   String model2;
   String fault1;
   String fault2;
-
-
+double _value=0.0;
+String _userId;
   var song;  //var _typearray = DefConstants.countriesArray;
-
-  final userdatabaseReference =
-  FirebaseDatabase.instance.reference().child("coiffuredata");
+  SingingCharacter4 _character4 = SingingCharacter4.New;
 
   final double _minimumPadding = 5.0;
 
-  TextEditingController nameController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmpasswordController = TextEditingController();
+  TextEditingController titleController = TextEditingController();
+
   TextEditingController discController = TextEditingController();
   TextEditingController bodyController = TextEditingController();
   var _indyearcurrentItemSelected="";
@@ -83,7 +79,7 @@ class _AddAdvState extends State<AddAdv> {
   RecordingStatus _currentStatus = RecordingStatus.Unset;
   void getData() {
     setState(() {
-      print("ooooooo${widget.sparepartsList[0]}");
+    //  print("ooooooo${widget.sparepartsList[0]}");
       final SparePartsReference = Firestore.instance;
       final SparePartsReference1 = Firestore.instance;
 
@@ -157,7 +153,6 @@ class _AddAdvState extends State<AddAdv> {
     indyearlist=new List<String>.generate(50, (i) =>  NumberUtility.changeDigit((now.year+1 -i).toString(), NumStrLanguage.English));
     indyearlist[0]=("الموديل");
     _indyearcurrentItemSelected=indyearlist[0];
-    // _typecurrentItemSelected = _typearray[0];
     _sparecurrentItemSelected = widget.sparepartsList[0];
     _probtypecurrentItemSelected=proplemtype[0];
     getData();
@@ -306,11 +301,11 @@ class _AddAdvState extends State<AddAdv> {
                           ),
                         ],
                       ),
-                      SizedBox(
+                      _probtypecurrentItemSelected==proplemtype[0]?SizedBox(
                         height: _minimumPadding,
                         width: _minimumPadding,
-                      ),
-                      Container(
+                      ):Container(),
+                      _probtypecurrentItemSelected==proplemtype[0]?Container(
                         height: 40,
                         color: Colors.grey,
                         child: InkWell(
@@ -344,7 +339,7 @@ class _AddAdvState extends State<AddAdv> {
                             ),
                           ),
                         ),
-                      ),
+                      ):Container(),
                       Padding(
                         padding: EdgeInsets.only(
                             top: _minimumPadding * 5, bottom: _minimumPadding),
@@ -358,6 +353,36 @@ class _AddAdvState extends State<AddAdv> {
                           ),
                         ),
                       ),
+                      SizedBox(
+                        height: _minimumPadding,
+                        width: _minimumPadding,
+                      ),
+                      Padding(
+                          padding: EdgeInsets.only(
+                              top: _minimumPadding, bottom: _minimumPadding),
+                          child: Directionality(
+                            textDirection: TextDirection.rtl,
+                            child: TextFormField(
+                              textAlign: TextAlign.right,
+                              keyboardType: TextInputType.text,
+                              style: textStyle,
+                              //textDirection: TextDirection.rtl,
+                              controller: titleController,
+                              validator: (String value) {
+                                if (value.isEmpty) {
+                                  return 'برجاء إدخال عنوان';
+                                }
+                              },
+                              decoration: InputDecoration(
+                                labelText: 'عنوان',
+                                //hintText: 'Name',
+                                labelStyle: textStyle,
+                                errorStyle: TextStyle(
+                                    color: Colors.red, fontSize: 15.0),
+                                // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
+                              ),
+                            ),
+                          )),
                       SizedBox(
                         height: _minimumPadding,
                         width: _minimumPadding,
@@ -392,7 +417,7 @@ class _AddAdvState extends State<AddAdv> {
                         height: _minimumPadding,
                         width: _minimumPadding,
                       ),
-                      Padding(
+                      _probtypecurrentItemSelected==proplemtype[0]?Container():Padding(
                           padding: EdgeInsets.only(
                               top: _minimumPadding, bottom: _minimumPadding),
                           child: Directionality(
@@ -419,16 +444,16 @@ class _AddAdvState extends State<AddAdv> {
                               ),
                             ),
                           )),
-                      SizedBox(
+                      _probtypecurrentItemSelected==proplemtype[0]?Container():SizedBox(
                         height: _minimumPadding,
                         width: _minimumPadding,
                       ),
 
-                      SizedBox(
+                      _probtypecurrentItemSelected==proplemtype[0]?Container():SizedBox(
                         height: _minimumPadding,
                         width: _minimumPadding,
                       ),
-                      Padding(
+                      _probtypecurrentItemSelected==proplemtype[0]?Container():Padding(
                         padding: const EdgeInsets.only(right: 8),
                         child: Text(
                           "اختار قطع الغيار",
@@ -439,7 +464,77 @@ class _AddAdvState extends State<AddAdv> {
                               fontWeight: FontWeight.bold),
                         ),
                       ),
-                      Padding(
+                      _probtypecurrentItemSelected==proplemtype[0]?Container():SizedBox(
+                        height: _minimumPadding,
+                        width: _minimumPadding,
+                      ),
+                      _probtypecurrentItemSelected==proplemtype[0]?Container():Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          ListTile(
+                            title: const Text(
+                              'جديدة',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+//                                          fontFamily: 'Estedad-Black',
+                              ),
+                              textAlign: TextAlign.right,
+                            ),
+                            trailing: Radio(
+                              value: SingingCharacter4.New,
+                              groupValue: _character4,
+                              onChanged: (SingingCharacter4 value) {
+                                setState(() {
+                                  _character4 = value;
+                                });
+                              },
+                            ),
+                          ),
+                          ListTile(
+                            title: const Text(
+                              'جديدة/مستعملة',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+//                                          fontFamily: 'Estedad-Black',
+                              ),
+                              textAlign: TextAlign.right,
+                            ),
+                            trailing: Radio(
+                              value: SingingCharacter4.NO,
+                              groupValue: _character4,
+                              onChanged: (SingingCharacter4 value) {
+                                setState(() {
+                                  _character4 = value;
+                                });
+                              },
+                            ),
+                          ),
+                          ListTile(
+                            title: const Text(
+                              'مستعملة',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
+//                                          fontFamily: 'Estedad-Black',
+                              ),
+                              textAlign: TextAlign.right,
+                            ),
+                            trailing: Radio(
+                              value: SingingCharacter4.used,
+                              groupValue: _character4,
+                              onChanged: (SingingCharacter4 value) {
+                                setState(() {
+                                  _character4 = value;
+                                });
+                              },
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      _probtypecurrentItemSelected==proplemtype[0]?Container():Padding(
                         padding: EdgeInsets.only(
                             top: _minimumPadding, bottom: _minimumPadding),
                         child: Container(
@@ -473,20 +568,38 @@ class _AddAdvState extends State<AddAdv> {
                               )),
                         ),
                       ),
-                      SizedBox(
-                        height: _minimumPadding,
-                        width: _minimumPadding,
-                      ),
+                                           // Container(
+                      //   //decoration: BoxDecoration(border: Border.all(color: Colors.teal)),
+                      //   child: new Directionality(textDirection: TextDirection.rtl,
+                      //     child: CheckboxListTile(
+                      //       title: const Text('هل تريد قطع غيار جديدة ام قديمة؟'),
+                      //       subtitle: const Text('فعل الزر فى حالة الجديدة'),
+                      //       secondary: const Icon(Icons.directions_car),
+                      //       activeColor: Colors.red,
+                      //       checkColor: Colors.yellow,
+                      //       selected: _isChecked,
+                      //       value: _isChecked,
+                      //       onChanged: (bool value) {
+                      //         setState(() {
+                      //           _isChecked = value;
+                      //         });
+                      //       },
+                      //     ),
+                      //   ),
+                      // ),
                       SizedBox(
                         height: _minimumPadding,
                         width: _minimumPadding,
                       ),
 
 ///////////////////////////////////////
-                      new Slider(value:0.0 ,
-                          max: 300.0,min: 0.0,
+                      new Slider(value:_value??0.0,
+                          max: 62.0,min: 0.0,
                           onChanged: (double value){
-                            value= double.parse(_current?.duration.inSeconds.toString());
+                        setState(() {
+                          value= double.parse(_current?.duration.inSeconds.toString());
+
+                        });
                           }),
                       Center(
                         child: new Text(
@@ -587,20 +700,20 @@ class _AddAdvState extends State<AddAdv> {
 //                            ),
 //                            color: Colors.blueAccent.withOpacity(0.5),
 //                          ),
-                          SizedBox(
-                            width: 8,
-                          ),
-                          InkWell(
-                            onTap:uploadaudio,//onPlayAudio,
-                            child: Container(
-                              width: 60,
-                              height: 60,
-                              child: Icon(Icons.file_upload, size: 20,),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color(0xFFe0f2f1)),
-                            ),
-                          ),
+//                           SizedBox(
+//                             width: 8,
+//                           ),
+//                           InkWell(
+//                             onTap:onPlayAudio,//uploadaudio,//onPlayAudio,
+//                             child: Container(
+//                               width: 60,
+//                               height: 60,
+//                               child: Icon(Icons.file_upload, size: 20,),
+//                               decoration: BoxDecoration(
+//                                   shape: BoxShape.circle,
+//                                   color: Color(0xFFe0f2f1)),
+//                             ),
+//                           ),
 //                          new FlatButton(
 //                            onPressed: onPlayAudio,
 //                            child:
@@ -735,13 +848,13 @@ class _AddAdvState extends State<AddAdv> {
                               onTap: () async {
                                 if (_formKey.currentState.validate()) {
 
-                                  if(fromPlaceLat == null || fromPlaceLng == null ||   fPlaceName == null  ){
-                                    Toast.show("برجاء إدخال الموقع",context,duration: Toast.LENGTH_LONG,gravity:  Toast.BOTTOM);
+                                  if(images.length == 0 || song == null||  model1 == null || model2 == null||  fault1 == null || fault2 == null){
+                                    Toast.show("برجاء التأكد من إضافة كل البيانات المطلوبة",context,duration: Toast.LENGTH_LONG,gravity:  Toast.BOTTOM);
                                   }else{
                                     try {
                                       final result = await InternetAddress.lookup('google.com');
                                       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-                                        uploadpp0();
+                                        uploadaudio();
 
                                         setState(() {
                                           _load1 = true;
@@ -758,7 +871,7 @@ class _AddAdvState extends State<AddAdv> {
                               },
                               child: Center(
                                 child: Text(
-                                  'تسجيل',
+                                  'الإضافة و النشر',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.white,
@@ -781,6 +894,123 @@ class _AddAdvState extends State<AddAdv> {
         ),
       ),
     );
+  }
+  Future uploadpp0(audiourl) async {
+    // String url1;
+    final StorageReference storageRef =
+    FirebaseStorage.instance.ref().child('myimage');
+    int i = 0;
+    for(var f in images){
+      //  images.forEach((f) async {
+      var byteData = await f.getByteData(quality: 50);
+
+      DateTime now = DateTime.now();
+      final file = File('${(await getTemporaryDirectory()).path}/$f');
+      await file.writeAsBytes(byteData.buffer
+          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+      final StorageUploadTask uploadTask =
+      storageRef.child('$now.jpg').putFile(file);
+      var Imageurl = await (await uploadTask.onComplete).ref.getDownloadURL();
+      Toast.show("تم تحميل صورة طال عمرك", context,
+          duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+      setState(() {
+        url1 = Imageurl.toString();
+        urlList.add(url1);
+        //  print('URL Is${images.length} ///$url1///$urlList');
+        i++;
+        // _load2 = false;
+      });
+      if (i == images.length) {
+        // print('gggg${images.length} ///$i');
+        createRecord(audiourl,urlList);
+      }
+    }
+    setState(() {
+     // _load2 = true;
+    });
+
+  }
+  void createRecord(audiourl,urlList) {
+    FirebaseAuth.instance.currentUser().then((user) => user == null
+        ? null
+        : setState(() {
+      _userId = user.uid;
+      DateTime now = DateTime.now();
+      String date =
+          '${now.year}-${now.month}-${now.day}-${now.hour}-${now.minute}-00-000';
+
+      String b = now.month.toString();
+      if (b.length < 2) {
+        b = "0" + b;
+      }
+      String c = now.day.toString();
+      if (c.length < 2) {
+        c = "0" + c;
+      }
+      String d = now.hour.toString();
+      if (d.length < 2) {
+        d = "0" + d;
+      }
+      String e = now.minute.toString();
+      if (e.length < 2) {
+        e = "0" + e;
+      }
+      String date1 = '${now.year}-${b}-${c} ${d}:${e}:00';
+      int arrange = int.parse('${now.year}${b}${c}${d}${e}');
+      Firestore.instance.collection('advertisments').document(_userId).setData({
+        'carrange': arrange,
+        'cId': _userId,
+        'cdate': date1,
+        'cdiscribtion': discController.text,
+        'cbody': bodyController.text,
+        'cpublished': false,
+        'curi': urlList[0],
+        'cimagelist': urlList.toString(),
+        'caudiourl': audiourl,
+
+        'cproblemtype':_probtypecurrentItemSelected,
+
+        'ccar':model1,
+        'ccarversion':model2,
+        'cmodel':_indyearcurrentItemSelected,
+
+        'mfault':fault1,
+        'subfault':fault2,
+
+        'sparepart':_sparecurrentItemSelected,
+
+        'ctitle': titleController.text,
+        'fromPLat': fromPlaceLat,
+        'fromPLng': fromPlaceLng,
+        'fPlaceName':fPlaceName,
+        'cNew':  _probtypecurrentItemSelected==proplemtype[1]
+            ? _character4.toString().contains("used")
+            ? "مستعملة"
+            : _character4.toString().contains("New")
+            ? "جديدة"
+            : "جديدة/مستعملة"
+            : null,
+
+      }).whenComplete(() {
+        setState(() {
+         // _load2 = false;
+          urlList.clear();
+          images.clear();
+          song=null;
+          titleController.text = "";
+          discController.text = "";
+          bodyController.text = "";
+          _sparecurrentItemSelected = widget.sparepartsList[0];
+          _probtypecurrentItemSelected = proplemtype[0];
+          _indyearcurrentItemSelected=indyearlist[0];
+          model1=null;model2=null;fault1=null;fault2=null;
+          _value = 0;
+          fromPlaceLat=null; fromPlaceLng=null; fPlaceName =null;
+
+        });
+      });
+
+    }));
   }
 
 //  void _onDropDownItemSelectedType(String newValueSelected) {
@@ -837,97 +1067,47 @@ class _AddAdvState extends State<AddAdv> {
 
     });
   }
-  void _uploaddata(urlList) {
-    //print("kkk"+urlList[0].toString());
 
-    FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: emailController.text,
-      password: passwordController.text,
-    ).then((signedInUser) {
-      print("kkk"+signedInUser.toString());
-
-      adduser(signedInUser.user, urlList);
-    }).catchError((e) {
-      Toast.show(e,context,duration: Toast.LENGTH_LONG,gravity:  Toast.BOTTOM);
-      //  print(e);
-    });
-
-
-//    var alertDialog = AlertDialog(
-//      title: Text("مبارك"),
-//        Toast.show("تم تسجيل الدخول بنجاح",context,duration: Toast.LENGTH_SHORT,gravity:  Toast.BOTTOM);  content: Text("تم الحجز بنجاح"),
-//    );
+//   Future uploadpp0() async {
+//     if (images.length == 0) {
+//       _uploaddata("");
 //
-//    showDialog(
-//        context: context,
-//        builder: (BuildContext context) => alertDialog);
-  }
-  void adduser( signedInUser, urlList) {
-    print("kkk"+signedInUser.uid);
-    Firestore.instance.collection('users').document(signedInUser.uid).setData({
-      'uid': signedInUser.uid,
-      'email': emailController.text,
-      'name': nameController.text,
-      'body': bodyController.text,
-      'photourl': signedInUser.photoUrl,
-      'curilist': urlList.toString(),
-      "provider": signedInUser.providerData[1].providerId,
-      'fromPLat': fromPlaceLat,
-      'fromPLng': fromPlaceLng,
-      'fPlaceName':fPlaceName,
-      'spareparts': _sparecurrentItemSelected,
-      'discribtion': discController.text,
-      'cType': "trader",
-    }).whenComplete(() {
-      SessionManager prefs =  SessionManager();
-      prefs.setAuthType("trader");
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ConnectionScreen()));
-    });
-  }
-
-  Future uploadpp0() async {
-    if (images.length == 0) {
-      _uploaddata("");
-
-    } else {
-    final StorageReference storageRef =
-    FirebaseStorage.instance.ref().child('myimage');
-    int i = 0;
-    for (var f in images) {
-      //  images.forEach((f) async {
-      var byteData = await f.getByteData(quality: 50);
-//      final String path1 = await getApplicationDocumentsDirectory().path;
-//      var file=await getImageFileFromAssets(path);
-      // final byteData = await rootBundle.load('$f');
-      DateTime now = DateTime.now();
-      final file = File('${(await getTemporaryDirectory()).path}/$f');
-      await file.writeAsBytes(byteData.buffer
-          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-      final StorageUploadTask uploadTask =
-      storageRef.child('$now.jpg').putFile(file);
-      var Imageurl = await (await uploadTask.onComplete).ref.getDownloadURL();
-      Toast.show("تم تحميل صورة طال عمرك", context,
-          duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-      setState(() {
-        url1 = Imageurl.toString();
-        urlList.add(url1);
-        //  print('URL Is${images.length} ///$url1///$urlList');
-        i++;
-        // _load2 = false;
-      });
-      if (i == images.length) {
-        // print('gggg${images.length} ///$i');
-        _uploaddata(urlList);
-      }
-    }
-    setState(() {
-      _load1 = true;
-    });
-  }
-  }
+//     } else {
+//     final StorageReference storageRef =
+//     FirebaseStorage.instance.ref().child('myimage');
+//     int i = 0;
+//     for (var f in images) {
+//       //  images.forEach((f) async {
+//       var byteData = await f.getByteData(quality: 50);
+// //      final String path1 = await getApplicationDocumentsDirectory().path;
+// //      var file=await getImageFileFromAssets(path);
+//       // final byteData = await rootBundle.load('$f');
+//       DateTime now = DateTime.now();
+//       final file = File('${(await getTemporaryDirectory()).path}/$f');
+//       await file.writeAsBytes(byteData.buffer
+//           .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+//       final StorageUploadTask uploadTask =
+//       storageRef.child('$now.jpg').putFile(file);
+//       var Imageurl = await (await uploadTask.onComplete).ref.getDownloadURL();
+//       Toast.show("تم تحميل صورة طال عمرك", context,
+//           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+//       setState(() {
+//         url1 = Imageurl.toString();
+//         urlList.add(url1);
+//         //  print('URL Is${images.length} ///$url1///$urlList');
+//         i++;
+//         // _load2 = false;
+//       });
+//       if (i == images.length) {
+//         // print('gggg${images.length} ///$i');
+//         _uploaddata(urlList);
+//       }
+//     }
+//     setState(() {
+//       _load1 = true;
+//     });
+//   }
+//   }
 
 
   void onSubmit3(String result) {
@@ -1000,8 +1180,14 @@ class _AddAdvState extends State<AddAdv> {
 
       const tick = const Duration(milliseconds: 50);
       new Timer.periodic(tick, (Timer t) async {
+        _value= double.parse(_current?.duration.inSeconds.toString())??0.0;
+
         if (_currentStatus == RecordingStatus.Stopped) {
           t.cancel();
+        }
+        if (double.parse(_current?.duration.inSeconds.toString()) > 60) {
+          //t.cancel();
+          _stop();
         }
 
         var current = await _recorder.current(channel: 0);
@@ -1046,7 +1232,7 @@ class _AddAdvState extends State<AddAdv> {
       case RecordingStatus.Initialized:
         {
           text = 'Start';
-         icon=Icons.play_arrow;
+         icon=Icons.record_voice_over;
 
           break;
         }
@@ -1060,7 +1246,7 @@ class _AddAdvState extends State<AddAdv> {
       case RecordingStatus.Paused:
         {
           text = 'Resume';
-          icon=Icons.arrow_forward_ios;
+          icon=Icons.play_arrow;
 
           break;
         }
@@ -1101,27 +1287,10 @@ class _AddAdvState extends State<AddAdv> {
       var Audiourl = await (await uploadTask.onComplete).ref.getDownloadURL();
       var  url2 = Audiourl.toString();
       print("$_extension  mmm$url2");
-    });  }
+      uploadpp0(url2);
+    });
+  }
 
-//  uploadaudio(){
-//    DateTime now = DateTime.now();
-//
-//    String filePath = _current?.path;
-//    String _extension = _current?.audioFormat.toString();
-//    StorageReference storageRef =
-//    FirebaseStorage.instance.ref().child("myaudio");
-//
-//    final StorageUploadTask uploadTask = storageRef.child("$now.$_extension").putFile(
-//      File(filePath),
-////      StorageMetadata(
-////        contentType: 'audio/$_extension',
-////      ),
-//    );
-//    setState(() async {
-//      var Audiourl = await (await uploadTask.onComplete).ref.getDownloadURL();
-//    var  url2 = Audiourl.toString();
-//    print("$_extension mmm$url2");
-//    });  }
 }
 //////////////////////////////////
 typedef void MyFormCallback3(String result);

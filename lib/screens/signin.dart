@@ -12,6 +12,7 @@ import 'package:priceme/screens/signinphone.dart';
 import 'package:priceme/trader/login.dart';
 import 'package:toast/toast.dart';
 
+import 'hometest.dart';
 import 'network_connection.dart';
 
 
@@ -136,7 +137,7 @@ signInWithGoogle().whenComplete(() {
     Navigator.of(context).push(
     MaterialPageRoute(
     builder: (context) {
-    return ConnectionScreen();
+    return HomeTest();
     },
     ),
     );
