@@ -38,7 +38,22 @@ dependencies:
   toast: ^0.1.3
   flutter_spinkit: "^4.1.2"
   google_sign_in:
-
+  multi_image_picker: ^4.6.6
+  http: ^0.12.2
+  path_provider: ^1.6.11
+  flutter_image_compress: ^0.6.8
+  flutter_swiper: ^1.1.6
+  url_launcher: ^5.4.10
+  flutter_slidable: ^0.5.4
+  geolocator:
+  access_settings_menu: ^0.0.1
+  flutter_alert: ^0.4.0
+  rflutter_alert: ^1.0.3
+  font_awesome_flutter: ^8.8.1
+  geoflutterfire: ^2.0.3+2
+  location: ^2.3.5
+  google_maps_flutter: ^0.4.0
+  shared_preferences: ^0.5.10
 
 dev_dependencies:
   flutter_test:

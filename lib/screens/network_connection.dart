@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:priceme/adminscreens/sparepartsadmin.dart';
 
 class ConnectionScreen extends StatefulWidget {
   ConnectionScreen();
@@ -130,29 +131,12 @@ void initState() {
                 //color: CustomColors.kTabBarIconColor,
               ),
               child: InkWell(
-                onTap: () async {
-                 // check();
-//                  try {
-//                    final result = await InternetAddress.lookup('google.com');
-//                    if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-//                      FirebaseAuth.instance.currentUser().then((user) => user !=
-//                              null
-//                          ?  Navigator.push(
-//                          context,
-//                          MaterialPageRoute(
-//                              builder: (context) =>
-//                                  FragmentSouq1(widget.regionlist)))
-//                          :
-//                      Navigator.push(
-//                          context,
-//                          MaterialPageRoute(
-//                              builder: (context) =>
-//                                  SignIn(widget.regionlist))),);
-//                          }
-//                  } on SocketException catch (_) {
-////Toast.show(_.toString()+"jjjjjjjjjjjj",context,duration: Toast.LENGTH_LONG,gravity:  Toast.BOTTOM);
-//
-//                  }
+                onTap: ()  {
+
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => SparePartsAdmin()));
                 },
                 child: Center(
                   child: Row(

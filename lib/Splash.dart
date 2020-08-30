@@ -1,13 +1,48 @@
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/gradient_xd_transform.dart';
+import 'package:priceme/screens/network_connection.dart';
 import 'package:priceme/screens/signin.dart';
 
-class Splash extends StatelessWidget {
-  final ImageProvider ic_logo;
-  Splash({
-    Key key,
-    this.ic_logo = const AssetImage('assets/images/ic_logo.png'),
-  }) : super(key: key);
+import 'classes/sharedpreftype.dart';
+
+class Splash  extends StatefulWidget {
+  @override
+  _SplashState createState() => _SplashState();
+}
+
+class _SplashState extends State<Splash> {
+
+
+  @override
+  void initState() {
+    super.initState();
+    SessionManager prefs =  SessionManager();
+    Future<String> authType= prefs.getAuthType();
+    authType.then((data) {
+      print("authToken " + data.toString());
+      if(data.toString()=="user"){
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ConnectionScreen()));
+      }else if (data.toString()=="trader"){
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ConnectionScreen()));
+      }else if (data.toString()=="admin"){
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ConnectionScreen()));
+      }else{}
+    },onError: (e) {
+      print(e);
+    });
+
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +68,7 @@ class Splash extends StatelessWidget {
                       height: 77.0,
                       decoration: BoxDecoration(
                         image: DecorationImage(
-                          image: ic_logo,
+                          image:AssetImage('assets/images/ic_logo.png'),
                           fit: BoxFit.fill,
                         ),
                       ),
@@ -100,7 +135,7 @@ class Splash extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        'تخطي الدخول',
+                        ' الدخول كزائر',
                         style: TextStyle(
                           fontFamily: 'Helvetica',
                           fontSize: 15,
@@ -120,5 +155,8 @@ class Splash extends StatelessWidget {
 
 
     );
+
   }
+
 }
+
