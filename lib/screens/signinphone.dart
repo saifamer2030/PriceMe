@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:toast/toast.dart';
 
+import 'hometest.dart';
 import 'network_connection.dart';
 
 class SignInPhone extends StatefulWidget {
@@ -44,7 +45,7 @@ class _SignInPhoneState extends State<SignInPhone> {
     Widget loadingIndicator = _load
         ? new Container(
             child: SpinKitCircle(
-              color: const Color(0xff171732),
+              color: const Color(0xff5500ff),
             ),
           )
         : new Container();
@@ -205,7 +206,7 @@ class _SignInPhoneState extends State<SignInPhone> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => ConnectionScreen()));
+                  builder: (context) => HomeTest()));
           //FirebaseUser user = result.user;
           // Navigator.of(context).pushReplacementNamed('/fragmentsouq');
 
@@ -291,7 +292,7 @@ class _SignInPhoneState extends State<SignInPhone> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => ConnectionScreen()));
+                                builder: (context) => HomeTest()));
                         //FirebaseUser user = result.user;
                         //createRecord(result.user.uid);
                         // Navigator.of(context).pushReplacementNamed('/fragmentsouq');

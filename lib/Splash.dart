@@ -30,12 +30,7 @@ class _SplashState extends State<Splash> {
             context,
             MaterialPageRoute(
                 builder: (context) => ConnectionScreen()));
-      }else if (data.toString()=="admin"){
-        Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ConnectionScreen()));
-      }else{}
+      }
     },onError: (e) {
       print(e);
     });
@@ -54,18 +49,19 @@ class _SplashState extends State<Splash> {
               gradient: LinearGradient(
                 begin: Alignment(1.38, -0.81),
                 end: Alignment(-1.38, 0.67),
-                colors: [const Color(0xff001e50), const Color(0xff051631)],
+                colors: [ const Color(0xff001e50), const Color(0xff051631),],
                 stops: [0.0, 1.0],
               ),
             ),
             child:ListView(
+              physics: BouncingScrollPhysics(),
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(top: 150),
+                  padding: const EdgeInsets.only(top: 200),
                   child: Center(
                     child: Container(
-                      width: 129.7,
-                      height: 77.0,
+                      width: 250,
+                      height: 95.0,
                       decoration: BoxDecoration(
                         image: DecorationImage(
                           image:AssetImage('assets/images/ic_logo.png'),
@@ -77,7 +73,7 @@ class _SplashState extends State<Splash> {
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.only(top: 350,left: 20,right: 20),
+                  padding: const EdgeInsets.only(top: 230,left: 20,right: 20),
                   child: InkWell(
 
                     onTap: ()  {
