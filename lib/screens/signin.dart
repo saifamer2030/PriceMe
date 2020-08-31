@@ -15,6 +15,7 @@ import 'package:toast/toast.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:http/http.dart' as http;
 
+import '../Logintrader.dart';
 import 'hometest.dart';
 import 'network_connection.dart';
 
@@ -81,7 +82,7 @@ class _SignInState extends State<SignIn> {
               gradient: LinearGradient(
                 begin: Alignment(1.38, -0.81),
                 end: Alignment(-1.38, 0.67),
-                colors: [const Color(0xff001e50), const Color(0xff051631)],
+                colors: [const Color(0xff008D95), const Color(0xff15494A),],
                 stops: [0.0, 1.0],
               ),
             ),
@@ -227,7 +228,7 @@ class _SignInState extends State<SignIn> {
                     onPressed: () {
                       Navigator.of(context)
                           .push(MaterialPageRoute(builder: (context) {
-                        return MyLogIn();
+                        return Logintrader();
                       }));
                     },
                     child: Text(

@@ -45,7 +45,7 @@ class _SignInPhoneState extends State<SignInPhone> {
     Widget loadingIndicator = _load
         ? new Container(
             child: SpinKitCircle(
-              color: const Color(0xff5500ff),
+              color: const Color(0xffff5423),
             ),
           )
         : new Container();
@@ -60,7 +60,7 @@ class _SignInPhoneState extends State<SignInPhone> {
           gradient: LinearGradient(
             begin: Alignment(1.38, -0.81),
             end: Alignment(-1.38, 0.67),
-            colors: [const Color(0xff001e50), const Color(0xff051631)],
+            colors: [const Color(0xff008D95), const Color(0xff15494A)],
             stops: [0.0, 1.0],
           ),
         ),
@@ -80,7 +80,7 @@ class _SignInPhoneState extends State<SignInPhone> {
                     children: <Widget>[
                       Padding(
                           padding: EdgeInsets.only(
-                              top: _minimumPadding, bottom: _minimumPadding),
+                              top: _minimumPadding, bottom: _minimumPadding,right: _minimumPadding,left: _minimumPadding),
                           child: Directionality(
                             textDirection: TextDirection.rtl,
                             child: TextFormField(
@@ -106,16 +106,19 @@ class _SignInPhoneState extends State<SignInPhone> {
                                 labelText: "رقم الجوال",
                                 //Translations.of(context).translate('telephone_number'),
                                 //hintText: 'مثل:512345678',
-                                prefixIcon: Icon(Icons.phone_android),
+                                prefixIcon: Padding(
+                                  padding: const EdgeInsets.only(right: 10),
+                                  child: Icon(Icons.phone_android),
+                                ),
                                 contentPadding:
                                 const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white),
-                                  borderRadius: BorderRadius.circular(25.7),
-                                ),
+//                                focusedBorder: OutlineInputBorder(
+//                                  borderSide: BorderSide(color: Colors.white),
+//                                  borderRadius: BorderRadius.circular(5.7),
+//                                ),
                                 enabledBorder: UnderlineInputBorder(
                                   borderSide: BorderSide(color: Colors.white),
-                                  borderRadius: BorderRadius.circular(25.7),
+                                  borderRadius: BorderRadius.circular(5.7),
                                 ),
                               ),
                             ),
@@ -125,24 +128,29 @@ class _SignInPhoneState extends State<SignInPhone> {
                         child: Container(
                           width: 300 /*MediaQuery.of(context).size.width*/,
                           height: 40,
-                          child: new RaisedButton(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(9.0),
+                            border: Border.all(
+                                width: 1.0, color: const Color(0xffff5423)),
+                          ),
+                          child: new InkWell(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                new Text("دخول"),
+                                new Text("دخول",style: TextStyle(color: Colors.white),),
                                 SizedBox(
                                   height: _minimumPadding,
                                   width: _minimumPadding,
                                 ),
                                 Icon(
                                   Icons.check,
-                                  color: Colors.orange,
+                                  color: Colors.white,
                                 ),
                               ],
                             ),
-                            textColor: Colors.black,
-                            color: Colors.orange,//const Color(0xff171732),
-                            onPressed: () async {
+
+
+                            onTap: () async {
                               if (_formKey.currentState.validate()) {
                                 try {
                                   final result = await InternetAddress.lookup(
@@ -169,8 +177,6 @@ class _SignInPhoneState extends State<SignInPhone> {
                                 print('correct');
                             },
 //
-                            shape: new RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(100.0)),
                           ),
                         ),
                       ),
