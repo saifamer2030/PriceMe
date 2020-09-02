@@ -332,10 +332,12 @@ class _SparePartsAdminState extends State<SparePartsAdmin> {
           height: 120.0,
           width: 60.0,
           decoration: BoxDecoration(
+
             image: DecorationImage(
               image: NetworkImage(sparepartsList[index].surl),
               fit: BoxFit.fill,
             ),
+
             shape: BoxShape.circle,
           ),
         ),

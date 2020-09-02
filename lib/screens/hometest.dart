@@ -9,9 +9,10 @@ import 'package:priceme/classes/ModelClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 
 import 'addadv.dart';
+import 'homepage.dart';
 
 class HomeTest extends StatefulWidget {
-  HomeTest();
+   HomeTest();
   @override
   _HomeTestState createState() => _HomeTestState();
 }
@@ -64,11 +65,17 @@ setState((){})
               ),
               child: InkWell(
                 onTap: ()  {
-
+                  ////***********home page***************************
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => AddAdv(sparepartsList)));
+                          builder: (context) => HomePage(sparepartsList)));
+                  ////***********center botton***************************
+                  // Navigator.push(
+                  //     context,
+                  //     MaterialPageRoute(
+                  //         builder: (context) => AddAdv(sparepartsList,"قطع غيار","", sparepartsList[0])));
+
                 },
                 child: Center(
                   child: Row(

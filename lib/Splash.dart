@@ -49,12 +49,12 @@ class _SplashState extends State<Splash> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ConnectionScreen()));
+                builder: (context) => HomeTest()));
       }else if (data.toString()=="trader"){
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => ConnectionScreen()));
+                builder: (context) => HomeTest()));
       }
     },onError: (e) {
       print(e);
@@ -99,7 +99,7 @@ class _SplashState extends State<Splash> {
                   physics: BouncingScrollPhysics(),
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 120),
+                      padding: const EdgeInsets.only(top: 100),
                       child: Center(
                         child: Container(
                           height: 150.0,
@@ -113,7 +113,7 @@ class _SplashState extends State<Splash> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 100, left: 20, right: 20),
+                      padding: const EdgeInsets.only(top: 50, left: 20, right: 20),
                       child: InkWell(
                         onTap: () {
                           Navigator.push(
@@ -239,6 +239,45 @@ class _SplashState extends State<Splash> {
                         ),
                       ),
                     ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+                      child: InkWell(
+                        onTap: () {
+                         // _login();
+                        },
+                        child: Container(
+                          width: 308.0,
+                          height: 47.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(9.0),
+                            border: Border.all(
+                                width: 1.0, color: const Color(0xffff5423)),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              // Image(
+                              //     image:
+                              //     AssetImage("assets/images/facebook_logo.png"),
+                              //     height: 50.0),
+                              //assets/images/facebook_logo.png
+
+                              Text(
+                                'الدخول كزائر',
+                                style: TextStyle(
+                                  fontFamily: 'Helvetica',
+                                  fontSize: 15,
+                                  color: const Color(0xffffffff),
+                                  height: 1,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+
                     InkWell(
                       onTap: (){
                         Navigator.of(context)

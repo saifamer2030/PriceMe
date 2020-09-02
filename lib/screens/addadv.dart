@@ -30,7 +30,8 @@ import 'dart:math' as Math;
 class AddAdv extends StatefulWidget {
   final LocalFileSystem localFileSystem;
   List<String> sparepartsList;
-  AddAdv(this.sparepartsList,  {localFileSystem})
+  String probtype0, selecteditem0,mfault;
+  AddAdv(this.sparepartsList,this.probtype0,this.mfault, this.selecteditem0,  {localFileSystem})
       : this.localFileSystem = localFileSystem ?? LocalFileSystem();
 
   @override
@@ -153,8 +154,10 @@ String _userId;
     indyearlist=new List<String>.generate(50, (i) =>  NumberUtility.changeDigit((now.year+1 -i).toString(), NumStrLanguage.English));
     indyearlist[0]=("الموديل");
     _indyearcurrentItemSelected=indyearlist[0];
-    _sparecurrentItemSelected = widget.sparepartsList[0];
-    _probtypecurrentItemSelected=proplemtype[0];
+    _probtypecurrentItemSelected=widget.probtype0=="قطع غيار"?widget.probtype0:proplemtype[0];
+    _sparecurrentItemSelected =  widget.probtype0=="قطع غيار"?widget.selecteditem0:widget.sparepartsList[0];
+     fault1=widget.mfault;
+     fault2=widget.selecteditem0;
     getData();
 
   }
@@ -314,7 +317,7 @@ String _userId;
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => MyForm4(
-                                        faultsList,
+                                        faultsList,widget.selecteditem0,
                                         onSubmit4: onSubmit4)));
 
                           },
@@ -1000,8 +1003,8 @@ String _userId;
           titleController.text = "";
           discController.text = "";
           bodyController.text = "";
-          _sparecurrentItemSelected = widget.sparepartsList[0];
-          _probtypecurrentItemSelected = proplemtype[0];
+          _sparecurrentItemSelected = widget.probtype0=="قطع غيار"?widget.selecteditem0:widget.sparepartsList[0];
+          _probtypecurrentItemSelected=widget.probtype0=="قطع غيار"?widget.probtype0:proplemtype[0];
           _indyearcurrentItemSelected=indyearlist[0];
           model1=null;model2=null;fault1=null;fault2=null;
           _value = 0;
@@ -1423,8 +1426,8 @@ class MyForm4 extends StatefulWidget {
   final MyFormCallback4 onSubmit4;
  // String model;
   List<FaultStringClass> faultsList = [];
-
-  MyForm4(this.faultsList, {this.onSubmit4});
+String selecteditem;
+  MyForm4(this.faultsList,this.selecteditem, {this.onSubmit4});
   @override
   _MyForm4State createState() => _MyForm4State();
 }
@@ -1437,36 +1440,13 @@ class _MyForm4State extends State<MyForm4> {
   @override
   void initState() {
     super.initState();
-   // _currentValue = widget.model;
+    _currentValue = widget.selecteditem;
    // modelList = widget.faultsList;
   }
-
   @override
   Widget build(BuildContext context) {
-//    Widget cancelButton = FlatButton(
-//      child: Text(
-//        "إلغاء",
-//        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-//      ),
-//      onPressed: () {
-//        setState(() {
-//          Navigator.pop(context);
-//        });
-//      },
-//    );
-//    Widget continueButton = FlatButton(
-//      child: Text(
-//        "حفظ",
-//        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-//      ),
-//      onPressed: () {
-//        setState(() {
-//          Navigator.pop(context);
-//          widget.onSubmit3(_currentValue1.toString() + "," + _currentValue.toString());
-//        });
-//      },
-//    );
-    return Scaffold(
+
+    return  Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff171732),
         centerTitle:true ,
@@ -1484,6 +1464,11 @@ class _MyForm4State extends State<MyForm4> {
             child: ListView.builder(
               itemCount: widget.faultsList.length,
               itemBuilder: (context, i) {
+                if( widget.faultsList[i].subtitle.contains(widget.selecteditem)){
+                  _currentValue1=widget.faultsList[i].title;
+                 // widget.onSubmit4(_currentValue1.toString() + "," + _currentValue.toString());
+
+                }
                 return new ExpansionTile(
                   title: new Text(
                     widget.faultsList[i].title,
