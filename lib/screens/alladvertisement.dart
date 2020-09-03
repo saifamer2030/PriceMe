@@ -12,6 +12,8 @@ import 'package:priceme/screens/signin.dart';
 
 import 'package:toast/toast.dart';
 
+import 'advdetail.dart';
+
 class AllAdvertisement extends StatefulWidget {
   AllAdvertisement();
   @override
@@ -113,14 +115,11 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
         margin: EdgeInsets.only(right: 1, left: 1, bottom: 2),
         child: InkWell(
           onTap: () {
-
-            // Navigator.push(
-            //     context,
-            //     MaterialPageRoute(
-            //         builder: (context) =>
-            //             AdvProlile(cId, chead, cname)));
-
-
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        AdvDetail(document['userId'], document['advid'])));
 
           },
           child: Container(
