@@ -797,13 +797,15 @@ String _userId;
                                       builder: (context) =>
                                           CurrentLocation2()),
                                 );
-                                fromPlace = sendData["loc_latLng"];
-                                fromPlaceLat = fromPlace.latitude.toString();
-                                fromPlaceLng = fromPlace.longitude.toString();
-                                fPlaceName = sendData["loc_name"];
-                                print("\n\n\n\n\n\n\nfromPlaceLng>>>>"+
-                                    fromPlaceLng+fPlaceName+"\n\n\n\n\n\n");
 
+                                // print("\n\n\n\n\n\n\nfromPlaceLng>>>>"+
+                                //     fromPlaceLng+fPlaceName+"\n\n\n\n\n\n");
+setState(() {
+  fromPlace = sendData["loc_latLng"];
+  fromPlaceLat = fromPlace.latitude.toString();
+  fromPlaceLng = fromPlace.longitude.toString();
+  fPlaceName = sendData["loc_name"];
+});
                               } ,
                               child: Icon(
                                 fromPlaceLat == null ? Icons.gps_fixed : Icons.check_circle
@@ -857,11 +859,12 @@ String _userId;
                                     try {
                                       final result = await InternetAddress.lookup('google.com');
                                       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-                                        uploadaudio();
-
                                         setState(() {
                                           _load1 = true;
                                         });
+                                        uploadaudio();
+
+
                                       }
                                     } on SocketException catch (_) {
                                       //  print('not connected');
@@ -929,7 +932,7 @@ String _userId;
       }
     }
     setState(() {
-     // _load2 = true;
+      _load1 = true;
     });
 
   }
@@ -960,9 +963,14 @@ String _userId;
       }
       String date1 = '${now.year}-${b}-${c} ${d}:${e}:00';
       int arrange = int.parse('${now.year}${b}${c}${d}${e}');
-      Firestore.instance.collection('advertisments').document(_userId).setData({
+      DocumentReference documentReference =
+      Firestore.instance.collection('advertisments').document();
+      documentReference.setData({
+        //'timestamp': FieldValue.serverTimestamp(), to arrange data using orderby
+
         'carrange': arrange,
-        'cId': _userId,
+        'advid': documentReference.documentID,
+        'userId': _userId,
         'cdate': date1,
         'cdiscribtion': discController.text,
         'cbody': bodyController.text,
@@ -1004,12 +1012,13 @@ String _userId;
           discController.text = "";
           bodyController.text = "";
           _sparecurrentItemSelected = widget.probtype0=="قطع غيار"?widget.selecteditem0:widget.sparepartsList[0];
-          _probtypecurrentItemSelected=widget.probtype0=="قطع غيار"?widget.probtype0:proplemtype[0];
+         // _probtypecurrentItemSelected=widget.probtype0=="قطع غيار"?widget.probtype0:proplemtype[0];
           _indyearcurrentItemSelected=indyearlist[0];
           model1=null;model2=null;fault1=null;fault2=null;
           _value = 0;
           fromPlaceLat=null; fromPlaceLng=null; fPlaceName =null;
-
+            _load1 = false;
+          _init();
         });
       });
 
@@ -1071,46 +1080,6 @@ String _userId;
     });
   }
 
-//   Future uploadpp0() async {
-//     if (images.length == 0) {
-//       _uploaddata("");
-//
-//     } else {
-//     final StorageReference storageRef =
-//     FirebaseStorage.instance.ref().child('myimage');
-//     int i = 0;
-//     for (var f in images) {
-//       //  images.forEach((f) async {
-//       var byteData = await f.getByteData(quality: 50);
-// //      final String path1 = await getApplicationDocumentsDirectory().path;
-// //      var file=await getImageFileFromAssets(path);
-//       // final byteData = await rootBundle.load('$f');
-//       DateTime now = DateTime.now();
-//       final file = File('${(await getTemporaryDirectory()).path}/$f');
-//       await file.writeAsBytes(byteData.buffer
-//           .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-//       final StorageUploadTask uploadTask =
-//       storageRef.child('$now.jpg').putFile(file);
-//       var Imageurl = await (await uploadTask.onComplete).ref.getDownloadURL();
-//       Toast.show("تم تحميل صورة طال عمرك", context,
-//           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-//       setState(() {
-//         url1 = Imageurl.toString();
-//         urlList.add(url1);
-//         //  print('URL Is${images.length} ///$url1///$urlList');
-//         i++;
-//         // _load2 = false;
-//       });
-//       if (i == images.length) {
-//         // print('gggg${images.length} ///$i');
-//         _uploaddata(urlList);
-//       }
-//     }
-//     setState(() {
-//       _load1 = true;
-//     });
-//   }
-//   }
 
 
   void onSubmit3(String result) {
@@ -1290,8 +1259,14 @@ String _userId;
       var Audiourl = await (await uploadTask.onComplete).ref.getDownloadURL();
       var  url2 = Audiourl.toString();
       print("$_extension  mmm$url2");
+      setState(() {
+        _load1 = true;
+      });
+      Toast.show("تم تحميل التسجيل الصوتى طال عمرك", context,
+          duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       uploadpp0(url2);
     });
+
   }
 
 }

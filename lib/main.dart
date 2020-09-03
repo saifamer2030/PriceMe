@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:priceme/screens/addadv.dart';
 import 'package:priceme/screens/homepage.dart';
 import 'package:priceme/screens/hometest.dart';
+import 'package:priceme/screens/myadvertisement.dart';
 import 'package:priceme/trader/signuptrader.dart';
 
 import 'Splash.dart';
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: HomeTest(),
+      home: MyAdvertisement(),
     );
   }
 }

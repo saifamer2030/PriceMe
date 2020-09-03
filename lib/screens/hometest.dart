@@ -66,15 +66,15 @@ setState((){})
               child: InkWell(
                 onTap: ()  {
                   ////***********home page***************************
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => HomePage(sparepartsList)));
-                  ////***********center botton***************************
                   // Navigator.push(
                   //     context,
                   //     MaterialPageRoute(
-                  //         builder: (context) => AddAdv(sparepartsList,"قطع غيار","", sparepartsList[0])));
+                  //         builder: (context) => HomePage(sparepartsList)));
+                  ////***********center botton***************************
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => AddAdv(sparepartsList,"قطع غيار","", sparepartsList[0])));
 
                 },
                 child: Center(

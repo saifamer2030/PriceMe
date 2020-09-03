@@ -10,6 +10,7 @@ import 'package:priceme/screens/hometest.dart';
 import 'package:priceme/screens/network_connection.dart';
 import 'package:priceme/screens/signin.dart';
 import 'package:priceme/screens/signinphone.dart';
+import 'package:priceme/trader/login.dart';
 
 import 'Logintrader.dart';
 import 'classes/sharedpreftype.dart';
@@ -282,7 +283,7 @@ class _SplashState extends State<Splash> {
                       onTap: (){
                         Navigator.of(context)
                             .push(MaterialPageRoute(builder: (context) {
-                          return Logintrader();
+                          return MyLogIn();
                         }));
                       },
                       child: Padding(
