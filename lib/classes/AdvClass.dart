@@ -21,7 +21,8 @@ String mfault;
   String fromPLng;
   String fPlaceName;
   String cNew;
-
+  String pname;
+  String pphone;
   AdvClass(
   this.advid,
   this.userId,
@@ -45,7 +46,8 @@ String mfault;
       this.fromPLng,
       this.fPlaceName,
       this.cNew,
+      this.pname,
+      this.pphone,
       );
-
 
 }

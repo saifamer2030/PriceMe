@@ -21,6 +21,7 @@ import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:priceme/screens/cur_loc.dart';
 import 'package:priceme/screens/network_connection.dart';
 import 'package:audioplayers/audioplayers.dart';
+import 'package:priceme/screens/signin.dart';
 import 'dart:io' as io;
 
 import 'package:toast/toast.dart';
@@ -66,7 +67,9 @@ String _userId;
   SingingCharacter4 _character4 = SingingCharacter4.New;
 
   final double _minimumPadding = 5.0;
-
+  String _cName = "";
+  String _cMobile;
+  String _cEmail="";
   TextEditingController titleController = TextEditingController();
 
   TextEditingController discController = TextEditingController();
@@ -150,6 +153,39 @@ String _userId;
   void initState() {
     super.initState();
     _init();
+
+    FirebaseAuth.instance.currentUser().then((user) => user == null
+        ? Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
+        builder: (context) => SignIn(), maintainState: false))
+        : setState(() {_userId = user.uid;
+    var userQuery = Firestore.instance.collection('users').where('uid', isEqualTo: _userId).limit(1);
+    userQuery.getDocuments().then((data){
+      if (data.documents.length > 0){
+        setState(() {
+          _cName = data.documents[0].data['name'];
+          _cMobile = data.documents[0].data['phone'];
+          _cEmail=data.documents[0].data['email'];
+          // if(_cName==null){_cName=user.displayName??"اسم غير معلوم";}
+          if(_cName==null){
+            if(user.displayName==null||user.displayName==""){
+              _cName="ايميل غير معلوم";
+            }else{_cName=user.displayName;}}
+          // print("mmm$_cMobile+++${user.phoneNumber}***");
+          if(_cMobile==null){
+            if(user.phoneNumber==null||user.phoneNumber==""){
+              _cMobile="لا يوجد رقم هاتف بعد";
+            }else{_cMobile=user.phoneNumber;}}
+          //  if(_cEmail==null){_cEmail=user.email??"ايميل غير معلوم";}
+          if(_cEmail==null){
+            if(user.email==null||user.email==""){
+              _cEmail="ايميل غير معلوم";
+            }else{_cEmail=user.email;}}
+
+        });
+      }
+    });
+    }));
+
     DateTime now = DateTime.now();
     indyearlist=new List<String>.generate(50, (i) =>  NumberUtility.changeDigit((now.year+1 -i).toString(), NumStrLanguage.English));
     indyearlist[0]=("الموديل");
@@ -978,6 +1014,8 @@ setState(() {
         'curi': urlList[0],
         'cimagelist': urlList.toString(),
         'caudiourl': audiourl,
+        'pphone': _cMobile,
+        'pname': _cName,
 
         'cproblemtype':_probtypecurrentItemSelected,
 

@@ -25,6 +25,7 @@ class AdvDetail extends StatefulWidget {
 class _AdvDetailState extends State<AdvDetail> {
   String _userId;
   String _username;
+  String _userphone;
 
   String cdate;
   String cdiscribtion;
@@ -46,6 +47,9 @@ class _AdvDetailState extends State<AdvDetail> {
   String fromPLng;
   String fPlaceName;
   String cNew;
+  String ownerName;
+  String ownerPhone;
+
   var _formKey1 = GlobalKey<FormState>();
   var refreshKey = GlobalKey<RefreshIndicatorState>();
   Future<void> _launched;
@@ -60,7 +64,6 @@ class _AdvDetailState extends State<AdvDetail> {
   //AdvNameClass advnNameclass;
   final double _minimumPadding = 5.0;
   bool _load = false;
-  String cPhone;
   TextEditingController _commentController = TextEditingController();
   List<String> _imageUrls;
 
@@ -70,6 +73,32 @@ class _AdvDetailState extends State<AdvDetail> {
   void initState() {
     super.initState();
 
+    FirebaseAuth.instance.currentUser().then((user) => user == null
+        ? _userId=null
+        : setState(() {_userId = user.uid;
+    var userQuery = Firestore.instance.collection('users').where('uid', isEqualTo: _userId).limit(1);
+    userQuery.getDocuments().then((data){
+      if (data.documents.length > 0){
+        setState(() {
+          String _username;
+          String _userphone;
+          _username = data.documents[0].data['name'];
+          _userphone = data.documents[0].data['phone'];
+          // if(_cName==null){_cName=user.displayName??"اسم غير معلوم";}
+          if(_username==null){
+            if(user.displayName==null||user.displayName==""){
+              _username="ايميل غير معلوم";
+            }else{_username=user.displayName;}}
+          // print("mmm$_cMobile+++${user.phoneNumber}***");
+          if(_userphone==null){
+            if(user.phoneNumber==null||user.phoneNumber==""){
+              _userphone="لا يوجد رقم هاتف بعد";
+            }else{_userphone=user.phoneNumber;}}
+
+        });
+      }
+    });
+    }));
     setState(() {
       var userQuery = Firestore.instance
           .collection('advertisments')
@@ -101,6 +130,9 @@ class _AdvDetailState extends State<AdvDetail> {
             fromPLng = data.documents[0].data['fromPLng'];
             fPlaceName = data.documents[0].data['fPlaceName'];
             cNew = data.documents[0].data['cNew'];
+            ownerName = data.documents[0].data['pname'];
+            ownerPhone = data.documents[0].data['pphone'];
+
             _imageUrls = cimagelist
                 .replaceAll(" ", "")
                 .replaceAll("[", "")
@@ -435,44 +467,44 @@ class _AdvDetailState extends State<AdvDetail> {
                               ),
                             ),
                           ),
-//                                 Positioned(
-//                                   top: 20,
-//                                   right: 5,
-//                                   child: Padding(
-//                                     padding: const EdgeInsets.all(5.0),
-//                                     child: Row(
-//                                       children: <Widget>[
-//                                         advnNameclass == null
-//                                             ? Text("")
-//                                             : Padding(
-//                                                 padding: const EdgeInsets.only(
-//                                                     top: 8.0),
-//                                                 child: widget.cName == null
-//                                                     ? Text("اسم غير معلوم")
-//                                                     : Text(
-//                                                         "المالك: ${widget.cName}",
-//                                                         textDirection:
-//                                                             TextDirection.rtl,
-//                                                         textAlign:
-//                                                             TextAlign.right,
-//                                                         style: TextStyle(
-//                                                             fontSize: 15.0,
-//                                                             color: const Color(
-//                                                                 0xff171732),
-// //                                                      fontFamily:
-// //                                                          'Gamja Flower',
-//                                                             fontStyle: FontStyle
-//                                                                 .normal),
-//                                                       ),
-//                                               ),
-//                                         Icon(
-//                                           Icons.person,
-//                                           color: const Color(0xff171732),
-//                                         ),
-//                                       ],
-//                                     ),
-//                                   ),
-//                                 ),
+                                Positioned(
+                                  top: 20,
+                                  right: 5,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(5.0),
+                                    child: Row(
+                                      children: <Widget>[
+                                        ownerName == null
+                                            ? Text("")
+                                            : Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 8.0),
+                                                child: ownerName == null
+                                                    ? Text("اسم غير معلوم")
+                                                    : Text(
+                                                        "المالك: ${ownerName}",
+                                                        textDirection:
+                                                            TextDirection.rtl,
+                                                        textAlign:
+                                                            TextAlign.right,
+                                                        style: TextStyle(
+                                                            fontSize: 15.0,
+                                                            color: const Color(
+                                                                0xff171732),
+//                                                      fontFamily:
+//                                                          'Gamja Flower',
+                                                            fontStyle: FontStyle
+                                                                .normal),
+                                                      ),
+                                              ),
+                                        Icon(
+                                          Icons.person,
+                                          color: const Color(0xff171732),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
                           Positioned(
                             top: 45,
                             right: 5,
@@ -574,107 +606,108 @@ class _AdvDetailState extends State<AdvDetail> {
                       )),
                 ),
                 _userId == widget.userId
-                    ? Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Container(
-                          width:
-                              300 /*MediaQuery.of(context).size.width*/,
-                          height: 40,
-                          child: new RaisedButton(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                new Text("تمديد الاعلان"),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 10.0),
-                                  child: Icon(
-                                    Icons.check,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            textColor: Colors.white,
-                            color: const Color(0xff171732),
-                            onPressed: () {
-                              // DateTime startdate =
-                              //     DateTime.parse(advnNameclass.cdate);
-                              // var newdate =
-                              //     startdate.add(new Duration(days: 14));
-                              // DateTime now = DateTime.now();
-                              // var permissiondate =
-                              //     startdate.add(new Duration(days: 10));
-                              //
-                              // String b = newdate.month.toString();
-                              // if (b.length < 2) {
-                              //   b = "0" + b;
-                              // }
-                              // String c = newdate.day.toString();
-                              // if (c.length < 2) {
-                              //   c = "0" + c;
-                              // }
-                              // String d = newdate.hour.toString();
-                              // if (d.length < 2) {
-                              //   d = "0" + d;
-                              // }
-                              // String e = newdate.minute.toString();
-                              // if (e.length < 2) {
-                              //   e = "0" + e;
-                              // }
-                              // String date1 =
-                              //     '${newdate.year}-${b}-${c} ${d}:${e}:00';
-                              //
-                              // if (_userId == null) {
-                              //   Toast.show(
-                              //       "ابشر .. سجل دخول الاول طال عمرك",
-                              //       context,
-                              //       duration: Toast.LENGTH_LONG,
-                              //       gravity: Toast.BOTTOM);
-                              // } else {
-                              //   if (now.isAfter(permissiondate)) {
-                              //     final advdatabaseReference =
-                              //         FirebaseDatabase.instance
-                              //             .reference()
-                              //             .child("advdata");
-                              //     advdatabaseReference
-                              //         .child(widget.cId)
-                              //         .child(widget.cDateID)
-                              //         .update({
-                              //       "cdate": date1,
-                              //     }).then((_) {
-                              //       setState(() {
-                              //         advnNameclass.cdate = date1;
-                              //         showNotification(
-                              //             date1,
-                              //             advnNameclass.ctitle,
-                              //             advnNameclass.cId,
-                              //             advnNameclass.chead,
-                              //             _username);
-                              //
-                              //         Toast.show("$date1تم التمديد الى ",
-                              //             context,
-                              //             duration: Toast.LENGTH_LONG,
-                              //             gravity: Toast.BOTTOM);
-                              //       });
-                              //     });
-                              //   } else {
-                              //     Toast.show(
-                              //         "يمكنك التجديد بعد مرور 10 ايام من موعد التجديد الاول او انتظار الاشعار",
-                              //         context,
-                              //         duration: Toast.LENGTH_LONG,
-                              //         gravity: Toast.BOTTOM);
-                              //   }
-                              // }
-                            },
+                    ? Container()
+//                 Padding(
+//                         padding: const EdgeInsets.all(5.0),
+//                         child: Container(
+//                           width:
+//                               300 /*MediaQuery.of(context).size.width*/,
+//                           height: 40,
+//                           child: new RaisedButton(
+//                             child: Row(
+//                               mainAxisAlignment: MainAxisAlignment.center,
+//                               children: <Widget>[
+//                                 new Text("تمديد الاعلان"),
+//                                 Padding(
+//                                   padding:
+//                                       const EdgeInsets.only(left: 10.0),
+//                                   child: Icon(
+//                                     Icons.check,
+//                                     color: Colors.white,
+//                                   ),
+//                                 ),
+//                               ],
+//                             ),
 //
-                            shape: new RoundedRectangleBorder(
-                                borderRadius:
-                                    new BorderRadius.circular(10.0)),
-                          ),
-                        ),
-                      )
+//                             textColor: Colors.white,
+//                             color: const Color(0xff171732),
+//                             onPressed: () {
+//                               // DateTime startdate =
+//                               //     DateTime.parse(advnNameclass.cdate);
+//                               // var newdate =
+//                               //     startdate.add(new Duration(days: 14));
+//                               // DateTime now = DateTime.now();
+//                               // var permissiondate =
+//                               //     startdate.add(new Duration(days: 10));
+//                               //
+//                               // String b = newdate.month.toString();
+//                               // if (b.length < 2) {
+//                               //   b = "0" + b;
+//                               // }
+//                               // String c = newdate.day.toString();
+//                               // if (c.length < 2) {
+//                               //   c = "0" + c;
+//                               // }
+//                               // String d = newdate.hour.toString();
+//                               // if (d.length < 2) {
+//                               //   d = "0" + d;
+//                               // }
+//                               // String e = newdate.minute.toString();
+//                               // if (e.length < 2) {
+//                               //   e = "0" + e;
+//                               // }
+//                               // String date1 =
+//                               //     '${newdate.year}-${b}-${c} ${d}:${e}:00';
+//                               //
+//                               // if (_userId == null) {
+//                               //   Toast.show(
+//                               //       "ابشر .. سجل دخول الاول طال عمرك",
+//                               //       context,
+//                               //       duration: Toast.LENGTH_LONG,
+//                               //       gravity: Toast.BOTTOM);
+//                               // } else {
+//                               //   if (now.isAfter(permissiondate)) {
+//                               //     final advdatabaseReference =
+//                               //         FirebaseDatabase.instance
+//                               //             .reference()
+//                               //             .child("advdata");
+//                               //     advdatabaseReference
+//                               //         .child(widget.cId)
+//                               //         .child(widget.cDateID)
+//                               //         .update({
+//                               //       "cdate": date1,
+//                               //     }).then((_) {
+//                               //       setState(() {
+//                               //         advnNameclass.cdate = date1;
+//                               //         showNotification(
+//                               //             date1,
+//                               //             advnNameclass.ctitle,
+//                               //             advnNameclass.cId,
+//                               //             advnNameclass.chead,
+//                               //             _username);
+//                               //
+//                               //         Toast.show("$date1تم التمديد الى ",
+//                               //             context,
+//                               //             duration: Toast.LENGTH_LONG,
+//                               //             gravity: Toast.BOTTOM);
+//                               //       });
+//                               //     });
+//                               //   } else {
+//                               //     Toast.show(
+//                               //         "يمكنك التجديد بعد مرور 10 ايام من موعد التجديد الاول او انتظار الاشعار",
+//                               //         context,
+//                               //         duration: Toast.LENGTH_LONG,
+//                               //         gravity: Toast.BOTTOM);
+//                               //   }
+//                               // }
+//                             },
+// //
+//                             shape: new RoundedRectangleBorder(
+//                                 borderRadius:
+//                                     new BorderRadius.circular(10.0)),
+//                           ),
+//                         ),
+//                       )
                     : Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: Container(
@@ -815,9 +848,9 @@ class _AdvDetailState extends State<AdvDetail> {
                                   duration: Toast.LENGTH_LONG,
                                   gravity: Toast.BOTTOM);
                             } else {
-                              if (cPhone != null) {
+                              if (ownerPhone != null) {
                                 _makePhoneCall(
-                                    'tel:${cPhone}');
+                                    'tel:${ownerPhone}');
                               } else {
                                 Toast.show("حاول تاني طال عمرك", context,
                                     duration: Toast.LENGTH_LONG,
@@ -870,38 +903,17 @@ class _AdvDetailState extends State<AdvDetail> {
                                         child: _firebasedata(
                                           index,
                                           commentlist.length,
-                                          commentlist[index].cId,
-                                          commentlist[index].cuserid,
+                                          commentlist[index].ownerId,
+                                          commentlist[index].traderid,
+                                          commentlist[index].advID,
+                                          commentlist[index].commentid,
+                                          commentlist[index].tradname,
+                                          commentlist[index].ownername,
                                           commentlist[index].cdate,
-                                          commentlist[index].cheaddate,
-                                          commentlist[index].ccoment,
-                                          commentlist[index].cname,
-                                          commentlist[index].cadvID,
+                                          commentlist[index].price,
+                                          commentlist[index].rate,
                                         ),
-//                                                    onTap: () {
-//                                                      if(_userId==commentlist[index].cuserid){
-//                                                        FirebaseDatabase.instance
-//                                                            .reference()
-//                                                            .child("commentsdata")
-//                                                            .child(widget.cId)
-//                                                            .child(commentlist[index].cheaddate)
-//                                                            .remove()
-//                                                            .whenComplete(() {
-//
-//                                                          setState(() {
-//                                                            commentlist.removeAt(index);
-//                                                          });
-//                                                          Toast.show("تم حذف التعليق", context,
-//                                                              duration: Toast.LENGTH_SHORT,
-//                                                              gravity: Toast.BOTTOM);
-//                                                        });
-//                                                      }
-//                                                      else{
-//                                                        Toast.show("ليس تعليقك", context,
-//                                                            duration: Toast.LENGTH_SHORT,
-//                                                            gravity: Toast.BOTTOM);
-//                                                      }
-//                                                    }
+
                                       );
                                     }),
                           )),
@@ -926,13 +938,13 @@ class _AdvDetailState extends State<AdvDetail> {
                                         child: TextFormField(
                                           textAlign: TextAlign.right,
                                           keyboardType:
-                                              TextInputType.text,
+                                              TextInputType.number,
                                           textDirection:
                                               TextDirection.rtl,
                                           controller: _commentController,
                                           validator: (String value) {
                                             if ((value.isEmpty)) {
-                                              return 'ابشر .. لكن اكتب تعليق الاول طال عمرك';
+                                              return 'ابشر .. لكن اكتب السعر الاول طال عمرك';
                                             }
                                           },
 
@@ -942,7 +954,7 @@ class _AdvDetailState extends State<AdvDetail> {
                                               errorStyle: TextStyle(
                                                   color: Colors.red,
                                                   fontSize: 15.0),
-                                              labelText: "التعليق",
+                                              labelText: "السعر بالدينار الاردنى",
                                               // hintText: "التعليق",
 
 //                                prefixIcon: Icon(
@@ -1038,8 +1050,8 @@ class _AdvDetailState extends State<AdvDetail> {
 //       final commentbaseReference =
 //           FirebaseDatabase.instance.reference().child("commentsdata");
 //       commentbaseReference
-//           .child(widget.cId)
-//           .child(widget.cDateID)
+//           .child(widget.userId)
+//           .child(widget.advid)
 //           .child(_userId + date)
 //           .set({
 //         'cId': widget.userId,
@@ -1139,13 +1151,15 @@ class _AdvDetailState extends State<AdvDetail> {
   Widget _firebasedata(
     index,
     length,
-    cId,
-    cuserid,
-    cdate,
-    cheaddate,
-    ccoment,
-    cname,
-    cadvID,
+   ownerId,
+   traderid,
+   advID,
+   commentid,
+   tradname,
+   ownername,
+   cdate,
+   price,
+   rate,
   ) {
     return Padding(
       padding: const EdgeInsets.only(top: 5.0, right: 5.0, left: 5.0),
@@ -1165,7 +1179,7 @@ class _AdvDetailState extends State<AdvDetail> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      _userId == commentlist[index].cuserid
+                      _userId == commentlist[index].traderid
                           ? FlatButton(
                               onPressed: () {
                                 showDialog(
@@ -1183,14 +1197,14 @@ class _AdvDetailState extends State<AdvDetail> {
                                                 print("kkkkkkkkkkkk");
                                                 if (_userId ==
                                                     commentlist[index]
-                                                        .cuserid) {
+                                                        .traderid) {
                                                   FirebaseDatabase.instance
                                                       .reference()
                                                       .child("commentsdata")
                                                       .child(widget.userId)
-                                                      .child(cadvID)
+                                                      .child(advID)
                                                       .child(commentlist[index]
-                                                          .cheaddate)
+                                                          .commentid)
                                                       .remove()
                                                       .whenComplete(() {
                                                     setState(() {
@@ -1248,7 +1262,7 @@ class _AdvDetailState extends State<AdvDetail> {
                                   child: Align(
                                       alignment: Alignment.topRight,
                                       child: Text(
-                                        cname,
+                                        tradname,
                                         style: TextStyle(
                                           color: Colors.blue,
                                           fontSize: 15,
@@ -1270,7 +1284,7 @@ class _AdvDetailState extends State<AdvDetail> {
                             child: Align(
                                 alignment: Alignment.topRight,
                                 child: Text(
-                                  ccoment,
+                                  price,
                                   textDirection: TextDirection.rtl,
                                   style: TextStyle(
                                     color: Colors.black,

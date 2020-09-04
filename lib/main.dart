@@ -3,6 +3,7 @@ import 'package:priceme/screens/addadv.dart';
 import 'package:priceme/screens/homepage.dart';
 import 'package:priceme/screens/hometest.dart';
 import 'package:priceme/screens/myadvertisement.dart';
+import 'package:priceme/screens/personalpage.dart';
 import 'package:priceme/trader/signuptrader.dart';
 
 import 'Splash.dart';

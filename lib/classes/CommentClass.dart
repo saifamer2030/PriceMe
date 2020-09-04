@@ -1,23 +1,25 @@
 class CommentClass {
-  String cId;
-  String cuserid;
+  String ownerId;
+  String traderid;
+  String advID;
+  String commentid;
+  String tradname;
+  String ownername;
   String cdate;
-  String cheaddate;
-  String ccoment;
-  String cname;
-  String cadvID;
-
+  String price;
+  String rate;
 
 
   CommentClass(
-  this.cId,
-  this.cuserid,
-  this.cdate,
-  this.cheaddate,
-  this.ccoment,
-  this.cname,
-      this.cadvID,
-
+  this.ownerId,
+  this.traderid,
+  this.advID,
+  this.commentid,
+  this.tradname,
+  this.ownername,
+      this.cdate,
+      this.price,
+      this.rate,
      );
 
 
