@@ -1,4 +1,5 @@
 
+import 'package:adobe_xd/gradient_xd_transform.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -77,6 +78,18 @@ class _SignUptraderState extends State<SignUptrader> {
 
     return Scaffold(
       body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment(1.38, -0.81),
+            end: Alignment(-1.38, 0.67),
+            colors: [
+              const Color(0xff04939b),
+              const Color(0xff008d95),
+              const Color(0xff15494a)
+            ],
+            stops: [0.0, 0.0, 1.0],
+          ),
+        ),
         child: Stack(
           children: <Widget>[
             Form(
@@ -86,6 +99,18 @@ class _SignUptraderState extends State<SignUptrader> {
                   child: ListView(
                     physics: BouncingScrollPhysics(),
                     children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.only(top: 0),
+                        child: Container(
+                          height: 170.0,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: const AssetImage('assets/images/ic_logo2.png'),
+                              fit: BoxFit.fill,
+                            ),
+                          ),
+                        ),
+                      ),
                       //getImageAsset(),
                       Padding(
                         padding: EdgeInsets.only(
@@ -94,7 +119,7 @@ class _SignUptraderState extends State<SignUptrader> {
                           child: Text(
                             "إنشاء حساب جديد",
                             style: TextStyle(
-                                color: const Color(0xffF1AB37),
+                                color: const Color(0xffff904a),
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -130,7 +155,7 @@ class _SignUptraderState extends State<SignUptrader> {
                             child: TextFormField(
                               textAlign: TextAlign.right,
                               keyboardType: TextInputType.text,
-                              style: textStyle,
+                              style: TextStyle(color: Colors.white),
                               //textDirection: TextDirection.rtl,
                               controller: nameController,
                               validator: (String value) {
@@ -141,7 +166,7 @@ class _SignUptraderState extends State<SignUptrader> {
                               decoration: InputDecoration(
                                 labelText: 'اسم التاجر',
                                 //hintText: 'Name',
-                                labelStyle: textStyle,
+                                labelStyle: TextStyle(color: Colors.white),
                                 errorStyle: TextStyle(
                                     color: Colors.red, fontSize: 15.0),
                                 // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
@@ -160,7 +185,7 @@ class _SignUptraderState extends State<SignUptrader> {
                             child: TextFormField(
                               textAlign: TextAlign.right,
                               keyboardType: TextInputType.emailAddress,
-                              style: textStyle,
+                              style: TextStyle(color: Colors.white),
                               //textDirection: TextDirection.rtl,
                               controller: emailController,
                               validator: (String value) {
@@ -177,7 +202,7 @@ class _SignUptraderState extends State<SignUptrader> {
                               decoration: InputDecoration(
                                 labelText: 'البريد الإلكترونى',
                                 //hintText: 'Name',
-                                labelStyle: textStyle,
+                                labelStyle: TextStyle(color: Colors.white),
                                 errorStyle: TextStyle(
                                     color: Colors.red, fontSize: 15.0),
                                 // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
@@ -197,7 +222,7 @@ class _SignUptraderState extends State<SignUptrader> {
                               obscureText: true,
                               textAlign: TextAlign.right,
                               keyboardType: TextInputType.text,
-                              style: textStyle,
+                              style: TextStyle(color: Colors.white),
                               //textDirection: TextDirection.rtl,
                               controller: passwordController,
                               validator: (String value) {
@@ -211,7 +236,7 @@ class _SignUptraderState extends State<SignUptrader> {
                               decoration: InputDecoration(
                                 labelText: 'كلمة السر',
                                 //hintText: 'Name',
-                                labelStyle: textStyle,
+                                labelStyle: TextStyle(color: Colors.white),
                                 errorStyle: TextStyle(
                                     color: Colors.red, fontSize: 15.0),
                                 // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
@@ -231,7 +256,7 @@ class _SignUptraderState extends State<SignUptrader> {
                               obscureText: true,
                               textAlign: TextAlign.right,
                               keyboardType: TextInputType.text,
-                              style: textStyle,
+                              style:TextStyle(color: Colors.white),
                               //textDirection: TextDirection.rtl,
                               controller: confirmpasswordController,
                               validator: (String value) {
@@ -248,7 +273,7 @@ class _SignUptraderState extends State<SignUptrader> {
                               decoration: InputDecoration(
                                 labelText: 'تأكيد كلمة السر',
                                 //hintText: 'Name',
-                                labelStyle: textStyle,
+                                labelStyle: TextStyle(color: Colors.white),
                                 errorStyle: TextStyle(
                                     color: Colors.red, fontSize: 15.0),
                                 // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
@@ -266,7 +291,7 @@ class _SignUptraderState extends State<SignUptrader> {
                           child: Text(
                             "معلومات إضافية",
                             style: TextStyle(
-                                color: const Color(0xffF1AB37),
+                                color:const Color(0xffff904a),
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -284,7 +309,7 @@ class _SignUptraderState extends State<SignUptrader> {
                             child: TextFormField(
                               textAlign: TextAlign.right,
                               keyboardType: TextInputType.text,
-                              style: textStyle,
+                              style:TextStyle(color: Colors.white),
                               //textDirection: TextDirection.rtl,
                               controller: workshopnameController,
                               validator: (String value) {
@@ -295,7 +320,7 @@ class _SignUptraderState extends State<SignUptrader> {
                               decoration: InputDecoration(
                                 labelText: 'اسم المحل',
                                 //hintText: 'Name',
-                                labelStyle: textStyle,
+                                labelStyle: TextStyle(color: Colors.white),
                                 errorStyle: TextStyle(
                                     color: Colors.red, fontSize: 15.0),
                                 // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
@@ -314,7 +339,7 @@ class _SignUptraderState extends State<SignUptrader> {
                             child: TextFormField(
                               textAlign: TextAlign.right,
                               keyboardType: TextInputType.number,
-                              style: textStyle,
+                              style: TextStyle(color: Colors.white),
                               //textDirection: TextDirection.rtl,
                               controller: phoneController,
                               validator: (String value) {
@@ -328,7 +353,7 @@ class _SignUptraderState extends State<SignUptrader> {
                               decoration: InputDecoration(
                                 labelText: 'رقم الهاتف',
                                 //hintText: 'Name',
-                                labelStyle: textStyle,
+                                labelStyle:TextStyle(color: Colors.white),
                                 errorStyle: TextStyle(
                                     color: Colors.red, fontSize: 15.0),
                                 // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
@@ -350,7 +375,7 @@ class _SignUptraderState extends State<SignUptrader> {
                           "العمل",
                           textDirection: TextDirection.rtl,
                           style: TextStyle(
-                              color: const Color(0xffF1AB37),
+                              color:const Color(0xffff904a),
                               fontSize: 20,
                               fontWeight: FontWeight.bold),
                         ),
@@ -374,7 +399,7 @@ class _SignUptraderState extends State<SignUptrader> {
                                         child: Text(
                                           value,
                                           style: TextStyle(
-                                              color: const Color(0xffF1AB37),
+                                              color:  const Color(0xffff2121),
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold),
                                         ));
@@ -404,7 +429,7 @@ class _SignUptraderState extends State<SignUptrader> {
                               child: Icon(
                                 images.length>0 ? Icons.check_circle : Icons
                                     .add_photo_alternate,
-                                color: Colors.greenAccent,
+                                color: const Color(0xffff904a),
                                 size: 50,
                               ),
                             ),
@@ -416,7 +441,7 @@ class _SignUptraderState extends State<SignUptrader> {
                                 "يرجى الضغط على الصورة لتحميل صور الاعمال السابقة",
                                 textDirection: TextDirection.rtl,
                                 style: TextStyle(
-                                    color: Colors.black,
+                                    color: Colors.white,
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -461,7 +486,7 @@ class _SignUptraderState extends State<SignUptrader> {
                               child: Icon(
                                 fromPlaceLat == null ? Icons.gps_fixed : Icons.check_circle
                                     ,
-                                color: Colors.purpleAccent,
+                                color:   const Color(0xffff904a),
                                 size: 50,
                               ),
                             ),
@@ -473,7 +498,7 @@ class _SignUptraderState extends State<SignUptrader> {
                                 "يرجى الضغط على الصورة لتحديد موقع المحل",
                                 textDirection: TextDirection.rtl,
                                 style: TextStyle(
-                                    color: Colors.black,
+                                    color: Colors.white,
                                     fontSize: 15,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -495,11 +520,22 @@ class _SignUptraderState extends State<SignUptrader> {
                             top: _minimumPadding, bottom: _minimumPadding),
                         child: Container(
                           height: 50.0,
-                          child: Material(
-                            borderRadius: BorderRadius.circular(20.0),
-                            shadowColor: const Color(0xffFCC201),
-                            color: const Color(0xffF1AB37),
-                            elevation: 3.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(9.0),
+                            gradient: RadialGradient(
+                              center: Alignment(-0.93, 0.0),
+                              radius: 1.092,
+                              colors: [
+                                const Color(0xffff2121),
+                                const Color(0xffff5423),
+                                const Color(0xffff7024),
+                                const Color(0xffff904a)
+                              ],
+                              stops: [0.0, 0.562, 0.867, 1.0],
+                              transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837,
+                                  0.0, -0.419, Alignment(-0.93, 0.0)),
+                            ),
+                          ),
                             child: GestureDetector(
                               onTap: () async {
                                 if (_formKey.currentState.validate()) {
@@ -536,7 +572,7 @@ class _SignUptraderState extends State<SignUptrader> {
                                 ),
                               ),
                             ),
-                          ),
+
                         ),
                       ),
 

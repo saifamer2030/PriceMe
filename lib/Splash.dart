@@ -6,31 +6,34 @@ import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:priceme/FragmentNavigation.dart';
 import 'package:priceme/screens/hometest.dart';
 import 'package:priceme/screens/network_connection.dart';
 import 'package:priceme/screens/signin.dart';
 import 'package:priceme/screens/signinphone.dart';
-import 'package:priceme/trader/login.dart';
 
-import 'Logintrader.dart';
+import 'trader/Logintrader.dart';
 import 'classes/sharedpreftype.dart';
 
-class Splash  extends StatefulWidget {
+class Splash extends StatefulWidget {
+
   @override
   _SplashState createState() => _SplashState();
 }
 
-class _SplashState extends State<Splash> {
+class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   var _formKey = GlobalKey<FormState>();
   final double _minimumPadding = 5.0;
   dynamic _userData;
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _codeController = TextEditingController();
+  AnimationController _controller;
 
   bool _load = false;
   bool isLoggedIn = false;
   var profileData;
   var facebookLogin = FacebookLogin();
+
   void onLoginStatusChanged(bool isLoggedIn, {profileData}) {
     setState(() {
       this.isLoggedIn = isLoggedIn;
@@ -40,27 +43,38 @@ class _SplashState extends State<Splash> {
 
   @override
   void initState() {
+    ///////*****************************************
+    _controller = AnimationController(
+        duration: Duration(seconds: 5),
+//        lowerBound: 200,
+        upperBound: 150.0,
+        vsync: this);
+
+    _controller.addListener(() {
+      setState(() {});
+    });
+    _controller.forward();
     super.initState();
     _checkIfIsLogged();
-    SessionManager prefs =  SessionManager();
-    Future<String> authType= prefs.getAuthType();
+    SessionManager prefs = SessionManager();
+    Future<String> authType = prefs.getAuthType();
     authType.then((data) {
       print("authToken " + data.toString());
-      if(data.toString()=="user"){
+      if (data.toString() == "user") {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => HomeTest()));
-      }else if (data.toString()=="trader"){
+            context, MaterialPageRoute(builder: (context) =>FragmentPriceMe(["sssss","ddddd"])));
+      } else if (data.toString() == "trader") {
         Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => HomeTest()));
+            context, MaterialPageRoute(builder: (context) => FragmentPriceMe(["sssss","ddddd"])));
       }
-    },onError: (e) {
+    }, onError: (e) {
       print(e);
     });
-
+  }
+  @override
+  void dispose() {
+    _controller?.dispose();
+    super.dispose();
   }
   _checkIfIsLogged() async {
     final accessToken = await FacebookAuth.instance.isLogged;
@@ -71,234 +85,79 @@ class _SplashState extends State<Splash> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     Widget loadingIndicator = _load
         ? new Container(
-      child: SpinKitCircle(
-        color: const Color(0xffff5423),
-      ),
-    )
+            child: SpinKitCircle(
+              color: const Color(0xffff5423),
+            ),
+          )
         : new Container();
     return Scaffold(
-      body:
-          Stack(
-            children: [
-              Container(
-                width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment(1.38, -0.81),
-                    end: Alignment(-1.38, 0.67),
-                    colors: [ const Color(0xff008D95), const Color(0xff15494A),],
-                    stops: [0.0, 1.0],
+      body: Stack(
+        children: [
+          Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment(1.38, -0.81),
+                end: Alignment(-1.38, 0.67),
+                colors: [
+                  const Color(0xff008D95),
+                  const Color(0xff15494A),
+                ],
+                stops: [0.0, 1.0],
+              ),
+            ),
+            child: ListView(
+              physics: BouncingScrollPhysics(),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 100),
+                  child: Center(
+                    child: Container(
+//                      width: _controller.value,
+//                      height: _controller.value,
+                      height: 150.0,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage('assets/images/ic_logo2.png'),
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-                child:ListView(
-                  physics: BouncingScrollPhysics(),
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(top: 100),
+                Padding(
+                  padding: const EdgeInsets.only(top: 50, left: 20, right: 20),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignInPhone()));
+                    },
+                    child: Container(
+                      width: 308.0,
+                      height: 47.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(9.0),
+                        border: Border.all(
+                            width: 1.0, color: const Color(0xffff5423)),
+                      ),
                       child: Center(
-                        child: Container(
-                          height: 150.0,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image:AssetImage('assets/images/ic_logo2.png'),
-                              fit: BoxFit.fill,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Icon(
+                              Icons.phone_android,
+                              color: Colors.blue[800],
+                              size: 40,
                             ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 50, left: 20, right: 20),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SignInPhone()));
-                        },
-                        child: Container(
-                          width: 308.0,
-                          height: 47.0,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(9.0),
-                            border: Border.all(
-                                width: 1.0, color: const Color(0xffff5423)),
-                          ),
-                          child: Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                Icon(
-                                  Icons.phone_android,
-                                  color: Colors.blue[800],
-                                  size: 40,
-                                ),
-                                Text(
-                                  'تسجيل الدخول بالهاتف',
-                                  style: TextStyle(
-                                    fontFamily: 'Helvetica',
-                                    fontSize: 15,
-                                    color: const Color(0xffffffff),
-                                    height: 1,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-                      child: InkWell(
-                        onTap: () {
-                          setState(() {
-                            _load = true;
-                          });
-                          signInWithGoogle().whenComplete(() {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) {
-                                  return HomeTest();
-                                },
-                              ),
-                            );
-                          });
-                        },
-                        child: Container(
-                          width: 308.0,
-                          height: 47.0,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(9.0),
-                            border: Border.all(
-                                width: 1.0, color: const Color(0xffff5423)),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Image(
-                                  image:
-                                  AssetImage("assets/images/google_logo.png"),
-                                  height: 35.0),
-                              Text(
-                                'تسجيل الدخول جوجل',
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 15,
-                                  color: const Color(0xffffffff),
-                                  height: 1,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-                      child: InkWell(
-                        onTap: () {
-                          _login();
-                        },
-                        child: Container(
-                          width: 308.0,
-                          height: 47.0,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(9.0),
-                            border: Border.all(
-                                width: 1.0, color: const Color(0xffff5423)),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Image(
-                                  image:
-                                  AssetImage("assets/images/facebook_logo.png"),
-                                  height: 50.0),
-                              //assets/images/facebook_logo.png
-
-                              Text(
-                                'تسجيل الدخول فيس بوك',
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 15,
-                                  color: const Color(0xffffffff),
-                                  height: 1,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-                      child: InkWell(
-                        onTap: () {
-                         // _login();
-                        },
-                        child: Container(
-                          width: 308.0,
-                          height: 47.0,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(9.0),
-                            border: Border.all(
-                                width: 1.0, color: const Color(0xffff5423)),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              // Image(
-                              //     image:
-                              //     AssetImage("assets/images/facebook_logo.png"),
-                              //     height: 50.0),
-                              //assets/images/facebook_logo.png
-
-                              Text(
-                                'الدخول كزائر',
-                                style: TextStyle(
-                                  fontFamily: 'Helvetica',
-                                  fontSize: 15,
-                                  color: const Color(0xffffffff),
-                                  height: 1,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    InkWell(
-                      onTap: (){
-                        Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) {
-                          return MyLogIn();
-                        }));
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 20,left: 20,right: 20),
-                        child: Container(
-                          width: 308.0,
-                          height: 47.0,
-//                          decoration: BoxDecoration(
-//                            borderRadius: BorderRadius.circular(9.0),
-//                            border:
-//                            Border.all(width: 1.0, color: const Color(0xffff5423)),
-//                          ),
-                          child: Center(
-                            child: Text(
-                              "هل انت تاجر؟...",
+                            Text(
+                              'تسجيل الدخول بالهاتف',
                               style: TextStyle(
                                 fontFamily: 'Helvetica',
                                 fontSize: 15,
@@ -307,30 +166,185 @@ class _SplashState extends State<Splash> {
                               ),
                               textAlign: TextAlign.center,
                             ),
-                          ),
+                          ],
                         ),
                       ),
                     ),
-
-                  ],
+                  ),
                 ),
-              ),
-              Align(
-                child: loadingIndicator,
-                alignment: FractionalOffset.center,
-              ),
-            ],
+                Padding(
+                  padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+                  child: InkWell(
+                    onTap: () {
+                      setState(() {
+                        _load = true;
+                      });
+                      signInWithGoogle().whenComplete(() {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) {
+                              return HomeTest();
+                            },
+                          ),
+                        );
+                      });
+                    },
+                    child: Container(
+                      width: 308.0,
+                      height: 47.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(9.0),
+                        border: Border.all(
+                            width: 1.0, color: const Color(0xffff5423)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Image(
+                              image:
+                                  AssetImage("assets/images/google_logo.png"),
+                              height: 35.0),
+                          Text(
+                            'تسجيل الدخول جوجل',
+                            style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 15,
+                              color: const Color(0xffffffff),
+                              height: 1,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+                  child: InkWell(
+                    onTap: () {
+                      _login();
+                    },
+                    child: Container(
+                      width: 308.0,
+                      height: 47.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(9.0),
+                        border: Border.all(
+                            width: 1.0, color: const Color(0xffff5423)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Image(
+                              image:
+                                  AssetImage("assets/images/facebook_logo.png"),
+                              height: 50.0),
+                          //assets/images/facebook_logo.png
 
+                          Text(
+                            'تسجيل الدخول فيس بوك',
+                            style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 15,
+                              color: const Color(0xffffffff),
+                              height: 1,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+                  child: InkWell(
+                    onTap: () {
+                      // _login();
+                    },
+                    child: Container(
+                      width: 308.0,
+                      height: 47.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(9.0),
+                        border: Border.all(
+                            width: 1.0, color: const Color(0xffff5423)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          // Image(
+                          //     image:
+                          //     AssetImage("assets/images/facebook_logo.png"),
+                          //     height: 50.0),
+                          //assets/images/facebook_logo.png
+
+                          Text(
+                            'الدخول كزائر',
+                            style: TextStyle(
+                              fontFamily: 'Helvetica',
+                              fontSize: 15,
+                              color: const Color(0xffffffff),
+                              height: 1,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return Logintrader();
+                    }));
+                  },
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(top: 20, left: 20, right: 20),
+                    child: Container(
+                      width: 308.0,
+                      height: 47.0,
+//                          decoration: BoxDecoration(
+//                            borderRadius: BorderRadius.circular(9.0),
+//                            border:
+//                            Border.all(width: 1.0, color: const Color(0xffff5423)),
+//                          ),
+                      child: Center(
+                        child: Text(
+                          "هل انت تاجر؟...",
+                          style: TextStyle(
+                            fontFamily: 'Helvetica',
+                            fontSize: 15,
+                            color: const Color(0xffffffff),
+                            height: 1,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-
-            );
-
+          Align(
+            child: loadingIndicator,
+            alignment: FractionalOffset.center,
+          ),
+        ],
+      ),
+    );
   }
+
   Future<bool> loginUserphone(String phone, BuildContext context) async {
     FirebaseAuth _auth = FirebaseAuth.instance;
 
     _auth.verifyPhoneNumber(
-      //phoneNumber: "+966$phone",
+        //phoneNumber: "+966$phone",
         phoneNumber: "+2$phone",
         timeout: Duration(seconds: 60),
         verificationCompleted: (AuthCredential credential) async {
@@ -407,11 +421,11 @@ class _SplashState extends State<Splash> {
                       onPressed: () async {
                         final code = _codeController.text.trim();
                         AuthCredential credential =
-                        PhoneAuthProvider.getCredential(
-                            verificationId: verificationId, smsCode: code);
+                            PhoneAuthProvider.getCredential(
+                                verificationId: verificationId, smsCode: code);
 
                         AuthResult result =
-                        await _auth.signInWithCredential(credential);
+                            await _auth.signInWithCredential(credential);
 
                         //FirebaseUser user = result.user;
                         //createRecord(result.user.uid);
@@ -433,11 +447,13 @@ class _SplashState extends State<Splash> {
         AuthCredential credential = FacebookAuthProvider.getCredential(
             accessToken: result.accessToken.token);
         await FirebaseAuth.instance.signInWithCredential(credential);
-        setState(() => _userData = userData
-        );
+        setState(() => _userData = userData);
 
         print("kkk" + userData['id']);
-        Firestore.instance.collection('users').document(userData['id']).setData({
+        Firestore.instance
+            .collection('users')
+            .document(userData['id'])
+            .setData({
           'uid': userData['id'],
           'email': userData['email'],
 //            'name': userData.displayName,
@@ -446,10 +462,14 @@ class _SplashState extends State<Splash> {
           'cType': "user",
         });
 
+//        Navigator.pushReplacement(
+//            context,
+//            MaterialPageRoute(
+//                builder: (context) => _displayUserData(userData)));
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => _displayUserData(userData)));
+                builder: (context) => FragmentPriceMe(["regionlist"])));
         break;
       case FacebookAuthLoginResponse.cancelled:
         print("login cancelled");
@@ -460,17 +480,14 @@ class _SplashState extends State<Splash> {
     }
   }
 
-
   _logOut() async {
     await FacebookAuth.instance.logOut();
     setState(() => _userData = null);
   }
 
-
   void initiateFacebookLogin() async {
     var facebookLogin = FacebookLogin();
-    var facebookLoginResult =
-    await facebookLogin.logIn(['email']);
+    var facebookLoginResult = await facebookLogin.logIn(['email']);
     switch (facebookLoginResult.status) {
       case FacebookLoginStatus.error:
         print("Error");
@@ -521,10 +538,6 @@ class _SplashState extends State<Splash> {
     print("Logged out");
   }
 
-
-
-
-
   /**void createRecord(signedInUserid) {
       setState(() {
       _load = false;
@@ -565,7 +578,7 @@ class _SplashState extends State<Splash> {
 
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =
-    await googleSignInAccount.authentication;
+        await googleSignInAccount.authentication;
 
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleSignInAuthentication.accessToken,
@@ -628,6 +641,4 @@ class _SplashState extends State<Splash> {
       'cType': "user",
     });
   }
-
 }
-
