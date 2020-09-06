@@ -6,8 +6,8 @@ class CommentClass {
   String tradname;
   String ownername;
   String cdate;
-  String price;
-  String rate;
+  double price;
+  double rate;
 
 
   CommentClass(
