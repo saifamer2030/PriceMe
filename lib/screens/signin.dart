@@ -10,12 +10,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:priceme/screens/signinphone.dart';
-import 'package:priceme/trader/login.dart';
 import 'package:toast/toast.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:http/http.dart' as http;
 
-import '../Logintrader.dart';
+import '../trader/Logintrader.dart';
 import 'hometest.dart';
 import 'network_connection.dart';
 

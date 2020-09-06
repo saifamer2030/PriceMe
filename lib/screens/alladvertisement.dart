@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -15,7 +14,10 @@ import 'package:toast/toast.dart';
 import 'advdetail.dart';
 
 class AllAdvertisement extends StatefulWidget {
-  AllAdvertisement();
+  List<String> regionlist = [];
+
+  AllAdvertisement(this.regionlist);
+
   @override
   _AllAdvertisementState createState() => _AllAdvertisementState();
 }
@@ -23,8 +25,7 @@ class AllAdvertisement extends StatefulWidget {
 class _AllAdvertisementState extends State<AllAdvertisement> {
   List<AdvClass> advlist = [];
   bool _load = false;
-  String _userId,worktype;
-
+  String _userId, worktype;
 
   @override
   void initState() {
@@ -32,31 +33,35 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
 
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
-        builder: (context) => SignIn(), maintainState: false))
-        : setState(() {_userId = user.uid;
-    var userQuery = Firestore.instance.collection('users').where('uid', isEqualTo: _userId).limit(1);
-    userQuery.getDocuments().then((data){
-      if (data.documents.length > 0){
-        setState(() {
-          // firstName = data.documents[0].data['firstName'];
-          // lastName = data.documents[0].data['lastName'];
-          worktype=data.documents[0].data['worktype'];print("mmm"+worktype);
-        });
-      }
-    });
-        }));
+            builder: (context) => SignIn(), maintainState: false))
+        : setState(() {
+            _userId = user.uid;
+            var userQuery = Firestore.instance
+                .collection('users')
+                .where('uid', isEqualTo: _userId)
+                .limit(1);
+            userQuery.getDocuments().then((data) {
+              if (data.documents.length > 0) {
+                setState(() {
+                  // firstName = data.documents[0].data['firstName'];
+                  // lastName = data.documents[0].data['lastName'];
+                  worktype = data.documents[0].data['worktype'];
+                  print("mmm" + worktype);
+                });
+              }
+            });
+          }));
   }
 
   final double _minimumPadding = 5.0;
   var _controller = ScrollController();
 
-
   @override
   Widget build(BuildContext context) {
     Widget loadingIndicator = _load
         ? new Container(
-      child: SpinKitCircle(color: Colors.black),
-    )
+            child: SpinKitCircle(color: Colors.black),
+          )
         : new Container();
     TextStyle textStyle = Theme.of(context).textTheme.subtitle;
     return Scaffold(
@@ -82,9 +87,14 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
         ),
       ),
       body: Container(
-        child:  StreamBuilder(
-          stream: Firestore.instance.collection('advertisments').orderBy('carrange', descending: true)//.where("cproblemtype", isEqualTo:"قطع غيار")
-              .where("mfault", isEqualTo:worktype).snapshots(),
+        child: StreamBuilder(
+          stream: Firestore.instance
+              .collection('advertisments')
+              .orderBy('carrange',
+                  descending:
+                      true) //.where("cproblemtype", isEqualTo:"قطع غيار")
+              .where("mfault", isEqualTo: worktype)
+              .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
               return Center(child: Text("Loading.."));
@@ -96,7 +106,8 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
                 controller: _controller,
                 itemCount: snapshot.data.documents.length,
                 itemBuilder: (context, index) {
-                  return  firebasedata(context,index, snapshot.data.documents[index]);
+                  return firebasedata(
+                      context, index, snapshot.data.documents[index]);
                 });
           },
         ),
@@ -104,8 +115,9 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
     );
   }
 
-  Widget firebasedata(BuildContext context,int index, DocumentSnapshot document) {
-   return Padding(
+  Widget firebasedata(
+      BuildContext context, int index, DocumentSnapshot document) {
+    return Padding(
       padding: const EdgeInsets.all(2.0),
       child: Card(
         shape: new RoundedRectangleBorder(
@@ -120,148 +132,111 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
                 MaterialPageRoute(
                     builder: (context) =>
                         AdvDetail(document['userId'], document['advid'])));
-
           },
           child: Container(
               child: Row(
+            children: <Widget>[
+              Column(
                 children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Container(
-                        color: Colors.white,
-                        child: Stack(
-                          children: <Widget>[
-                            Center(
-                              child: document['curi'] == null
-                                  ? new Image.asset("assets/images/ic_logo.png",
-                              )
-                                  : new Image.network(
-                                document['curi'],
-                                fit: BoxFit.fitHeight,
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(2.0),
-                                color:const Color(0xff444460),
-                              ),
-                              child: Padding(
-                                  padding: const EdgeInsets.all(5.0),
-                                  child:  Text(
-                                      document['cproblemtype'],
-                                    textDirection: TextDirection.rtl,
-                                    textAlign: TextAlign.right,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-//                                          fontFamily: 'Estedad-Black',
-                                        fontStyle: FontStyle.normal),
-                                  )
-                              ),
-
-                            ),
-
-
-
-
-
-                          ],
+                  Container(
+                    color: Colors.white,
+                    child: Stack(
+                      children: <Widget>[
+                        Center(
+                          child: document['curi'] == null
+                              ? new Image.asset(
+                                  "assets/images/ic_logo.png",
+                                )
+                              : new Image.network(
+                                  document['curi'],
+                                  fit: BoxFit.fitHeight,
+                                ),
                         ),
-                        width: 100,
-                        height: 130,
-                      ),
-                      Container(
-                          width: 100,
+                        Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(2.0),
-                            color:Colors.black12,
+                            color: const Color(0xff444460),
                           ),
-                          child:  Padding(
-                            padding: const EdgeInsets.only(right: 5),
-                            child: Text(
-                              "منذ: ${ document['cdate']}",
-                              textDirection: TextDirection.rtl,
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 10,
-//                                  fontFamily: 'Estedad-Black',
-                                  fontStyle: FontStyle.normal),
-                            ),
-                          )
-
-                      ),
-                    ],
-                  ),
-                  Container(
-                    height: 130,
-                    child: Stack(
-                      //alignment: Alignment.bottomCenter,
-                      children: <Widget>[
-                        Positioned(
-                          top: 0,
-                          right: 0,
                           child: Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Text(
-                              document['ctitle'],
-                              textDirection: TextDirection.rtl,
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                                  color: Colors.green,
-//                                  fontFamily: 'Estedad-Black',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 15.0,
-                                  fontStyle: FontStyle.normal),
-                            ),
-                          ),
-                        ),
-                        Positioned(
-                          top: 50,
-                          right: 0,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: <Widget>[
-
-                              SizedBox(
-                                height: _minimumPadding,
-                                width: _minimumPadding*4,
-                              ),
-
-                              SizedBox(
-                                height: _minimumPadding,
-                                width: _minimumPadding,
-                              ),
-                              document['mfault'] == ""
-                                  ? Text(document['sparepart'])
-                                  : Text(
-                                "${document['mfault']}-${document['subfault']}",
+                              padding: const EdgeInsets.all(5.0),
+                              child: Text(
+                                document['cproblemtype'],
                                 textDirection: TextDirection.rtl,
                                 textAlign: TextAlign.right,
                                 style: TextStyle(
-//                                      fontFamily: 'Estedad-Black',
-                                    fontSize: 10.0,
+                                    color: Colors.white,
+                                    fontSize: 12,
+//                                          fontFamily: 'Estedad-Black',
                                     fontStyle: FontStyle.normal),
-                              ),
-                              new Icon(
-                                Icons.directions_car,
-                                color: Colors.black,
-                                size: 15,
-                              ),
-                            ],
-                          ),
+                              )),
                         ),
-
-                        Positioned(
-                          top: 100,
-                          right: 0,
-                          child: Padding(
-                            padding: const EdgeInsets.all(0.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Text(
-                                  document['fPlaceName'],
+                      ],
+                    ),
+                    width: 100,
+                    height: 130,
+                  ),
+                  Container(
+                      width: 100,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(2.0),
+                        color: Colors.black12,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(right: 5),
+                        child: Text(
+                          "منذ: ${document['cdate']}",
+                          textDirection: TextDirection.rtl,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 10,
+//                                  fontFamily: 'Estedad-Black',
+                              fontStyle: FontStyle.normal),
+                        ),
+                      )),
+                ],
+              ),
+              Container(
+                height: 130,
+                child: Stack(
+                  //alignment: Alignment.bottomCenter,
+                  children: <Widget>[
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: Text(
+                          document['ctitle'],
+                          textDirection: TextDirection.rtl,
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                              color: Colors.green,
+//                                  fontFamily: 'Estedad-Black',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15.0,
+                              fontStyle: FontStyle.normal),
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      top: 50,
+                      right: 0,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          SizedBox(
+                            height: _minimumPadding,
+                            width: _minimumPadding * 4,
+                          ),
+                          SizedBox(
+                            height: _minimumPadding,
+                            width: _minimumPadding,
+                          ),
+                          document['mfault'] == ""
+                              ? Text(document['sparepart'])
+                              : Text(
+                                  "${document['mfault']}-${document['subfault']}",
                                   textDirection: TextDirection.rtl,
                                   textAlign: TextAlign.right,
                                   style: TextStyle(
@@ -269,35 +244,59 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
                                       fontSize: 10.0,
                                       fontStyle: FontStyle.normal),
                                 ),
-                                new Icon(
-                                  Icons.location_on,
-                                  color: Colors.black,
-                                  size: 15,
-                                ),
-
-                              ],
-                            ),
+                          new Icon(
+                            Icons.directions_car,
+                            color: Colors.black,
+                            size: 15,
                           ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                        ],
+                      ),
+                    ),
+                    Positioned(
+                      top: 100,
+                      right: 0,
+                      child: Padding(
+                        padding: const EdgeInsets.all(0.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                  left: 10, right: 5, top: 5, bottom: 5),
-                              child: Text(
-                                "                                                                    ",
-                                textDirection: TextDirection.rtl,
-                                textAlign: TextAlign.right,
-                              ),
+                            Text(
+                              document['fPlaceName'],
+                              textDirection: TextDirection.rtl,
+                              textAlign: TextAlign.right,
+                              style: TextStyle(
+//                                      fontFamily: 'Estedad-Black',
+                                  fontSize: 10.0,
+                                  fontStyle: FontStyle.normal),
+                            ),
+                            new Icon(
+                              Icons.location_on,
+                              color: Colors.black,
+                              size: 15,
                             ),
                           ],
                         ),
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              left: 10, right: 5, top: 5, bottom: 5),
+                          child: Text(
+                            "                                                                    ",
+                            textDirection: TextDirection.rtl,
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
                       ],
                     ),
-                  ),
-                ],
-              )),
+                  ],
+                ),
+              ),
+            ],
+          )),
         ),
       ),
     );
