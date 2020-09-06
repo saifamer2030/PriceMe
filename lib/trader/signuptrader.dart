@@ -9,6 +9,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
+import 'package:priceme/screens/alladvertisement.dart';
 import 'package:priceme/screens/cur_loc.dart';
 import 'package:priceme/screens/network_connection.dart';
 import 'dart:io';
@@ -18,7 +19,8 @@ import 'dart:math' as Math;
 
 class SignUptrader extends StatefulWidget {
   List<String> faultsList = [];
-  SignUptrader(this.faultsList);
+  List<String> sparesList = [];
+  SignUptrader(this.faultsList,this.sparesList);
   @override
   _SignUptraderState createState() => _SignUptraderState();
 }
@@ -28,14 +30,14 @@ class _SignUptraderState extends State<SignUptrader> {
   String url1;
   String imagepathes = '';
   List<String> urlList = [];
-
+  List<String> _typearray=["تاجر صيانة","تاجر قطع"];
   List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
   var _formKey = GlobalKey<FormState>();
   LatLng fromPlace, toPlace ;
   String fromPlaceLat , fromPlaceLng , fPlaceName ;
   Map <String , dynamic > sendData = Map();
-
+  String workshoptype;
 
   //var _typearray = DefConstants.countriesArray;
 
@@ -51,16 +53,19 @@ class _SignUptraderState extends State<SignUptrader> {
   TextEditingController workshopnameController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
 
-  //var _typecurrentItemSelected = '';
-  var _workcurrentItemSelected = '';
+  var _typecurrentItemSelected = '';
+  var _faultcurrentItemSelected = '';
+ var _sparecurrentItemSelected="";
 
 
   @override
   void initState() {
     super.initState();
 
-    // _typecurrentItemSelected = _typearray[0];
-    _workcurrentItemSelected = widget.faultsList[0];
+     _typecurrentItemSelected = _typearray[0];
+    _faultcurrentItemSelected = widget.faultsList[0];
+    _sparecurrentItemSelected = widget.sparesList[0];
+workshoptype=_faultcurrentItemSelected;
   }
 
   @override
@@ -393,7 +398,7 @@ class _SignUptraderState extends State<SignUptrader> {
                               child: Align(
                                 alignment: Alignment.centerRight,
                                 child: DropdownButton<String>(
-                                  items: widget.faultsList.map((String value) {
+                                  items: _typearray.map((String value) {
                                     return DropdownMenuItem<String>(
                                         value: value,
                                         child: Text(
@@ -404,10 +409,83 @@ class _SignUptraderState extends State<SignUptrader> {
                                               fontWeight: FontWeight.bold),
                                         ));
                                   }).toList(),
-                                  value: _workcurrentItemSelected,
+                                  value: _typecurrentItemSelected,
                                   onChanged: (String newValueSelected) {
                                     // Your code to execute, when a menu item is selected from dropdown
-                                    _onDropDownItemSelectedWork(
+                                    _onDropDownItemSelectedtype(
+                                        newValueSelected);
+                                  },
+                                ),
+                              )),
+                        ),
+                      ),
+                      SizedBox(
+                        height: _minimumPadding,
+                        width: _minimumPadding,
+                      ),
+                      _typecurrentItemSelected== _typearray[0]?Padding(
+                         padding: EdgeInsets.only(
+                             top: _minimumPadding, bottom: _minimumPadding),
+                         child: Container(
+                           height: 40.0,
+                         //  width: MediaQuery.of(context).size.width/2.3,
+                           child: Material(
+                               borderRadius: BorderRadius.circular(5.0),
+                               shadowColor: const Color(0xffdddddd),
+                               color: const Color(0xffe7e7e7),
+                               elevation: 2.0,
+                               child: Align(
+                                 alignment: Alignment.centerRight,
+                                 child: DropdownButton<String>(
+                                   items: widget.faultsList.map((String value) {
+                                     return DropdownMenuItem<String>(
+                                         value: value,
+                                         child: Text(
+                                           value,
+                                           style: TextStyle(
+                                               color:  const Color(0xffff2121),
+                                               fontSize: 15,
+                                               fontWeight: FontWeight.bold),
+                                         ));
+                                   }).toList(),
+                                   value: _faultcurrentItemSelected,
+                                   onChanged: (String newValueSelected) {
+                                     // Your code to execute, when a menu item is selected from dropdown
+                                     _onDropDownItemSelectedfault(
+                                         newValueSelected);
+                                   },
+                                 ),
+                               )),
+                         ),
+                       ):Padding(
+                        padding: EdgeInsets.only(
+                            top: _minimumPadding, bottom: _minimumPadding),
+                        child: Container(
+                          height: 40.0,
+                          // width: MediaQuery.of(context).size.width/2.3,
+                          child: Material(
+                              borderRadius: BorderRadius.circular(5.0),
+                              shadowColor: const Color(0xffdddddd),
+                              color: const Color(0xffe7e7e7),
+                              elevation: 2.0,
+                              child: Align(
+                                alignment: Alignment.centerRight,
+                                child: DropdownButton<String>(
+                                  items: widget.sparesList.map((String value) {
+                                    return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(
+                                          value,
+                                          style: TextStyle(
+                                              color:  const Color(0xffff2121),
+                                              fontSize: 15,
+                                              fontWeight: FontWeight.bold),
+                                        ));
+                                  }).toList(),
+                                  value: _sparecurrentItemSelected,
+                                  onChanged: (String newValueSelected) {
+                                    // Your code to execute, when a menu item is selected from dropdown
+                                    _onDropDownItemSelectedspare(
                                         newValueSelected);
                                   },
                                 ),
@@ -588,17 +666,24 @@ class _SignUptraderState extends State<SignUptrader> {
     );
   }
 
-//  void _onDropDownItemSelectedType(String newValueSelected) {
-//    setState(() {
-//      this._typecurrentItemSelected = newValueSelected;
-//    });
-//  }
-  void _onDropDownItemSelectedWork(String newValueSelected) {
+ void _onDropDownItemSelectedtype(String newValueSelected) {
+   setState(() {
+     this._typecurrentItemSelected = newValueSelected;
+   });
+ }
+  void _onDropDownItemSelectedfault(String newValueSelected) {
     setState(() {
-      this._workcurrentItemSelected = newValueSelected;
+      this._faultcurrentItemSelected = newValueSelected;
+      workshoptype=newValueSelected;
     });
   }
+  void _onDropDownItemSelectedspare(String newValueSelected) {
+    setState(() {
+      this._faultcurrentItemSelected = newValueSelected;
+      workshoptype=newValueSelected;
 
+    });
+  }
   Future<void> loadAssets() async {
     List<Asset> resultList = List<Asset>();
     String error = 'No Error Dectected';
@@ -669,16 +754,18 @@ class _SignUptraderState extends State<SignUptrader> {
       'fromPLat': fromPlaceLat,
       'fromPLng': fromPlaceLng,
       'fPlaceName':fPlaceName,
-      'worktype': _workcurrentItemSelected,
+      'worktype': workshoptype,
       'workshopname': workshopnameController.text,
       'cType': "trader",
+      'traderType': _typecurrentItemSelected,
+
     }).whenComplete(() {
       SessionManager prefs =  SessionManager();
       prefs.setAuthType("trader");
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => ConnectionScreen()));
+              builder: (context) => AllAdvertisement()));
     });
   }
 

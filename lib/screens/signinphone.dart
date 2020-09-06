@@ -8,6 +8,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:toast/toast.dart';
 
+import '../FragmentNavigation.dart';
 import 'hometest.dart';
 import 'network_connection.dart';
 
@@ -298,7 +299,7 @@ class _SignInPhoneState extends State<SignInPhone> {
                         Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => HomeTest()));
+                                builder: (context) => FragmentPriceMe()));
                         //FirebaseUser user = result.user;
                         //createRecord(result.user.uid);
                         // Navigator.of(context).pushReplacementNamed('/fragmentsouq');

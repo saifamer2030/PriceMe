@@ -14,9 +14,9 @@ import 'package:toast/toast.dart';
 import 'advdetail.dart';
 
 class AllAdvertisement extends StatefulWidget {
-  List<String> regionlist = [];
 
-  AllAdvertisement(this.regionlist);
+
+  AllAdvertisement();
 
   @override
   _AllAdvertisementState createState() => _AllAdvertisementState();

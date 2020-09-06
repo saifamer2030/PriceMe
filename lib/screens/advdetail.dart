@@ -634,7 +634,7 @@ class _AdvDetailState extends State<AdvDetail> {
                           textColor: const Color(0xff171732),
                           color: Colors.grey[400],
                           onPressed: () {
-                            sortrate();
+                           // sortrate();
                             // if (_userId == null) {
                             //   Toast.show(
                             //       "ابشر .. سجل دخول الاول طال عمرك",
@@ -686,7 +686,7 @@ class _AdvDetailState extends State<AdvDetail> {
                           textColor: const Color(0xff171732),
                           color: Colors.grey[400],
                           onPressed: () {
-                            sortprice();
+                           // sortprice();
                             // if (_userId == null) {
                             //   Toast.show(
                             //       "ابشر .. سجل دخول الاول طال عمرك",
@@ -708,6 +708,103 @@ class _AdvDetailState extends State<AdvDetail> {
                           shape: new RoundedRectangleBorder(
                               borderRadius:
                                   new BorderRadius.circular(10.0)),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 2 * _minimumPadding,
+                  width: _minimumPadding,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: <Widget>[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Container(
+                        width: 150 /*MediaQuery.of(context).size.width*/,
+                        height: 40,
+                        child: new RaisedButton(
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              new Text(
+                                "افضل تقييم",
+                                style: TextStyle(
+                                  color: const Color(0xff171732),
+                                  fontSize: 10,
+                                ),
+                              ),
+                              Icon(
+                                Icons.stars,
+                                color: const Color(0xff171732),
+                              ),
+                            ],
+                          ),
+                          textColor: const Color(0xff171732),
+                          color: Colors.grey[400],
+                          onPressed: () {
+                            sortrate();
+
+                          },
+
+//
+                          shape: new RoundedRectangleBorder(
+                              borderRadius:
+                              new BorderRadius.circular(10.0)),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 10.0),
+                      child: Container(
+                        width: 150 /*MediaQuery.of(context).size.width*/,
+                        height: 40,
+                        child: new RaisedButton(
+                          child: Row(
+                            mainAxisAlignment:
+                            MainAxisAlignment.spaceEvenly,
+                            children: <Widget>[
+                              new Text(
+                                "افضل سعر",
+                                style: TextStyle(
+                                  color: const Color(0xff171732),
+                                  fontSize: 10,
+                                ),
+                              ),
+                              Icon(
+                                Icons.monetization_on,
+                                color: const Color(0xff171732),
+                              ),
+                            ],
+                          ),
+                          textColor: const Color(0xff171732),
+                          color: Colors.grey[400],
+                          onPressed: () {
+                            sortprice();
+                            // if (_userId == null) {
+                            //   Toast.show(
+                            //       "ابشر .. سجل دخول الاول طال عمرك",
+                            //       context,
+                            //       duration: Toast.LENGTH_LONG,
+                            //       gravity: Toast.BOTTOM);
+                            // } else {
+                            //   if (ownerPhone != null) {
+                            //     _makePhoneCall(
+                            //         'tel:${ownerPhone}');
+                            //   } else {
+                            //     Toast.show("حاول تاني طال عمرك", context,
+                            //         duration: Toast.LENGTH_LONG,
+                            //         gravity: Toast.BOTTOM);
+                            //   }
+                            // }
+                          },
+//
+                          shape: new RoundedRectangleBorder(
+                              borderRadius:
+                              new BorderRadius.circular(10.0)),
                         ),
                       ),
                     ),
@@ -914,10 +1011,10 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
           _userId,
           widget.advid,
             commentid,
-          now.toString(),
           _username,
           ownerName,
-            double.parse(price),
+          now.toString(),
+          double.parse(price),
           5.0-double.parse(price),
         );
         setState(() {

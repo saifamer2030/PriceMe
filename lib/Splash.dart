@@ -7,6 +7,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:priceme/FragmentNavigation.dart';
+import 'package:priceme/screens/alladvertisement.dart';
 import 'package:priceme/screens/hometest.dart';
 import 'package:priceme/screens/network_connection.dart';
 import 'package:priceme/screens/signin.dart';
@@ -28,7 +29,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _codeController = TextEditingController();
   AnimationController _controller;
-
+String _userId,cType;
   bool _load = false;
   bool isLoggedIn = false;
   var profileData;
@@ -55,21 +56,45 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     });
     _controller.forward();
     super.initState();
-    _checkIfIsLogged();
-    SessionManager prefs = SessionManager();
-    Future<String> authType = prefs.getAuthType();
-    authType.then((data) {
-      print("authToken " + data.toString());
-      if (data.toString() == "user") {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) =>FragmentPriceMe(["sssss","ddddd"])));
-      } else if (data.toString() == "trader") {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => FragmentPriceMe(["sssss","ddddd"])));
-      }
-    }, onError: (e) {
-      print(e);
-    });
+
+    FirebaseAuth.instance.currentUser().then((user) => user == null
+        ? isLoggedIn = false
+        : setState(() {
+      _userId = user.uid;
+      var userQuery = Firestore.instance
+          .collection('users')
+          .where('uid', isEqualTo: _userId)
+          .limit(1);
+      userQuery.getDocuments().then((data) {
+        if (data.documents.length > 0) {
+          setState(() {
+            cType = data.documents[0].data['cType'];
+              if (cType == "user") {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) =>FragmentPriceMe()));
+              } else if (cType== "trader") {
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => AllAdvertisement()));
+              }
+          });
+        }
+      });
+    }));
+    // _checkIfIsLogged();
+    // SessionManager prefs = SessionManager();
+    // Future<String> authType = prefs.getAuthType();
+    // authType.then((data) {
+    //   print("authToken " + data.toString());
+    //   if (data.toString() == "user") {
+    //     Navigator.push(
+    //         context, MaterialPageRoute(builder: (context) =>FragmentPriceMe()));
+    //   } else if (data.toString() == "trader") {
+    //     Navigator.push(
+    //         context, MaterialPageRoute(builder: (context) => AllAdvertisement()));
+    //   }
+    // }, onError: (e) {
+    //   print(e);
+    // });
   }
   @override
   void dispose() {
@@ -183,7 +208,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) {
-                              return HomeTest();
+                              return FragmentPriceMe();
                             },
                           ),
                         );
@@ -297,10 +322,9 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                 ),
                 InkWell(
                   onTap: () {
-                    Navigator.of(context)
-                        .push(MaterialPageRoute(builder: (context) {
-                      return Logintrader();
-                    }));
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (context) =>Logintrader()));
+
                   },
                   child: Padding(
                     padding:
@@ -469,7 +493,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-                builder: (context) => FragmentPriceMe(["regionlist"])));
+                builder: (context) => FragmentPriceMe()));
         break;
       case FacebookAuthLoginResponse.cancelled:
         print("login cancelled");

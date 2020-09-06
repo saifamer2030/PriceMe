@@ -28,6 +28,8 @@ import 'package:toast/toast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:math' as Math;
 
+import '../Splash.dart';
+
 class AddAdv extends StatefulWidget {
   final LocalFileSystem localFileSystem;
   List<String> sparepartsList;
@@ -155,8 +157,10 @@ String _userId;
     _init();
 
     FirebaseAuth.instance.currentUser().then((user) => user == null
-        ? Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
-        builder: (context) => SignIn(), maintainState: false))
+        ? Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => Splash()))
         : setState(() {_userId = user.uid;
     var userQuery = Firestore.instance.collection('users').where('uid', isEqualTo: _userId).limit(1);
     userQuery.getDocuments().then((data){
