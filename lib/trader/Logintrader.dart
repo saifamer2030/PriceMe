@@ -12,6 +12,7 @@ import 'package:toast/toast.dart';
 
 import '../classes/SparePartsClass.dart';
 import '../classes/sharedpreftype.dart';
+import 'Fragmenttrader.dart';
 
 class Logintrader extends StatefulWidget {
   _Logintrader createState() => _Logintrader();
@@ -327,7 +328,7 @@ class _Logintrader extends State<Logintrader> {
       // SessionManager prefs =  SessionManager();
       // prefs.setAuthType("trader");
       Navigator.push(
-          context, MaterialPageRoute(builder: (context) =>AllAdvertisement()));
+          context, MaterialPageRoute(builder: (context) =>FragmentTrader()));
 
     }).catchError((e) {
       print(e);

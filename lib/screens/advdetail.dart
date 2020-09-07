@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:priceme/classes/CommentClass.dart';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -26,6 +28,13 @@ class _AdvDetailState extends State<AdvDetail> {
   String _userId;
   String _username;
   String _userphone;
+  AudioPlayer audioPlayer = AudioPlayer();
+  Duration duration= new Duration();
+  Duration position= new Duration();
+
+  bool isplaying1 = false;
+  bool arrangecheck = true;
+
 
   String cdate;
   String cdiscribtion;
@@ -449,109 +458,137 @@ class _AdvDetailState extends State<AdvDetail> {
                         ],
                       )),
                 ),
+
+                // Row(
+                //   mainAxisAlignment: MainAxisAlignment.center,
+                //   children: <Widget>[
+                //     IconButton(
+                //         icon: Icon(isplaying1 ? Icons.pause:Icons.play_arrow),
+                //         iconSize: 30.0,
+                //         color: isplaying1? Colors.orange:Colors.black,
+                //         onPressed: (){
+                //           if(isplaying1){
+                //             musicPlayer.pause();
+                //
+                //             setState(() {
+                //               isplaying1=false;
+                //             });
+                //           }
+                //           else{
+                //             setState(() {
+                //               isplaying1=true;
+                //             });
+                //
+                //             musicPlayer.play(MusicItem(
+                //               trackName:"تسجيل صوتى",// widget.song_name,
+                //               albumName: mfault,
+                //               artistName: ownerName,//widget.artist_name,
+                //               url: caudiourl,
+                //               coverUrl:_imageUrls[0],// widget.image_url,
+                //               duration: Duration(seconds: 60),
+                //             ));
+                //           }
+                //         }),
+                //
+                //     SizedBox(
+                //       width: 10.0,
+                //     ),
+                //     IconButton(
+                //         icon: Icon(
+                //           Icons.stop,
+                //         ),
+                //         color: isplaying1?Colors.black:Colors.orange,
+                //         iconSize: 30.0,
+                //         onPressed: (){
+                //           musicPlayer.stop();
+                //           setState(() {
+                //             isplaying1=false;
+                //           });
+                //         }
+                //     ),
+                //
+                //   ],
+                // ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+
+                    IconButton(
+                        icon: Icon(isplaying1 ? Icons.pause:Icons.play_arrow),
+                        iconSize: 30.0,
+                        color: isplaying1? Colors.orange:Colors.black,
+                        onPressed: () async {
+                          if(isplaying1){
+                            var res=await audioPlayer.pause();
+                            if(res==1){
+                              setState(() {
+                                isplaying1=false;
+                              });
+                            }
+
+                          }
+                          else{
+                            var res=await audioPlayer.play(caudiourl,isLocal: true);
+                            if(res==1){
+                              setState(() {
+                                isplaying1=true;
+                              });
+                            }
+                          }
+                          audioPlayer.onDurationChanged.listen((Duration dd) {
+                            setState(() {
+                              duration=dd;
+                            });
+                          });
+                          audioPlayer.onAudioPositionChanged.listen((Duration dd) {
+                            setState(() {
+                              position=dd;
+                            });
+                          });
+                        }),
+
+                    SizedBox(
+                      width: 0.0,
+                    ),
+                    IconButton(
+                        icon: Icon(
+                          Icons.stop,
+                        ),
+                        color: isplaying1?Colors.black:Colors.orange,
+                        iconSize: 30.0,
+                        onPressed: (){
+                          audioPlayer.stop();
+                          setState(() {
+                            isplaying1=false;
+                            duration = new Duration(seconds: 0);
+                            position = new Duration(seconds: 0);
+                          });
+                        }
+                    ),
+                    Flexible(
+                      child: Slider.adaptive(
+                          min: 0.0,
+                          value: position.inSeconds.toDouble(),
+                          max: duration.inSeconds.toDouble(),
+                          activeColor: Colors.black,
+                          inactiveColor: Colors.orange,
+
+                          onChanged: (double value) {
+                            setState(() {
+                              audioPlayer.seek(new Duration(seconds: value.toInt()));
+                              value = value;
+                            });
+                          }),
+                    ),
+
+                  ],
+                ),
+
+
+
                 _userId == widget.userId
                     ? Container()
-//                 Padding(
-//                         padding: const EdgeInsets.all(5.0),
-//                         child: Container(
-//                           width:
-//                               300 /*MediaQuery.of(context).size.width*/,
-//                           height: 40,
-//                           child: new RaisedButton(
-//                             child: Row(
-//                               mainAxisAlignment: MainAxisAlignment.center,
-//                               children: <Widget>[
-//                                 new Text("تمديد الاعلان"),
-//                                 Padding(
-//                                   padding:
-//                                       const EdgeInsets.only(left: 10.0),
-//                                   child: Icon(
-//                                     Icons.check,
-//                                     color: Colors.white,
-//                                   ),
-//                                 ),
-//                               ],
-//                             ),
-//
-//                             textColor: Colors.white,
-//                             color: const Color(0xff171732),
-//                             onPressed: () {
-//                               // DateTime startdate =
-//                               //     DateTime.parse(advnNameclass.cdate);
-//                               // var newdate =
-//                               //     startdate.add(new Duration(days: 14));
-//                               // DateTime now = DateTime.now();
-//                               // var permissiondate =
-//                               //     startdate.add(new Duration(days: 10));
-//                               //
-//                               // String b = newdate.month.toString();
-//                               // if (b.length < 2) {
-//                               //   b = "0" + b;
-//                               // }
-//                               // String c = newdate.day.toString();
-//                               // if (c.length < 2) {
-//                               //   c = "0" + c;
-//                               // }
-//                               // String d = newdate.hour.toString();
-//                               // if (d.length < 2) {
-//                               //   d = "0" + d;
-//                               // }
-//                               // String e = newdate.minute.toString();
-//                               // if (e.length < 2) {
-//                               //   e = "0" + e;
-//                               // }
-//                               // String date1 =
-//                               //     '${newdate.year}-${b}-${c} ${d}:${e}:00';
-//                               //
-//                               // if (_userId == null) {
-//                               //   Toast.show(
-//                               //       "ابشر .. سجل دخول الاول طال عمرك",
-//                               //       context,
-//                               //       duration: Toast.LENGTH_LONG,
-//                               //       gravity: Toast.BOTTOM);
-//                               // } else {
-//                               //   if (now.isAfter(permissiondate)) {
-//                               //     final advdatabaseReference =
-//                               //         FirebaseDatabase.instance
-//                               //             .reference()
-//                               //             .child("advdata");
-//                               //     advdatabaseReference
-//                               //         .child(widget.cId)
-//                               //         .child(widget.cDateID)
-//                               //         .update({
-//                               //       "cdate": date1,
-//                               //     }).then((_) {
-//                               //       setState(() {
-//                               //         advnNameclass.cdate = date1;
-//                               //         showNotification(
-//                               //             date1,
-//                               //             advnNameclass.ctitle,
-//                               //             advnNameclass.cId,
-//                               //             advnNameclass.chead,
-//                               //             _username);
-//                               //
-//                               //         Toast.show("$date1تم التمديد الى ",
-//                               //             context,
-//                               //             duration: Toast.LENGTH_LONG,
-//                               //             gravity: Toast.BOTTOM);
-//                               //       });
-//                               //     });
-//                               //   } else {
-//                               //     Toast.show(
-//                               //         "يمكنك التجديد بعد مرور 10 ايام من موعد التجديد الاول او انتظار الاشعار",
-//                               //         context,
-//                               //         duration: Toast.LENGTH_LONG,
-//                               //         gravity: Toast.BOTTOM);
-//                               //   }
-//                               // }
-//                             },
-// //
-//                             shape: new RoundedRectangleBorder(
-//                                 borderRadius:
-//                                     new BorderRadius.circular(10.0)),
-//                           ),
-//                         ),
-//                       )
+
                     : Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: Container(
@@ -744,8 +781,11 @@ class _AdvDetailState extends State<AdvDetail> {
                             ],
                           ),
                           textColor: const Color(0xff171732),
-                          color: Colors.grey[400],
+                          color: arrangecheck?Colors.grey[100]:Colors.amber,
                           onPressed: () {
+                            setState(() {
+                              arrangecheck=false;
+                            });
                             sortrate();
 
                           },
@@ -781,25 +821,14 @@ class _AdvDetailState extends State<AdvDetail> {
                             ],
                           ),
                           textColor: const Color(0xff171732),
-                          color: Colors.grey[400],
+                          color: arrangecheck?Colors.amber:Colors.grey[100],
+
                           onPressed: () {
+                            setState(() {
+                              arrangecheck=true;
+                            });
                             sortprice();
-                            // if (_userId == null) {
-                            //   Toast.show(
-                            //       "ابشر .. سجل دخول الاول طال عمرك",
-                            //       context,
-                            //       duration: Toast.LENGTH_LONG,
-                            //       gravity: Toast.BOTTOM);
-                            // } else {
-                            //   if (ownerPhone != null) {
-                            //     _makePhoneCall(
-                            //         'tel:${ownerPhone}');
-                            //   } else {
-                            //     Toast.show("حاول تاني طال عمرك", context,
-                            //         duration: Toast.LENGTH_LONG,
-                            //         gravity: Toast.BOTTOM);
-                            //   }
-                            // }
+
                           },
 //
                           shape: new RoundedRectangleBorder(

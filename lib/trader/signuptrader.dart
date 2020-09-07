@@ -17,6 +17,8 @@ import 'package:toast/toast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:math' as Math;
 
+import 'Fragmenttrader.dart';
+
 class SignUptrader extends StatefulWidget {
   List<String> faultsList = [];
   List<String> sparesList = [];
@@ -679,7 +681,7 @@ workshoptype=_faultcurrentItemSelected;
   }
   void _onDropDownItemSelectedspare(String newValueSelected) {
     setState(() {
-      this._faultcurrentItemSelected = newValueSelected;
+      this._sparecurrentItemSelected = newValueSelected;
       workshoptype=newValueSelected;
 
     });
@@ -765,7 +767,7 @@ workshoptype=_faultcurrentItemSelected;
       Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => AllAdvertisement()));
+              builder: (context) => FragmentTrader()));
     });
   }
 

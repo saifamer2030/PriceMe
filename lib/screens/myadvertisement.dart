@@ -23,7 +23,7 @@ class MyAdvertisement extends StatefulWidget {
 class _MyAdvertisementState extends State<MyAdvertisement> {
   List<AdvClass> advlist = [];
   bool _load = false;
-  String _userId;
+  String _userId="";
 
 
   @override

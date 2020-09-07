@@ -12,6 +12,7 @@ import 'package:priceme/screens/hometest.dart';
 import 'package:priceme/screens/network_connection.dart';
 import 'package:priceme/screens/signin.dart';
 import 'package:priceme/screens/signinphone.dart';
+import 'package:priceme/trader/Fragmenttrader.dart';
 
 import 'trader/Logintrader.dart';
 import 'classes/sharedpreftype.dart';
@@ -74,7 +75,7 @@ String _userId,cType;
                     context, MaterialPageRoute(builder: (context) =>FragmentPriceMe()));
               } else if (cType== "trader") {
                 Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => AllAdvertisement()));
+                    context, MaterialPageRoute(builder: (context) => FragmentTrader()));
               }
           });
         }
