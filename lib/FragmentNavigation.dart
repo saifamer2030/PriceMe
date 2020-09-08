@@ -15,7 +15,6 @@ import 'classes/ModelClass.dart';
 import 'classes/SparePartsClass.dart';
 
 class FragmentPriceMe extends StatefulWidget {
-
   FragmentPriceMe();
 
   @override
@@ -32,10 +31,10 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
 //  List<Widget> _children() => [
 
   List<Widget> screens() => [
-    MorePriceMe(),
-    MyAdvertisement(),
-    MyAdvertisement(),
-    HomePage(sparepartsList),
+        MorePriceMe(),
+        MyAdvertisement(),
+        MyAdvertisement(),
+        HomePage(sparepartsList),
       ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
   final GlobalKey<NavigatorState> navigatorKey =
@@ -63,7 +62,6 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
       ),
       key: navigatorKey,
       floatingActionButton: MyFloatingButton(sparepartsList),
-
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
         shape: CircularNotchedRectangle(),
@@ -81,7 +79,8 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                     onPressed: () {
                       print("kkkkkkkkk");
                       setState(() {
-                        currentScreen = MorePriceMe(); // if user taps on this dashboard tab will be active
+                        currentScreen =
+                            MorePriceMe(); // if user taps on this dashboard tab will be active
                         currentTab = 0;
                       });
                     },
@@ -89,13 +88,13 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Icon(
-                          Icons.account_circle,
+                          Icons.settings,
                           color: currentTab == 0
                               ? const Color(0xff15494A)
                               : Colors.grey,
                         ),
                         Text(
-                          'حسابي',
+                          'إعدادات',
                           style: TextStyle(
                             color: currentTab == 0
                                 ? const Color(0xff15494A)
@@ -109,7 +108,8 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = MyAdvertisement(); // if user taps on this dashboard tab will be active
+                        currentScreen =
+                            MyAdvertisement(); // if user taps on this dashboard tab will be active
                         currentTab = 2;
                       });
                     },
@@ -126,7 +126,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                           'التنبيهات',
                           style: TextStyle(
                             color: currentTab == 2
-                                ?  const Color(0xff15494A)
+                                ? const Color(0xff15494A)
                                 : Colors.grey,
                           ),
                         ),
@@ -145,7 +145,8 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = AllAdvertisement(); // if user taps on this dashboard tab will be active
+                        currentScreen =
+                            AllAdvertisement(); // if user taps on this dashboard tab will be active
                         currentTab = 1;
                       });
                     },
@@ -155,14 +156,14 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                         Icon(
                           Icons.video_library,
                           color: currentTab == 1
-                              ?  const Color(0xff15494A)
+                              ? const Color(0xff15494A)
                               : Colors.grey,
                         ),
                         Text(
                           'الفيديوهات',
                           style: TextStyle(
                             color: currentTab == 1
-                                ?  const Color(0xff15494A)
+                                ? const Color(0xff15494A)
                                 : Colors.grey,
                           ),
                         ),
@@ -173,7 +174,8 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = HomePage(sparepartsList); // if user taps on this dashboard tab will be active
+                        currentScreen = HomePage(
+                            sparepartsList); // if user taps on this dashboard tab will be active
                         currentTab = 3;
                       });
                     },
@@ -183,14 +185,14 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                         Icon(
                           Icons.home,
                           color: currentTab == 3
-                              ?  const Color(0xff15494A)
+                              ? const Color(0xff15494A)
                               : Colors.grey,
                         ),
                         Text(
                           'الرئيسية',
                           style: TextStyle(
                             color: currentTab == 3
-                                ?  const Color(0xff15494A)
+                                ? const Color(0xff15494A)
                                 : Colors.grey,
                           ),
                         ),
@@ -205,6 +207,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
       ),
     );
   }
+
   void getData() {
     setState(() {
       final SparePartsReference = Firestore.instance;
@@ -224,15 +227,14 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
         });
       });
     });
-
   }
-
 }
 
 class MyFloatingButton extends StatefulWidget {
-
   List<String> sparepartsList;
+
   MyFloatingButton(this.sparepartsList);
+
   @override
   _MyFloatingButtonState createState() => _MyFloatingButtonState();
 }
@@ -244,14 +246,31 @@ class _MyFloatingButtonState extends State<MyFloatingButton> {
   Widget build(BuildContext context) {
     return _show
         ? FloatingActionButton(
-            backgroundColor: const Color(0xff15494A),
-            child: Icon(Icons.add),
             heroTag: "unique3",
+            child: Container(
+              width: 60,
+              height: 60,
+              child: Icon(
+                Icons.add,
+//                size: 40,
+              ),
+              decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  gradient: LinearGradient(
+                    colors: [
+                      const Color(0xffff2121),
+                      const Color(0xffff5423),
+                      const Color(0xffff7024),
+                      const Color(0xffff904a)
+                    ],
+                  )),
+            ),
             onPressed: () {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AddAdv(widget.sparepartsList,"قطع غيار","", widget.sparepartsList[0])));
+                      builder: (context) => AddAdv(widget.sparepartsList,
+                          "قطع غيار", "", widget.sparepartsList[0])));
 //        FirebaseAuth.instance.currentUser().then((user) => user == null
 //            ? Navigator.of(context, rootNavigator: false).push(
 //            MaterialPageRoute(
@@ -271,8 +290,37 @@ class _MyFloatingButtonState extends State<MyFloatingButton> {
 //        }));
             },
           )
+//        ? FloatingActionButton(
+//
+////            child: Icon(Icons.add),
+//            heroTag: "unique3",
+//            onPressed: () {
+//              Navigator.push(
+//                  context,
+//                  MaterialPageRoute(
+//                      builder: (context) => AddAdv(widget.sparepartsList,"قطع غيار","", widget.sparepartsList[0])));
+////        FirebaseAuth.instance.currentUser().then((user) => user == null
+////            ? Navigator.of(context, rootNavigator: false).push(
+////            MaterialPageRoute(
+////                builder: (context) => LoginScreen2(widget.regionlist),
+////                maintainState: false))
+////            : setState(() {
+////          var sheetController = showBottomSheet(
+////              context: context,
+////              builder: (context) =>
+////                  BottomSheetWidget(widget.regionlist));
+////
+////          _showButton(false);
+////
+////          sheetController.closed.then((value) {
+////            _showButton(true);
+////          });
+////        }));
+//            },
+//          )
         : Container();
   }
+
   // void getData() {
   //   setState(() {
   //     final SparePartsReference = Firestore.instance;

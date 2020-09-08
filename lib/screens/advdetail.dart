@@ -7,6 +7,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:priceme/UserRating/RatingClass.dart';
+import 'package:priceme/UserRating/UserRatingPage.dart';
 import 'package:priceme/classes/CommentClass.dart';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -621,14 +623,12 @@ class _AdvDetailState extends State<AdvDetail> {
                                     duration: Toast.LENGTH_LONG,
                                     gravity: Toast.BOTTOM);
                               } else {
-                                // Navigator.push(
-                                //   context,
-                                //   new MaterialPageRoute(
-                                //       builder: (BuildContext context) =>
-                                //           new ChatPage(
-                                //               name: widget.cName,
-                                //               uid: widget.cId)),
-                                // );
+                                 Navigator.push(
+                                   context,
+                                   new MaterialPageRoute(
+                                       builder: (BuildContext context) =>
+                                           new UserRatingPage(Rating(widget.userId,"",""))),
+                                 );
                               }
                             },
 //

@@ -244,7 +244,7 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
                           children: <Widget>[
                             Center(
                               child: document['curi'] == null
-                                  ? new Image.asset("assets/images/ic_logo.png",
+                                  ? new Image.asset("assets/images/ic_logo2.png",
                               )
                                   : new Image.network(
                                 document['curi'],

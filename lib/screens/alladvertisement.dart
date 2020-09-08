@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -145,7 +144,7 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
                         Center(
                           child: document['curi'] == null
                               ? new Image.asset(
-                                  "assets/images/ic_logo.png",
+                                  "assets/images/ic_logo2.png",
                                 )
                               : new Image.network(
                                   document['curi'],

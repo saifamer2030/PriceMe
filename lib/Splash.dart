@@ -81,21 +81,21 @@ String _userId,cType;
         }
       });
     }));
-    // _checkIfIsLogged();
-    // SessionManager prefs = SessionManager();
-    // Future<String> authType = prefs.getAuthType();
-    // authType.then((data) {
-    //   print("authToken " + data.toString());
-    //   if (data.toString() == "user") {
-    //     Navigator.push(
-    //         context, MaterialPageRoute(builder: (context) =>FragmentPriceMe()));
-    //   } else if (data.toString() == "trader") {
-    //     Navigator.push(
-    //         context, MaterialPageRoute(builder: (context) => AllAdvertisement()));
-    //   }
-    // }, onError: (e) {
-    //   print(e);
-    // });
+     _checkIfIsLogged();
+     SessionManager prefs = SessionManager();
+     Future<String> authType = prefs.getAuthType();
+     authType.then((data) {
+       print("authToken " + data.toString());
+       if (data.toString() == "user") {
+         Navigator.push(
+             context, MaterialPageRoute(builder: (context) =>FragmentPriceMe()));
+       } else if (data.toString() == "trader") {
+         Navigator.push(
+             context, MaterialPageRoute(builder: (context) => FragmentTrader()));
+       }
+     }, onError: (e) {
+       print(e);
+     });
   }
   @override
   void dispose() {
