@@ -61,6 +61,9 @@ dependencies:
   audioplayers: ^0.16.0
   file: ^5.2.1
   flutter_rating_bar: ^2.0.0
+  image_picker: 0.5.4+3
+  video_player: ^0.10.12+2
+  chewie: ^0.9.10
 
 
 dev_dependencies:
