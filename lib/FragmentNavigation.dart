@@ -34,7 +34,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
         MorePriceMe(),
         MyAdvertisement(),
         MyAdvertisement(),
-        HomePage(sparepartsList),
+        HomePage(),
       ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
   final GlobalKey<NavigatorState> navigatorKey =
@@ -43,9 +43,9 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
   @override
   void initState() {
     super.initState();
-    getData();
+    //getData();
     setState(() {
-      currentScreen = HomePage(sparepartsList);
+      currentScreen = HomePage();
     });
 
 //    _currentIndex = widget.selectPage != null ? widget.selectPage : 4;
@@ -174,8 +174,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = HomePage(
-                            sparepartsList); // if user taps on this dashboard tab will be active
+                        currentScreen = HomePage(); // if user taps on this dashboard tab will be active
                         currentTab = 3;
                       });
                     },
@@ -208,26 +207,26 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
     );
   }
 
-  void getData() {
-    setState(() {
-      final SparePartsReference = Firestore.instance;
-      SparePartsReference.collection("spareparts")
-          .getDocuments()
-          .then((QuerySnapshot snapshot) {
-        snapshot.documents.forEach((sparepart) {
-          SparePartsClass spc = SparePartsClass(
-            sparepart.data['sid'],
-            sparepart.data['sName'],
-            sparepart.data['surl'],
-          );
-          setState(() {
-            sparepartsList.add(sparepart.data['sName']);
-            // print(sparepartsList.length.toString() + "llll");
-          });
-        });
-      });
-    });
-  }
+  // void getData() {
+  //   setState(() {
+  //     final SparePartsReference = Firestore.instance;
+  //     SparePartsReference.collection("spareparts")
+  //         .getDocuments()
+  //         .then((QuerySnapshot snapshot) {
+  //       snapshot.documents.forEach((sparepart) {
+  //         SparePartsClass spc = SparePartsClass(
+  //           sparepart.data['sid'],
+  //           sparepart.data['sName'],
+  //           sparepart.data['surl'],
+  //         );
+  //         setState(() {
+  //           sparepartsList.add(sparepart.data['sName']);
+  //           // print(sparepartsList.length.toString() + "llll");
+  //         });
+  //       });
+  //     });
+  //   });
+  // }
 }
 
 class MyFloatingButton extends StatefulWidget {
@@ -269,8 +268,7 @@ class _MyFloatingButtonState extends State<MyFloatingButton> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AddAdv(widget.sparepartsList,
-                          "قطع غيار", "", widget.sparepartsList[0])));
+                      builder: (context) => AddAdv("قطع غيار", "", "")));
 //        FirebaseAuth.instance.currentUser().then((user) => user == null
 //            ? Navigator.of(context, rootNavigator: false).push(
 //            MaterialPageRoute(

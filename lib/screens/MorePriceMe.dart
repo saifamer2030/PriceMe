@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:priceme/screens/personalpage.dart';
 import 'package:priceme/screens/signin.dart';
 import '../Splash.dart';
@@ -587,6 +588,8 @@ class _MorePriceMeState extends State<MorePriceMe> {
                     InkWell(
                       onTap: () {
                         FirebaseAuth.instance.signOut();
+                        SessionManager prefs = SessionManager();
+                        prefs.setAuthType("");
                         Navigator.push(
                             context,
                             MaterialPageRoute(

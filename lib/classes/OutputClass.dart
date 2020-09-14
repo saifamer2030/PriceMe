@@ -1,14 +1,13 @@
 import 'dart:ui';
 
-class FaultStringClass {
+class OutputClass {
   String title;
   String subtitle;
-  String subcheckList ;
 
-  FaultStringClass(
+
+  OutputClass(
   this.title,
       this.subtitle,
-      this.subcheckList,
 
 
       );

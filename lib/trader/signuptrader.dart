@@ -772,6 +772,7 @@ workshoptype=_faultcurrentItemSelected;
   }
 
   Future uploadpp0() async {
+    //print("xxx");
     if (images.length == 0) {
       _uploaddata("");
 

@@ -32,49 +32,49 @@ class _Logintrader extends State<Logintrader> {
   TextEditingController _emailController = TextEditingController();
   TextEditingController _passwordController = TextEditingController();
 
-  //
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   final FaultReference = Firestore.instance;
-  //
-  //   FaultReference.collection("faults")
-  //       .getDocuments()
-  //       .then((QuerySnapshot snapshot) {
-  //     snapshot.documents.forEach((fault) {
-  //       SparePartsClass spc = SparePartsClass(
-  //         fault.data['sid'],
-  //         fault.data['sName'],
-  //         fault.data['surl'],
-  //       );
-  //       setState(() {
-  //         faultsList.add(fault.data['sName']);
-  //         // print(sparepartsList.length.toString() + "llll");
-  //       });
-  //     });
-  //   });
-  //   //////////////////////////////
-  //   final SparePartsReference = Firestore.instance;
-  //
-  //   SparePartsReference.collection("spareparts")
-  //       .getDocuments()
-  //       .then((QuerySnapshot snapshot) {
-  //     snapshot.documents.forEach((sparepart) {
-  //       SparePartsClass spc = SparePartsClass(
-  //         sparepart.data['sid'],
-  //         sparepart.data['sName'],
-  //         sparepart.data['surl'],
-  //       );
-  //       setState(() {
-  //         sparesList.add(sparepart.data['sName']);
-  //         // print(sparepartsList.length.toString() + "llll");
-  //       });
-  //     });
-  //   });
-  //
-  //
-  //
-  // }
+
+  @override
+  void initState() {
+    super.initState();
+    final FaultReference = Firestore.instance;
+
+    FaultReference.collection("faults")
+        .getDocuments()
+        .then((QuerySnapshot snapshot) {
+      snapshot.documents.forEach((fault) {
+        SparePartsClass spc = SparePartsClass(
+          fault.data['sid'],
+          fault.data['sName'],
+          fault.data['surl'],
+        );
+        setState(() {
+          faultsList.add(fault.data['sName']);
+          // print(sparepartsList.length.toString() + "llll");
+        });
+      });
+    });
+    //////////////////////////////
+    final SparePartsReference = Firestore.instance;
+
+    SparePartsReference.collection("spareparts")
+        .getDocuments()
+        .then((QuerySnapshot snapshot) {
+      snapshot.documents.forEach((sparepart) {
+        SparePartsClass spc = SparePartsClass(
+          sparepart.data['sid'],
+          sparepart.data['sName'],
+          sparepart.data['surl'],
+        );
+        setState(() {
+          sparesList.add(sparepart.data['sName']);
+          // print(sparepartsList.length.toString() + "llll");
+        });
+      });
+    });
+
+
+
+  }
   @override
   Widget build(BuildContext context) {
 
@@ -325,8 +325,8 @@ class _Logintrader extends State<Logintrader> {
         .signInWithEmailAndPassword(
         email: _emailController.text, password: _passwordController.text)
         .then((signedInUser) {
-      // SessionManager prefs =  SessionManager();
-      // prefs.setAuthType("trader");
+      SessionManager prefs =  SessionManager();
+      prefs.setAuthType("trader");
       Navigator.push(
           context, MaterialPageRoute(builder: (context) =>FragmentTrader()));
 

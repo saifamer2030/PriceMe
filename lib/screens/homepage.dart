@@ -16,8 +16,8 @@ import 'hometest.dart';
 
 
 class HomePage extends StatefulWidget {
-  List<String> sparepartsList;
-  HomePage(this.sparepartsList);
+  //List<String> sparepartsList;
+  HomePage();
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -30,7 +30,13 @@ class _HomePageState extends State<HomePage> {
   List<SparePartsSizesClass> sparepartsList = [];
   List<SparePartsSizesClass> faultsList = [];
   List<FaultsClass> subfaultsList = [];
+  List<FaultsClass> subsparesList = [];
+
+
   bool subfaultcheck=false;
+  bool subsparescheck=false;
+
+
   String mfault="";
 
  bool _load=false;
@@ -102,21 +108,61 @@ class _HomePageState extends State<HomePage> {
                           return InkWell(
                           onTap: () {
                             setState(() {
-
+                              mfault=sparepartsList[index].sName;
                               sparepartsList[index].ssizecheck =   !sparepartsList[index].ssizecheck;
-                              if ( sparepartsList[index].ssizecheck )
-                                sparepartsList[index].ssize =100;
-                              else sparepartsList[index].ssize =75;
+                              if ( sparepartsList[index].ssizecheck ){
+                                setState(() {
+                                  sparepartsList[index].ssize =100;
+                                  subsparescheck=true;
+                                });
+
+                              }
+                              else{
+                                setState(() {
+                                  sparepartsList[index].ssize =75;
+                                  subsparescheck=false;
+                                });
+
+
+                              }
                             });
                             for (var i = 0; i < sparepartsList.length; i++) {
                               if (i != index) setState(() {
-                                sparepartsList[i].ssize =75;
+                                setState(() {
+                                  sparepartsList[i].ssize =75;
+                                });
                               });
                             }
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => AddAdv(widget.sparepartsList,"قطع غيار",mfault, sparepartsList[index].sName)));
+
+                            setState(() {
+                              final SparePartsReference = Firestore.instance;
+                              subsparesList.clear();
+
+                              SparePartsReference.collection("subspares").document(sparepartsList[index].sid).collection("subsparesid")
+                                  .getDocuments()
+                                  .then((QuerySnapshot snapshot) {
+                                snapshot.documents.forEach((fault) {
+                                  FaultsClass fp = FaultsClass(
+                                    fault.data['fid'],
+                                    fault.data['fName'],
+                                    fault.data['fsubId'],
+                                    fault.data['fsubName'],
+                                    fault.data['fsubDesc'],
+                                    fault.data['fsubUrl'],
+                                  );
+                                  setState(() {
+                                    subsparesList.add(fp);
+                                    // print(sparepartsList.length.toString() + "llll");
+                                  });
+                                });
+                              }).whenComplete(() {setState(() {
+
+                              });});
+                            });
+                            // Navigator.push(
+                            //     context,
+                            //     MaterialPageRoute(
+                            //         builder: (context) => AddAdv(widget.sparepartsList,"قطع غيار",mfault, sparepartsList[index].sName)));
                           },
                             child: Container(
                               width: 100,
@@ -158,6 +204,135 @@ class _HomePageState extends State<HomePage> {
                         }),
                   )),
             ),
+            subsparescheck
+                ? Container(
+              height: 400,
+              child: subsparesList.length == 0
+                  ? Center(child: new Text("برجاء الإنتظار"))
+                  : new ListView.builder(
+                  physics: BouncingScrollPhysics(),
+                  //scrollDirection: Axis.horizontal,
+                  // reverse: true,
+                  itemCount: subsparesList.length,
+                  itemBuilder: (BuildContext ctxt, int index) {
+                    return InkWell(
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            top: 5.0, right: 5.0, left: 5.0),
+                        child: Card(
+//                                        color: departlist1[index].ccolor,
+                          color: Colors.white,
+                          shape: new RoundedRectangleBorder(
+                              side: new BorderSide(
+                                //color: subfaultsList[index].ccolor,
+                                  width: 2.0),
+                              borderRadius:
+                              BorderRadius.circular(10.0)),
+                          //borderOnForeground: true,
+                          elevation: 10.0,
+                          margin: EdgeInsets.all(1),
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AddAdv("قطع غيار", mfault,subsparesList[index].fsubName)));
+
+
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.all(3.0),
+                              child: ListTile(
+                                title: Text(
+                                  subsparesList[index].fsubName,
+                                  textDirection: TextDirection.rtl,
+                                  style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
+                                ),
+                                subtitle:  Text(
+                                  subsparesList[index].fsubDesc,
+                                  textDirection: TextDirection.rtl,
+                                  style: TextStyle(fontSize: 15.0),
+                                ),
+                                leading: Icon(Icons.arrow_back_ios),
+
+                                trailing: Container(
+                                  height: 120.0,
+                                  width: 60.0,
+                                  decoration: BoxDecoration(
+                                    image: DecorationImage(
+                                      image: NetworkImage( subsparesList[index].fsubUrl),
+                                      fit: BoxFit.fill,
+                                    ),
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+
+                              ),
+//                             Container(
+//                               child: Row(
+//                                 mainAxisAlignment:
+//                                 MainAxisAlignment.center,
+//                                 children: [
+//                                   Container(
+//                                     width: 50,
+//                                     height: 50,
+//                                     child: new Image.network(
+//                                       subfaultsList[index].fsubUrl,
+//                                       fit: BoxFit.contain,
+//                                     ),
+//                                   ),
+//                                   SizedBox(
+//                                     height: 2,
+//                                   ),
+//                                   Padding(
+//                                     padding:
+//                                     const EdgeInsets.all(8.0),
+//                                     child: Container(
+//                                       margin:
+//                                       EdgeInsets.only(right: 2),
+//                                       child: Center(
+//                                         child: Padding(
+//                                           padding:
+//                                           const EdgeInsets.only(
+//                                               top: 5),
+//                                           child: Text(
+//                                             subfaultsList[index]
+//                                                 .fsubName,
+//                                             textAlign:
+//                                             TextAlign.center,
+//                                             style: TextStyle(
+//                                               color: const Color(
+//                                                   0xff171732),
+// //                                                              fontFamily: "Estedad-Black",
+//                                               fontWeight:
+//                                               FontWeight.bold,
+//                                               fontSize: 12,
+//                                               height: 0,
+//                                             ),
+//                                           ),
+//                                         ),
+//                                       ),
+//                                     ),
+//                                   ),
+//                                 ],
+//                               ),
+//                             ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      /**  _firebasedatdepart1(
+                          index,
+                          departlist1.length,
+                          departlist1[index].id,
+                          departlist1[index].title,
+                          departlist1[index].subtitle,
+                          departlist1[index].uri,
+                          ),**/
+                    );
+                  }),
+            )
+                : Container(),
             Container(
               width: MediaQuery.of(context).size.width,
               height: 40.0,
@@ -206,7 +381,7 @@ class _HomePageState extends State<HomePage> {
                                 final SparePartsReference = Firestore.instance;
                                 subfaultsList.clear();
 
-                                SparePartsReference.collection("subfaults").document(faultsList[index].sid).collection(faultsList[index].sName)
+                                SparePartsReference.collection("subfaults").document(faultsList[index].sid).collection("subfaultid")
                                     .getDocuments()
                                     .then((QuerySnapshot snapshot) {
                                   snapshot.documents.forEach((fault) {
@@ -300,7 +475,7 @@ class _HomePageState extends State<HomePage> {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => AddAdv(widget.sparepartsList,"اعطال", mfault,subfaultsList[index].fsubName)));
+                                      builder: (context) => AddAdv("اعطال", mfault,subfaultsList[index].fsubName)));
 
 
                             },

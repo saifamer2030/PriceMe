@@ -74,7 +74,7 @@ setState((){})
                   Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => AddAdv(sparepartsList,"قطع غيار","", sparepartsList[0])));
+                          builder: (context) => AddAdv("قطع غيار","", sparepartsList[0])));
 
                 },
                 child: Center(

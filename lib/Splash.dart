@@ -57,31 +57,30 @@ String _userId,cType;
     });
     _controller.forward();
     super.initState();
-
-    FirebaseAuth.instance.currentUser().then((user) => user == null
-        ? isLoggedIn = false
-        : setState(() {
-      _userId = user.uid;
-      var userQuery = Firestore.instance
-          .collection('users')
-          .where('uid', isEqualTo: _userId)
-          .limit(1);
-      userQuery.getDocuments().then((data) {
-        if (data.documents.length > 0) {
-          setState(() {
-            cType = data.documents[0].data['cType'];
-              if (cType == "user") {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) =>FragmentPriceMe()));
-              } else if (cType== "trader") {
-                Navigator.push(
-                    context, MaterialPageRoute(builder: (context) => FragmentTrader()));
-              }
-          });
-        }
-      });
-    }));
-     _checkIfIsLogged();
+    // FirebaseAuth.instance.currentUser().then((user) => user == null
+    //     ? isLoggedIn = false
+    //     : setState(() {
+    //   _userId = user.uid;
+    //   var userQuery = Firestore.instance
+    //       .collection('users')
+    //       .where('uid', isEqualTo: _userId)
+    //       .limit(1);
+    //   userQuery.getDocuments().then((data) {
+    //     if (data.documents.length > 0) {
+    //       setState(() {
+    //         cType = data.documents[0].data['cType'];
+    //           if (cType == "user") {
+    //             Navigator.push(
+    //                 context, MaterialPageRoute(builder: (context) =>FragmentPriceMe()));
+    //           } else if (cType== "trader") {
+    //             Navigator.push(
+    //                 context, MaterialPageRoute(builder: (context) => FragmentTrader()));
+    //           }
+    //       });
+    //     }
+    //   });
+    // }));
+   //  _checkIfIsLogged();
      SessionManager prefs = SessionManager();
      Future<String> authType = prefs.getAuthType();
      authType.then((data) {
@@ -102,14 +101,14 @@ String _userId,cType;
     _controller?.dispose();
     super.dispose();
   }
-  _checkIfIsLogged() async {
-    final accessToken = await FacebookAuth.instance.isLogged;
-    if (accessToken != null) {
-      FacebookAuth.instance.getUserData().then((userData) {
-        setState(() => _userData = userData);
-      });
-    }
-  }
+  // _checkIfIsLogged() async {
+  //   final accessToken = await FacebookAuth.instance.isLogged;
+  //   if (accessToken != null) {
+  //     FacebookAuth.instance.getUserData().then((userData) {
+  //       setState(() => _userData = userData);
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -321,35 +320,23 @@ String _userId,cType;
                     ),
                   ),
                 ),
-                InkWell(
-                  onTap: () {
+                SizedBox(height: 20,),
+                FlatButton(
+                  onPressed: () {
                     Navigator.push(
                         context, MaterialPageRoute(builder: (context) =>Logintrader()));
 
                   },
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(top: 20, left: 20, right: 20),
-                    child: Container(
-                      width: 308.0,
-                      height: 47.0,
-//                          decoration: BoxDecoration(
-//                            borderRadius: BorderRadius.circular(9.0),
-//                            border:
-//                            Border.all(width: 1.0, color: const Color(0xffff5423)),
-//                          ),
-                      child: Center(
-                        child: Text(
-                          "هل انت تاجر؟...",
-                          style: TextStyle(
-                            fontFamily: 'Helvetica',
-                            fontSize: 15,
-                            color: const Color(0xffffffff),
-                            height: 1,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+                  child:  Center(
+                    child: Text(
+                      "هل انت تاجر...؟",
+                      style: TextStyle(
+                        fontFamily: 'Helvetica',
+                        fontSize: 15,
+                        color: const Color(0xffffffff),
+                        height: 1,
                       ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                 ),

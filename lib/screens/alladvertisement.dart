@@ -24,7 +24,9 @@ class AllAdvertisement extends StatefulWidget {
 class _AllAdvertisementState extends State<AllAdvertisement> {
   List<AdvClass> advlist = [];
   bool _load = false;
-  String _userId, worktype;
+  String _userId="";
+  String  worktype="";
+  String tradertype="";
 
   @override
   void initState() {
@@ -44,7 +46,9 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
                 setState(() {
                   // firstName = data.documents[0].data['firstName'];
                   // lastName = data.documents[0].data['lastName'];
+                  tradertype = data.documents[0].data['traderType'];
                   worktype = data.documents[0].data['worktype'];
+                  tradertype=="تاجر صيانة"?tradertype="اعطال":tradertype="قطع غيار";
                   print("mmm" + worktype);
                 });
               }
@@ -92,7 +96,9 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
               .orderBy('carrange',
                   descending:
                       true) //.where("cproblemtype", isEqualTo:"قطع غيار")
-              .where("mfault", isEqualTo: worktype)
+              .where("mfaultarray", arrayContains: worktype)
+              .where("cproblemtype", isEqualTo: tradertype)
+
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {

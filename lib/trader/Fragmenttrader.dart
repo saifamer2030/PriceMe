@@ -250,7 +250,7 @@ class _MyFloatingButtonState extends State<MyFloatingButton> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AddAdv(widget.sparepartsList,"قطع غيار","", widget.sparepartsList[0])));
+                      builder: (context) => AddAdv("قطع غيار","", "")));
 //        FirebaseAuth.instance.currentUser().then((user) => user == null
 //            ? Navigator.of(context, rootNavigator: false).push(
 //            MaterialPageRoute(

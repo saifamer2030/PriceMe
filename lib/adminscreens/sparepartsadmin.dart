@@ -7,6 +7,7 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:priceme/adminscreens/subsparesadmin.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:toast/toast.dart';
@@ -316,32 +317,41 @@ class _SparePartsAdminState extends State<SparePartsAdmin> {
   }
 
   Widget firebasedata(var index) {
-    return Card(
-      elevation: 10,
-      shape:
-          new RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
-      margin: EdgeInsets.all(6),
-      child: ListTile(
-        title: Text(
-          sparepartsList[index].sName,
-          textDirection: TextDirection.rtl,
-          style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
-        ),
-
-        trailing: Container(
-          height: 120.0,
-          width: 60.0,
-          decoration: BoxDecoration(
-
-            image: DecorationImage(
-              image: NetworkImage(sparepartsList[index].surl),
-              fit: BoxFit.fill,
-            ),
-
-            shape: BoxShape.circle,
+    return InkWell(
+      onTap: (){
+        // print("kkk"+sparepartsList[index].sName+"///"+sparepartsList[index].sid+"////"+sparepartsList[index].surl);
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => SubSparesAdmin(sparepartsList[index].sid,sparepartsList[index].sName,sparepartsList[index].surl)));
+      },
+      child: Card(
+        elevation: 10,
+        shape:
+            new RoundedRectangleBorder(borderRadius: BorderRadius.circular(4.0)),
+        margin: EdgeInsets.all(6),
+        child: ListTile(
+          title: Text(
+            sparepartsList[index].sName,
+            textDirection: TextDirection.rtl,
+            style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold),
           ),
-        ),
 
+          trailing: Container(
+            height: 120.0,
+            width: 60.0,
+            decoration: BoxDecoration(
+
+              image: DecorationImage(
+                image: NetworkImage(sparepartsList[index].surl),
+                fit: BoxFit.fill,
+              ),
+
+              shape: BoxShape.circle,
+            ),
+          ),
+
+        ),
       ),
     );
 

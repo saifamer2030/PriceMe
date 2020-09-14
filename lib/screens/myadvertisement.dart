@@ -24,6 +24,7 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
   List<AdvClass> advlist = [];
   bool _load = false;
   String _userId="";
+  List<String> _imageUrls;
 
 
   @override
@@ -89,53 +90,42 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
                   return  Slidable(
                       actionPane: SlidableDrawerDismissal(),
                   child:firebasedata(context,index, snapshot.data.documents[index]),
-                    actions: <Widget>[
-                      Container(
-                        padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                        child: IconSlideAction(
-                          caption: 'تعديل',
-                          color: Colors.green,
-                          icon: Icons.edit,
-                          onTap: () {
-                            // Navigator.push(
-                            //   context,
-                            //   new MaterialPageRoute(
-                            //       builder: (BuildContext context) =>
-                            //       new EditAdsForCars(
-                            //         index,
-                            //         advlist.length,
-                            //         advlist[index].cId,
-                            //         advlist[index].cdate,
-                            //         advlist[index].chead,
-                            //         advlist[index].ctitle,
-                            //         advlist[index].cdepart,
-                            //         advlist[index].cregion,
-                            //         advlist[index].cphone,
-                            //         advlist[index].cprice,
-                            //         advlist[index].cdetail,
-                            //         advlist[index].cpublished,
-                            //         advlist[index].curi,
-                            //         advlist[index].curilist,
-                            //         advlist[index].cagekm,
-                            //         advlist[index].csale,
-                            //         advlist[index].cauto,
-                            //         advlist[index].coil,
-                            //         advlist[index].cNew,
-                            //         advlist[index].cno,
-                            //         advlist[index].cname,
-                            //         departlist1,
-                            //         widget.regionlist,
-                            //         advlist[index].cdep11,
-                            //         advlist[index].cdep22,
-                            //         advlist[index].cmodel,
-                            //
-                            //       )),
-                            // );
-                          },
-                        ),
-                      )
-                    ],
                     secondaryActions: <Widget>[
+                      //secondaryActions
+                      // Container(
+                      //   padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                      //   child: IconSlideAction(
+                      //     caption: 'تعديل',
+                      //     color: Colors.green,
+                      //     icon: Icons.edit,
+                      //     onTap: () {
+                      //       Navigator.push(
+                      //         context,
+                      //         new MaterialPageRoute(
+                      //             builder: (BuildContext context) =>
+                      //             new EditAdv(
+                      //               index,
+                      //               advlist.length,
+                      //               snapshot.data.documents[index]["cimagelist"],
+                      //               snapshot.data.documents[index]["cimagelist"],
+                      //               snapshot.data.documents[index]["cimagelist"],
+                      //               snapshot.data.documents[index]["cimagelist"],
+                      //               snapshot.data.documents[index]["cimagelist"],
+                      //               snapshot.data.documents[index]["cimagelist"],
+                      //               snapshot.data.documents[index]["cimagelist"],
+                      //               snapshot.data.documents[index]["cimagelist"],
+                      //               snapshot.data.documents[index]["cimagelist"],
+                      //               snapshot.data.documents[index]["cimagelist"],
+                      //               snapshot.data.documents[index]["cimagelist"],
+                      //               snapshot.data.documents[index]["cimagelist"],
+                      //
+                      //             )),
+                      //       );
+                      //     },
+                      //   ),
+                      // )
+                    ],
+                    actions: <Widget>[
                       Container(
                           padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
                           child: IconSlideAction(
@@ -155,37 +145,32 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
                                         child: new FlatButton(
                                           onPressed: () {
 
-//                                                 setState(() {
-//                                                   FirebaseDatabase.instance.reference()
-//                                                       .child("advdata").child(_userId).child(advlist[index].chead)
-//                                                       .remove().whenComplete(() =>
-//                                                       Toast.show("تم الحذف فى المفضلة", context,
-//                                                           duration: Toast.LENGTH_SHORT,
-//                                                           gravity: Toast.BOTTOM));
-//                                                   setState(() async {
-//                                                     advlist.removeAt(index);
-//                                                     Navigator.pop(context);
-//
-//                                                     _imageUrls = advlist[index].curilist
-//                                                         .replaceAll(" ", "")
-//                                                         .replaceAll("[", "")
-//                                                         .replaceAll("]", "")
-//                                                         .split(",");
-//
-// //                                            final StorageReference storageRef =
-// //                                            FirebaseStorage.instance.ref().child('myimage');
-//                                                     for(String imge in _imageUrls){
-//
-//                                                       final StorageReference storageRef =
-//                                                       await FirebaseStorage.instance.getReferenceFromUrl(imge);
-//                                                       //   print("hhhhhhhhhhhhhhh${storageRef.path}");
-//                                                       await storageRef.delete().whenComplete(() {
-//                                                         // print("hhhhhhhhhhhhhhh$imge");
-//                                                       });
-//                                                     }
-//
-//                                                   });
-//                                                 });
+                                                setState(() {
+                                                  Firestore.instance.collection("advertisments")
+                                                      .document(snapshot.data.documents[index]["advid"])
+                                                      .delete().whenComplete(() =>
+                                                  setState(() async {
+                                                    Navigator.pop(context);
+                                                    Toast.show("تم الحذف", context,
+                                                        duration: Toast.LENGTH_SHORT,
+                                                        gravity: Toast.BOTTOM);
+                                                    _imageUrls = snapshot.data.documents[index]["cimagelist"]
+                                                        .replaceAll(" ", "")
+                                                        .replaceAll("[", "")
+                                                        .replaceAll("]", "")
+                                                        .split(",");
+
+                                                    for(String imge in _imageUrls){
+
+                                                      final StorageReference storageRef =
+                                                      await FirebaseStorage.instance.getReferenceFromUrl(imge);
+                                                      //   print("hhhhhhhhhhhhhhh${storageRef.path}");
+                                                      await storageRef.delete().whenComplete(() {
+                                                      });
+                                                    }
+                                                    this.reassemble();
+                                                  }));
+                                                });
                                           }
                                           ,
                                           child: Text("موافق"),
@@ -413,4 +398,5 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
       ),
     );
   }
+
 }

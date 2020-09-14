@@ -8,12 +8,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
+import 'package:priceme/classes/AClass.dart';
 import 'package:priceme/classes/FaultStringClass.dart';
 import 'package:priceme/classes/FaultsClass.dart';
 import 'package:priceme/classes/ModelClass.dart';
+import 'package:priceme/classes/OutputClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:priceme/screens/cur_loc.dart';
@@ -30,9 +33,8 @@ import '../Splash.dart';
 
 class AddAdv extends StatefulWidget {
   final LocalFileSystem localFileSystem;
-  List<String> sparepartsList;
   String probtype0, selecteditem0,mfault;
-  AddAdv(this.sparepartsList,this.probtype0,this.mfault, this.selecteditem0,  {localFileSystem})
+  AddAdv(this.probtype0,this.mfault, this.selecteditem0,  {localFileSystem})
       : this.localFileSystem = localFileSystem ?? LocalFileSystem();
 
   @override
@@ -48,9 +50,23 @@ class _AddAdvState extends State<AddAdv> {
   List<String> proplemtype = ["اعطال","قطع غيار"];
   List<String> indyearlist = [];
   List<String> subfaultsList = [];
+  List<bool> subcheckList = [];
+
+  List<String> subsparesList = [];
+  List<bool> subcheckList1 = [];
+
+  List<FaultStringClass> sparesList = [];
   List<FaultStringClass> faultsList = [];
+
   List<SparePartsClass> mainfaultsList = [];
+  List<SparePartsClass> mainsparsList = [];
+
+
   String subfault="";
+  String subcheck="";
+
+  String subfault1="";
+  String subcheck1="";
   List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
   var _formKey = GlobalKey<FormState>();
@@ -81,7 +97,7 @@ String _userId;
   FlutterAudioRecorder _recorder;
   Recording _current;
   RecordingStatus _currentStatus = RecordingStatus.Unset;
-  void getData() {
+  void getDataf() {
     setState(() {
     //  print("ooooooo${widget.sparepartsList[0]}");
       final SparePartsReference = Firestore.instance;
@@ -110,10 +126,13 @@ String _userId;
         });
       }).whenComplete(() {
         faultsList.clear();
-          for(var mfaults in mainfaultsList){
+       int i=0;
+        // subcheckList.add(false);
+
+        for(var mfaults in mainfaultsList){
             //setState(() {  subfaultsList.clear;});
 
-            SparePartsReference1.collection("subfaults").document(mfaults.sid).collection(mfaults.sName)
+            SparePartsReference1.collection("subfaults").document(mfaults.sid).collection("subfaultid")
               .getDocuments()
               .then((QuerySnapshot snapshot) {
             snapshot.documents.forEach((fault) {
@@ -126,8 +145,10 @@ String _userId;
                 fault.data['fsubUrl'],
               );
               setState(() {
+                i++;
                 subfaultsList.add(fault.data['fsubName']);
                 subfault=subfault+fault.data['fsubName']+",";
+                subcheck=subcheck+"false"+",";
                 print(fault.data['fsubName'] + "llll"+mfaults.sName);
 
               });
@@ -135,12 +156,92 @@ String _userId;
           }).whenComplete(() {
               setState(() {
                 print(mfaults.sName+"////"+subfaultsList.length.toString());
-                faultsList.add(new FaultStringClass(mfaults.sName,subfault));
+                faultsList.add(new FaultStringClass(mfaults.sName,subfault,subcheck));
                 subfault="";
+                subcheck="";
+
+                i=0;
                 subfaultsList.clear();
+                subcheckList.clear();
 
               });
             });
+
+        }//////
+
+      });
+    });
+
+  }
+  void getDatas() {
+    setState(() {
+      //  print("ooooooo${widget.sparepartsList[0]}");
+      final SparePartsReference = Firestore.instance;
+      final SparePartsReference1 = Firestore.instance;
+
+      mainfaultsList.clear;
+
+      SparePartsReference.collection("spareparts")
+          .getDocuments()
+          .then((QuerySnapshot snapshot) {
+        snapshot.documents.forEach((sparepart) {
+          SparePartsClass spc = SparePartsClass(
+            sparepart.data['sid'],
+            sparepart.data['sName'],
+            sparepart.data['surl'],
+
+          );
+
+
+          setState(() {
+
+            mainsparsList.add(spc);
+            // print(sparepartsList.length.toString() + "llll");
+          });
+
+        });
+      }).whenComplete(() {
+        sparesList.clear();
+        int i=0;
+        // subcheckList.add(false);
+
+        for(var mfaults in mainsparsList){
+          //setState(() {  subfaultsList.clear;});
+
+          SparePartsReference1.collection("subspares").document(mfaults.sid).collection("subsparesid")
+              .getDocuments()
+              .then((QuerySnapshot snapshot) {
+            snapshot.documents.forEach((fault) {
+              FaultsClass fp = FaultsClass(
+                fault.data['fid'],
+                fault.data['fName'],
+                fault.data['fsubId'],
+                fault.data['fsubName'],
+                fault.data['fsubDesc'],
+                fault.data['fsubUrl'],
+              );
+              setState(() {
+                i++;
+                subsparesList.add(fault.data['fsubName']);
+                subfault1=subfault1+fault.data['fsubName']+",";
+                subcheck1=subcheck1+"false"+",";
+            //    print(fault.data['fsubName'] + "llll"+mfaults.sName);
+
+              });
+            });
+          }).whenComplete(() {
+            setState(() {
+             // print(mfaults.sName+"////"+subfaultsList.length.toString());
+              sparesList.add(new FaultStringClass(mfaults.sName,subfault1,subcheck1));
+              subfault1="";
+              subcheck1="";
+
+              i=0;
+              subsparesList.clear();
+              subcheckList1.clear();
+
+            });
+          });
 
         }//////
 
@@ -193,11 +294,11 @@ String _userId;
     indyearlist[0]=("الموديل");
     _indyearcurrentItemSelected=indyearlist[0];
     _probtypecurrentItemSelected=widget.probtype0=="قطع غيار"?widget.probtype0:proplemtype[0];
-    _sparecurrentItemSelected =  widget.probtype0=="قطع غيار"?widget.selecteditem0:widget.sparepartsList[0];
+    // _sparecurrentItemSelected =  widget.probtype0=="قطع غيار"?widget.selecteditem0:widget.sparepartsList[0];
      fault1=widget.mfault;
      fault2=widget.selecteditem0;
-    getData();
-
+    getDataf();
+    getDatas();
   }
 
   @override
@@ -355,7 +456,7 @@ String _userId;
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => MyForm4(
-                                        faultsList,widget.selecteditem0,
+                                        faultsList,widget.selecteditem0,widget.mfault,
                                         onSubmit4: onSubmit4)));
 
                           },
@@ -415,7 +516,7 @@ String _userId;
                                 }
                               },
                               decoration: InputDecoration(
-                                labelText: 'عنوان',
+                                labelText: 'عنوان المشكلة',
                                 //hintText: 'Name',
                                 labelStyle: textStyle,
                                 errorStyle: TextStyle(
@@ -579,35 +680,40 @@ String _userId;
                         padding: EdgeInsets.only(
                             top: _minimumPadding, bottom: _minimumPadding),
                         child: Container(
-                          height: 40.0,
-                          child: Material(
-                              borderRadius: BorderRadius.circular(5.0),
-                              shadowColor: const Color(0xffdddddd),
-                              color: const Color(0xffe7e7e7),
-                              elevation: 2.0,
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: DropdownButton<String>(
-                                  items: widget.sparepartsList.map((String value) {
-                                    return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(
-                                          value,
-                                          style: TextStyle(
-                                              color: const Color(0xffF1AB37),
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold),
-                                        ));
-                                  }).toList(),
-                                  value: _sparecurrentItemSelected,
-                                  onChanged: (String newValueSelected) {
-                                    // Your code to execute, when a menu item is selected from dropdown
-                                    _onDropDownItemSelectedSpares(
-                                        newValueSelected);
-                                  },
+                          height: 40,
+                          color: Colors.grey,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MyForm4(
+                                          sparesList,widget.selecteditem0,widget.mfault,
+                                          onSubmit4: onSubmit4)));
+
+                            },
+                            child: Card(
+                              elevation: 0.0,
+                              color: const Color(0xff171732),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "نوع قطع الغيار",
+                                    textDirection: TextDirection.rtl,
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
-                              )),
-                        ),
+                              ),
+                            ),
+                          ),
+                        )
                       ),
                                            // Container(
                       //   //decoration: BoxDecoration(border: Border.all(color: Colors.teal)),
@@ -725,7 +831,7 @@ String _userId;
                             child: Container(
                               width: 60,
                               height: 60,
-                              child: Icon(Icons.stop, size: 20,),
+                              child: Icon(Icons.backup,color: Colors.green, size: 30,),
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: Color(0xFFe0f2f1)),
@@ -955,7 +1061,7 @@ setState(() {
       final StorageUploadTask uploadTask =
       storageRef.child('$now.jpg').putFile(file);
       var Imageurl = await (await uploadTask.onComplete).ref.getDownloadURL();
-      Toast.show("تم تحميل صورة طال عمرك", context,
+      Toast.show("تم تحميل صورة ", context,
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       setState(() {
         url1 = Imageurl.toString();
@@ -1027,6 +1133,7 @@ setState(() {
 
         'mfault':fault1,
         'subfault':fault2,
+        'mfaultarray':fault1.split(","),
 
         'sparepart':_sparecurrentItemSelected,
 
@@ -1051,13 +1158,15 @@ setState(() {
           titleController.text = "";
           discController.text = "";
           bodyController.text = "";
-          _sparecurrentItemSelected = widget.probtype0=="قطع غيار"?widget.selecteditem0:widget.sparepartsList[0];
+          // _sparecurrentItemSelected = widget.probtype0=="قطع غيار"?widget.selecteditem0:widget.sparepartsList[0];
          // _probtypecurrentItemSelected=widget.probtype0=="قطع غيار"?widget.probtype0:proplemtype[0];
           _indyearcurrentItemSelected=indyearlist[0];
           model1=null;model2=null;fault1=null;fault2=null;
           _value = 0;
           fromPlaceLat=null; fromPlaceLng=null; fPlaceName =null;
             _load1 = false;
+          fault1=widget.mfault;
+          fault2=widget.selecteditem0;
           _init();
         });
       });
@@ -1131,14 +1240,25 @@ setState(() {
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
     });
   }
-  void onSubmit4(String result) {
+  void onSubmit4(List<OutputClass> result) {
     setState(() {
-      fault1 = result.split(",")[0];
-      fault2 = result.split(",")[1];
+      //result.clear();
+      for(int i = 0; i < result.length; i++){
+       // setState(() {
+          fault1 = fault1+","+result[i].title;
+          fault2 = fault2+","+result[i].subtitle;
+       // });
+        print("${result[i].title}///////${result[i].subtitle}");
+      }
+      // fault1 = result.split(",")[0];
+      // fault2 = result.split(",")[1];
       Toast.show(
-          "${result.split(",")[0]}///////${result.split(",")[1]}", context,
+          "$fault1///////${fault2}", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      result.clear();
+
     });
+
   }
   _init() async {
     try {
@@ -1302,7 +1422,7 @@ setState(() {
       setState(() {
         _load1 = true;
       });
-      Toast.show("تم تحميل التسجيل الصوتى طال عمرك", context,
+      Toast.show("تم تحميل التسجيل الصوتى", context,
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       uploadpp0(url2);
     });
@@ -1436,26 +1556,59 @@ class _MyForm3State extends State<MyForm3> {
 ////////////////////////////////
 
 //////////////////////////////////
-typedef void MyFormCallback4(String result);
+typedef void MyFormCallback4(List<OutputClass> result);
 class MyForm4 extends StatefulWidget {
   final MyFormCallback4 onSubmit4;
- // String model;
   List<FaultStringClass> faultsList = [];
-String selecteditem;
-  MyForm4(this.faultsList,this.selecteditem, {this.onSubmit4});
+String selecteditem,mainitem;
+  MyForm4(this.faultsList,this.selecteditem,this.mainitem,{this.onSubmit4});
   @override
   _MyForm4State createState() => _MyForm4State();
 }
 class _MyForm4State extends State<MyForm4> {
-  String _currentValue = '';
-  String _currentValue1 = '';
-
+  String _currentValuesub = '';
+  String _currentValuem = '';
+  bool _isChecked= false;
   List<ModelClass> modelList = [];
+  List<AClass> aList = [];
+  List<OutputClass> outputList = [];
 
+  List<bool> checlist = [];
   @override
   void initState() {
     super.initState();
-    _currentValue = widget.selecteditem;
+    outputList.clear();
+    _currentValuesub = widget.selecteditem;
+    _currentValuem=widget.mainitem;
+   if (widget.mainitem==""||widget.selecteditem==""){}else{ outputList.add(OutputClass(widget.mainitem,widget.selecteditem));}
+    for(int i = 0; i < widget.faultsList.length; i++){
+      // checlist.clear();
+      // for(int n = 0; n < widget.faultsList[i].subtitle.split(",").length; n++){
+      //   if (widget.faultsList[i].subtitle.split(",")[n]==_currentValue){
+      //     print("rrrrrr"+widget.faultsList[i].subtitle.split(",")[n]+"1"+_currentValue);
+      //       checlist.add(true);
+      //   }else{
+      //       checlist.add(false);
+      //
+      //     print("rrrrrr"+widget.faultsList[i].subtitle.split(",")[n]+"0"+_currentValue);
+      //
+      //   }
+      // }
+      setState(() {
+        print("rrrrrrr"+checlist.toString());
+        aList.add(AClass(i,
+            widget.faultsList[i].title,
+            widget.faultsList[i].subtitle.split(","),
+            //checlist
+          // List.filled(widget.faultsList[i].subtitle.split(",").length, false),
+            List<bool>.generate(widget.faultsList[i].subtitle.split(",").length,
+                    (k) => widget.faultsList[i].subtitle.split(",")[k]==_currentValuesub)
+
+        ));
+      });
+
+
+    }
    // modelList = widget.faultsList;
   }
   @override
@@ -1477,16 +1630,18 @@ class _MyForm4State extends State<MyForm4> {
           Padding(
             padding: const EdgeInsets.only(top:18.0),
             child: ListView.builder(
-              itemCount: widget.faultsList.length,
+              itemCount:aList.length,
               itemBuilder: (context, i) {
-                if( widget.faultsList[i].subtitle.contains(widget.selecteditem)){
-                  _currentValue1=widget.faultsList[i].title;
+                if(  aList[i].subtitle.contains(widget.selecteditem)){
+                  //_currentValuem=aList[i].title;
+                  // print(_currentValuem+"ppp");
                  // widget.onSubmit4(_currentValue1.toString() + "," + _currentValue.toString());
-
+                //   subcheck.clear();
+                // subcheck = List.filled(widget.faultsList[i].subtitle.split(",").length, false);
                 }
                 return new ExpansionTile(
                   title: new Text(
-                    widget.faultsList[i].title,
+                    aList[i].title,
                     style: new TextStyle(
                         fontSize: 20.0,
                         fontWeight: FontWeight.bold,
@@ -1495,26 +1650,54 @@ class _MyForm4State extends State<MyForm4> {
                   children: <Widget>[
                     Column(
                       // padding: EdgeInsets.all(8.0),widget.faultsList[i].subtitle.substring(0, widget.faultsList[i].subtitle.length() - 1)
-                      children:  widget.faultsList[i].subtitle.split(",")
-                          .map((value) =>value==""?Container(): RadioListTile(
-                        groupValue: _currentValue,
-                        title: Text(
-                          value,
-                          textDirection: TextDirection.rtl,
-                        ),
-                        value: value,
-                        onChanged: (val) {
-                          setState(() {
-                            debugPrint('VAL = $val');
-                            _currentValue = val;
-                            _currentValue1 =  widget.faultsList[i].title;
-                            Navigator.pop(context);
-                            widget.onSubmit4(_currentValue1.toString() + "," + _currentValue.toString());
-                          });
-                        },
-                      ))
-                          .toList(),
-                    ),
+                      children:  List.generate( aList[i].subtitle.length, (j) => aList[i].subtitle[j]==""||aList[i].subtitle[j].length==0?Container(): CheckboxListTile(
+                //  groupValue: _currentValue,
+                title: Text(
+                  aList[i].subtitle[j],
+                textDirection: TextDirection.rtl,
+                ),
+                //  value: value,
+                value: aList[i].checklist[j],
+
+                onChanged: (val) {
+                  setState(() {
+                    aList[i].checklist[j]=val;
+                  });
+                  if(val){
+                    setState(() {
+                      outputList.add(OutputClass(aList[i].title,aList[i].subtitle[j]));
+                      print("hhh${outputList.length}//"+aList[i].title+aList[i].subtitle[j]);
+                      // _currentValuesub=aList[i].subtitle[j];
+                      //   _currentValuem =aList[i].title;
+                    });
+                  }else{
+                    outputList.removeWhere((item) => item.subtitle == aList[i].subtitle[j]);
+                    print("hhh${outputList.length}//"+aList[i].title+aList[i].subtitle[j]);
+
+                  }
+                },
+                ))),
+
+                      // widget.faultsList[i].subtitle.split(",")
+                      //     .mapIndexed((value,i) =>value==""?Container(): CheckboxListTile(
+                      // //  groupValue: _currentValue,
+                      //   title: Text(
+                      //     value,
+                      //     textDirection: TextDirection.rtl,
+                      //   ),
+                      // //  value: value,
+                      //   value: false,
+                      //
+                      //   onChanged: (val) {
+                      //     setState(() {
+                      //       debugPrint('VAL = $val');
+                      //       _isChecked = val;
+                      //       _currentValue1 =  widget.faultsList[i].title;
+                      //       });
+                      //   },
+                      // ))
+                      //     .toList(),
+                  //  ),
 //              new Column(
 //                children:
 //                _buildExpandableContent(regionlist[i]),
@@ -1524,6 +1707,33 @@ class _MyForm4State extends State<MyForm4> {
               },
             ),
           ),
+          Positioned(
+            bottom: 5,
+
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment:MainAxisAlignment.spaceBetween ,
+              children: <Widget>[
+                RaisedButton(
+                  onPressed: () {
+                    widget.onSubmit4(outputList/**_currentValuem.toString() + "," + _currentValuesub.toString()**/);
+                    Navigator.pop(context);
+
+                  },
+                  child: const Text('حفظ', style: TextStyle(fontSize: 20)),
+                ),
+                SizedBox(width: 10,),
+                RaisedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+
+                  },
+                  child: const Text("الغاء", style: TextStyle(fontSize: 20)),
+                ),
+              ],
+            ),
+          )
+
 //          Row(
 //            mainAxisAlignment: MainAxisAlignment.spaceAround,
 //            children: <Widget>[

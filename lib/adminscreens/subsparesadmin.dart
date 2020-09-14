@@ -15,15 +15,15 @@ import 'package:firebase_storage/firebase_storage.dart';
 
 import 'dart:math' as Math;
 
-class SubFaultAdmin extends StatefulWidget {
+class SubSparesAdmin extends StatefulWidget {
   String id,name, url;
   List<String> subFault;
-  SubFaultAdmin(this.id,this.name, this.url);
+  SubSparesAdmin(this.id,this.name, this.url);
   @override
-  _SubFaultAdminState createState() => _SubFaultAdminState();
+  _SubSparesAdminState createState() => _SubSparesAdminState();
 }
 
-class _SubFaultAdminState extends State<SubFaultAdmin> {
+class _SubSparesAdminState extends State<SubSparesAdmin> {
   List<FaultsClass> faultsList = [];
   var _controller = ScrollController();
   TextEditingController _spareNameController = TextEditingController();
@@ -297,7 +297,7 @@ class _SubFaultAdminState extends State<SubFaultAdmin> {
                                             print("kkk${faultsList[index].fsubId}");
                                             setState(() {
                                               Firestore.instance
-                                                  .collection("subfaults").document(widget.id).collection("subfaultid")
+                                                  .collection("subspares").document(widget.id).collection("subsparesid")
                                                   .document(
                                                   faultsList[index].fsubId)
                                                   .delete()
@@ -391,7 +391,7 @@ class _SubFaultAdminState extends State<SubFaultAdmin> {
 
   void getData() {
     setState(() {
-      SparePartsReference.collection("subfaults").document(widget.id).collection("subfaultid")
+      SparePartsReference.collection("subspares").document(widget.id).collection("subsparesid")
           .getDocuments()
           .then((QuerySnapshot snapshot) {
         snapshot.documents.forEach((fault) {
@@ -486,7 +486,7 @@ class _SubFaultAdminState extends State<SubFaultAdmin> {
 
   void createRecord(urlList) {
     DocumentReference documentReference =
-    Firestore.instance.collection('subfaults').document(widget.id).collection("subfaultid").document();
+    Firestore.instance.collection('subspares').document(widget.id).collection("subsparesid").document();
     documentReference.setData({
       'fid': widget.id,
       'fName': widget.name,
@@ -518,7 +518,7 @@ class _SubFaultAdminState extends State<SubFaultAdmin> {
 
 
   void updatedata(url) {
-    Firestore.instance.collection('subfaults').document(widget.id).collection("subfaultid")
+    Firestore.instance.collection('subspares').document(widget.id).collection("subsparesid")
         .document(id)
         .updateData({
       'fsubName': _spareNameController.text,

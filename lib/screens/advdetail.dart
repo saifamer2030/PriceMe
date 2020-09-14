@@ -33,6 +33,8 @@ class _AdvDetailState extends State<AdvDetail> {
   AudioPlayer audioPlayer = AudioPlayer();
   Duration duration= new Duration();
   Duration position= new Duration();
+  double bestprice=10000000.0;
+  double bestrate=0.0;
 
   bool isplaying1 = false;
   bool arrangecheck = true;
@@ -94,6 +96,7 @@ class _AdvDetailState extends State<AdvDetail> {
 
           _username = data.documents[0].data['name'];
           _userphone = data.documents[0].data['phone'];
+          // _traderate=data.documents[0].data['rate'];
           // if(_cName==null){_cName=user.displayName??"اسم غير معلوم";}
           if(_username==null){
             if(user.displayName==null||user.displayName==""){
@@ -175,6 +178,17 @@ class _AdvDetailState extends State<AdvDetail> {
         setState(() {
           commentlist.add(cc);
           commentlist.sort((c1, c2) =>c1.price.compareTo(c2.price));});
+        if( bestprice>comment.data['price']){
+          setState(() {
+            bestprice=comment.data['price'];
+          });
+          }
+        if( bestrate<comment.data['rate']){
+          setState(() {
+            bestrate=comment.data['rate'];
+          });
+        }
+
       });
     });
   }
@@ -279,16 +293,16 @@ class _AdvDetailState extends State<AdvDetail> {
                               child: ctitle == null
                                   ? Container()
                                   : Text(
-                                      "${ctitle}",
-                                      textDirection: TextDirection.rtl,
-                                      textAlign: TextAlign.right,
-                                      style: TextStyle(
-                                          color: const Color(0xff171732),
+                                "${ctitle}",
+                                textDirection: TextDirection.rtl,
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                    color: const Color(0xff171732),
 //                                                fontFamily: 'Gamja Flower',
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15.0,
-                                          fontStyle: FontStyle.normal),
-                                    ),
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15.0,
+                                    fontStyle: FontStyle.normal),
+                              ),
                             ),
                           ),
                           Positioned(
@@ -301,65 +315,65 @@ class _AdvDetailState extends State<AdvDetail> {
                                   mfault == ""
                                       ? Text(sparepart)
                                       : Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 8.0),
-                                          child:  Text("$mfault-$subfault"
-                                            ,
-                                                  textDirection:
-                                                      TextDirection.rtl,
-                                                  textAlign:
-                                                      TextAlign.right,
-                                                  style: TextStyle(
-                                                      color: const Color(
-                                                          0xff171732),
-                                                      fontSize: 15.0,
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0),
+                                    child:  Text("$mfault-$subfault"
+                                      ,
+                                      textDirection:
+                                      TextDirection.rtl,
+                                      textAlign:
+                                      TextAlign.right,
+                                      style: TextStyle(
+                                          color: const Color(
+                                              0xff171732),
+                                          fontSize: 15.0,
 //                                                      fontFamily: 'Gamja Flower',
-                                                      fontStyle: FontStyle
-                                                          .normal),
-                                                ),
-                                        ),
+                                          fontStyle: FontStyle
+                                              .normal),
+                                    ),
+                                  ),
                                 ],
                               ),
                             ),
                           ),
-                                Positioned(
-                                  top: 20,
-                                  right: 5,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Row(
-                                      children: <Widget>[
-                                        ownerName == null
-                                            ? Text("")
-                                            : Padding(
-                                                padding: const EdgeInsets.only(
-                                                    top: 8.0),
-                                                child: ownerName == null
-                                                    ? Text("اسم غير معلوم")
-                                                    : Text(
-                                                        "المالك: ${ownerName}",
-                                                        textDirection:
-                                                            TextDirection.rtl,
-                                                        textAlign:
-                                                            TextAlign.right,
-                                                        style: TextStyle(
-                                                            fontSize: 15.0,
-                                                            color: const Color(
-                                                                0xff171732),
+                          Positioned(
+                            top: 20,
+                            right: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Row(
+                                children: <Widget>[
+                                  ownerName == null
+                                      ? Text("")
+                                      : Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0),
+                                    child: ownerName == null
+                                        ? Text("اسم غير معلوم")
+                                        : Text(
+                                      "المالك: ${ownerName}",
+                                      textDirection:
+                                      TextDirection.rtl,
+                                      textAlign:
+                                      TextAlign.right,
+                                      style: TextStyle(
+                                          fontSize: 15.0,
+                                          color: const Color(
+                                              0xff171732),
 //                                                      fontFamily:
 //                                                          'Gamja Flower',
-                                                            fontStyle: FontStyle
-                                                                .normal),
-                                                      ),
-                                              ),
-                                        Icon(
-                                          Icons.person,
-                                          color: const Color(0xff171732),
-                                        ),
-                                      ],
+                                          fontStyle: FontStyle
+                                              .normal),
                                     ),
                                   ),
-                                ),
+                                  Icon(
+                                    Icons.person,
+                                    color: const Color(0xff171732),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                           Positioned(
                             top: 45,
                             right: 5,
@@ -370,23 +384,23 @@ class _AdvDetailState extends State<AdvDetail> {
                                   fPlaceName == null
                                       ? Container()
                                       : Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 8.0),
-                                          child: Text(
-                                            fPlaceName,
-                                            textDirection:
-                                                TextDirection.rtl,
-                                            textAlign: TextAlign.right,
-                                            style: TextStyle(
-                                                fontSize: 15.0,
-                                                color: const Color(
-                                                    0xff171732),
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0),
+                                    child: Text(
+                                      fPlaceName,
+                                      textDirection:
+                                      TextDirection.rtl,
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                          fontSize: 15.0,
+                                          color: const Color(
+                                              0xff171732),
 //                                                      fontFamily:
 //                                                          'Gamja Flower',
-                                                fontStyle:
-                                                    FontStyle.normal),
-                                          ),
-                                        ),
+                                          fontStyle:
+                                          FontStyle.normal),
+                                    ),
+                                  ),
                                   Icon(
                                     Icons.location_on,
                                     color: const Color(0xff171732),
@@ -433,29 +447,74 @@ class _AdvDetailState extends State<AdvDetail> {
                                 child: cdiscribtion == null
                                     ? Text("")
                                     : Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 8.0),
-                                        child: Text(
-                                          "${cdiscribtion}",
-                                          textDirection:
-                                              TextDirection.rtl,
-                                          //minFontSize: 8,
-                                          maxLines: 3,
-                                          textAlign: TextAlign.right,
-                                          style: TextStyle(
-                                              fontSize: 15.0,
+                                  padding: const EdgeInsets.only(
+                                      top: 8.0),
+                                  child: Text(
+                                    "${cdiscribtion}",
+                                    textDirection:
+                                    TextDirection.rtl,
+                                    //minFontSize: 8,
+                                    maxLines: 3,
+                                    textAlign: TextAlign.right,
+                                    style: TextStyle(
+                                        fontSize: 15.0,
 //                                                          fontFamily:
 //                                                              'Gamja Flower',
-                                              fontStyle:
-                                                  FontStyle.normal),
-                                        ),
-                                      ),
+                                        fontStyle:
+                                        FontStyle.normal),
+                                  ),
+                                ),
                               ),
                             ),
                             /** Icon(
                                 Icons.calendar_today,
                                 color: Colors.grey,
                                 ),**/
+                          ),
+                        ],
+                      )),
+                ),
+                Card(
+                  shape: new RoundedRectangleBorder(
+                      side: new BorderSide(
+                          color: Colors.grey[400], width: 3.0),
+                      borderRadius: BorderRadius.circular(10.0)),
+                  //borderOnForeground: true,
+                  elevation: 10.0,
+                  margin: EdgeInsets.only(right: 1, left: 1, bottom: 2),
+                  child: Container(
+                      height: 120,
+                      color: Colors.grey[300],
+                      padding: EdgeInsets.all(0),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            "${bestprice}",
+                            textDirection:
+                            TextDirection.rtl,
+                            //minFontSize: 8,
+                            maxLines: 3,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                                fontSize: 15.0,
+//                                                          fontFamily:
+//                                                              'Gamja Flower',
+                                fontStyle:
+                                FontStyle.normal),
+                          ),
+                          Text(
+                            "افضل سعر:",
+                            textDirection:
+                            TextDirection.rtl,
+                            //minFontSize: 8,
+                            maxLines: 3,
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                                fontSize: 15.0,
+//                                                          fontFamily:
+//                                                              'Gamja Flower',
+                                fontStyle:
+                                FontStyle.normal),
                           ),
                         ],
                       )),
@@ -894,7 +953,7 @@ class _AdvDetailState extends State<AdvDetail> {
                             child: Row(
                               children: <Widget>[
                                 Container(
-                                  width: 320,
+                                  width: 300,
                                   height: 60,
                                   child: Padding(
                                     padding: const EdgeInsets.all(5.0),
@@ -943,14 +1002,19 @@ class _AdvDetailState extends State<AdvDetail> {
                                     ),
                                   ),
                                 ),
-                                InkWell(
-                                  onTap: () async {
+                                IconButton(
+                                  icon: Icon(
+                                    Icons.add_comment,
+                                    color: Colors.grey,
+                                  ),
+                                  tooltip: 'Increase volume by 10',
+                                  onPressed: () async {
                                     if (_formKey1.currentState
                                         .validate()) {
                                       try {
                                         final result =
                                             await InternetAddress.lookup(
-                                                'google.com');
+                                            'google.com');
                                         if (result.isNotEmpty &&
                                             result[0]
                                                 .rawAddress
@@ -972,11 +1036,41 @@ class _AdvDetailState extends State<AdvDetail> {
 
                                     }
                                   },
-                                  child: Icon(
-                                    Icons.add_comment,
-                                    color: Colors.grey,
-                                  ),
                                 ),
+//                                 InkWell(
+//                                   onTap: () async {
+//                                     if (_formKey1.currentState
+//                                         .validate()) {
+//                                       try {
+//                                         final result =
+//                                             await InternetAddress.lookup(
+//                                                 'google.com');
+//                                         if (result.isNotEmpty &&
+//                                             result[0]
+//                                                 .rawAddress
+//                                                 .isNotEmpty) {
+//                                           createRecord();
+//                                         }
+//                                       } on SocketException catch (_) {
+//                                         //  print('not connected');
+//                                         Toast.show(
+//                                             "انت غير متصل بشبكة إنترنت طال عمرك",
+//                                             context,
+//                                             duration: Toast.LENGTH_LONG,
+//                                             gravity: Toast.BOTTOM);
+//                                       }
+//
+// //                                                setState(() {
+// //                                                  _load2 = true;
+// //                                                });
+//
+//                                     }
+//                                   },
+//                                   child: Icon(
+//                                     Icons.add_comment,
+//                                     color: Colors.grey,
+//                                   ),
+//                                 ),
                               ],
                             ),
                           ),
@@ -1033,6 +1127,7 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
         'price': double.parse(price),
       'rate':5.0-double.parse(price),
       }).whenComplete(() {
+
         Toast.show("ارسالنا تعليقك طال عمرك", context,
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         CommentClass commentclass = new CommentClass(
@@ -1050,6 +1145,16 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
           commentlist.add(commentclass);
 // aaa(commentlist);
         _commentController.text = "";
+          if( bestprice>double.parse(price)){
+            setState(() {
+              bestprice=double.parse(price);
+            });
+          }
+          if( bestrate<5.0-double.parse(price)){
+            setState(() {
+              bestrate=5.0-double.parse(price);
+            });
+          }
           //      var cursor = (5/commentlist.length)* _controller.position.maxScrollExtent;//specific item
 
           _controller.animateTo(
