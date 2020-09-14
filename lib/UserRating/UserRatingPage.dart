@@ -5,8 +5,8 @@ import 'package:firebase_database/firebase_database.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:priceme/screens/signin.dart';
+import 'package:toast/toast.dart';
 
 import 'RatingClass.dart';
 
@@ -24,13 +24,17 @@ class UserRatingPage extends StatefulWidget {
 //final ratingReference = FirebaseDatabase.instance.reference().child('Rating');
 //final ratingAvrageReference =
 //    FirebaseDatabase.instance.reference().child('coiffuredata');
+enum SingingCharacter { done, notDone }
 
 class _UserRatingPageState extends State<UserRatingPage> {
   List<Rating> itemsRate;
   var Rate = 0.0;
+  var Rate2 = 0.0;
+  var Rate3 = 0.0;
   var _averageRating, _totalRate, _totalCust;
   FirebaseAuth _firebaseAuth;
   String _userId;
+  SingingCharacter _character = SingingCharacter.done;
 
   // تعريف الايتم المراد ادخال قيم فيها
   TextEditingController _rateController;
@@ -86,7 +90,6 @@ class _UserRatingPageState extends State<UserRatingPage> {
       body: Container(
         width: width,
         height: height,
-
         decoration: new BoxDecoration(
           image: new DecorationImage(
             image: new AssetImage("assets/images/ic_background.png"),
@@ -112,43 +115,243 @@ class _UserRatingPageState extends State<UserRatingPage> {
 //                  ),
 //                ],
 //              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 150.0),
-                child: Center(
-                    child: Text(
-                  "تقييمك يدعم تحسين الخدمة",
-                  style: TextStyle(fontSize: 20.0),
-                )),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Center(
-                  child: RatingBar(
-                    initialRating: 0,
-                    direction: Axis.horizontal,
-                    allowHalfRating: true,
-                    itemCount: 5,
-                    itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
-                    itemBuilder: (context, _) => Icon(
-                      Icons.star,
-                      color: Colors.amber,
-                    ),
-                    onRatingUpdate: (rating) {
-                      print(rating);
 
-                      setState(() {
-                        Rate = rating;
-                      });
-                    },
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Center(
+                  child: Text(
+                    "تقييم معاملة التاجر",
+                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 20.0),
+                padding: const EdgeInsets.only(top: 20),
                 child: Center(
-                  child: Text("${Rate}"),
+                    child: Text(
+                  "الاتفاق علي السعر*",
+                  style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
+                )),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Radio(
+                    value: SingingCharacter.done,
+                    groupValue: _character,
+                    onChanged: (SingingCharacter value) {
+                      setState(() {
+                        _character = value;
+                      });
+                    },
+                  ),
+                  Text('تم'),
+                  Radio(
+                    value: SingingCharacter.notDone,
+                    groupValue: _character,
+                    onChanged: (SingingCharacter value) {
+                      setState(() {
+                        _character = value;
+                      });
+                    },
+                  ),
+                  Text('لم يتم'),
+                ],
+              ),
+
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Center(
+                        child: Text(
+                          Rate == 5.0
+                              ? ' أكمل وجه'
+                              : ((Rate < 5.0) & (Rate > 3.0))
+                                  ? 'ممتازة'
+                                  : ((Rate < 4.0) & (Rate > 2.0))
+                                      ? 'جيدة جداً'
+                                      : ((Rate < 3.0) & (Rate > 1.0))
+                                          ? 'جيدة'
+                                          : ((Rate < 2.0) & (Rate > 0.0))
+                                              ? 'سيئة'
+                                              : 'لا يوجد تقييم',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 10),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(0.0),
+                      child: Center(
+                        child: RatingBar(
+                          initialRating: 0,
+                          unratedColor: Colors.grey[500],
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
+                          itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: Colors.amber,
+//                            size: 15,
+                          ),
+                          onRatingUpdate: (rating) {
+                            print(rating);
+
+                            setState(() {
+                              Rate = rating;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(0.0),
+                      child: Center(
+                          child: Text(
+                        "نوعية الخدمة*",
+                        style: TextStyle(
+                            fontSize: 12.0, fontWeight: FontWeight.bold),
+                      )),
+                    ),
+                  ],
                 ),
               ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Center(
+                        child: Text(
+                          Rate2 == 5.0
+                              ? ' أكمل وجه'
+                              : ((Rate2 < 5.0) & (Rate2 > 3.0))
+                                  ? 'ممتازة'
+                                  : ((Rate2 < 4.0) & (Rate2 > 2.0))
+                                      ? 'جيدة جداً'
+                                      : ((Rate2 < 3.0) & (Rate2 > 1.0))
+                                          ? 'جيدة'
+                                          : ((Rate2 < 2.0) & (Rate2 > 0.0))
+                                              ? 'سيئة'
+                                              : 'لا يوجد تقييم',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 10),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(0.0),
+                      child: Center(
+                        child: RatingBar(
+                          initialRating: 0,
+                          unratedColor: Colors.grey[500],
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
+                          itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: Colors.amber,
+//                            size: 15,
+                          ),
+                          onRatingUpdate: (rating) {
+                            print(rating);
+
+                            setState(() {
+                              Rate2 = rating;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(0.0),
+                      child: Center(
+                          child: Text(
+                        "الالتزام بالمواعيد*",
+                        style: TextStyle(
+                            fontSize: 12.0, fontWeight: FontWeight.bold),
+                      )),
+                    ),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Center(
+                        child: Text(
+                          Rate3 == 5.0
+                              ? ' أكمل وجه'
+                              : ((Rate3 < 5.0) & (Rate3 > 3.0))
+                                  ? 'ممتازة'
+                                  : ((Rate3 < 4.0) & (Rate3 > 2.0))
+                                      ? 'جيدة جداً'
+                                      : ((Rate3 < 3.0) & (Rate3 > 1.0))
+                                          ? 'جيدة'
+                                          : ((Rate3 < 2.0) & (Rate3 > 0.0))
+                                              ? 'سيئة'
+                                              : 'لا يوجد تقييم',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontSize: 10),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(0.0),
+                      child: Center(
+                        child: RatingBar(
+                          initialRating: 0,
+                          unratedColor: Colors.grey[500],
+                          direction: Axis.horizontal,
+                          allowHalfRating: true,
+                          itemCount: 5,
+                          itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
+                          itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: Colors.amber,
+//                            size: 15,
+                          ),
+                          onRatingUpdate: (rating) {
+                            print(rating);
+
+                            setState(() {
+                              Rate3 = rating;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(0.0),
+                      child: Center(
+                          child: Text(
+                        "المعاملة مع الزبون*",
+                        style: TextStyle(
+                            fontSize: 12.0, fontWeight: FontWeight.bold),
+                      )),
+                    ),
+                  ],
+                ),
+              ),
+
               Padding(
                 padding: const EdgeInsets.only(
                     top: 20.0, right: 10.0, left: 10.0, bottom: 10.0),
@@ -217,14 +420,13 @@ class _UserRatingPageState extends State<UserRatingPage> {
     );
   }
 
-
-
   void getUser({String com}) {
+    var allRating = (Rate + Rate2 + Rate3) / 3;
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? null
         : setState(() {
             _userId = user.uid;
-            if (user != null && com != " ") {
+            if (user != null && com != "" && Rate != 0.0 && Rate2 != 0.0 && Rate3 != 0.0) {
               DocumentReference documentReference = Firestore.instance
                   .collection('Rating')
                   .document(widget.rating.id)
@@ -233,19 +435,34 @@ class _UserRatingPageState extends State<UserRatingPage> {
               String ratingid = documentReference.documentID;
               documentReference.setData({
                 'Comment': _commentController.text,
-                'Rate': Rate,
+                'Rate': allRating.round(),
+                'AgreementPrice': (_character.toString().contains("done")
+                    ? "تم الاتفاق علي السعر"
+                    : "لم يتم الاتفاق علي السعر"),
               }).whenComplete(() {
                 setState(() {
                   Firestore.instance
                       .collection('users')
                       .document(widget.rating.id)
                       .updateData({
-                    'rating': (double.parse(_totalRate) + Rate).toString(),
+                    'rating': (double.parse(_totalRate) + allRating.round()).toString(),
                     'custRate': _totalCust + 1,
                   });
+                  print('############## $allRating ###################');
+                  Toast.show(
+                      "تم إرسال تقييمك بنجاح",
+                      context,
+                      duration: Toast.LENGTH_LONG,
+                      gravity: Toast.BOTTOM);
                   Navigator.pop(context);
                 });
               });
+            }else{
+              Toast.show(
+                  "برجاء إكمال التقييم",
+                  context,
+                  duration: Toast.LENGTH_LONG,
+                  gravity: Toast.BOTTOM);
             }
           }));
   }

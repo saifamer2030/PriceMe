@@ -474,19 +474,21 @@ class _AdvDetailState extends State<AdvDetail> {
                         ],
                       )),
                 ),
-                Card(
+                SizedBox(height: 10.0,),
+                bestprice==10000000.0?Container():Card(
                   shape: new RoundedRectangleBorder(
                       side: new BorderSide(
-                          color: Colors.grey[400], width: 3.0),
+                          color: Colors.green[400], width: 3.0),
                       borderRadius: BorderRadius.circular(10.0)),
                   //borderOnForeground: true,
                   elevation: 10.0,
-                  margin: EdgeInsets.only(right: 1, left: 1, bottom: 2),
+                  margin: EdgeInsets.only(right: 100, left: 100, bottom: 2),
                   child: Container(
-                      height: 120,
-                      color: Colors.grey[300],
+                      height: 30,
+                      color: Colors.green[300],
                       padding: EdgeInsets.all(0),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
                           Text(
                             "${bestprice}",
@@ -496,11 +498,8 @@ class _AdvDetailState extends State<AdvDetail> {
                             maxLines: 3,
                             textAlign: TextAlign.right,
                             style: TextStyle(
-                                fontSize: 15.0,
-//                                                          fontFamily:
-//                                                              'Gamja Flower',
-                                fontStyle:
-                                FontStyle.normal),
+                                fontSize: 25.0,
+                                fontStyle:                                FontStyle.normal),
                           ),
                           Text(
                             "افضل سعر:",
