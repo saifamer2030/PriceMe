@@ -37,11 +37,6 @@ class _HomePageState extends State<HomePage> {
   String mfault = "";
 
   bool _load = false;
-  static String collectionDbName = 'instagram_stories_db';
-
-  //TODO: add possibility get data from any API
-  CollectionReference dbInstance =
-      Firestore.instance.collection(collectionDbName);
 
   @override
   void initState() {
@@ -129,8 +124,8 @@ class _HomePageState extends State<HomePage> {
                       const Color(0xffff904a)
                     ],
                     stops: [0.0, 0.562, 0.867, 1.0],
-                    transform: GradientXDTransform(
-                        1.0, 0.0, 0.0, 1.837, 0.0, -0.419, Alignment(-0.93, 0.0)),
+                    transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837, 0.0,
+                        -0.419, Alignment(-0.93, 0.0)),
                   ),
 //                color: Colors.orange,
                 ),
@@ -259,72 +254,78 @@ class _HomePageState extends State<HomePage> {
             ),
             subsparescheck
                 ? Container(
-                    height: 400,
+                    height: 200,
                     child: subsparesList.length == 0
                         ? Center(child: new Text("برجاء الإنتظار"))
-                        : new ListView.builder(
-                            physics: BouncingScrollPhysics(),
-                            //scrollDirection: Axis.horizontal,
-                            // reverse: true,
-                            itemCount: subsparesList.length,
-                            itemBuilder: (BuildContext ctxt, int index) {
-                              return InkWell(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 5.0, right: 5.0, left: 5.0),
-                                  child: Card(
+                        : Card(
+                      color: Colors.white,
+                      elevation: 10,
+                            shape: new RoundedRectangleBorder(
+                                side: new BorderSide(
+                                  color: Colors.white,
+                                    //color: subfaultsList[index].ccolor,
+                                    width: 4.0),
+                                borderRadius: BorderRadius.circular(20.0)),
+                            child: new ListView.builder(
+                                physics: BouncingScrollPhysics(),
+                                //scrollDirection: Axis.horizontal,
+                                // reverse: true,
+                                itemCount: subsparesList.length,
+                                itemBuilder: (BuildContext ctxt, int index) {
+                                  return InkWell(
+                                    child: Container(
 //                                        color: departlist1[index].ccolor,
-                                    color: Colors.white,
-                                    shape: new RoundedRectangleBorder(
-                                        side: new BorderSide(
-                                            //color: subfaultsList[index].ccolor,
-                                            width: 2.0),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0)),
-                                    //borderOnForeground: true,
-                                    elevation: 10.0,
-                                    margin: EdgeInsets.all(1),
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => AddAdv(
-                                                    "قطع غيار",
-                                                    mfault,
-                                                    subsparesList[index]
-                                                        .fsubName)));
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(3.0),
-                                        child: ListTile(
-                                          title: Text(
-                                            subsparesList[index].fsubName,
-                                            textDirection: TextDirection.rtl,
-                                            style: TextStyle(
-                                                fontSize: 18.0,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          subtitle: Text(
-                                            subsparesList[index].fsubDesc,
-                                            textDirection: TextDirection.rtl,
-                                            style: TextStyle(fontSize: 15.0),
-                                          ),
-                                          leading: Icon(Icons.arrow_back_ios),
-                                          trailing: Container(
-                                            height: 120.0,
-                                            width: 60.0,
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: NetworkImage(
-                                                    subsparesList[index]
-                                                        .fsubUrl),
-                                                fit: BoxFit.fill,
+//                                      color: Colors.white,
+//                                      shape: new RoundedRectangleBorder(
+//                                          side: new BorderSide(
+//                                            color: Colors.white,
+//                                              //color: subfaultsList[index].ccolor,
+//                                              width: 2.0),
+//                                          borderRadius:
+//                                              BorderRadius.circular(10.0)),
+                                      //borderOnForeground: true,
+
+                                      child: InkWell(
+                                        onTap: () {
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) => AddAdv(
+                                                      "قطع غيار",
+                                                      mfault,
+                                                      subsparesList[index]
+                                                          .fsubName)));
+                                        },
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(3.0),
+                                          child: ListTile(
+                                            title: Text(
+                                              subsparesList[index].fsubName,
+                                              textDirection: TextDirection.rtl,
+                                              style: TextStyle(
+                                                  fontSize: 18.0,
+                                                  fontWeight: FontWeight.bold),
+                                            ),
+                                            subtitle: Text(
+                                              subsparesList[index].fsubDesc,
+                                              textDirection: TextDirection.rtl,
+                                              style: TextStyle(fontSize: 15.0),
+                                            ),
+                                            leading: Icon(Icons.arrow_back_ios,color: Colors.black,),
+                                            trailing: Container(
+                                              height: 120.0,
+                                              width: 60.0,
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  image: NetworkImage(
+                                                      subsparesList[index]
+                                                          .fsubUrl),
+                                                  fit: BoxFit.fill,
+                                                ),
+
                                               ),
-                                              shape: BoxShape.circle,
                                             ),
                                           ),
-                                        ),
 //                             Container(
 //                               child: Row(
 //                                 mainAxisAlignment:
@@ -374,20 +375,20 @@ class _HomePageState extends State<HomePage> {
 //                                 ],
 //                               ),
 //                             ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                                /**  _firebasedatdepart1(
-                          index,
-                          departlist1.length,
-                          departlist1[index].id,
-                          departlist1[index].title,
-                          departlist1[index].subtitle,
-                          departlist1[index].uri,
-                          ),**/
-                              );
-                            }),
+                                    /**  _firebasedatdepart1(
+                            index,
+                            departlist1.length,
+                            departlist1[index].id,
+                            departlist1[index].title,
+                            departlist1[index].subtitle,
+                            departlist1[index].uri,
+                            ),**/
+                                  );
+                                }),
+                          ),
                   )
                 : Container(),
             Container(
