@@ -12,6 +12,7 @@ import 'package:priceme/screens/hometest.dart';
 import 'package:priceme/screens/myadvertisement.dart';
 
 import 'Videos/allvideos.dart';
+import 'Videos/photosvideo.dart';
 import 'classes/ModelClass.dart';
 import 'classes/SparePartsClass.dart';
 
@@ -34,7 +35,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
   List<Widget> screens() => [
         MorePriceMe(),
         MyAdvertisement(),
-    AllVideos(),
+    VidiosPhoto(),
         HomePage(),
       ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
@@ -147,7 +148,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                     onPressed: () {
                       setState(() {
                         currentScreen =
-                            AllVideos(); // if user taps on this dashboard tab will be active
+                            VidiosPhoto(); // if user taps on this dashboard tab will be active
                         currentTab = 1;
                       });
                     },

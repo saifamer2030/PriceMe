@@ -284,6 +284,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_video_compress:
+    dependency: "direct main"
+    description:
+      name: flutter_video_compress
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.7+8"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -595,13 +602,6 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
-  social_media_widgets:
-    dependency: "direct main"
-    description:
-      name: social_media_widgets
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "1.0.0+2"
   source_span:
     dependency: transitive
     description:

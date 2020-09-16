@@ -1,14 +1,20 @@
+import 'dart:io';
+
 import 'package:adobe_xd/gradient_xd_transform.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:priceme/Videos/addVideo.dart';
+import 'package:priceme/Videos/allvideos.dart';
 
 import 'package:priceme/classes/FaultsClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/SparePartsSizesClass.dart';
-import 'package:social_media_widgets/instagram_story_swipe.dart';
 import 'package:toast/toast.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'addadv.dart';
@@ -37,6 +43,8 @@ class _HomePageState extends State<HomePage> {
   String mfault = "";
 
   bool _load = false;
+  String _tempDir;
+  String filePath;
 
   @override
   void initState() {
@@ -50,6 +58,42 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  Widget firebasedata(
+      BuildContext context, int index, DocumentSnapshot document) {
+
+    return   InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => AllVideos    (document['carrange'])));
+        // _onInstagramStorySwipeClicked();
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(5.0),
+        child: Container(
+          height: 200,
+          width: 150,
+          decoration: BoxDecoration(
+            border: new Border.all(
+              color: Colors.black,
+              width: 3,
+            ),
+            image: document['imgurl'] == null?DecorationImage(
+              image: AssetImage("assets/images/ic_background.png" ),
+              fit: BoxFit.fill,
+            ):DecorationImage(
+              image:  NetworkImage(
+                  document['imgurl']              ),
+
+              fit: BoxFit.fill,
+            ),
+            borderRadius: BorderRadius.circular(9.0),
+          ),
+        ),
+      ),
+    );
+  }
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -71,43 +115,156 @@ class _HomePageState extends State<HomePage> {
           physics: BouncingScrollPhysics(),
           //mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(top: 7),
-              child: Expanded(
-                child: Container(
-                  width: 100,
-                  height: 200,
-                  child: ListView(
-                    reverse: true,
-                    physics: BouncingScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    children: [
-                      InkWell(
-                        onTap: () {
-                          _onInstagramStorySwipeClicked();
-                        },
-                        child: Container(
-                          width: 100,
-                          height: 200,
-                          decoration: BoxDecoration(
-                            border: new Border.all(
-                              color: Colors.black,
-                              width: 3,
-                            ),
-                            image: DecorationImage(
-                              image: NetworkImage(
-                                  "https://firebasestorage.googleapis.com/v0/b/souqnagran-49abe.appspot.com/o/PhotoChating%2Fimg_1595263302880.jpg?alt=media&token=0cfa7d1c-8e98-4ef0-aeb4-6befd8cbe203"),
-                              fit: BoxFit.fill,
-                            ),
-                            borderRadius: BorderRadius.circular(9.0),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+            // FlutterLinkPreview(
+            //   url: "https://firebasestorage.googleapis.com/v0/b/priceme-49386.appspot.com/o/video%2F2020-09-16%2011%3A10%3A44.350865.mp4?alt=media&token=836d436f-db07-424f-ab10-a872138330d9",
+            //   bodyStyle: TextStyle(
+            //     fontSize: 18.0,
+            //   ),
+            //   titleStyle: TextStyle(
+            //     fontSize: 20.0,
+            //     fontWeight: FontWeight.bold,
+            //   ),
+            //   showMultimedia: true,
+            //   builder: (info) {
+            //     if (info is WebInfo) {
+            //       return SizedBox(
+            //         height: 350,
+            //         child: Card(
+            //           shape: RoundedRectangleBorder(
+            //               borderRadius: BorderRadius.circular(20.0)),
+            //           clipBehavior: Clip.antiAlias,
+            //           child: Column(
+            //             crossAxisAlignment: CrossAxisAlignment.start,
+            //             children: [
+            //               if (info.image != null)
+            //                 Expanded(
+            //                     child: Image.network(
+            //                       info.image,
+            //                       width: double.maxFinite,
+            //                       fit: BoxFit.cover,
+            //                     )),
+            //               Padding(
+            //                 padding:
+            //                 const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
+            //                 child: Text(
+            //                   info.title,
+            //                   style: TextStyle(
+            //                     fontSize: 20.0,
+            //                     fontWeight: FontWeight.bold,
+            //                   ),
+            //                 ),
+            //               ),
+            //               if (info.description != null)
+            //                 Padding(
+            //                   padding: const EdgeInsets.all(16.0),
+            //                   child: Text(info.description),
+            //                 ),
+            //             ],
+            //           ),
+            //         ),
+            //       );
+            //     }
+            //     if (info is WebImageInfo) {
+            //       return SizedBox(
+            //         height: 350,
+            //         child: Card(
+            //           shape: RoundedRectangleBorder(
+            //               borderRadius: BorderRadius.circular(20.0)),
+            //           clipBehavior: Clip.antiAlias,
+            //           child: Image.network(
+            //             info.image,
+            //             fit: BoxFit.cover,
+            //             width: double.maxFinite,
+            //           ),
+            //         ),
+            //       );
+            //     } else if (info is WebVideoInfo) {
+            //       return SizedBox(
+            //         height: 350,
+            //         child: Card(
+            //           shape: RoundedRectangleBorder(
+            //               borderRadius: BorderRadius.circular(20.0)),
+            //           clipBehavior: Clip.antiAlias,
+            //           child: Image.network(
+            //             info.image,
+            //             fit: BoxFit.cover,
+            //             width: double.maxFinite,
+            //           ),
+            //         ),
+            //       );
+            //     }
+            //     return Container();
+            //   },
+            // ),
+            Container(
+              height: 210,
+              child: StreamBuilder(
+                stream: Firestore.instance
+                    .collection('videos')
+                    .orderBy('carrange',
+                    descending:
+                    true).limit(5)//.where("cproblemtype", isEqualTo:"قطع غيار")
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: Text("Loading..",));
+                  }
+
+                  return new ListView.builder(
+                      //add item count depending on your list
+                      //itemCount: list.length,
+
+                      //added scrolldirection
+                      reverse: true,
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                     // controller: _controller,
+                      itemCount: snapshot.data.documents.length,
+                      itemBuilder: (context, index) {
+                        return firebasedata(
+                            context, index, snapshot.data.documents[index]);
+                      });
+                },
               ),
             ),
+            // Padding(
+            //   padding: const EdgeInsets.only(top: 7),
+            //   child: Expanded(
+            //     child: Container(
+            //       width: 100,
+            //       height: 200,
+            //       child: ListView(
+            //         reverse: true,
+            //         physics: BouncingScrollPhysics(),
+            //         scrollDirection: Axis.horizontal,
+            //         children: [
+            //           InkWell(
+            //             onTap: () {
+            //               // _onInstagramStorySwipeClicked();
+            //             },
+            //             child: Container(
+            //               width: 100,
+            //               height: 200,
+            //               decoration: BoxDecoration(
+            //                 border: new Border.all(
+            //                   color: Colors.black,
+            //                   width: 3,
+            //                 ),
+            //                 image: DecorationImage(
+            //                   image: NetworkImage(
+            //                       "https://firebasestorage.googleapis.com/v0/b/souqnagran-49abe.appspot.com/o/PhotoChating%2Fimg_1595263302880.jpg?alt=media&token=0cfa7d1c-8e98-4ef0-aeb4-6befd8cbe203"),
+            //                   fit: BoxFit.fill,
+            //                 ),
+            //                 borderRadius: BorderRadius.circular(9.0),
+            //               ),
+            //             ),
+            //           ),
+            //         ],
+            //       ),
+            //     ),
+            //   ),
+            // ),
             Padding(
               padding: const EdgeInsets.only(top: 10),
               child: Container(
@@ -661,29 +818,34 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  _onInstagramStorySwipeClicked() {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => InstagramStorySwipe(
-          children: <Widget>[
-            Container(
-              color: Colors.redAccent,
-            ),
-            Container(
-              color: Colors.green,
-            ),
-            Container(
-              color: Colors.brown,
-            ),
-            Container(
-              color: Colors.yellow,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+  // _onInstagramStorySwipeClicked() {
+  //   Navigator.push(
+  //     context,
+  //     MaterialPageRoute(
+  //       builder: (context) => InstagramStorySwipe(
+  //         children: <Widget>[
+  //           Column(
+  //             children: [
+  //               Container(
+  //                 color: Colors.redAccent,
+  //               ),
+  //               Container(
+  //                 color: Colors.green,
+  //               ),
+  //               Container(
+  //                 color: Colors.brown,
+  //               ),
+  //               Container(
+  //                 color: Colors.yellow,
+  //               ),
+  //             ],
+  //           ),
+  //
+  //         ],
+  //       ),
+  //     ),
+  //   );
+  // }
 
   _backFromStoriesAlert() {
     showDialog(

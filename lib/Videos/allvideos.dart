@@ -19,8 +19,8 @@ import 'package:video_player/video_player.dart';
 
 class AllVideos extends StatefulWidget {
 
-
-  AllVideos();
+int carrange;
+  AllVideos(this.carrange);
 
   @override
   _AllVideosState createState() => _AllVideosState();
@@ -100,7 +100,7 @@ class _AllVideosState extends State<AllVideos> {
               .collection('videos')
               .orderBy('carrange',
                   descending:
-                      true) //.where("cproblemtype", isEqualTo:"قطع غيار")
+                      true) .where("carrange", isLessThanOrEqualTo:widget.carrange).limit(5)
              .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
@@ -309,6 +309,12 @@ class _VideoWidgetState extends State<VideoWidget> {
     _initializeVideoPlayerFuture = videoPlayerController.initialize().then((_) {
       //       Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
       setState(() {});
+    });
+    videoPlayerController.addListener(() {
+      if (videoPlayerController.value.position ==
+          videoPlayerController.value.duration) {
+        print('video Ended');
+      }
     });
   }
     @override

@@ -68,7 +68,7 @@ class _AdvDetailState extends State<AdvDetail> {
   Future<void> _launched;
   var _controller = ScrollController();
   bool favcheck = false;
-
+  double  traderating=0.0;
   //List<OrderDetailClass> orderlist = [];
   List<CommentClass> commentlist = [];
 
@@ -96,6 +96,11 @@ class _AdvDetailState extends State<AdvDetail> {
 
           _username = data.documents[0].data['name'];
           _userphone = data.documents[0].data['phone'];
+        String  rating =(data.documents[0].data['rating']) ;
+        int  custRate = data.documents[0].data['custRate'];
+        if(rating==null){traderating=0.0;}else{
+          traderating= double.parse(rating)/custRate;
+        }
           // _traderate=data.documents[0].data['rate'];
           // if(_cName==null){_cName=user.displayName??"اسم غير معلوم";}
           if(_username==null){
@@ -1124,7 +1129,7 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
       'tradname': _username,
       'ownername': ownerName,
         'price': double.parse(price),
-      'rate':5.0-double.parse(price),
+      'rate':traderating,
       }).whenComplete(() {
 
         Toast.show("ارسالنا تعليقك طال عمرك", context,
@@ -1174,7 +1179,7 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
           'tradname': _username,
           'ownername': ownerName,
           'price': _commentController.text,
-          'rate':"5",
+          'rate':traderating,
           'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
           'cType': "profilecomment",
 

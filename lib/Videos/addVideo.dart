@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+// import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
+import 'package:flutter_video_compress/flutter_video_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:toast/toast.dart';
 
@@ -20,7 +22,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/services.dart';
-
+import 'package:video_player/video_player.dart';
 import '../Splash.dart';
 
 class AddVideo extends StatefulWidget {
@@ -41,16 +43,16 @@ class _AddVideoState extends State<AddVideo> {
   List<String> urlList = [];
   String _cName;
   List<String> departlist = ["ترفيهى","اعمالي"];
-  File videofile;
+  File videofile,thumbnailurlfile;
  bool videocheck=false;
   double _value = 0.0;
   TextEditingController _titleController = TextEditingController();
   TextEditingController _detailController = TextEditingController();
   var _departcurrentItemSelected = '';
-
+  String imgurl;
   List<Asset> images = List<Asset>();
-
-
+ double _currentSliderValue=0.0;
+  int vd=0;
   @override
   void initState() {
     super.initState();
@@ -110,8 +112,65 @@ class _AddVideoState extends State<AddVideo> {
                           InkWell(
                             onTap: () async {
 
-                               videofile =  await ImagePicker.pickVideo(source: ImageSource.gallery,).whenComplete(() => setState(() {
+                               videofile =  await ImagePicker.pickVideo(source: ImageSource.gallery,).whenComplete(() => setState(()  {
                                  videocheck=true;
+
+                                 // final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
+                                 // _flutterFFmpeg
+                                 //     .getMediaInformation(videofile.path)
+                                 //     .then((info) => print("aaa$info"));
+
+                                 Future.delayed(Duration(seconds: 0), () async {
+                                   //  MediaInfo info = await FlutterVideoCompress().compressVideo(
+                                   //   videofile.path,
+                                   //   quality: VideoQuality.MediumQuality, // default(VideoQuality.DefaultQuality)
+                                   //   deleteOrigin: false, // default(false)
+                                   // );
+                                   //  print("aaa"+ info.file.path+"///"+info.file.toString()+"///"+info.duration.toString()+"///"+ info.path+"//"
+                                   //      + info.author+"//"+info.title+"//");
+                                    // info.file.path;
+                                    // info.duration;
+                                    // info.path;
+                                    // info.author;
+                                    // info.title;
+                                   // String thumb = await Thumbnails.getThumbnail(
+                                   //     thumbnailFolder: '/SD/DCIM/0/Videos/Thumbnails',
+                                   //     videoFile: videofile.path,
+                                   //     imageType: ThumbFormat.PNG,
+                                   //     quality: 30);
+                                   // print('Path to cache folder $thumb');
+                                    thumbnailurlfile = await FlutterVideoCompress().getThumbnailWithFile(
+                                       videofile.path,
+                                       quality: 50, // default(100)
+                                       position: 0 // default(-1)
+                                   );
+                                    // var info = await FlutterVideoInfo().getVideoInfo(videofile.path);
+                                    // print("Path**${info.duration}");
+                                   // giffile = await FlutterVideoCompress().convertVideoToGif(
+                                   //   videofile.path,
+                                   //   startTime: 0, // default(0)
+                                   //   duration: 1, // default(-1)
+                                   //   // endTime: -1 // default(-1)
+                                   //
+                                   // );
+
+                                    // setState(() {
+                                    //   vd= videoduration.inSeconds;
+                                    // });
+                                    //final videoInfo = FlutterVideoInfo();
+
+                                   /// String videoFilePath = "";
+
+
+
+                                 });
+                                 // String thumb = await Thumbnails.getThumbnail(
+                                 //     thumbnailFolder: '/storage/emulated/0/Videos/Thumbnails',
+                                 //     videoFile: videofile.path,
+                                 //     imageType: ThumbFormat.PNG,
+                                 //     quality: 30);
+                                 // print("lll$thumb");
+
                                })
                                );
                             },
@@ -150,6 +209,18 @@ class _AddVideoState extends State<AddVideo> {
                               ),
                             ),
                           ),
+                          // Slider(
+                          //   value: _currentSliderValue,
+                          //   min: 0,
+                          //   max: double.parse("$vd"),
+                          //   divisions: 5,
+                          //   label: _currentSliderValue.round().toString(),
+                          //   onChanged: (double value) {
+                          //     setState(() {
+                          //       _currentSliderValue = value;
+                          //     });
+                          //   },
+                          // ),
                           Center(
                             child: Container(
                               width: 250,
@@ -356,6 +427,8 @@ class _AddVideoState extends State<AddVideo> {
                                               'google.com');
                                       if (result.isNotEmpty &&
                                           result[0].rawAddress.isNotEmpty) {
+                                        print("mmmmm1");
+
                                         uploadpp0();
                                         //uploadToFirebase();
 
@@ -408,21 +481,44 @@ class _AddVideoState extends State<AddVideo> {
 
 
   Future uploadpp0() async {
+    print("mmmmm2");
+
     DateTime now = DateTime.now();
     StorageReference ref = FirebaseStorage.instance.ref().child("video").child('$now.mp4');
     StorageUploadTask uploadTask = ref.putFile(videofile);
     var videourl = await (await uploadTask.onComplete).ref.getDownloadURL();
-    final String url = videourl.toString();
+    final String vurl = videourl.toString();
+
+
     // Uri downloadUrl = (await uploadTask.onComplete).downloadUrl;
-    print(url);
+    print(vurl);
     setState(() {
       _load2 = true;
     });
 
-     createRecord(url);
+    uploadpp1(vurl);
+  }
+  Future uploadpp1(vurl) async {
+    print("mmmmm3");
+
+    DateTime now = DateTime.now();
+    StorageReference ref = FirebaseStorage.instance.ref().child("thumbnail").child('$now.jpg');
+    StorageUploadTask uploadTask = ref.putFile(thumbnailurlfile);
+    var thumbnailurl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    final String gurl = thumbnailurl.toString();
+
+
+    // Uri downloadUrl = (await uploadTask.onComplete).downloadUrl;
+    print(gurl);
+    setState(() {
+      _load2 = true;
+    });
+
+    createRecord(vurl,gurl);
   }
 
-  void createRecord(urlvideo) {
+  void createRecord(urlvideo,urlgif) {
+    print("mmmmm4");
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? null
         : setState(() {
@@ -463,12 +559,15 @@ class _AddVideoState extends State<AddVideo> {
         'curi': urlvideo,
         'likes': 0,
         'seens': 0,
+        'imgurl': urlgif,
+
 
       }).whenComplete(() {
 
         setState(() {
           _load2 = false;
           urlvideo="";
+          urlgif="";
           videofile=null;
           _titleController.text = "";
           _detailController.text = "";

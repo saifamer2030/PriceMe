@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:priceme/Videos/allvideos.dart';
+import 'package:priceme/Videos/photosvideo.dart';
 import 'package:priceme/classes/ModelClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/screens/MorePriceMe.dart';
@@ -34,7 +35,7 @@ class _FragmentTraderState extends State<FragmentTrader> {
   List<Widget> screens() => [
     MorePriceMe(),
     MyAdvertisement(),
-    AllVideos(),
+    VidiosPhoto(),
     AllAdvertisement(),
       ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
@@ -145,7 +146,7 @@ class _FragmentTraderState extends State<FragmentTrader> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = AllVideos(); // if user taps on this dashboard tab will be active
+                        currentScreen = VidiosPhoto(); // if user taps on this dashboard tab will be active
                         currentTab = 1;
                       });
                     },
