@@ -122,7 +122,7 @@ class _AllVideosState extends State<AllVideos> {
                   itemBuilder: (context, index) {
                     return Container(
                       width: double.infinity,
-                      height: 300.0,
+//                      height: 300.0,
                       alignment: Alignment.center,
 
                       child: Container(

@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:priceme/ChatRoom/widget/home.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:priceme/screens/personalpage.dart';
 import 'package:priceme/screens/signin.dart';
@@ -12,7 +13,6 @@ import 'homepage.dart';
 import 'myadvertisement.dart';
 
 class MorePriceMe extends StatefulWidget {
-
   MorePriceMe();
 
   @override
@@ -123,61 +123,58 @@ class _MorePriceMeState extends State<MorePriceMe> {
                     ),
                     InkWell(
                       onTap: () {
-                      if(_userId == null){
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    Splash()));
-                      }else{
-                        if (_userId != null &&
-                            _cType != null ) {
+                        if (_userId == null) {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) =>
-                                      MyAdvertisement()));
+                                  builder: (context) => Splash()));
                         } else {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) =>
-                            new CupertinoAlertDialog(
-                              title: new Text(
-                                "تنبية",
-                                style: TextStyle(
+                          if (_userId != null && _cType != null) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MyAdvertisement()));
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                                  new CupertinoAlertDialog(
+                                title: new Text(
+                                  "تنبية",
+                                  style: TextStyle(
 //                                      fontFamily: 'Estedad-Black',
-                                ),
-                              ),
-                              content: new Text(
-                                "نبغاك تخبرنا عن نوع حسابك",
-                                style: TextStyle(
-//                                      fontFamily: 'Estedad-Black',
-                                ),
-                              ),
-                              actions: [
-                                CupertinoDialogAction(
-                                    isDefaultAction: false,
-                                    child: new FlatButton(
-                                      onPressed: () {
-                                        Navigator.pop(context, false);
-                                        Navigator.push(
-                                            context,
-                                            new MaterialPageRoute(
-                                                builder: (context) =>
-                                                    PersonalPage()));
-                                      },
-                                      child: Text(
-                                        "موافق",
-                                        style: TextStyle(
-//                                              fontFamily: 'Estedad-Black',
-                                        ),
                                       ),
-                                    )),
-                              ],
-                            ),
-                          );
+                                ),
+                                content: new Text(
+                                  "نبغاك تخبرنا عن نوع حسابك",
+                                  style: TextStyle(
+//                                      fontFamily: 'Estedad-Black',
+                                      ),
+                                ),
+                                actions: [
+                                  CupertinoDialogAction(
+                                      isDefaultAction: false,
+                                      child: new FlatButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, false);
+                                          Navigator.push(
+                                              context,
+                                              new MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      PersonalPage()));
+                                        },
+                                        child: Text(
+                                          "موافق",
+                                          style: TextStyle(
+//                                              fontFamily: 'Estedad-Black',
+                                              ),
+                                        ),
+                                      )),
+                                ],
+                              ),
+                            );
+                          }
                         }
-                      }
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -228,60 +225,51 @@ class _MorePriceMeState extends State<MorePriceMe> {
                     ),
                     InkWell(
                       onTap: () {
-                        if (_userId == null) {
-                          Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (context) =>
-                                      Splash()));
-                        } else {
-                          if (_cType != null) {
-                            // Navigator.push(
-                            //     context,
-                            //     new MaterialPageRoute(
-                            //         builder: (context) => HomePage()));
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) =>
-                                  new CupertinoAlertDialog(
-                                title: new Text(
-                                  "تنبية",
-                                  style: TextStyle(
-//                                      fontFamily: 'Estedad-Black',
-                                      ),
-                                ),
-                                content:
-                                new Text(
-                                  "نبغاك تخبرنا عن نوع حسابك",
-                                  style: TextStyle(
-//                                      fontFamily: 'Estedad-Black',
-                                      ),
-                                ),
-                                actions: [
-                                  CupertinoDialogAction(
-                                      isDefaultAction: false,
-                                      child: new FlatButton(
-                                        onPressed: () {
-                                          Navigator.pop(context, false);
-                                          Navigator.push(
-                                              context,
-                                              new MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      PersonalPage()));
-                                        },
-                                        child: Text(
-                                          "موافق",
-                                          style: TextStyle(
-//                                              fontFamily: 'Estedad-Black',
-                                              ),
-                                        ),
-                                      )),
-                                ],
-                              ),
-                            );
-                          }
-                        }
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => HomeScreen(
+                                      currentUserId: _userId,
+                                    )));
+//                        showDialog(
+//                          context: context,
+//                          builder: (BuildContext context) =>
+//                          new CupertinoAlertDialog(
+//                            title: new Text(
+//                              "تنبية",
+//                              style: TextStyle(
+////                                      fontFamily: 'Estedad-Black',
+//                              ),
+//                            ),
+//                            content:
+//                            new Text(
+//                              "نبغاك تخبرنا عن نوع حسابك",
+//                              style: TextStyle(
+////                                      fontFamily: 'Estedad-Black',
+//                              ),
+//                            ),
+//                            actions: [
+//                              CupertinoDialogAction(
+//                                  isDefaultAction: false,
+//                                  child: new FlatButton(
+//                                    onPressed: () {
+//                                      Navigator.pop(context, false);
+//                                      Navigator.push(
+//                                          context,
+//                                          new MaterialPageRoute(
+//                                              builder: (context) =>
+//                                                  PersonalPage()));
+//                                    },
+//                                    child: Text(
+//                                      "موافق",
+//                                      style: TextStyle(
+////                                              fontFamily: 'Estedad-Black',
+//                                      ),
+//                                    ),
+//                                  )),
+//                            ],
+//                          ),
+//                        );
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -341,8 +329,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
                           Navigator.push(
                               context,
                               new MaterialPageRoute(
-                                  builder: (context) =>
-                                      Splash()));
+                                  builder: (context) => Splash()));
                         }
                       },
                       child: Row(
@@ -507,12 +494,12 @@ class _MorePriceMeState extends State<MorePriceMe> {
                     ),
                     InkWell(
                       onTap: () {
-                        if(_userId == null){
+                        if (_userId == null) {
                           Navigator.push(
                               context,
                               new MaterialPageRoute(
                                   builder: (context) => Splash()));
-                        }else{
+                        } else {
                           // Navigator.push(
                           //     context,
                           //     new MaterialPageRoute(
@@ -521,9 +508,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
                           //                 _cMobile, ""))));
 
                         }
-
-
-                                                 },
+                      },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
@@ -590,11 +575,8 @@ class _MorePriceMeState extends State<MorePriceMe> {
                         FirebaseAuth.instance.signOut();
                         SessionManager prefs = SessionManager();
                         prefs.setAuthType("");
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    Splash()));
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Splash()));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.end,

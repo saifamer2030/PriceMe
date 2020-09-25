@@ -60,40 +60,54 @@ class _HomePageState extends State<HomePage> {
 
   Widget firebasedata(
       BuildContext context, int index, DocumentSnapshot document) {
-
-    return   InkWell(
+    return InkWell(
       onTap: () {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => AllVideos    (document['carrange'])));
+                builder: (context) => AllVideos(document['carrange'])));
         // _onInstagramStorySwipeClicked();
       },
       child: Padding(
         padding: const EdgeInsets.all(5.0),
-        child: Container(
-          height: 200,
-          width: 150,
-          decoration: BoxDecoration(
-            border: new Border.all(
-              color: Colors.black,
-              width: 3,
+        child: Stack(
+          children: [
+            Container(
+              height: 200,
+              width: 150,
+              decoration: BoxDecoration(
+                border: new Border.all(
+                  color: Colors.black,
+                  width: 1,
+                ),
+                image: document['imgurl'] == null
+                    ? DecorationImage(
+                        image: AssetImage("assets/images/ic_background.png"),
+                        fit: BoxFit.fill,
+                      )
+                    : DecorationImage(
+                        image: NetworkImage(document['imgurl']),
+                        fit: BoxFit.fill,
+                      ),
+                borderRadius: BorderRadius.circular(9.0),
+              ),
             ),
-            image: document['imgurl'] == null?DecorationImage(
-              image: AssetImage("assets/images/ic_background.png" ),
-              fit: BoxFit.fill,
-            ):DecorationImage(
-              image:  NetworkImage(
-                  document['imgurl']              ),
-
-              fit: BoxFit.fill,
-            ),
-            borderRadius: BorderRadius.circular(9.0),
-          ),
+            Positioned(
+              top: 90,
+                left: 60,
+                child: Container(
+              child: Icon(
+                Icons.play_circle_outline,
+                color: Colors.white,
+                size: 35,
+              ),
+            ))
+          ],
         ),
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
@@ -201,13 +215,15 @@ class _HomePageState extends State<HomePage> {
               child: StreamBuilder(
                 stream: Firestore.instance
                     .collection('videos')
-                    .orderBy('carrange',
-                    descending:
-                    true).limit(5)//.where("cproblemtype", isEqualTo:"قطع غيار")
+                    .orderBy('carrange', descending: true)
+                    .limit(5) //.where("cproblemtype", isEqualTo:"قطع غيار")
                     .snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
-                    return Center(child: Text("Loading..",));
+                    return Center(
+                        child: Text(
+                      "Loading..",
+                    ));
                   }
 
                   return new ListView.builder(
@@ -219,7 +235,7 @@ class _HomePageState extends State<HomePage> {
                       physics: BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,
                       shrinkWrap: true,
-                     // controller: _controller,
+                      // controller: _controller,
                       itemCount: snapshot.data.documents.length,
                       itemBuilder: (context, index) {
                         return firebasedata(
@@ -383,8 +399,8 @@ class _HomePageState extends State<HomePage> {
                                     // ),
                                     decoration: BoxDecoration(
                                       border: new Border.all(
-                                        color: Colors.red,
-                                        width: 2.5,
+                                        color: Colors.black,
+                                        width: 1.0,
                                       ),
                                       image: DecorationImage(
                                         image: NetworkImage(
@@ -410,27 +426,36 @@ class _HomePageState extends State<HomePage> {
               )),
             ),
             subsparescheck
-                ? Container(
-                    height: 200,
-                    child: subsparesList.length == 0
-                        ? Center(child: new Text("برجاء الإنتظار"))
-                        : Card(
-                      color: Colors.white,
-                      elevation: 10,
-                            shape: new RoundedRectangleBorder(
-                                side: new BorderSide(
-                                  color: Colors.white,
-                                    //color: subfaultsList[index].ccolor,
-                                    width: 4.0),
-                                borderRadius: BorderRadius.circular(20.0)),
-                            child: new ListView.builder(
-                                physics: BouncingScrollPhysics(),
-                                //scrollDirection: Axis.horizontal,
-                                // reverse: true,
-                                itemCount: subsparesList.length,
-                                itemBuilder: (BuildContext ctxt, int index) {
-                                  return InkWell(
-                                    child: Container(
+                ? Stack(
+                    children: [
+                      Container(
+                        height: 250,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 50),
+                        child: Container(
+                          height: 200,
+                          child: subsparesList.length == 0
+                              ? Center(child: new Text("برجاء الإنتظار"))
+                              : Card(
+                                  color: Colors.grey[100],
+                                  elevation: 10,
+                                  shape: new RoundedRectangleBorder(
+                                      side: new BorderSide(
+                                          color: Colors.black,
+                                          //color: subfaultsList[index].ccolor,
+                                          width: 1.0),
+                                      borderRadius:
+                                          BorderRadius.circular(10.0)),
+                                  child: new ListView.builder(
+                                      physics: BouncingScrollPhysics(),
+                                      //scrollDirection: Axis.horizontal,
+                                      // reverse: true,
+                                      itemCount: subsparesList.length,
+                                      itemBuilder:
+                                          (BuildContext ctxt, int index) {
+                                        return InkWell(
+                                          child: Container(
 //                                        color: departlist1[index].ccolor,
 //                                      color: Colors.white,
 //                                      shape: new RoundedRectangleBorder(
@@ -440,49 +465,60 @@ class _HomePageState extends State<HomePage> {
 //                                              width: 2.0),
 //                                          borderRadius:
 //                                              BorderRadius.circular(10.0)),
-                                      //borderOnForeground: true,
+                                            //borderOnForeground: true,
 
-                                      child: InkWell(
-                                        onTap: () {
-                                          Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) => AddAdv(
-                                                      "قطع غيار",
-                                                      mfault,
-                                                      subsparesList[index]
-                                                          .fsubName)));
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(3.0),
-                                          child: ListTile(
-                                            title: Text(
-                                              subsparesList[index].fsubName,
-                                              textDirection: TextDirection.rtl,
-                                              style: TextStyle(
-                                                  fontSize: 18.0,
-                                                  fontWeight: FontWeight.bold),
-                                            ),
-                                            subtitle: Text(
-                                              subsparesList[index].fsubDesc,
-                                              textDirection: TextDirection.rtl,
-                                              style: TextStyle(fontSize: 15.0),
-                                            ),
-                                            leading: Icon(Icons.arrow_back_ios,color: Colors.black,),
-                                            trailing: Container(
-                                              height: 120.0,
-                                              width: 60.0,
-                                              decoration: BoxDecoration(
-                                                image: DecorationImage(
-                                                  image: NetworkImage(
-                                                      subsparesList[index]
-                                                          .fsubUrl),
-                                                  fit: BoxFit.fill,
+                                            child: InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            AddAdv(
+                                                                "قطع غيار",
+                                                                mfault,
+                                                                subsparesList[
+                                                                        index]
+                                                                    .fsubName)));
+                                              },
+                                              child: Padding(
+                                                padding:
+                                                    const EdgeInsets.all(3.0),
+                                                child: ListTile(
+                                                  title: Text(
+                                                    subsparesList[index]
+                                                        .fsubName,
+                                                    textDirection:
+                                                        TextDirection.rtl,
+                                                    style: TextStyle(
+                                                        fontSize: 18.0,
+                                                        fontWeight:
+                                                            FontWeight.bold),
+                                                  ),
+                                                  subtitle: Text(
+                                                    subsparesList[index]
+                                                        .fsubDesc,
+                                                    textDirection:
+                                                        TextDirection.rtl,
+                                                    style: TextStyle(
+                                                        fontSize: 15.0),
+                                                  ),
+                                                  leading: Icon(
+                                                    Icons.arrow_back_ios,
+                                                    color: Colors.black,
+                                                  ),
+                                                  trailing: Container(
+                                                    height: 120.0,
+                                                    width: 60.0,
+                                                    decoration: BoxDecoration(
+                                                      image: DecorationImage(
+                                                        image: NetworkImage(
+                                                            subsparesList[index]
+                                                                .fsubUrl),
+                                                        fit: BoxFit.fill,
+                                                      ),
+                                                    ),
+                                                  ),
                                                 ),
-
-                                              ),
-                                            ),
-                                          ),
 //                             Container(
 //                               child: Row(
 //                                 mainAxisAlignment:
@@ -532,20 +568,48 @@ class _HomePageState extends State<HomePage> {
 //                                 ],
 //                               ),
 //                             ),
-                                        ),
-                                      ),
-                                    ),
-                                    /**  _firebasedatdepart1(
-                            index,
-                            departlist1.length,
-                            departlist1[index].id,
-                            departlist1[index].title,
-                            departlist1[index].subtitle,
-                            departlist1[index].uri,
-                            ),**/
-                                  );
-                                }),
+                                              ),
+                                            ),
+                                          ),
+                                          /**  _firebasedatdepart1(
+                                  index,
+                                  departlist1.length,
+                                  departlist1[index].id,
+                                  departlist1[index].title,
+                                  departlist1[index].subtitle,
+                                  departlist1[index].uri,
+                                  ),**/
+                                        );
+                                      }),
+                                ),
+                        ),
+                      ),
+                      Positioned(
+                        right: 150,
+                        bottom: 150,
+                        child: Container(
+                          height: 100,
+                          width: 100,
+                          // child: Text(
+                          //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
+                          // ),textAlign: TextAlign.center,
+                          //
+                          // ),
+                          decoration: BoxDecoration(
+                            border: new Border.all(
+                              color: Colors.black,
+                              width: 1.0,
+                            ),
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                  "https://firebasestorage.googleapis.com/v0/b/priceme-49386.appspot.com/o/myimage%2F2020-08-26%2016%3A40%3A13.416549.jpg?alt=media&token=7c2275ea-f887-4a5d-99f4-abf2b561fe70"),
+                              fit: BoxFit.fill,
+                            ),
+                            shape: BoxShape.circle,
                           ),
+                        ),
+                      ),
+                    ],
                   )
                 : Container(),
             Container(
@@ -653,8 +717,8 @@ class _HomePageState extends State<HomePage> {
                                     // ),
                                     decoration: BoxDecoration(
                                       border: new Border.all(
-                                        color: Colors.red,
-                                        width: 2.5,
+                                        color: Colors.black,
+                                        width: 1,
                                       ),
                                       image: DecorationImage(
                                         image: NetworkImage(
@@ -680,73 +744,96 @@ class _HomePageState extends State<HomePage> {
               )),
             ),
             subfaultcheck
-                ? Container(
-                    height: 400,
-                    child: subfaultsList.length == 0
-                        ? Center(child: new Text("برجاء الإنتظار"))
-                        : new ListView.builder(
-                            physics: BouncingScrollPhysics(),
-                            //scrollDirection: Axis.horizontal,
-                            // reverse: true,
-                            itemCount: subfaultsList.length,
-                            itemBuilder: (BuildContext ctxt, int index) {
-                              return InkWell(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      top: 5.0, right: 5.0, left: 5.0),
-                                  child: Card(
-//                                        color: departlist1[index].ccolor,
-                                    color: Colors.white,
-                                    shape: new RoundedRectangleBorder(
-                                        side: new BorderSide(
-                                            //color: subfaultsList[index].ccolor,
-                                            width: 2.0),
-                                        borderRadius:
-                                            BorderRadius.circular(10.0)),
-                                    //borderOnForeground: true,
-                                    elevation: 10.0,
-                                    margin: EdgeInsets.all(1),
-                                    child: InkWell(
-                                      onTap: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) => AddAdv(
-                                                    "اعطال",
-                                                    mfault,
-                                                    subfaultsList[index]
-                                                        .fsubName)));
-                                      },
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(3.0),
-                                        child: ListTile(
-                                          title: Text(
-                                            subfaultsList[index].fsubName,
-                                            textDirection: TextDirection.rtl,
-                                            style: TextStyle(
-                                                fontSize: 18.0,
-                                                fontWeight: FontWeight.bold),
-                                          ),
-                                          subtitle: Text(
-                                            subfaultsList[index].fsubDesc,
-                                            textDirection: TextDirection.rtl,
-                                            style: TextStyle(fontSize: 15.0),
-                                          ),
-                                          leading: Icon(Icons.arrow_back_ios),
-                                          trailing: Container(
-                                            height: 120.0,
-                                            width: 60.0,
-                                            decoration: BoxDecoration(
-                                              image: DecorationImage(
-                                                image: NetworkImage(
-                                                    subfaultsList[index]
-                                                        .fsubUrl),
-                                                fit: BoxFit.fill,
-                                              ),
-                                              shape: BoxShape.circle,
-                                            ),
-                                          ),
-                                        ),
+                ? Stack(
+                    children: [
+                      Container(
+                        height: 250,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(top: 50),
+                        child: Container(
+                          height: 200,
+                          child: subfaultsList.length == 0
+                              ? Center(child: new Text("برجاء الإنتظار"))
+                              : Card(
+                                  color: Colors.grey[100],
+                                  elevation: 10,
+                                  shape: new RoundedRectangleBorder(
+                                      side: new BorderSide(
+                                          color: Colors.black,
+                                          //color: subfaultsList[index].ccolor,
+                                          width: 1.0),
+                                      borderRadius:
+                                          BorderRadius.circular(10.0)),
+                                  child: new ListView.builder(
+                                      physics: BouncingScrollPhysics(),
+                                      //scrollDirection: Axis.horizontal,
+                                      // reverse: true,
+                                      itemCount: subfaultsList.length,
+                                      itemBuilder:
+                                          (BuildContext ctxt, int index) {
+                                        return InkWell(
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(
+                                                top: 5.0,
+                                                right: 5.0,
+                                                left: 5.0),
+                                            child: Container(
+                                              margin: EdgeInsets.all(1),
+                                              child: InkWell(
+                                                onTap: () {
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              AddAdv(
+                                                                  "اعطال",
+                                                                  mfault,
+                                                                  subfaultsList[
+                                                                          index]
+                                                                      .fsubName)));
+                                                },
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(3.0),
+                                                  child: ListTile(
+                                                    title: Text(
+                                                      subfaultsList[index]
+                                                          .fsubName,
+                                                      textDirection:
+                                                          TextDirection.rtl,
+                                                      style: TextStyle(
+                                                          fontSize: 18.0,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                    subtitle: Text(
+                                                      subfaultsList[index]
+                                                          .fsubDesc,
+                                                      textDirection:
+                                                          TextDirection.rtl,
+                                                      style: TextStyle(
+                                                          fontSize: 15.0),
+                                                    ),
+                                                    leading: Icon(
+                                                      Icons.arrow_back_ios,
+                                                      color: Colors.black,
+                                                    ),
+                                                    trailing: Container(
+                                                      height: 120.0,
+                                                      width: 60.0,
+                                                      decoration: BoxDecoration(
+                                                        image: DecorationImage(
+                                                          image: NetworkImage(
+                                                              subfaultsList[
+                                                                      index]
+                                                                  .fsubUrl),
+                                                          fit: BoxFit.fill,
+                                                        ),
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                    ),
+                                                  ),
 //                             Container(
 //                               child: Row(
 //                                 mainAxisAlignment:
@@ -796,20 +883,49 @@ class _HomePageState extends State<HomePage> {
 //                                 ],
 //                               ),
 //                             ),
-                                      ),
-                                    ),
-                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          /**  _firebasedatdepart1(
+                                  index,
+                                  departlist1.length,
+                                  departlist1[index].id,
+                                  departlist1[index].title,
+                                  departlist1[index].subtitle,
+                                  departlist1[index].uri,
+                                  ),**/
+                                        );
+                                      }),
                                 ),
-                                /**  _firebasedatdepart1(
-                          index,
-                          departlist1.length,
-                          departlist1[index].id,
-                          departlist1[index].title,
-                          departlist1[index].subtitle,
-                          departlist1[index].uri,
-                          ),**/
-                              );
-                            }),
+                        ),
+                      ),
+                      Positioned(
+                        right: 150,
+                        bottom: 150,
+                        child: Container(
+                          height: 100,
+                          width: 100,
+                          // child: Text(
+                          //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
+                          // ),textAlign: TextAlign.center,
+                          //
+                          // ),
+                          decoration: BoxDecoration(
+                            border: new Border.all(
+                              color: Colors.black,
+                              width: 1.0,
+                            ),
+                            image: DecorationImage(
+                              image: NetworkImage(
+                                  "https://firebasestorage.googleapis.com/v0/b/priceme-49386.appspot.com/o/myimage%2F2020-09-13%2011%3A01%3A50.545909.jpg?alt=media&token=24741622-2ed9-44f4-9c67-04a47796925b"),
+                              fit: BoxFit.fill,
+                            ),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                      ),
+                    ],
                   )
                 : Container(),
           ],
