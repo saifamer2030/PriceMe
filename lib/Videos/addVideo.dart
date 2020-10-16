@@ -41,8 +41,8 @@ class _AddVideoState extends State<AddVideo> {
   String dep2;
   int picno = 0;
   List<String> urlList = [];
-  String _cName;
-  List<String> departlist = ["ترفيهى","اعمالي"];
+  String _cName,_cphotourl;
+  List<String> departlist = ["ترفيهى","تجارى"];
   File videofile,thumbnailurlfile;
  bool videocheck=false;
   double _value = 0.0;
@@ -68,7 +68,11 @@ class _AddVideoState extends State<AddVideo> {
       if (data.documents.length > 0){
         setState(() {
           _cName = data.documents[0].data['name'];
-
+          _cphotourl = data.documents[0].data['photourl'];
+          if(_cphotourl==null){
+            if(user.photoUrl==null||user.photoUrl==""){
+              _cphotourl= "https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg" ;
+            }else{_cphotourl=user.photoUrl;}}
           if(_cName==null){
             if(user.displayName==null||user.displayName==""){
               _cName="ايميل غير معلوم";
@@ -121,6 +125,20 @@ class _AddVideoState extends State<AddVideo> {
                                  //     .then((info) => print("aaa$info"));
 
                                  Future.delayed(Duration(seconds: 0), () async {
+                                     MediaInfo info = await FlutterVideoCompress().getMediaInfo(videofile.path).then((value) async {
+                                       print("${(value.duration/2000).round()}");
+                                       thumbnailurlfile = await FlutterVideoCompress().getThumbnailWithFile(
+                                           videofile.path,
+                                           quality: 50, // default(100)
+                                           position: (value.duration/2000).round() // default(-1)
+                                       );
+                                     });
+                                   // debugPrint(info.duration.toString()+"////"+info.toJson().toString());
+                                   //  MediaInfo info1 = await FlutterVideoCompress().compressVideo(
+                                   //   videofile.path,
+                                   //   quality: VideoQuality.LowQuality, // default(VideoQuality.DefaultQuality)
+                                   //   deleteOrigin: false, // default(false)
+                                   // );
                                    //  MediaInfo info = await FlutterVideoCompress().compressVideo(
                                    //   videofile.path,
                                    //   quality: VideoQuality.MediumQuality, // default(VideoQuality.DefaultQuality)
@@ -139,11 +157,7 @@ class _AddVideoState extends State<AddVideo> {
                                    //     imageType: ThumbFormat.PNG,
                                    //     quality: 30);
                                    // print('Path to cache folder $thumb');
-                                    thumbnailurlfile = await FlutterVideoCompress().getThumbnailWithFile(
-                                       videofile.path,
-                                       quality: 50, // default(100)
-                                       position: 0 // default(-1)
-                                   );
+
                                     // var info = await FlutterVideoInfo().getVideoInfo(videofile.path);
                                     // print("Path**${info.duration}");
                                    // giffile = await FlutterVideoCompress().convertVideoToGif(
@@ -549,8 +563,11 @@ class _AddVideoState extends State<AddVideo> {
       DocumentReference documentReference =
       Firestore.instance.collection('videos').document();
       documentReference.setData({
+        'cId': documentReference.documentID,
         'carrange': arrange,
-        'cId': _userId,
+        'cuserId': _userId,
+        'cname': _cName,
+        'cphotourl': _cphotourl,
         'cdate': date1,
         'ctitle': _titleController.text,
         'cdepart': _departcurrentItemSelected,
@@ -560,6 +577,8 @@ class _AddVideoState extends State<AddVideo> {
         'likes': 0,
         'seens': 0,
         'imgurl': urlgif,
+        'favcheck': false,
+
 
 
       }).whenComplete(() {

@@ -6,6 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:priceme/ChatRoom/widget/home.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
+import 'package:priceme/screens/alloffers.dart';
+import 'package:priceme/screens/allrents.dart';
+import 'package:priceme/screens/myoffers.dart';
+import 'package:priceme/screens/myrents.dart';
 import 'package:priceme/screens/personalpage.dart';
 import 'package:priceme/screens/signin.dart';
 import '../Splash.dart';
@@ -223,6 +227,238 @@ class _MorePriceMeState extends State<MorePriceMe> {
                       height: .2,
                       color: Colors.grey,
                     ),
+
+
+
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => AllOffers()));
+
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Icon(
+                            Icons.keyboard_arrow_left,
+                            color: const Color(0xff171732),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Text(
+                                'العروض',
+                                style: TextStyle(
+//                                      fontFamily: 'Estedad-Black',
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xff171732),
+                                  height: 1.2307692307692308,
+                                ),
+                                textAlign: TextAlign.right,
+                              ),
+
+                              // Adobe XD layer: 'world-wide-web-icon…' (shape)
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+
+                                child: new Icon(
+                                  Icons.email,
+                                  color: Colors.grey,
+                                ),
+
+//                                    child:  new Icon(
+//                                      Icons.chat,
+//                                      color: Colors.grey,
+//
+//                                    ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: .2,
+                      color: Colors.grey,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => MyOffers()));
+
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Icon(
+                            Icons.keyboard_arrow_left,
+                            color: const Color(0xff171732),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Text(
+                                'عروضي',
+                                style: TextStyle(
+//                                      fontFamily: 'Estedad-Black',
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xff171732),
+                                  height: 1.2307692307692308,
+                                ),
+                                textAlign: TextAlign.right,
+                              ),
+
+                              // Adobe XD layer: 'world-wide-web-icon…' (shape)
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+
+                                child: new Icon(
+                                  Icons.email,
+                                  color: Colors.grey,
+                                ),
+
+//                                    child:  new Icon(
+//                                      Icons.chat,
+//                                      color: Colors.grey,
+//
+//                                    ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: .2,
+                      color: Colors.grey,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => AllRents()));
+
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Icon(
+                            Icons.keyboard_arrow_left,
+                            color: const Color(0xff171732),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Text(
+                                'الايجار',
+                                style: TextStyle(
+//                                      fontFamily: 'Estedad-Black',
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xff171732),
+                                  height: 1.2307692307692308,
+                                ),
+                                textAlign: TextAlign.right,
+                              ),
+
+                              // Adobe XD layer: 'world-wide-web-icon…' (shape)
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+
+                                child: new Icon(
+                                  Icons.email,
+                                  color: Colors.grey,
+                                ),
+
+//                                    child:  new Icon(
+//                                      Icons.chat,
+//                                      color: Colors.grey,
+//
+//                                    ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: .2,
+                      color: Colors.grey,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => MyRents()));
+
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Icon(
+                            Icons.keyboard_arrow_left,
+                            color: const Color(0xff171732),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Text(
+                                'إيجاراتي',
+                                style: TextStyle(
+//                                      fontFamily: 'Estedad-Black',
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xff171732),
+                                  height: 1.2307692307692308,
+                                ),
+                                textAlign: TextAlign.right,
+                              ),
+
+                              // Adobe XD layer: 'world-wide-web-icon…' (shape)
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+
+                                child: new Icon(
+                                  Icons.email,
+                                  color: Colors.grey,
+                                ),
+
+//                                    child:  new Icon(
+//                                      Icons.chat,
+//                                      color: Colors.grey,
+//
+//                                    ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: .2,
+                      color: Colors.grey,
+                    ),
+
+
+
+
+
+
+
+
+
                     InkWell(
                       onTap: () {
                         Navigator.push(
@@ -231,45 +467,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
                                 builder: (context) => HomeScreen(
                                       currentUserId: _userId,
                                     )));
-//                        showDialog(
-//                          context: context,
-//                          builder: (BuildContext context) =>
-//                          new CupertinoAlertDialog(
-//                            title: new Text(
-//                              "تنبية",
-//                              style: TextStyle(
-////                                      fontFamily: 'Estedad-Black',
-//                              ),
-//                            ),
-//                            content:
-//                            new Text(
-//                              "نبغاك تخبرنا عن نوع حسابك",
-//                              style: TextStyle(
-////                                      fontFamily: 'Estedad-Black',
-//                              ),
-//                            ),
-//                            actions: [
-//                              CupertinoDialogAction(
-//                                  isDefaultAction: false,
-//                                  child: new FlatButton(
-//                                    onPressed: () {
-//                                      Navigator.pop(context, false);
-//                                      Navigator.push(
-//                                          context,
-//                                          new MaterialPageRoute(
-//                                              builder: (context) =>
-//                                                  PersonalPage()));
-//                                    },
-//                                    child: Text(
-//                                      "موافق",
-//                                      style: TextStyle(
-////                                              fontFamily: 'Estedad-Black',
-//                                      ),
-//                                    ),
-//                                  )),
-//                            ],
-//                          ),
-//                        );
+
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,

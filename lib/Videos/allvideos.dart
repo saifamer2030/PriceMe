@@ -18,9 +18,9 @@ import 'package:video_player/video_player.dart';
 
 
 class AllVideos extends StatefulWidget {
-
+String cdepart;
 int carrange;
-  AllVideos(this.carrange);
+  AllVideos(this.carrange,this.cdepart);
 
   @override
   _AllVideosState createState() => _AllVideosState();
@@ -101,6 +101,7 @@ class _AllVideosState extends State<AllVideos> {
               .orderBy('carrange',
                   descending:
                       true) .where("carrange", isLessThanOrEqualTo:widget.carrange).limit(5)
+              .where("cdepart", isEqualTo:widget.cdepart)
              .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
@@ -131,10 +132,13 @@ class _AllVideosState extends State<AllVideos> {
                           ),
 
                           child: VideoWidget(
-                            play: false,
-                            url: snapshot.data.documents[index]["curi"],
-                              title:snapshot.data.documents[index]["ctitle"],
-                              details: snapshot.data.documents[index]["cdetail"]
+                              play: false,
+                              document:snapshot.data.documents[index],
+                            itr: index,
+                              len:snapshot.data.documents.length
+                              // url: snapshot.data.documents[index]["curi"],
+                              // title:snapshot.data.documents[index]["ctitle"],
+                              // details: snapshot.data.documents[index]["cdetail"]
                           )
                       ),
                     );
@@ -285,11 +289,17 @@ class _AllVideosState extends State<AllVideos> {
 class VideoWidget extends StatefulWidget {
 
   final bool play;
-  final String url;
-  final String title;
-  final String details;
+  // final String url;
+  // final String title;
+  // final String details;
+  final DocumentSnapshot document;
+  final int itr;
+  final int len;
 
-  const VideoWidget({Key key, @required this.url, @required this.play, @required this.title, @required this.details})
+  const VideoWidget({Key key,@required this.document,@required  this.play,@required  this.itr,@required  this.len
+
+    //@required this.url, @required this.play, @required this.title, @required this.details
+  })
       : super(key: key);
 
   @override
@@ -300,12 +310,35 @@ class VideoWidget extends StatefulWidget {
 class _VideoWidgetState extends State<VideoWidget> {
   VideoPlayerController videoPlayerController ;
   Future<void> _initializeVideoPlayerFuture;
+ String a,_userId;
+  //var list = new List<int>.generate(10, (i) => i + 1);
+  // List<int> seens = new List<int>.generate(widget.len, (i) => 0);
 
+  List<int> seens=[];
+  List<int> likes=[];
+  List<bool> seencheck=[];
+  List<bool> favcheck=[];
+ //  int likes;
+ // bool seencheck=true;
+ //  bool favcheck;
   @override
   void initState() {
     super.initState();
-    videoPlayerController = new VideoPlayerController.network(widget.url);
+     seens = new List<int>.generate(widget.len, (i) => 0);
+    likes = new List<int>.generate(widget.len, (i) => 0);
+    seencheck = new List<bool>.generate(widget.len, (i) => true);
+    favcheck = new List<bool>.generate(widget.len, (i) => false);
 
+    favcheck[widget.itr]= widget.document['favcheck'];
+    seens[widget.itr]=widget.document['seens'];
+    likes[widget.itr]=widget.document['likes'];
+
+    videoPlayerController = new VideoPlayerController.network(widget.document['curi']);
+
+    FirebaseAuth.instance.currentUser().then((user) => user == null
+        ?  a=""
+
+        : setState(() {_userId = user.uid;}));
     _initializeVideoPlayerFuture = videoPlayerController.initialize().then((_) {
       //       Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
       setState(() {});
@@ -313,7 +346,18 @@ class _VideoWidgetState extends State<VideoWidget> {
     videoPlayerController.addListener(() {
       if (videoPlayerController.value.position ==
           videoPlayerController.value.duration) {
-        print('video Ended');
+        //print('video Ended');
+        if(seencheck[widget.itr]) {
+          setState(() {
+            seens[widget.itr] = seens[widget.itr] + 1;
+          });
+          Firestore.instance.collection('videos')
+              .document(widget.document['cId'])
+              .updateData({
+            'seens': seens[widget.itr],
+          });
+          seencheck[widget.itr]= false;
+        }
       }
     });
   }
@@ -333,19 +377,20 @@ class _VideoWidgetState extends State<VideoWidget> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.done) {
             return new Container(
-
+              // width: MediaQuery.of(context).size.width,
+              // height: MediaQuery.of(context).size.height,
               child: Card(
-                key: new PageStorageKey(widget.url),
+                key: new PageStorageKey(widget.document['curi']),
                 elevation: 5.0,
                 child: Column(
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Chewie(
-                        key: new PageStorageKey(widget.url),
+                        key: new PageStorageKey(widget.document['curi']),
                         controller: ChewieController(
                           videoPlayerController: videoPlayerController,
-                          aspectRatio: 3 / 2,
+                          aspectRatio: 4 / 3,
                           // Prepare the video to be played and display the first frame
                           autoInitialize: true,
                           looping: false,
@@ -369,18 +414,116 @@ class _VideoWidgetState extends State<VideoWidget> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
 
-                          Icon(
-                            Icons.favorite_border,
-                            color: Colors.red,
-                            size: 20,
+                          InkWell(
+                            onTap: () {
+                              setState(() {
+                                setState(() {
+                                  favcheck[widget.itr] =
+                                  ! favcheck[widget.itr] ; //boolean value
+                                });
+                                if (_userId == null) {
+                                  //if(favchecklist[position] ){
+                                  Toast.show(
+                                      "ابشر .. سجل دخول الاول طال عمرك",
+                                      context,
+                                      duration: Toast.LENGTH_LONG,
+                                      gravity: Toast.BOTTOM);
+                                  setState(() {
+                                    favcheck[widget.itr]= false; //boolean value
+                                  });
+                                } else {
+                                      if (favcheck[widget.itr]) {
+                                        setState(() {
+                                          likes[widget.itr]=likes[widget.itr]+1;
+                                        });
+                                        Firestore.instance.collection('videos')
+                                            .document(widget.document['cId'])
+                                            .updateData({
+                                          'likes':likes[widget.itr],
+                                        });
+                                        print("rrrrr$_userId");
+                                        Firestore.instance
+                                          .collection('favorite')
+                                          .document(_userId)
+                                          .collection("fav_offer_id")
+                                          .document(widget.document['cId'])
+                                          .setData({
+                                        'cId': widget.document['cId'],
+                                        'carrange':widget.document['carrange'],
+                                        'cuserId': widget.document['cuserId'],
+                                        'cname': widget.document['cname'],
+                                        'cphotourl': widget.document['cphotourl'],
+                                        'cdate': widget.document['cdate'],
+                                        'ctitle': widget.document['ctitle'],
+                                        'cdepart': widget.document['cdepart'],
+                                        'cdetail': widget.document['cdetail'],
+                                        'cpublished': false,
+                                        'curi':widget.document['curi'],
+                                        'likes': likes[widget.itr],
+                                        'seens': seens[widget.itr],
+                                        'imgurl': widget.document['imgurl'],
+                                        'favcheck': true,
+                                      });
+                                        //////////*******************************************
+
+                                      } else {
+                                        setState(() {
+                                          likes[widget.itr]=likes[widget.itr]-1;
+
+                                        });
+                                        Firestore.instance.collection('videos')
+                                            .document(widget.document['cId'])
+                                            .updateData({
+                                          'likes':likes[widget.itr],
+                                        });
+                                        Firestore.instance
+                                            .collection("favorite")
+                                            .document(_userId)
+                                            .collection("fav_offer_id")
+                                            .document(widget.document['cId'])
+                                            .delete();
+
+                                    Toast.show("تم الحذف فى المفضلة",
+                                        context,
+                                        duration: Toast.LENGTH_SHORT,
+                                        gravity: Toast.BOTTOM);
+                                  }
+
+                                  ////////////////*************************
+                                }
+                              });
+                            },
+                            child: Container(
+                              //decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 10.0, bottom: 10.0),
+                                child: favcheck[widget.itr]
+                                    ? Icon(
+                                  Icons.favorite,
+                                  size: 40.0,
+                                  color: Colors.red,
+                                )
+////
+                                    : Column(
+                                  children: <Widget>[
+                                    Icon(
+                                      Icons.favorite_border,
+                                      size: 40.0,
+                                      color: Colors.red,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
-                          Text("مشاهدات:0"),
-                          Text(widget.title),
+                          Text("مشاهدات:${seens[widget.itr]}"),
+                          Text(widget.document['ctitle']),
                         ],
                       ),
                     ),
                     Align(
-                        child: Text(widget.details,textDirection: TextDirection.rtl,),
+                        child: Text(widget.document['cdetail'],textDirection: TextDirection.rtl,),
                     ),
 
                   ],
@@ -389,8 +532,12 @@ class _VideoWidgetState extends State<VideoWidget> {
             );
           }
           else {
-            return Center(
-              child: CircularProgressIndicator(),);
+            return Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
+              child: Center(
+                child: CircularProgressIndicator(),),
+            );
           }
         },
       );

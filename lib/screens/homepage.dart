@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => AllVideos(document['carrange'])));
+                builder: (context) => AllVideos(document['carrange'],null)));
         // _onInstagramStorySwipeClicked();
       },
       child: Padding(
@@ -101,7 +101,44 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.white,
                 size: 35,
               ),
-            ))
+            )),
+            Positioned(
+               bottom: 5,
+                right: 5,
+                child: Container(
+                  child: Text( document['cname']==null||document['cname']==""?"اسم غير معلوم":document['cname']
+                    ,style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),),
+                )),
+
+            Positioned(
+                top: 5,
+                left: 5,
+                child: Container(
+                  height: 50,
+                  width: 50,
+                  // child: Text(
+                  //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
+                  // ),textAlign: TextAlign.center,
+                  //
+                  // ),
+                  decoration: BoxDecoration(
+                    border: new Border.all(
+                      color: Colors.black,
+                      width: 1.0,
+                    ),
+                    image: DecorationImage(
+                      image: NetworkImage(document['cphotourl']==null||document['cphotourl']==""?
+                        "https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg"  :document['cphotourl']),
+                      fit: BoxFit.fill,
+                    ),
+                    shape: BoxShape.circle,
+                  ),
+                ),
+
+            ),
           ],
         ),
       ),

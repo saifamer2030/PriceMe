@@ -91,39 +91,7 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
                       actionPane: SlidableDrawerDismissal(),
                   child:firebasedata(context,index, snapshot.data.documents[index]),
                     secondaryActions: <Widget>[
-                      //secondaryActions
-                      // Container(
-                      //   padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                      //   child: IconSlideAction(
-                      //     caption: 'تعديل',
-                      //     color: Colors.green,
-                      //     icon: Icons.edit,
-                      //     onTap: () {
-                      //       Navigator.push(
-                      //         context,
-                      //         new MaterialPageRoute(
-                      //             builder: (BuildContext context) =>
-                      //             new EditAdv(
-                      //               index,
-                      //               advlist.length,
-                      //               snapshot.data.documents[index]["cimagelist"],
-                      //               snapshot.data.documents[index]["cimagelist"],
-                      //               snapshot.data.documents[index]["cimagelist"],
-                      //               snapshot.data.documents[index]["cimagelist"],
-                      //               snapshot.data.documents[index]["cimagelist"],
-                      //               snapshot.data.documents[index]["cimagelist"],
-                      //               snapshot.data.documents[index]["cimagelist"],
-                      //               snapshot.data.documents[index]["cimagelist"],
-                      //               snapshot.data.documents[index]["cimagelist"],
-                      //               snapshot.data.documents[index]["cimagelist"],
-                      //               snapshot.data.documents[index]["cimagelist"],
-                      //               snapshot.data.documents[index]["cimagelist"],
-                      //
-                      //             )),
-                      //       );
-                      //     },
-                      //   ),
-                      // )
+
                     ],
                     actions: <Widget>[
                       Container(
