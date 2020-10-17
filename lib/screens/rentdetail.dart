@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:audioplayers/audioplayers.dart';
@@ -7,62 +8,65 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:priceme/UserRating/RatingClass.dart';
 import 'package:priceme/UserRating/UserRatingPage.dart';
 import 'package:priceme/classes/CommentClass.dart';
+import 'package:priceme/classes/CommentClassString.dart';
+import 'package:priceme/screens/map_view.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:toast/toast.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class AdvDetail extends StatefulWidget {
+class RentDetail extends StatefulWidget {
   String userId;
   String advid;
 
-  AdvDetail(this.userId, this.advid);
+  RentDetail(this.userId, this.advid);
 
   @override
-  _AdvDetailState createState() => _AdvDetailState();
+  _RentDetailState createState() => _RentDetailState();
 }
 
-class _AdvDetailState extends State<AdvDetail> {
+class _RentDetailState extends State<RentDetail> {
   String _userId;
   String _username;
   String _userphone;
   AudioPlayer audioPlayer = AudioPlayer();
   Duration duration= new Duration();
   Duration position= new Duration();
-  double bestprice=10000000.0;
-  double bestrate=0.0;
+
+  Completer<GoogleMapController> _mapcontroller = Completer();
+  Set<Marker> markers = Set();
+  List<Marker> _markers = <Marker>[];
 
   bool isplaying1 = false;
   bool arrangecheck = true;
 
-  String _cWorkshopname="";
 
   String cdate;
   String cdiscribtion;
-  String cbody;
   String curi;
   String cimagelist;
-  String caudiourl;
   String cproblemtype;
   bool cpublished;
   String ccar;
   String ccarversion;
-  String cmodel;
+  String cyear;
   int carrange;
-  String mfault;
-  String subfault;
-  String sparepart;
+   String ccolor;
+   String cmotion;
+  String cprice;
   String ctitle;
   String fromPLat;
   String fromPLng;
   String fPlaceName;
-  String cNew;
+ //String cNew;
   String ownerName;
   String ownerPhone;
+  String _cWorkshopname;
 
   var _formKey1 = GlobalKey<FormState>();
   var refreshKey = GlobalKey<RefreshIndicatorState>();
@@ -71,7 +75,7 @@ class _AdvDetailState extends State<AdvDetail> {
   bool favcheck = false;
   double  traderating=0.0;
   //List<OrderDetailClass> orderlist = [];
-  List<CommentClass> commentlist = [];
+  List<CommentClassString> commentlist = [];
 
   //var _controller = ScrollController();
 
@@ -120,9 +124,9 @@ class _AdvDetailState extends State<AdvDetail> {
     }));
     setState(() {
       var userQuery = Firestore.instance
-          .collection('advertisments')
+          .collection('rents')
           .where('userId', isEqualTo: widget.userId)
-          .where('advid', isEqualTo: widget.advid)
+          .where('offerid', isEqualTo: widget.advid)
           .limit(1);
       userQuery.getDocuments().then((data) {
         print("${ widget.advid}//mmoo${data.documents.length}");
@@ -131,24 +135,22 @@ class _AdvDetailState extends State<AdvDetail> {
           setState(() {
             cdate = data.documents[0].data['cdate'];
             cdiscribtion = data.documents[0].data['cdiscribtion'];
-            cbody = data.documents[0].data['cbody'];
             curi = data.documents[0].data['curi'];
             cimagelist = data.documents[0].data['cimagelist'];
-            caudiourl = data.documents[0].data['caudiourl'];
             cproblemtype = data.documents[0].data['cproblemtype'];
-            ccar = data.documents[0].data['ccar'];
+             ccar = data.documents[0].data['ccar'];
             cpublished = data.documents[0].data['cpublished'];
-            ccarversion = data.documents[0].data['ccarversion'];
-            cmodel = data.documents[0].data['cmodel'];
-            mfault = data.documents[0].data['mfault'];
+             ccarversion = data.documents[0].data['ccarversion'];
+            cyear = data.documents[0].data['cyear'];
+             ccolor = data.documents[0].data['color'];
 
-            subfault = data.documents[0].data['subfault'];
-            sparepart = data.documents[0].data['sparepart'];
+            cprice = data.documents[0].data['price'];
+
             ctitle = data.documents[0].data['ctitle'];
             fromPLat = data.documents[0].data['fromPLat'];
             fromPLng = data.documents[0].data['fromPLng'];
             fPlaceName = data.documents[0].data['fPlaceName'];
-            cNew = data.documents[0].data['cNew'];
+             cmotion = data.documents[0].data['cmotion'];
             ownerName = data.documents[0].data['pname'];
             ownerPhone = data.documents[0].data['pphone'];
             _cWorkshopname=data.documents[0].data['workshopname'];
@@ -165,12 +167,12 @@ class _AdvDetailState extends State<AdvDetail> {
     });
     commentlist.clear();
     final commentsReference = Firestore.instance;
-    commentsReference.collection("commentsdata").document(widget.userId).collection(widget.advid)
+    commentsReference.collection("commentsrentdata").document(widget.userId).collection(widget.advid)
         .getDocuments()
         .then((QuerySnapshot snapshot) {
       snapshot.documents.forEach((comment) {
 
-        CommentClass cc = CommentClass(
+        CommentClassString cc = CommentClassString(
           comment.data['ownerId'],
           comment.data['traderid'],
           comment.data['advID'],
@@ -179,23 +181,15 @@ class _AdvDetailState extends State<AdvDetail> {
           comment.data['tradname'],
           comment.data['ownername'],
           comment.data['cdate'],
-          comment.data['price'],
+          comment.data['comment'],
           comment.data['rate'],
+          comment.data['carrange'],
 
         );
         setState(() {
           commentlist.add(cc);
-          commentlist.sort((c1, c2) =>c1.price.compareTo(c2.price));});
-        if( bestprice>comment.data['price']){
-          setState(() {
-            bestprice=comment.data['price'];
-          });
-          }
-        if( bestrate<comment.data['rate']){
-          setState(() {
-            bestrate=comment.data['rate'];
-          });
-        }
+          commentlist.sort((c1, c2) =>c2.carrange.compareTo(c1.carrange));});
+
 
       });
     });
@@ -287,7 +281,7 @@ class _AdvDetailState extends State<AdvDetail> {
                   elevation: 10.0,
                   margin: EdgeInsets.only(right: 1, left: 1, bottom: 2),
                   child: Container(
-                      height: 120,
+                      height: 210,
                       color: Colors.grey[300],
                       padding: EdgeInsets.all(0),
                       child: Stack(
@@ -310,37 +304,6 @@ class _AdvDetailState extends State<AdvDetail> {
                                     fontWeight: FontWeight.bold,
                                     fontSize: 15.0,
                                     fontStyle: FontStyle.normal),
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            top: 8,
-                            left: 5,
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Row(
-                                children: <Widget>[
-                                  mfault == ""
-                                      ? Text(sparepart)
-                                      : Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 8.0),
-                                    child:  Text("$mfault-$subfault"
-                                      ,
-                                      textDirection:
-                                      TextDirection.rtl,
-                                      textAlign:
-                                      TextAlign.right,
-                                      style: TextStyle(
-                                          color: const Color(
-                                              0xff171732),
-                                          fontSize: 15.0,
-//                                                      fontFamily: 'Gamja Flower',
-                                          fontStyle: FontStyle
-                                              .normal),
-                                    ),
-                                  ),
-                                ],
                               ),
                             ),
                           ),
@@ -389,6 +352,112 @@ class _AdvDetailState extends State<AdvDetail> {
                               padding: const EdgeInsets.all(5.0),
                               child: Row(
                                 children: <Widget>[
+                                  ccar == null
+                                      ? Container()
+                                      : Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0),
+                                    child: Text("$ccar - $ccarversion - $cyear"
+                                      ,
+                                      textDirection:
+                                      TextDirection.rtl,
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                          fontSize: 15.0,
+                                          color: const Color(
+                                              0xff171732),
+//                                                      fontFamily:
+//                                                          'Gamja Flower',
+                                          fontStyle:
+                                          FontStyle.normal),
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.directions_car,
+                                    color: const Color(0xff171732),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 70,
+                            right: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Row(
+                                children: <Widget>[
+                                  ccolor == null
+                                      ? Container()
+                                      : Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0),
+                                    child: Text(
+                                      "اللون: $ccolor - نوع الحركة: $cmotion",
+                                      textDirection:
+                                      TextDirection.rtl,
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                          fontSize: 15.0,
+                                          color: const Color(
+                                              0xff171732),
+//                                                      fontFamily:
+//                                                          'Gamja Flower',
+                                          fontStyle:
+                                          FontStyle.normal),
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.directions_car,
+                                    color: const Color(0xff171732),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 95,
+                            right: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Row(
+                                children: <Widget>[
+                                  cprice == null
+                                      ? Container()
+                                      : Padding(
+                                    padding: const EdgeInsets.only(
+                                        top: 8.0),
+                                    child: Text(
+                                      "السعر بالدينار الاردني: $cprice ",
+                                      textDirection:
+                                      TextDirection.rtl,
+                                      textAlign: TextAlign.right,
+                                      style: TextStyle(
+                                          fontSize: 15.0,
+                                          color: const Color(
+                                              0xff171732),
+//                                                      fontFamily:
+//                                                          'Gamja Flower',
+                                          fontStyle:
+                                          FontStyle.normal),
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.monetization_on,
+                                    color: const Color(0xff171732),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          Positioned(
+                            top: 120,
+                            right: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Row(
+                                children: <Widget>[
                                   fPlaceName == null
                                       ? Container()
                                       : Padding(
@@ -417,36 +486,10 @@ class _AdvDetailState extends State<AdvDetail> {
                               ),
                             ),
                           ),
-                          /**    Positioned(
-                              top: 50,
-                              left: 5,
-                              child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Row(
-                              children: <Widget>[
 
-                              advnNameclass==null?Text(""):
-                              Padding(
-                              padding: const EdgeInsets.only(top:8.0),
-                              child: Text(advnNameclass.cregion,
-                              textDirection: TextDirection.rtl,
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-                              fontSize: 15.0,
-                              fontFamily: 'Gamja Flower',
-                              fontStyle: FontStyle.normal),
-                              ),
-                              ),
-                              Icon(
-                              Icons.location_on,
-                              color: Colors.grey,
-                              ),
-                              ],
-                              ),
-                              ),
-                              ),**/
+
                           Positioned(
-                            top: 70,
+                            top: 140,
                             right: 5,
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
@@ -483,174 +526,51 @@ class _AdvDetailState extends State<AdvDetail> {
                       )),
                 ),
                 SizedBox(height: 10.0,),
-                bestprice==10000000.0?Container():Card(
-                  shape: new RoundedRectangleBorder(
-                      side: new BorderSide(
-                          color: Colors.green[400], width: 3.0),
-                      borderRadius: BorderRadius.circular(10.0)),
-                  //borderOnForeground: true,
-                  elevation: 10.0,
-                  margin: EdgeInsets.only(right: 100, left: 100, bottom: 2),
-                  child: Container(
-                      height: 30,
-                      color: Colors.green[300],
-                      padding: EdgeInsets.all(0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: <Widget>[
-                          Text(
-                            "${bestprice}",
-                            textDirection:
-                            TextDirection.rtl,
-                            //minFontSize: 8,
-                            maxLines: 3,
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                                fontSize: 25.0,
-                                fontStyle:                                FontStyle.normal),
-                          ),
-                          Text(
-                            "افضل سعر:",
-                            textDirection:
-                            TextDirection.rtl,
-                            //minFontSize: 8,
-                            maxLines: 3,
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                                fontSize: 15.0,
-//                                                          fontFamily:
-//                                                              'Gamja Flower',
-                                fontStyle:
-                                FontStyle.normal),
-                          ),
-                        ],
-                      )),
-                ),
+//                 bestprice==10000000.0?Container():Card(
+//                   shape: new RoundedRectangleBorder(
+//                       side: new BorderSide(
+//                           color: Colors.green[400], width: 3.0),
+//                       borderRadius: BorderRadius.circular(10.0)),
+//                   //borderOnForeground: true,
+//                   elevation: 10.0,
+//                   margin: EdgeInsets.only(right: 100, left: 100, bottom: 2),
+//                   child: Container(
+//                       height: 30,
+//                       color: Colors.green[300],
+//                       padding: EdgeInsets.all(0),
+//                       child: Row(
+//                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                         children: <Widget>[
+//                           Text(
+//                             "${bestprice}",
+//                             textDirection:
+//                             TextDirection.rtl,
+//                             //minFontSize: 8,
+//                             maxLines: 3,
+//                             textAlign: TextAlign.right,
+//                             style: TextStyle(
+//                                 fontSize: 25.0,
+//                                 fontStyle:                                FontStyle.normal),
+//                           ),
+//                           Text(
+//                             "افضل سعر:",
+//                             textDirection:
+//                             TextDirection.rtl,
+//                             //minFontSize: 8,
+//                             maxLines: 3,
+//                             textAlign: TextAlign.right,
+//                             style: TextStyle(
+//                                 fontSize: 15.0,
+// //                                                          fontFamily:
+// //                                                              'Gamja Flower',
+//                                 fontStyle:
+//                                 FontStyle.normal),
+//                           ),
+//                         ],
+//                       )),
+//                 ),
 
-                // Row(
-                //   mainAxisAlignment: MainAxisAlignment.center,
-                //   children: <Widget>[
-                //     IconButton(
-                //         icon: Icon(isplaying1 ? Icons.pause:Icons.play_arrow),
-                //         iconSize: 30.0,
-                //         color: isplaying1? Colors.orange:Colors.black,
-                //         onPressed: (){
-                //           if(isplaying1){
-                //             musicPlayer.pause();
-                //
-                //             setState(() {
-                //               isplaying1=false;
-                //             });
-                //           }
-                //           else{
-                //             setState(() {
-                //               isplaying1=true;
-                //             });
-                //
-                //             musicPlayer.play(MusicItem(
-                //               trackName:"تسجيل صوتى",// widget.song_name,
-                //               albumName: mfault,
-                //               artistName: ownerName,//widget.artist_name,
-                //               url: caudiourl,
-                //               coverUrl:_imageUrls[0],// widget.image_url,
-                //               duration: Duration(seconds: 60),
-                //             ));
-                //           }
-                //         }),
-                //
-                //     SizedBox(
-                //       width: 10.0,
-                //     ),
-                //     IconButton(
-                //         icon: Icon(
-                //           Icons.stop,
-                //         ),
-                //         color: isplaying1?Colors.black:Colors.orange,
-                //         iconSize: 30.0,
-                //         onPressed: (){
-                //           musicPlayer.stop();
-                //           setState(() {
-                //             isplaying1=false;
-                //           });
-                //         }
-                //     ),
-                //
-                //   ],
-                // ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
 
-                    IconButton(
-                        icon: Icon(isplaying1 ? Icons.pause:Icons.play_arrow),
-                        iconSize: 30.0,
-                        color: isplaying1? Colors.orange:Colors.black,
-                        onPressed: () async {
-                          if(isplaying1){
-                            var res=await audioPlayer.pause();
-                            if(res==1){
-                              setState(() {
-                                isplaying1=false;
-                              });
-                            }
-
-                          }
-                          else{
-                            var res=await audioPlayer.play(caudiourl,isLocal: true);
-                            if(res==1){
-                              setState(() {
-                                isplaying1=true;
-                              });
-                            }
-                          }
-                          audioPlayer.onDurationChanged.listen((Duration dd) {
-                            setState(() {
-                              duration=dd;
-                            });
-                          });
-                          audioPlayer.onAudioPositionChanged.listen((Duration dd) {
-                            setState(() {
-                              position=dd;
-                            });
-                          });
-                        }),
-
-                    SizedBox(
-                      width: 0.0,
-                    ),
-                    IconButton(
-                        icon: Icon(
-                          Icons.stop,
-                        ),
-                        color: isplaying1?Colors.black:Colors.orange,
-                        iconSize: 30.0,
-                        onPressed: (){
-                          audioPlayer.stop();
-                          setState(() {
-                            isplaying1=false;
-                            duration = new Duration(seconds: 0);
-                            position = new Duration(seconds: 0);
-                          });
-                        }
-                    ),
-                    Flexible(
-                      child: Slider.adaptive(
-                          min: 0.0,
-                          value: position.inSeconds.toDouble(),
-                          max: duration.inSeconds.toDouble(),
-                          activeColor: Colors.black,
-                          inactiveColor: Colors.orange,
-
-                          onChanged: (double value) {
-                            setState(() {
-                              audioPlayer.seek(new Duration(seconds: value.toInt()));
-                              value = value;
-                            });
-                          }),
-                    ),
-
-                  ],
-                ),
 
 
 
@@ -819,91 +739,46 @@ class _AdvDetailState extends State<AdvDetail> {
                   height: 2 * _minimumPadding,
                   width: _minimumPadding,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Container(
-                        width: 150 /*MediaQuery.of(context).size.width*/,
-                        height: 40,
-                        child: new RaisedButton(
-                          child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              new Text(
-                                "افضل تقييم",
-                                style: TextStyle(
-                                  color: const Color(0xff171732),
-                                  fontSize: 10,
-                                ),
-                              ),
-                              Icon(
-                                Icons.stars,
-                                color: const Color(0xff171732),
-                              ),
-                            ],
+                Padding(
+                  padding: const EdgeInsets.only(left: 10.0),
+                  child: Container(
+                    width: 150 /*MediaQuery.of(context).size.width*/,
+                    height: 40,
+                    child: new RaisedButton(
+                      child: Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceEvenly,
+                        children: <Widget>[
+                          new Text(
+                            "الموقع على الخريطة",
+                            style: TextStyle(
+                              color: const Color(0xff171732),
+                              fontSize: 10,
+                            ),
                           ),
-                          textColor: const Color(0xff171732),
-                          color: arrangecheck?Colors.grey[100]:Colors.amber,
-                          onPressed: () {
-                            setState(() {
-                              arrangecheck=false;
-                            });
-                            sortrate();
-
-                          },
-
-//
-                          shape: new RoundedRectangleBorder(
-                              borderRadius:
-                              new BorderRadius.circular(10.0)),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Container(
-                        width: 150 /*MediaQuery.of(context).size.width*/,
-                        height: 40,
-                        child: new RaisedButton(
-                          child: Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              new Text(
-                                "افضل سعر",
-                                style: TextStyle(
-                                  color: const Color(0xff171732),
-                                  fontSize: 10,
-                                ),
-                              ),
-                              Icon(
-                                Icons.monetization_on,
-                                color: const Color(0xff171732),
-                              ),
-                            ],
+                          Icon(
+                            Icons.location_on,
+                            color: const Color(0xff171732),
                           ),
-                          textColor: const Color(0xff171732),
-                          color: arrangecheck?Colors.amber:Colors.grey[100],
-
-                          onPressed: () {
-                            setState(() {
-                              arrangecheck=true;
-                            });
-                            sortprice();
-
-                          },
-//
-                          shape: new RoundedRectangleBorder(
-                              borderRadius:
-                              new BorderRadius.circular(10.0)),
-                        ),
+                        ],
                       ),
+                      textColor: const Color(0xff171732),
+                      color: Colors.grey[400],
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    MapView(ctitle, double.parse(fromPLat), double.parse(fromPLng))));
+                      },
+//
+                      shape: new RoundedRectangleBorder(
+                          borderRadius:
+                          new BorderRadius.circular(10.0)),
                     ),
-                  ],
+                  ),
                 ),
+
                 SizedBox(
                   height: 2 * _minimumPadding,
                   width: _minimumPadding,
@@ -947,7 +822,7 @@ class _AdvDetailState extends State<AdvDetail> {
                                           commentlist[index].tradname,
                                           commentlist[index].ownername,
                                           commentlist[index].cdate,
-                                          commentlist[index].price,
+                                          commentlist[index].comment,
                                           commentlist[index].rate,
                                         ),
 
@@ -975,13 +850,13 @@ class _AdvDetailState extends State<AdvDetail> {
                                         child: TextFormField(
                                           textAlign: TextAlign.right,
                                           keyboardType:
-                                              TextInputType.number,
+                                              TextInputType.text,
                                           textDirection:
                                               TextDirection.rtl,
                                           controller: _commentController,
                                           validator: (String value) {
                                             if ((value.isEmpty)) {
-                                              return 'ابشر .. لكن اكتب السعر الاول طال عمرك';
+                                              return 'كتب التعليق ';
                                             }
                                           },
 
@@ -991,7 +866,7 @@ class _AdvDetailState extends State<AdvDetail> {
                                               errorStyle: TextStyle(
                                                   color: Colors.red,
                                                   fontSize: 15.0),
-                                              labelText: "السعر بالدينار الاردنى",
+                                              labelText: "التعليق",
                                               // hintText: "التعليق",
 
 //                                prefixIcon: Icon(
@@ -1118,57 +993,38 @@ class _AdvDetailState extends State<AdvDetail> {
       String date =
           '${now.year}-${now.month}-${now.day}-${now.hour}-${now.minute}-00';
       DocumentReference documentReference =
-      Firestore.instance.collection('commentsdata').document(widget.userId).collection(widget.advid).document();
+      Firestore.instance.collection('commentsrentdata').document(widget.userId).collection(widget.advid).document();
       String commentid= documentReference.documentID;
       String price;
-if( _commentController.text.contains('.')){price=_commentController.text;}else{price= "${_commentController.text}.0";}
       documentReference.setData({
+        'carrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
         'ownerId': widget.userId,
         'traderid': _userId,
-      'advID': widget.advid,
-      'commentid':commentid,
-      'cdate': now.toString(),
-      'tradname': _username,
-      'ownername': ownerName,
-        'price': double.parse(price),
-      'rate':traderating,
+        'advID': widget.advid,
+        'commentid':commentid,
+        'cdate': now.toString(),
+        'tradname': _username,
+        'ownername': ownerName,
+        'comment':_commentController.text,
+        'rate':0.0,
       }).whenComplete(() {
 
         Toast.show("ارسالنا تعليقك طال عمرك", context,
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-        CommentClass commentclass = new CommentClass(
+        CommentClassString commentclass = new CommentClassString(
           widget.userId,
           _userId,
           widget.advid,
-            commentid,
+          commentid,
           _username,
           ownerName,
           now.toString(),
-          double.parse(price),
-          5.0-double.parse(price),
+          _commentController.text,
+          0.0,0,
         );
         setState(() {
-          commentlist.add(commentclass);
-// aaa(commentlist);
-        _commentController.text = "";
-          if( bestprice>double.parse(price)){
-            setState(() {
-              bestprice=double.parse(price);
-            });
-          }
-          if( bestrate<5.0-double.parse(price)){
-            setState(() {
-              bestrate=5.0-double.parse(price);
-            });
-          }
-          //      var cursor = (5/commentlist.length)* _controller.position.maxScrollExtent;//specific item
-
-          _controller.animateTo(
-            // NEW
-            _controller.position.maxScrollExtent *2, // NEW
-            duration: const Duration(milliseconds: 500), // NEW
-            curve: Curves.ease, // NEW
-          );
+          commentlist.insert(0, commentclass);
+          _commentController.text = "";
         });
         DocumentReference documentReference =
         Firestore.instance.collection('Alarm').document(widget.userId).collection('Alarmid').document();
@@ -1254,7 +1110,7 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
                                                         .traderid) {
                                                   FirebaseDatabase.instance
                                                       .reference()
-                                                      .child("commentsdata")
+                                                      .child("commentsrentdata")
                                                       .child(widget.userId)
                                                       .child(advID)
                                                       .child(commentlist[index]
@@ -1354,33 +1210,7 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
       ),
     );
   }
-  sortprice(){
-    setState(() {
-      List<CommentClass> commentlist1 = [];
-      commentlist1.addAll(commentlist);
-      commentlist.clear();
-      for (var c in commentlist1){
-        setState(() {
-          commentlist.add(c);
-          commentlist.sort((c1, c2) =>c1.price.compareTo(c2.price));
-        });
-      }
-    });
-}
-  sortrate(){
-    setState(() {
-      List<CommentClass> commentlist1 = [];
-      commentlist1.addAll(commentlist);
-      commentlist.clear();
-      for (var c in commentlist1){
-        setState(() {
-          commentlist.add(c);
-          commentlist.sort((c1, c2) =>c1.rate.compareTo(c2.rate));
-        });
-      }
-    });
 
-  }
   Future<void> _makePhoneCall(String url) async {
     if (await canLaunch(url)) {
       await launch(url);
@@ -1388,4 +1218,5 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
       throw 'Could not launch $url';
     }
   }
+
 }

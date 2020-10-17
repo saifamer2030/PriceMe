@@ -6,13 +6,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:priceme/screens/MorePriceMe.dart';
 import 'package:priceme/screens/addadv.dart';
+import 'package:priceme/screens/addoffer.dart';
+import 'package:priceme/screens/addrent.dart';
 import 'package:priceme/screens/alladvertisement.dart';
+import 'package:priceme/screens/alloffers.dart';
+import 'package:priceme/screens/allrents.dart';
 import 'package:priceme/screens/homepage.dart';
 import 'package:priceme/screens/hometest.dart';
 import 'package:priceme/screens/myadvertisement.dart';
+import 'package:priceme/screens/myoffers.dart';
+import 'package:priceme/screens/myrents.dart';
 
 import 'Videos/allvideos.dart';
-import 'Videos/photosvideo.dart';
+import 'Videos/videotabs.dart';
 import 'classes/ModelClass.dart';
 import 'classes/SparePartsClass.dart';
 
@@ -29,13 +35,13 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
   List<ModelClass> faultsList = [];
   List<String> sparepartsList = [];
 
-  int currentTab = 3; // to keep track of active tab index
+  int currentTab = 5; // to keep track of active tab index
 //  List<Widget> _children() => [
 
   List<Widget> screens() => [
         MorePriceMe(),
         MyAdvertisement(),
-    VidiosPhoto(),
+    VideoTabs(),
         HomePage(),
       ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
@@ -111,7 +117,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                     onPressed: () {
                       setState(() {
                         currentScreen =
-                            MyAdvertisement(); // if user taps on this dashboard tab will be active
+                            MyOffers(); // if user taps on this dashboard tab will be active
                         currentTab = 2;
                       });
                     },
@@ -148,7 +154,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                     onPressed: () {
                       setState(() {
                         currentScreen =
-                            VidiosPhoto(); // if user taps on this dashboard tab will be active
+                            VideoTabs(); // if user taps on this dashboard tab will be active
                         currentTab = 1;
                       });
                     },

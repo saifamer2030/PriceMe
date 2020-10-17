@@ -1,6 +1,6 @@
-
 import 'dart:async';
 import 'dart:io';
+import 'package:adobe_xd/gradient_xd_transform.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file/local.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -33,13 +33,15 @@ import '../Splash.dart';
 
 class AddAdv extends StatefulWidget {
   final LocalFileSystem localFileSystem;
-  String probtype0, selecteditem0,mfault;
-  AddAdv(this.probtype0,this.mfault, this.selecteditem0,  {localFileSystem})
+  String probtype0, selecteditem0, mfault;
+
+  AddAdv(this.probtype0, this.mfault, this.selecteditem0, {localFileSystem})
       : this.localFileSystem = localFileSystem ?? LocalFileSystem();
 
   @override
   _AddAdvState createState() => _AddAdvState();
 }
+
 enum SingingCharacter4 { used, New, NO }
 
 class _AddAdvState extends State<AddAdv> {
@@ -47,7 +49,7 @@ class _AddAdvState extends State<AddAdv> {
   String url1;
   String imagepathes = '';
   List<String> urlList = [];
-  List<String> proplemtype = ["اعطال","قطع غيار"];
+  List<String> proplemtype = ["اعطال", "قطع غيار"];
   List<String> indyearlist = [];
   List<String> subfaultsList = [];
   List<bool> subcheckList = [];
@@ -61,45 +63,47 @@ class _AddAdvState extends State<AddAdv> {
   List<SparePartsClass> mainfaultsList = [];
   List<SparePartsClass> mainsparsList = [];
 
+  String subfault = "";
+  String subcheck = "";
 
-  String subfault="";
-  String subcheck="";
-
-  String subfault1="";
-  String subcheck1="";
+  String subfault1 = "";
+  String subcheck1 = "";
   List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
   var _formKey = GlobalKey<FormState>();
-  LatLng fromPlace, toPlace ;
-  String fromPlaceLat , fromPlaceLng , fPlaceName ;
-  Map <String , dynamic > sendData = Map();
+  LatLng fromPlace, toPlace;
+
+  String fromPlaceLat, fromPlaceLng, fPlaceName;
+
+  Map<String, dynamic> sendData = Map();
   String model1;
   String model2;
   String fault1;
   String fault2;
-double _value=0.0;
-String _userId;
-  var song;  //var _typearray = DefConstants.countriesArray;
+  double _value = 0.0;
+  String _userId;
+  var song; //var _typearray = DefConstants.countriesArray;
   SingingCharacter4 _character4 = SingingCharacter4.New;
 
   final double _minimumPadding = 5.0;
   String _cName = "";
   String _cMobile;
-  String _cEmail="";
+  String _cEmail = "";
   TextEditingController titleController = TextEditingController();
 
   TextEditingController discController = TextEditingController();
   TextEditingController bodyController = TextEditingController();
-  var _indyearcurrentItemSelected="";
+  var _indyearcurrentItemSelected = "";
 
   var _probtypecurrentItemSelected = '';
   var _sparecurrentItemSelected = '';
   FlutterAudioRecorder _recorder;
   Recording _current;
   RecordingStatus _currentStatus = RecordingStatus.Unset;
+
   void getDataf() {
     setState(() {
-    //  print("ooooooo${widget.sparepartsList[0]}");
+      //  print("ooooooo${widget.sparepartsList[0]}");
       final SparePartsReference = Firestore.instance;
       final SparePartsReference1 = Firestore.instance;
 
@@ -113,26 +117,24 @@ String _userId;
             sparepart.data['sid'],
             sparepart.data['sName'],
             sparepart.data['surl'],
-
           );
 
-
-        setState(() {
-
-          mainfaultsList.add(spc);
-          // print(sparepartsList.length.toString() + "llll");
-        });
-
+          setState(() {
+            mainfaultsList.add(spc);
+            // print(sparepartsList.length.toString() + "llll");
+          });
         });
       }).whenComplete(() {
         faultsList.clear();
-       int i=0;
+        int i = 0;
         // subcheckList.add(false);
 
-        for(var mfaults in mainfaultsList){
-            //setState(() {  subfaultsList.clear;});
+        for (var mfaults in mainfaultsList) {
+          //setState(() {  subfaultsList.clear;});
 
-            SparePartsReference1.collection("subfaults").document(mfaults.sid).collection("subfaultid")
+          SparePartsReference1.collection("subfaults")
+              .document(mfaults.sid)
+              .collection("subfaultid")
               .getDocuments()
               .then((QuerySnapshot snapshot) {
             snapshot.documents.forEach((fault) {
@@ -147,32 +149,29 @@ String _userId;
               setState(() {
                 i++;
                 subfaultsList.add(fault.data['fsubName']);
-                subfault=subfault+fault.data['fsubName']+",";
-                subcheck=subcheck+"false"+",";
-                print(fault.data['fsubName'] + "llll"+mfaults.sName);
-
+                subfault = subfault + fault.data['fsubName'] + ",";
+                subcheck = subcheck + "false" + ",";
+                print(fault.data['fsubName'] + "llll" + mfaults.sName);
               });
             });
           }).whenComplete(() {
-              setState(() {
-                print(mfaults.sName+"////"+subfaultsList.length.toString());
-                faultsList.add(new FaultStringClass(mfaults.sName,subfault,subcheck));
-                subfault="";
-                subcheck="";
+            setState(() {
+              print(mfaults.sName + "////" + subfaultsList.length.toString());
+              faultsList
+                  .add(new FaultStringClass(mfaults.sName, subfault, subcheck));
+              subfault = "";
+              subcheck = "";
 
-                i=0;
-                subfaultsList.clear();
-                subcheckList.clear();
-
-              });
+              i = 0;
+              subfaultsList.clear();
+              subcheckList.clear();
             });
-
-        }//////
-
+          });
+        } //////
       });
     });
-
   }
+
   void getDatas() {
     setState(() {
       //  print("ooooooo${widget.sparepartsList[0]}");
@@ -189,26 +188,24 @@ String _userId;
             sparepart.data['sid'],
             sparepart.data['sName'],
             sparepart.data['surl'],
-
           );
 
-
           setState(() {
-
             mainsparsList.add(spc);
             // print(sparepartsList.length.toString() + "llll");
           });
-
         });
       }).whenComplete(() {
         sparesList.clear();
-        int i=0;
+        int i = 0;
         // subcheckList.add(false);
 
-        for(var mfaults in mainsparsList){
+        for (var mfaults in mainsparsList) {
           //setState(() {  subfaultsList.clear;});
 
-          SparePartsReference1.collection("subspares").document(mfaults.sid).collection("subsparesid")
+          SparePartsReference1.collection("subspares")
+              .document(mfaults.sid)
+              .collection("subsparesid")
               .getDocuments()
               .then((QuerySnapshot snapshot) {
             snapshot.documents.forEach((fault) {
@@ -223,31 +220,27 @@ String _userId;
               setState(() {
                 i++;
                 subsparesList.add(fault.data['fsubName']);
-                subfault1=subfault1+fault.data['fsubName']+",";
-                subcheck1=subcheck1+"false"+",";
-            //    print(fault.data['fsubName'] + "llll"+mfaults.sName);
-
+                subfault1 = subfault1 + fault.data['fsubName'] + ",";
+                subcheck1 = subcheck1 + "false" + ",";
+                //    print(fault.data['fsubName'] + "llll"+mfaults.sName);
               });
             });
           }).whenComplete(() {
             setState(() {
-             // print(mfaults.sName+"////"+subfaultsList.length.toString());
-              sparesList.add(new FaultStringClass(mfaults.sName,subfault1,subcheck1));
-              subfault1="";
-              subcheck1="";
+              // print(mfaults.sName+"////"+subfaultsList.length.toString());
+              sparesList.add(
+                  new FaultStringClass(mfaults.sName, subfault1, subcheck1));
+              subfault1 = "";
+              subcheck1 = "";
 
-              i=0;
+              i = 0;
               subsparesList.clear();
               subcheckList1.clear();
-
             });
           });
-
-        }//////
-
+        } //////
       });
     });
-
   }
 
   @override
@@ -257,46 +250,60 @@ String _userId;
 
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => Splash()))
-        : setState(() {_userId = user.uid;
-    var userQuery = Firestore.instance.collection('users').where('uid', isEqualTo: _userId).limit(1);
-    userQuery.getDocuments().then((data){
-      if (data.documents.length > 0){
-        setState(() {
-          _cName = data.documents[0].data['name'];
-          _cMobile = data.documents[0].data['phone'];
-          _cEmail=data.documents[0].data['email'];
-          // if(_cName==null){_cName=user.displayName??"اسم غير معلوم";}
-          if(_cName==null){
-            if(user.displayName==null||user.displayName==""){
-              _cName="ايميل غير معلوم";
-            }else{_cName=user.displayName;}}
-          // print("mmm$_cMobile+++${user.phoneNumber}***");
-          if(_cMobile==null){
-            if(user.phoneNumber==null||user.phoneNumber==""){
-              _cMobile="لا يوجد رقم هاتف بعد";
-            }else{_cMobile=user.phoneNumber;}}
-          //  if(_cEmail==null){_cEmail=user.email??"ايميل غير معلوم";}
-          if(_cEmail==null){
-            if(user.email==null||user.email==""){
-              _cEmail="ايميل غير معلوم";
-            }else{_cEmail=user.email;}}
-
-        });
-      }
-    });
-    }));
+            context, MaterialPageRoute(builder: (context) => Splash()))
+        : setState(() {
+            _userId = user.uid;
+            var userQuery = Firestore.instance
+                .collection('users')
+                .where('uid', isEqualTo: _userId)
+                .limit(1);
+            userQuery.getDocuments().then((data) {
+              if (data.documents.length > 0) {
+                setState(() {
+                  _cName = data.documents[0].data['name'];
+                  _cMobile = data.documents[0].data['phone'];
+                  _cEmail = data.documents[0].data['email'];
+                  // if(_cName==null){_cName=user.displayName??"اسم غير معلوم";}
+                  if (_cName == null) {
+                    if (user.displayName == null || user.displayName == "") {
+                      _cName = "ايميل غير معلوم";
+                    } else {
+                      _cName = user.displayName;
+                    }
+                  }
+                  // print("mmm$_cMobile+++${user.phoneNumber}***");
+                  if (_cMobile == null) {
+                    if (user.phoneNumber == null || user.phoneNumber == "") {
+                      _cMobile = "لا يوجد رقم هاتف بعد";
+                    } else {
+                      _cMobile = user.phoneNumber;
+                    }
+                  }
+                  //  if(_cEmail==null){_cEmail=user.email??"ايميل غير معلوم";}
+                  if (_cEmail == null) {
+                    if (user.email == null || user.email == "") {
+                      _cEmail = "ايميل غير معلوم";
+                    } else {
+                      _cEmail = user.email;
+                    }
+                  }
+                });
+              }
+            });
+          }));
 
     DateTime now = DateTime.now();
-    indyearlist=new List<String>.generate(50, (i) =>  NumberUtility.changeDigit((now.year+1 -i).toString(), NumStrLanguage.English));
-    indyearlist[0]=("الموديل");
-    _indyearcurrentItemSelected=indyearlist[0];
-    _probtypecurrentItemSelected=widget.probtype0=="قطع غيار"?widget.probtype0:proplemtype[0];
+    indyearlist = new List<String>.generate(
+        50,
+        (i) => NumberUtility.changeDigit(
+            (now.year + 1 - i).toString(), NumStrLanguage.English));
+    indyearlist[0] = ("الموديل");
+    _indyearcurrentItemSelected = indyearlist[0];
+    _probtypecurrentItemSelected =
+        widget.probtype0 == "قطع غيار" ? widget.probtype0 : proplemtype[0];
     // _sparecurrentItemSelected =  widget.probtype0=="قطع غيار"?widget.selecteditem0:widget.sparepartsList[0];
-     fault1=widget.mfault;
-     fault2=widget.selecteditem0;
+    fault1 = widget.mfault;
+    fault2 = widget.selecteditem0;
     getDataf();
     getDatas();
   }
@@ -305,14 +312,13 @@ String _userId;
   Widget build(BuildContext context) {
     Widget loadingIndicator = _load1
         ? new Container(
-      child: SpinKitCircle(color: const Color(0xff171732),),
-    )
+            child: SpinKitCircle(
+              color: const Color(0xff171732),
+            ),
+          )
         : new Container();
 
-    TextStyle textStyle = Theme
-        .of(context)
-        .textTheme
-        .subtitle;
+    TextStyle textStyle = Theme.of(context).textTheme.subtitle;
 
     return Scaffold(
       body: Container(
@@ -344,7 +350,7 @@ String _userId;
                                         child: Text(
                                           value,
                                           style: TextStyle(
-                                              color: const Color(0xffF1AB37),
+                                              color: Colors.black,
                                               fontSize: 15,
                                               fontWeight: FontWeight.bold),
                                         ));
@@ -382,7 +388,7 @@ String _userId;
                                             child: Text(
                                               value,
                                               style: TextStyle(
-                                                  color: const Color(0xffF1AB37),
+                                                  color: Colors.black,
                                                   fontSize: 15,
                                                   fontWeight: FontWeight.bold),
                                             ));
@@ -397,10 +403,28 @@ String _userId;
                                   )),
                             ),
                           ),
-
                           Container(
                             height: 40,
-                            color: Colors.grey,
+                            decoration: BoxDecoration(
+                              gradient: RadialGradient(
+                                center: Alignment(-0.93, 0.0),
+                                radius: 1.092,
+                                colors: [
+                                  const Color(0xffff2121),
+                                  const Color(0xffff5423),
+                                  const Color(0xffff7024),
+                                  const Color(0xffff904a),
+                                ],
+                                stops: [0.0, 0.562, 0.867, 1.0],
+                                transform: GradientXDTransform(1.0, 0.0, 0.0,
+                                    1.837, 0.0, -0.419, Alignment(-0.93, 0.0)),
+                              ),
+//                color: Colors.orange,
+                              borderRadius: BorderRadius.circular(10),
+//                                boxShadow: [
+//                                  BoxShadow(color: Colors.black, spreadRadius: 1)
+//                                ]
+                            ),
                             child: InkWell(
                               onTap: () {
                                 Navigator.push(
@@ -419,23 +443,16 @@ String _userId;
 //                                    });
 //showBottomSheet();
                               },
-                              child: Card(
-                                elevation: 0.0,
-                                color: const Color(0xff171732),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "نوع السيارة",
-                                      textDirection: TextDirection.rtl,
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Text(
+                                    "نوع السيارة",
+                                    textDirection: TextDirection.rtl,
+                                    style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ),
@@ -443,45 +460,50 @@ String _userId;
                           ),
                         ],
                       ),
-                      _probtypecurrentItemSelected==proplemtype[0]?SizedBox(
-                        height: _minimumPadding,
-                        width: _minimumPadding,
-                      ):Container(),
-                      _probtypecurrentItemSelected==proplemtype[0]?Container(
-                        height: 40,
-                        color: Colors.grey,
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MyForm4(
-                                        faultsList,widget.selecteditem0,widget.mfault,
-                                        onSubmit4: onSubmit4)));
-
-                          },
-                          child: Card(
-                            elevation: 0.0,
-                            color: const Color(0xff171732),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "نوع العطل",
-                                  textDirection: TextDirection.rtl,
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
+                      _probtypecurrentItemSelected == proplemtype[0]
+                          ? SizedBox(
+                              height: _minimumPadding,
+                              width: _minimumPadding,
+                            )
+                          : Container(),
+                      _probtypecurrentItemSelected == proplemtype[0]
+                          ? Container(
+                              height: 40,
+                              color: Colors.grey,
+                              child: InkWell(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MyForm4(
+                                              faultsList,
+                                              widget.selecteditem0,
+                                              widget.mfault,
+                                              onSubmit4: onSubmit4)));
+                                },
+                                child: Card(
+                                  elevation: 0.0,
+                                  color: const Color(0xff171732),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Center(
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Text(
+                                        "نوع العطل",
+                                        textDirection: TextDirection.rtl,
+                                        style: TextStyle(
+                                            color: Colors.grey,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ),
-                        ),
-                      ):Container(),
+                            )
+                          : Container(),
                       Padding(
                         padding: EdgeInsets.only(
                             top: _minimumPadding * 5, bottom: _minimumPadding),
@@ -489,7 +511,7 @@ String _userId;
                           child: Text(
                             "معلومات إضافية",
                             style: TextStyle(
-                                color: const Color(0xffF1AB37),
+                                color: const Color(0xffff5423),
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -559,163 +581,178 @@ String _userId;
                         height: _minimumPadding,
                         width: _minimumPadding,
                       ),
-                      _probtypecurrentItemSelected==proplemtype[0]?Container():Padding(
-                          padding: EdgeInsets.only(
-                              top: _minimumPadding, bottom: _minimumPadding),
-                          child: Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: TextFormField(
-                              textAlign: TextAlign.right,
-                              keyboardType: TextInputType.text,
-                              style: textStyle,
-                              //textDirection: TextDirection.rtl,
-                              controller: bodyController,
-                              validator: (String value) {
-                                if (value.isEmpty) {
-                                  return 'برجاء إدخال رقم الهيكل';
-                                }
-
-                              },
-                              decoration: InputDecoration(
-                                labelText: 'رقم الهيكل',
-                                //hintText: 'Name',
-                                labelStyle: textStyle,
-                                errorStyle: TextStyle(
-                                    color: Colors.red, fontSize: 15.0),
-                                // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
-                              ),
-                            ),
-                          )),
-                      _probtypecurrentItemSelected==proplemtype[0]?Container():SizedBox(
-                        height: _minimumPadding,
-                        width: _minimumPadding,
-                      ),
-
-                      _probtypecurrentItemSelected==proplemtype[0]?Container():SizedBox(
-                        height: _minimumPadding,
-                        width: _minimumPadding,
-                      ),
-                      _probtypecurrentItemSelected==proplemtype[0]?Container():Padding(
-                        padding: const EdgeInsets.only(right: 8),
-                        child: Text(
-                          "اختار قطع الغيار",
-                          textDirection: TextDirection.rtl,
-                          style: TextStyle(
-                              color: const Color(0xffF1AB37),
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      _probtypecurrentItemSelected==proplemtype[0]?Container():SizedBox(
-                        height: _minimumPadding,
-                        width: _minimumPadding,
-                      ),
-                      _probtypecurrentItemSelected==proplemtype[0]?Container():Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          ListTile(
-                            title: const Text(
-                              'جديدة',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-//                                          fontFamily: 'Estedad-Black',
-                              ),
-                              textAlign: TextAlign.right,
-                            ),
-                            trailing: Radio(
-                              value: SingingCharacter4.New,
-                              groupValue: _character4,
-                              onChanged: (SingingCharacter4 value) {
-                                setState(() {
-                                  _character4 = value;
-                                });
-                              },
-                            ),
-                          ),
-                          ListTile(
-                            title: const Text(
-                              'جديدة/مستعملة',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-//                                          fontFamily: 'Estedad-Black',
-                              ),
-                              textAlign: TextAlign.right,
-                            ),
-                            trailing: Radio(
-                              value: SingingCharacter4.NO,
-                              groupValue: _character4,
-                              onChanged: (SingingCharacter4 value) {
-                                setState(() {
-                                  _character4 = value;
-                                });
-                              },
-                            ),
-                          ),
-                          ListTile(
-                            title: const Text(
-                              'مستعملة',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-//                                          fontFamily: 'Estedad-Black',
-                              ),
-                              textAlign: TextAlign.right,
-                            ),
-                            trailing: Radio(
-                              value: SingingCharacter4.used,
-                              groupValue: _character4,
-                              onChanged: (SingingCharacter4 value) {
-                                setState(() {
-                                  _character4 = value;
-                                });
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      _probtypecurrentItemSelected==proplemtype[0]?Container():Padding(
-                        padding: EdgeInsets.only(
-                            top: _minimumPadding, bottom: _minimumPadding),
-                        child: Container(
-                          height: 40,
-                          color: Colors.grey,
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MyForm4(
-                                          sparesList,widget.selecteditem0,widget.mfault,
-                                          onSubmit4: onSubmit4)));
-
-                            },
-                            child: Card(
-                              elevation: 0.0,
-                              color: const Color(0xff171732),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "نوع قطع الغيار",
-                                    textDirection: TextDirection.rtl,
-                                    style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold),
+                      _probtypecurrentItemSelected == proplemtype[0]
+                          ? Container()
+                          : Padding(
+                              padding: EdgeInsets.only(
+                                  top: _minimumPadding,
+                                  bottom: _minimumPadding),
+                              child: Directionality(
+                                textDirection: TextDirection.rtl,
+                                child: TextFormField(
+                                  textAlign: TextAlign.right,
+                                  keyboardType: TextInputType.text,
+                                  style: textStyle,
+                                  //textDirection: TextDirection.rtl,
+                                  controller: bodyController,
+                                  validator: (String value) {
+                                    if (value.isEmpty) {
+                                      return 'برجاء إدخال رقم الهيكل';
+                                    }
+                                  },
+                                  decoration: InputDecoration(
+                                    labelText: 'رقم الهيكل',
+                                    //hintText: 'Name',
+                                    labelStyle: textStyle,
+                                    errorStyle: TextStyle(
+                                        color: Colors.red, fontSize: 15.0),
+                                    // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
                                   ),
                                 ),
+                              )),
+                      _probtypecurrentItemSelected == proplemtype[0]
+                          ? Container()
+                          : SizedBox(
+                              height: _minimumPadding,
+                              width: _minimumPadding,
+                            ),
+
+                      _probtypecurrentItemSelected == proplemtype[0]
+                          ? Container()
+                          : SizedBox(
+                              height: _minimumPadding,
+                              width: _minimumPadding,
+                            ),
+                      _probtypecurrentItemSelected == proplemtype[0]
+                          ? Container()
+                          : Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: Text(
+                                "اختار قطع الغيار",
+                                textDirection: TextDirection.rtl,
+                                style: TextStyle(
+                                    color:const Color(0xffff5423),
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
-                          ),
-                        )
-                      ),
-                                           // Container(
+                      _probtypecurrentItemSelected == proplemtype[0]
+                          ? Container()
+                          : SizedBox(
+                              height: _minimumPadding,
+                              width: _minimumPadding,
+                            ),
+                      _probtypecurrentItemSelected == proplemtype[0]
+                          ? Container()
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: <Widget>[
+                                ListTile(
+                                  title: const Text(
+                                    'جديدة',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+//                                          fontFamily: 'Estedad-Black',
+                                    ),
+                                    textAlign: TextAlign.right,
+                                  ),
+                                  trailing: Radio(
+                                    value: SingingCharacter4.New,
+                                    groupValue: _character4,
+                                    onChanged: (SingingCharacter4 value) {
+                                      setState(() {
+                                        _character4 = value;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                ListTile(
+                                  title: const Text(
+                                    'جديدة/مستعملة',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+//                                          fontFamily: 'Estedad-Black',
+                                    ),
+                                    textAlign: TextAlign.right,
+                                  ),
+                                  trailing: Radio(
+                                    value: SingingCharacter4.NO,
+                                    groupValue: _character4,
+                                    onChanged: (SingingCharacter4 value) {
+                                      setState(() {
+                                        _character4 = value;
+                                      });
+                                    },
+                                  ),
+                                ),
+                                ListTile(
+                                  title: const Text(
+                                    'مستعملة',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 18,
+//                                          fontFamily: 'Estedad-Black',
+                                    ),
+                                    textAlign: TextAlign.right,
+                                  ),
+                                  trailing: Radio(
+                                    value: SingingCharacter4.used,
+                                    groupValue: _character4,
+                                    onChanged: (SingingCharacter4 value) {
+                                      setState(() {
+                                        _character4 = value;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                      _probtypecurrentItemSelected == proplemtype[0]
+                          ? Container()
+                          : Padding(
+                              padding: EdgeInsets.only(
+                                  top: _minimumPadding,
+                                  bottom: _minimumPadding),
+                              child: Container(
+                                height: 40,
+
+                                child: InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => MyForm4(
+                                                sparesList,
+                                                widget.selecteditem0,
+                                                widget.mfault,
+                                                onSubmit4: onSubmit4)));
+                                  },
+                                  child: Card(
+                                    elevation: 0.0,
+                                    color: const Color(0xff171732),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Center(
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(5.0),
+                                        child: Text(
+                                          "نوع قطع الغيار",
+                                          textDirection: TextDirection.rtl,
+                                          style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )),
+                      // Container(
                       //   //decoration: BoxDecoration(border: Border.all(color: Colors.teal)),
                       //   child: new Directionality(textDirection: TextDirection.rtl,
                       //     child: CheckboxListTile(
@@ -740,25 +777,25 @@ String _userId;
                       ),
 
 ///////////////////////////////////////
-                      new Slider(value:_value??0.0,
-                          max: 62.0,min: 0.0,
-                          onChanged: (double value){
-                        setState(() {
-                          value= double.parse(_current?.duration.inSeconds.toString());
-
-                        });
+                      new Slider(
+                          value: _value ?? 0.0,
+                          max: 62.0,
+                          min: 0.0,
+                          onChanged: (double value) {
+                            setState(() {
+                              value = double.parse(
+                                  _current?.duration.inSeconds.toString());
+                            });
                           }),
                       Center(
-                        child: new Text(
-                            " ${_current?.duration.toString()}"),
+                        child: new Text(" ${_current?.duration.toString()}"),
                       ),
                       new Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child:
-                            new InkWell(
+                            child: new InkWell(
                               onTap: () {
                                 switch (_currentStatus) {
                                   case RecordingStatus.Initialized:
@@ -788,7 +825,7 @@ String _userId;
                               child: Container(
                                 width: 60,
                                 height: 60,
-                                child:  _buildText(_currentStatus),
+                                child: _buildText(_currentStatus),
                                 decoration: BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: Color(0xFFe0f2f1)),
@@ -827,11 +864,17 @@ String _userId;
 //                            ),
                           ),
                           InkWell(
-                            onTap: _currentStatus != RecordingStatus.Unset ? _stop : null,
+                            onTap: _currentStatus != RecordingStatus.Unset
+                                ? _stop
+                                : null,
                             child: Container(
                               width: 60,
                               height: 60,
-                              child: Icon(Icons.backup,color: Colors.green, size: 30,),
+                              child: Icon(
+                                Icons.backup,
+                                color: Colors.green,
+                                size: 30,
+                              ),
                               decoration: BoxDecoration(
                                   shape: BoxShape.circle,
                                   color: Color(0xFFe0f2f1)),
@@ -878,8 +921,7 @@ String _userId;
 //                          "isMeteringEnabled: ${_current?.metering?.isMeteringEnabled}"),
 //                      new Text("Extension : ${_current?.extension}"),
 
-
-                    //////////////////////////////////////////
+                      //////////////////////////////////////////
                       SizedBox(
                         height: _minimumPadding,
                         width: _minimumPadding,
@@ -891,10 +933,13 @@ String _userId;
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             InkWell(
-                              onTap: (){loadAssets();} ,
+                              onTap: () {
+                                loadAssets();
+                              },
                               child: Icon(
-                                images.length>0 ? Icons.check_circle : Icons
-                                    .add_photo_alternate,
+                                images.length > 0
+                                    ? Icons.check_circle
+                                    : Icons.add_photo_alternate,
                                 color: Colors.greenAccent,
                                 size: 50,
                               ),
@@ -938,22 +983,22 @@ String _userId;
                                 sendData = await Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          CurrentLocation2()),
+                                      builder: (context) => CurrentLocation2()),
                                 );
 
                                 // print("\n\n\n\n\n\n\nfromPlaceLng>>>>"+
                                 //     fromPlaceLng+fPlaceName+"\n\n\n\n\n\n");
-setState(() {
-  fromPlace = sendData["loc_latLng"];
-  fromPlaceLat = fromPlace.latitude.toString();
-  fromPlaceLng = fromPlace.longitude.toString();
-  fPlaceName = sendData["loc_name"];
-});
-                              } ,
+                                setState(() {
+                                  fromPlace = sendData["loc_latLng"];
+                                  fromPlaceLat = fromPlace.latitude.toString();
+                                  fromPlaceLng = fromPlace.longitude.toString();
+                                  fPlaceName = sendData["loc_name"];
+                                });
+                              },
                               child: Icon(
-                                fromPlaceLat == null ? Icons.gps_fixed : Icons.check_circle
-                                    ,
+                                fromPlaceLat == null
+                                    ? Icons.gps_fixed
+                                    : Icons.check_circle,
                                 color: Colors.purpleAccent,
                                 size: 50,
                               ),
@@ -979,7 +1024,6 @@ setState(() {
                                 size: 15,
                               ),
                             ),
-
                           ],
                         ),
                       ),
@@ -988,34 +1032,61 @@ setState(() {
                             top: _minimumPadding, bottom: _minimumPadding),
                         child: Container(
                           height: 50.0,
-                          child: Material(
-                            borderRadius: BorderRadius.circular(20.0),
-                            shadowColor: const Color(0xffFCC201),
-                            color: const Color(0xffF1AB37),
-                            elevation: 3.0,
+                          decoration: BoxDecoration(
+                            gradient: RadialGradient(
+                              center: Alignment(-0.93, 0.0),
+                              radius: 1.092,
+                              colors: [
+                                const Color(0xffff2121),
+                                const Color(0xffff5423),
+                                const Color(0xffff7024),
+                                const Color(0xffff904a),
+                              ],
+                              stops: [0.0, 0.562, 0.867, 1.0],
+                              transform: GradientXDTransform(1.0, 0.0, 0.0,
+                                  1.837, 0.0, -0.419, Alignment(-0.93, 0.0)),
+                            ),
+//                color: Colors.orange,
+                            borderRadius: BorderRadius.circular(10),
+//                                boxShadow: [
+//                                  BoxShadow(color: Colors.black, spreadRadius: 1)
+//                                ]
+                          ),
+
                             child: GestureDetector(
                               onTap: () async {
                                 if (_formKey.currentState.validate()) {
-
-                                  if(images.length == 0 || song == null||  model1 == null || model2 == null||  fault1 == null || fault2 == null){
-                                    Toast.show("برجاء التأكد من إضافة كل البيانات المطلوبة",context,duration: Toast.LENGTH_LONG,gravity:  Toast.BOTTOM);
-                                  }else{
+                                  if (images.length == 0 ||
+                                      song == null ||
+                                      model1 == null ||
+                                      model2 == null ||
+                                      fault1 == null ||
+                                      fault2 == null) {
+                                    Toast.show(
+                                        "برجاء التأكد من إضافة كل البيانات المطلوبة",
+                                        context,
+                                        duration: Toast.LENGTH_LONG,
+                                        gravity: Toast.BOTTOM);
+                                  } else {
                                     try {
-                                      final result = await InternetAddress.lookup('google.com');
-                                      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+                                      final result =
+                                          await InternetAddress.lookup(
+                                              'google.com');
+                                      if (result.isNotEmpty &&
+                                          result[0].rawAddress.isNotEmpty) {
                                         setState(() {
                                           _load1 = true;
                                         });
                                         uploadaudio();
-
-
                                       }
                                     } on SocketException catch (_) {
                                       //  print('not connected');
-                                       Toast.show("برجاء مراجعة الاتصال بالشبكة",context,duration: Toast.LENGTH_LONG,gravity:  Toast.BOTTOM);
-
-                                    }}
-
+                                      Toast.show("برجاء مراجعة الاتصال بالشبكة",
+                                          context,
+                                          duration: Toast.LENGTH_LONG,
+                                          gravity: Toast.BOTTOM);
+                                    }
+                                  }
                                 } else
                                   print('correct');
                               },
@@ -1024,7 +1095,7 @@ setState(() {
                                   'الإضافة و النشر',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
-                                      color: Colors.white,
+                                      color: Colors.black,
                                       fontWeight: FontWeight.bold,
                                       fontFamily: 'Montserrat'),
                                 ),
@@ -1032,25 +1103,26 @@ setState(() {
                             ),
                           ),
                         ),
-                      ),
 
                     ],
                   )),
             ),
             new Align(
-              child: loadingIndicator, alignment: FractionalOffset.center,),
-
+              child: loadingIndicator,
+              alignment: FractionalOffset.center,
+            ),
           ],
         ),
       ),
     );
   }
+
   Future uploadpp0(audiourl) async {
     // String url1;
     final StorageReference storageRef =
-    FirebaseStorage.instance.ref().child('myimage');
+        FirebaseStorage.instance.ref().child('myimage');
     int i = 0;
-    for(var f in images){
+    for (var f in images) {
       //  images.forEach((f) async {
       var byteData = await f.getByteData(quality: 50);
 
@@ -1059,7 +1131,7 @@ setState(() {
       await file.writeAsBytes(byteData.buffer
           .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
       final StorageUploadTask uploadTask =
-      storageRef.child('$now.jpg').putFile(file);
+          storageRef.child('$now.jpg').putFile(file);
       var Imageurl = await (await uploadTask.onComplete).ref.getDownloadURL();
       Toast.show("تم تحميل صورة ", context,
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
@@ -1072,106 +1144,109 @@ setState(() {
       });
       if (i == images.length) {
         // print('gggg${images.length} ///$i');
-        createRecord(audiourl,urlList);
+        createRecord(audiourl, urlList);
       }
     }
     setState(() {
       _load1 = true;
     });
-
   }
-  void createRecord(audiourl,urlList) {
+
+  void createRecord(audiourl, urlList) {
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? null
         : setState(() {
-      _userId = user.uid;
-      DateTime now = DateTime.now();
-      String date =
-          '${now.year}-${now.month}-${now.day}-${now.hour}-${now.minute}-00-000';
+            _userId = user.uid;
+            DateTime now = DateTime.now();
+            String date =
+                '${now.year}-${now.month}-${now.day}-${now.hour}-${now.minute}-00-000';
 
-      String b = now.month.toString();
-      if (b.length < 2) {
-        b = "0" + b;
-      }
-      String c = now.day.toString();
-      if (c.length < 2) {
-        c = "0" + c;
-      }
-      String d = now.hour.toString();
-      if (d.length < 2) {
-        d = "0" + d;
-      }
-      String e = now.minute.toString();
-      if (e.length < 2) {
-        e = "0" + e;
-      }
-      String date1 = '${now.year}-${b}-${c} ${d}:${e}:00';
-      int arrange = int.parse('${now.year}${b}${c}${d}${e}');
-      DocumentReference documentReference =
-      Firestore.instance.collection('advertisments').document();
-      documentReference.setData({
-        //'timestamp': FieldValue.serverTimestamp(), to arrange data using orderby
+            String b = now.month.toString();
+            if (b.length < 2) {
+              b = "0" + b;
+            }
+            String c = now.day.toString();
+            if (c.length < 2) {
+              c = "0" + c;
+            }
+            String d = now.hour.toString();
+            if (d.length < 2) {
+              d = "0" + d;
+            }
+            String e = now.minute.toString();
+            if (e.length < 2) {
+              e = "0" + e;
+            }
+            String date1 = '${now.year}-${b}-${c} ${d}:${e}:00';
+            int arrange = int.parse('${now.year}${b}${c}${d}${e}');
+            DocumentReference documentReference =
+                Firestore.instance.collection('advertisments').document();
+            documentReference.setData({
+              //'timestamp': FieldValue.serverTimestamp(), to arrange data using orderby
 
-        'carrange': arrange,
-        'advid': documentReference.documentID,
-        'userId': _userId,
-        'cdate': date1,
-        'cdiscribtion': discController.text,
-        'cbody': bodyController.text,
-        'cpublished': false,
-        'curi': urlList[0],
-        'cimagelist': urlList.toString(),
-        'caudiourl': audiourl,
-        'pphone': _cMobile,
-        'pname': _cName,
+              'carrange': arrange,
+              'advid': documentReference.documentID,
+              'userId': _userId,
+              'cdate': date1,
+              'cdiscribtion': discController.text,
+              'cbody': bodyController.text,
+              'cpublished': false,
+              'curi': urlList[0],
+              'cimagelist': urlList.toString(),
+              'caudiourl': audiourl,
+              'pphone': _cMobile,
+              'pname': _cName,
 
-        'cproblemtype':_probtypecurrentItemSelected,
+              'cproblemtype': _probtypecurrentItemSelected,
 
-        'ccar':model1,
-        'ccarversion':model2,
-        'cmodel':_indyearcurrentItemSelected,
+              'ccar': model1,
+              'ccarversion': model2,
+              'cmodel': _indyearcurrentItemSelected,
 
-        'mfault':fault1,
-        'subfault':fault2,
-        'mfaultarray':fault1.split(","),
+              'mfault': fault1,
+              'subfault': fault2,
+              'mfaultarray': fault1.split(","),
 
-        'sparepart':_sparecurrentItemSelected,
+              'sparepart': _sparecurrentItemSelected,
 
-        'ctitle': titleController.text,
-        'fromPLat': fromPlaceLat,
-        'fromPLng': fromPlaceLng,
-        'fPlaceName':fPlaceName,
-        'cNew':  _probtypecurrentItemSelected==proplemtype[1]
-            ? _character4.toString().contains("used")
-            ? "مستعملة"
-            : _character4.toString().contains("New")
-            ? "جديدة"
-            : "جديدة/مستعملة"
-            : null,
-
-      }).whenComplete(() {
-        setState(() {
-         // _load2 = false;
-          urlList.clear();
-          images.clear();
-          song=null;
-          titleController.text = "";
-          discController.text = "";
-          bodyController.text = "";
-          // _sparecurrentItemSelected = widget.probtype0=="قطع غيار"?widget.selecteditem0:widget.sparepartsList[0];
-         // _probtypecurrentItemSelected=widget.probtype0=="قطع غيار"?widget.probtype0:proplemtype[0];
-          _indyearcurrentItemSelected=indyearlist[0];
-          model1=null;model2=null;fault1=null;fault2=null;
-          _value = 0;
-          fromPlaceLat=null; fromPlaceLng=null; fPlaceName =null;
-            _load1 = false;
-          fault1=widget.mfault;
-          fault2=widget.selecteditem0;
-          _init();
-        });
-      });
-
-    }));
+              'ctitle': titleController.text,
+              'fromPLat': fromPlaceLat,
+              'fromPLng': fromPlaceLng,
+              'fPlaceName': fPlaceName,
+              'cNew': _probtypecurrentItemSelected == proplemtype[1]
+                  ? _character4.toString().contains("used")
+                      ? "مستعملة"
+                      : _character4.toString().contains("New")
+                          ? "جديدة"
+                          : "جديدة/مستعملة"
+                  : null,
+            }).whenComplete(() {
+              setState(() {
+                // _load2 = false;
+                urlList.clear();
+                images.clear();
+                song = null;
+                titleController.text = "";
+                discController.text = "";
+                bodyController.text = "";
+                // _sparecurrentItemSelected = widget.probtype0=="قطع غيار"?widget.selecteditem0:widget.sparepartsList[0];
+                // _probtypecurrentItemSelected=widget.probtype0=="قطع غيار"?widget.probtype0:proplemtype[0];
+                _indyearcurrentItemSelected = indyearlist[0];
+                model1 = null;
+                model2 = null;
+                fault1 = null;
+                fault2 = null;
+                _value = 0;
+                fromPlaceLat = null;
+                fromPlaceLng = null;
+                fPlaceName = null;
+                _load1 = false;
+                fault1 = widget.mfault;
+                fault2 = widget.selecteditem0;
+                _init();
+              });
+            });
+          }));
   }
 
 //  void _onDropDownItemSelectedType(String newValueSelected) {
@@ -1184,6 +1259,7 @@ setState(() {
       this._sparecurrentItemSelected = newValueSelected;
     });
   }
+
   void _onDropDownItemSelectedindyear(String newValueSelected) {
     setState(() {
       this._indyearcurrentItemSelected = newValueSelected;
@@ -1219,17 +1295,13 @@ setState(() {
       error = e.toString();
     }
 
-
     if (!mounted) return;
 
     setState(() {
       images = resultList;
       _error = error;
-
     });
   }
-
-
 
   void onSubmit3(String result) {
     setState(() {
@@ -1240,26 +1312,25 @@ setState(() {
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
     });
   }
+
   void onSubmit4(List<OutputClass> result) {
     setState(() {
       //result.clear();
-      for(int i = 0; i < result.length; i++){
-       // setState(() {
-          fault1 = fault1+","+result[i].title;
-          fault2 = fault2+","+result[i].subtitle;
-       // });
+      for (int i = 0; i < result.length; i++) {
+        // setState(() {
+        fault1 = fault1 + "," + result[i].title;
+        fault2 = fault2 + "," + result[i].subtitle;
+        // });
         print("${result[i].title}///////${result[i].subtitle}");
       }
       // fault1 = result.split(",")[0];
       // fault2 = result.split(",")[1];
-      Toast.show(
-          "$fault1///////${fault2}", context,
+      Toast.show("$fault1///////${fault2}", context,
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
       result.clear();
-
     });
-
   }
+
   _init() async {
     try {
       if (await FlutterAudioRecorder.hasPermissions) {
@@ -1312,7 +1383,7 @@ setState(() {
 
       const tick = const Duration(milliseconds: 50);
       new Timer.periodic(tick, (Timer t) async {
-        _value= double.parse(_current?.duration.inSeconds.toString())??0.0;
+        _value = double.parse(_current?.duration.inSeconds.toString()) ?? 0.0;
 
         if (_currentStatus == RecordingStatus.Stopped) {
           t.cancel();
@@ -1351,7 +1422,7 @@ setState(() {
     File file = widget.localFileSystem.file(result.path);
     print("File length: ${await file.length()}");
     setState(() {
-      song=file.readAsBytesSync();
+      song = file.readAsBytesSync();
       _current = result;
       _currentStatus = _current.status;
     });
@@ -1359,35 +1430,35 @@ setState(() {
 
   Widget _buildText(RecordingStatus status) {
     var text = "";
-    var icon=Icons.play_arrow;
+    var icon = Icons.play_arrow;
     switch (_currentStatus) {
       case RecordingStatus.Initialized:
         {
           text = 'Start';
-         icon=Icons.record_voice_over;
+          icon = Icons.record_voice_over;
 
           break;
         }
       case RecordingStatus.Recording:
         {
           text = 'Pause';
-          icon=Icons.pause;
+          icon = Icons.pause;
 
           break;
         }
       case RecordingStatus.Paused:
         {
           text = 'Resume';
-          icon=Icons.play_arrow;
+          icon = Icons.play_arrow;
 
           break;
         }
       case RecordingStatus.Stopped:
         {
           text = 'Init';
-          icon=Icons.cancel;
+          icon = Icons.cancel;
 
-        break;
+          break;
         }
       default:
         break;
@@ -1399,25 +1470,27 @@ setState(() {
     AudioPlayer audioPlayer = AudioPlayer();
     await audioPlayer.play(_current.path, isLocal: true);
   }
-  uploadaudio(){
+
+  uploadaudio() {
     DateTime now = DateTime.now();
 
     String filePath = _current?.path;
     String _extension = _current?.audioFormat.toString();
     StorageReference storageRef =
-    FirebaseStorage.instance.ref().child("myaudio");
+        FirebaseStorage.instance.ref().child("myaudio");
 //    ref=FirebaseStorage.instance.ref().child(songpath);
 //    StorageUploadTask uploadTask=ref.putData(song);
 //
 //    song_down_url=await (await uploadTask.onComplete).ref.getDownloadURL();
-    final StorageUploadTask uploadTask = storageRef.child("$now.${_current?.audioFormat}").putData(song
+    final StorageUploadTask uploadTask =
+        storageRef.child("$now.${_current?.audioFormat}").putData(song
 //      StorageMetadata(
 //        contentType: 'audio/$_extension',
 //      ),
-    );
+            );
     setState(() async {
       var Audiourl = await (await uploadTask.onComplete).ref.getDownloadURL();
-      var  url2 = Audiourl.toString();
+      var url2 = Audiourl.toString();
       print("$_extension  mmm$url2");
       setState(() {
         _load1 = true;
@@ -1426,19 +1499,22 @@ setState(() {
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
       uploadpp0(url2);
     });
-
   }
-
 }
+
 //////////////////////////////////
 typedef void MyFormCallback3(String result);
+
 class MyForm3 extends StatefulWidget {
   final MyFormCallback3 onSubmit3;
   String model;
+
   MyForm3(this.model, {this.onSubmit3});
+
   @override
   _MyForm3State createState() => _MyForm3State();
 }
+
 class _MyForm3State extends State<MyForm3> {
   String _currentValue = '';
   String _currentValue1 = '';
@@ -1450,10 +1526,9 @@ class _MyForm3State extends State<MyForm3> {
     super.initState();
     _currentValue = widget.model;
     modelList = [
-      new ModelClass("تويوتا",["كورولا","ياريس"]),
-      new ModelClass("هونداى",["اكسينت","اكسيل","ماتريكس"]),
-      new ModelClass("فيات",["128","132"]),
-
+      new ModelClass("تويوتا", ["كورولا", "ياريس"]),
+      new ModelClass("هونداى", ["اكسينت", "اكسيل", "ماتريكس"]),
+      new ModelClass("فيات", ["128", "132"]),
     ];
   }
 
@@ -1484,19 +1559,29 @@ class _MyForm3State extends State<MyForm3> {
 //    );
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff171732),
-        centerTitle:true ,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: <Color>[
+                const Color(0xffff2121),
+                const Color(0xffff5423),
+                const Color(0xffff7024),
+                const Color(0xffff904a),
+              ])),
+        ),
+        centerTitle: true,
         title: Text(
           widget.model,
           style: TextStyle(fontWeight: FontWeight.bold),
           textDirection: TextDirection.rtl,
         ),
-
       ),
       body: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top:18.0),
+            padding: const EdgeInsets.only(top: 18.0),
             child: ListView.builder(
               itemCount: modelList.length,
               itemBuilder: (context, i) {
@@ -1511,24 +1596,27 @@ class _MyForm3State extends State<MyForm3> {
                   children: <Widget>[
                     Column(
                       // padding: EdgeInsets.all(8.0),
-                      children: modelList[i].subtitle
+                      children: modelList[i]
+                          .subtitle
                           .map((value) => RadioListTile(
-                        groupValue: _currentValue,
-                        title: Text(
-                          value,
-                          textDirection: TextDirection.rtl,
-                        ),
-                        value: value,
-                        onChanged: (val) {
-                          setState(() {
-                            debugPrint('VAL = $val');
-                            _currentValue = val;
-                            _currentValue1 = modelList[i].title;
-                            Navigator.pop(context);
-                            widget.onSubmit3(_currentValue1.toString() + "," + _currentValue.toString());
-                          });
-                        },
-                      ))
+                                groupValue: _currentValue,
+                                title: Text(
+                                  value,
+                                  textDirection: TextDirection.rtl,
+                                ),
+                                value: value,
+                                onChanged: (val) {
+                                  setState(() {
+                                    debugPrint('VAL = $val');
+                                    _currentValue = val;
+                                    _currentValue1 = modelList[i].title;
+                                    Navigator.pop(context);
+                                    widget.onSubmit3(_currentValue1.toString() +
+                                        "," +
+                                        _currentValue.toString());
+                                  });
+                                },
+                              ))
                           .toList(),
                     ),
 //              new Column(
@@ -1547,7 +1635,6 @@ class _MyForm3State extends State<MyForm3> {
 //              continueButton,
 //            ],
 //          )
-
         ],
       ),
     );
@@ -1557,31 +1644,39 @@ class _MyForm3State extends State<MyForm3> {
 
 //////////////////////////////////
 typedef void MyFormCallback4(List<OutputClass> result);
+
 class MyForm4 extends StatefulWidget {
   final MyFormCallback4 onSubmit4;
   List<FaultStringClass> faultsList = [];
-String selecteditem,mainitem;
-  MyForm4(this.faultsList,this.selecteditem,this.mainitem,{this.onSubmit4});
+  String selecteditem, mainitem;
+
+  MyForm4(this.faultsList, this.selecteditem, this.mainitem, {this.onSubmit4});
+
   @override
   _MyForm4State createState() => _MyForm4State();
 }
+
 class _MyForm4State extends State<MyForm4> {
   String _currentValuesub = '';
   String _currentValuem = '';
-  bool _isChecked= false;
+  bool _isChecked = false;
   List<ModelClass> modelList = [];
   List<AClass> aList = [];
   List<OutputClass> outputList = [];
 
   List<bool> checlist = [];
+
   @override
   void initState() {
     super.initState();
     outputList.clear();
     _currentValuesub = widget.selecteditem;
-    _currentValuem=widget.mainitem;
-   if (widget.mainitem==""||widget.selecteditem==""){}else{ outputList.add(OutputClass(widget.mainitem,widget.selecteditem));}
-    for(int i = 0; i < widget.faultsList.length; i++){
+    _currentValuem = widget.mainitem;
+    if (widget.mainitem == "" || widget.selecteditem == "") {
+    } else {
+      outputList.add(OutputClass(widget.mainitem, widget.selecteditem));
+    }
+    for (int i = 0; i < widget.faultsList.length; i++) {
       // checlist.clear();
       // for(int n = 0; n < widget.faultsList[i].subtitle.split(",").length; n++){
       //   if (widget.faultsList[i].subtitle.split(",")[n]==_currentValue){
@@ -1595,49 +1690,60 @@ class _MyForm4State extends State<MyForm4> {
       //   }
       // }
       setState(() {
-        print("rrrrrrr"+checlist.toString());
-        aList.add(AClass(i,
+        print("rrrrrrr" + checlist.toString());
+        aList.add(AClass(
+            i,
             widget.faultsList[i].title,
             widget.faultsList[i].subtitle.split(","),
             //checlist
-          // List.filled(widget.faultsList[i].subtitle.split(",").length, false),
-            List<bool>.generate(widget.faultsList[i].subtitle.split(",").length,
-                    (k) => widget.faultsList[i].subtitle.split(",")[k]==_currentValuesub)
-
-        ));
+            // List.filled(widget.faultsList[i].subtitle.split(",").length, false),
+            List<bool>.generate(
+                widget.faultsList[i].subtitle.split(",").length,
+                (k) =>
+                    widget.faultsList[i].subtitle.split(",")[k] ==
+                    _currentValuesub)));
       });
-
-
     }
-   // modelList = widget.faultsList;
+    // modelList = widget.faultsList;
   }
+
   @override
   Widget build(BuildContext context) {
-
-    return  Scaffold(
+    return Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff171732),
-        centerTitle:true ,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: <Color>[
+                    const Color(0xffff2121),
+                    const Color(0xffff5423),
+                    const Color(0xffff7024),
+                    const Color(0xffff904a),
+                  ])
+          ),
+        ),
+        centerTitle: true,
         title: Text(
-         "اختر العطل",
+          "اختر العطل",
           style: TextStyle(fontWeight: FontWeight.bold),
           textDirection: TextDirection.rtl,
         ),
-
       ),
       body: Stack(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top:18.0),
+            padding: const EdgeInsets.only(top: 18.0),
             child: ListView.builder(
-              itemCount:aList.length,
+              itemCount: aList.length,
               itemBuilder: (context, i) {
-                if(  aList[i].subtitle.contains(widget.selecteditem)){
+                if (aList[i].subtitle.contains(widget.selecteditem)) {
                   //_currentValuem=aList[i].title;
                   // print(_currentValuem+"ppp");
-                 // widget.onSubmit4(_currentValue1.toString() + "," + _currentValue.toString());
-                //   subcheck.clear();
-                // subcheck = List.filled(widget.faultsList[i].subtitle.split(",").length, false);
+                  // widget.onSubmit4(_currentValue1.toString() + "," + _currentValue.toString());
+                  //   subcheck.clear();
+                  // subcheck = List.filled(widget.faultsList[i].subtitle.split(",").length, false);
                 }
                 return new ExpansionTile(
                   title: new Text(
@@ -1649,55 +1755,67 @@ class _MyForm4State extends State<MyForm4> {
                   ),
                   children: <Widget>[
                     Column(
-                      // padding: EdgeInsets.all(8.0),widget.faultsList[i].subtitle.substring(0, widget.faultsList[i].subtitle.length() - 1)
-                      children:  List.generate( aList[i].subtitle.length, (j) => aList[i].subtitle[j]==""||aList[i].subtitle[j].length==0?Container(): CheckboxListTile(
-                //  groupValue: _currentValue,
-                title: Text(
-                  aList[i].subtitle[j],
-                textDirection: TextDirection.rtl,
-                ),
-                //  value: value,
-                value: aList[i].checklist[j],
+                        // padding: EdgeInsets.all(8.0),widget.faultsList[i].subtitle.substring(0, widget.faultsList[i].subtitle.length() - 1)
+                        children: List.generate(
+                            aList[i].subtitle.length,
+                            (j) => aList[i].subtitle[j] == "" ||
+                                    aList[i].subtitle[j].length == 0
+                                ? Container()
+                                : CheckboxListTile(
+                                    //  groupValue: _currentValue,
+                                    title: Text(
+                                      aList[i].subtitle[j],
+                                      textDirection: TextDirection.rtl,
+                                    ),
+                                    //  value: value,
+                                    value: aList[i].checklist[j],
 
-                onChanged: (val) {
-                  setState(() {
-                    aList[i].checklist[j]=val;
-                  });
-                  if(val){
-                    setState(() {
-                      outputList.add(OutputClass(aList[i].title,aList[i].subtitle[j]));
-                      print("hhh${outputList.length}//"+aList[i].title+aList[i].subtitle[j]);
-                      // _currentValuesub=aList[i].subtitle[j];
-                      //   _currentValuem =aList[i].title;
-                    });
-                  }else{
-                    outputList.removeWhere((item) => item.subtitle == aList[i].subtitle[j]);
-                    print("hhh${outputList.length}//"+aList[i].title+aList[i].subtitle[j]);
+                                    onChanged: (val) {
+                                      setState(() {
+                                        aList[i].checklist[j] = val;
+                                      });
+                                      if (val) {
+                                        setState(() {
+                                          outputList.add(OutputClass(
+                                              aList[i].title,
+                                              aList[i].subtitle[j]));
+                                          print("hhh${outputList.length}//" +
+                                              aList[i].title +
+                                              aList[i].subtitle[j]);
+                                          // _currentValuesub=aList[i].subtitle[j];
+                                          //   _currentValuem =aList[i].title;
+                                        });
+                                      } else {
+                                        outputList.removeWhere((item) =>
+                                            item.subtitle ==
+                                            aList[i].subtitle[j]);
+                                        print("hhh${outputList.length}//" +
+                                            aList[i].title +
+                                            aList[i].subtitle[j]);
+                                      }
+                                    },
+                                  ))),
 
-                  }
-                },
-                ))),
-
-                      // widget.faultsList[i].subtitle.split(",")
-                      //     .mapIndexed((value,i) =>value==""?Container(): CheckboxListTile(
-                      // //  groupValue: _currentValue,
-                      //   title: Text(
-                      //     value,
-                      //     textDirection: TextDirection.rtl,
-                      //   ),
-                      // //  value: value,
-                      //   value: false,
-                      //
-                      //   onChanged: (val) {
-                      //     setState(() {
-                      //       debugPrint('VAL = $val');
-                      //       _isChecked = val;
-                      //       _currentValue1 =  widget.faultsList[i].title;
-                      //       });
-                      //   },
-                      // ))
-                      //     .toList(),
-                  //  ),
+                    // widget.faultsList[i].subtitle.split(",")
+                    //     .mapIndexed((value,i) =>value==""?Container(): CheckboxListTile(
+                    // //  groupValue: _currentValue,
+                    //   title: Text(
+                    //     value,
+                    //     textDirection: TextDirection.rtl,
+                    //   ),
+                    // //  value: value,
+                    //   value: false,
+                    //
+                    //   onChanged: (val) {
+                    //     setState(() {
+                    //       debugPrint('VAL = $val');
+                    //       _isChecked = val;
+                    //       _currentValue1 =  widget.faultsList[i].title;
+                    //       });
+                    //   },
+                    // ))
+                    //     .toList(),
+                    //  ),
 //              new Column(
 //                children:
 //                _buildExpandableContent(regionlist[i]),
@@ -1709,24 +1827,28 @@ class _MyForm4State extends State<MyForm4> {
           ),
           Positioned(
             bottom: 5,
-
+            left: 100,
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment:MainAxisAlignment.spaceBetween ,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
                 RaisedButton(
-                  onPressed: () {
-                    widget.onSubmit4(outputList/**_currentValuem.toString() + "," + _currentValuesub.toString()**/);
-                    Navigator.pop(context);
+                  color: Colors.green,
 
+                  onPressed: () {
+                    widget.onSubmit4(
+                        outputList /**_currentValuem.toString() + "," + _currentValuesub.toString()**/);
+                    Navigator.pop(context);
                   },
                   child: const Text('حفظ', style: TextStyle(fontSize: 20)),
                 ),
-                SizedBox(width: 10,),
+                SizedBox(
+                  width: 10,
+                ),
                 RaisedButton(
+                  color: Colors.deepOrange,
                   onPressed: () {
                     Navigator.pop(context);
-
                   },
                   child: const Text("الغاء", style: TextStyle(fontSize: 20)),
                 ),
@@ -1741,7 +1863,6 @@ class _MyForm4State extends State<MyForm4> {
 //              continueButton,
 //            ],
 //          )
-
         ],
       ),
     );

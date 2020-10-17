@@ -19,14 +19,14 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'allvideos.dart';
 
-class VidiosPhoto extends StatefulWidget {
-  VidiosPhoto();
+class VidiosPhotoComercial extends StatefulWidget {
+  VidiosPhotoComercial();
 
   @override
-  _VidiosPhotoState createState() => _VidiosPhotoState();
+  _VidiosPhotoComercialState createState() => _VidiosPhotoComercialState();
 }
 
-class _VidiosPhotoState extends State<VidiosPhoto> {
+class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
 
   String filePath;
 
@@ -56,7 +56,7 @@ class _VidiosPhotoState extends State<VidiosPhoto> {
         height: height,
         child: StreamBuilder(
           stream: Firestore.instance
-              .collection('videos')
+              .collection('videos').where("cdepart", isEqualTo:"تجارى")
               .orderBy('carrange',
               descending:
               true)
@@ -137,7 +137,7 @@ Navigator.push(
                   ),
                 )),
             Positioned(
-                bottom: 5,
+                bottom: 10,
                 right: 5,
                 child: Container(
                   child: Text( document['cname']==null||document['cname']==""?"اسم غير معلوم":document['cname']

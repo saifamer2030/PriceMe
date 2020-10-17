@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:access_settings_menu/access_settings_menu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_alert/flutter_alert.dart';
@@ -30,10 +29,9 @@ class _CurrentLocationState extends State<CurrentLocation2> {
 
   @override
   void initState() {
+    super.initState();
     checkGPS('ACTION_LOCATION_SOURCE_SETTINGS');
     _getCurrentLocation();
-
-    super.initState();
   }
 
   @override
@@ -57,9 +55,7 @@ class _CurrentLocationState extends State<CurrentLocation2> {
                 markers: _markers,
                 onCameraMove: _onCameraMove,
                 myLocationEnabled: true,
-//                padding: EdgeInsets.only(
-//                  top: 20.0,
-//                ),
+
               )),
           new Align(
             alignment: Alignment.center,
@@ -70,7 +66,7 @@ class _CurrentLocationState extends State<CurrentLocation2> {
             alignment: Alignment.bottomCenter,
             margin: EdgeInsets.all(16.0),
             child: RaisedButton(
-                color: Colors.amber,
+                color: Theme.of(context).accentColor,
                 onPressed: () {
                   _onAddMarker(context);
                 },
@@ -79,7 +75,7 @@ class _CurrentLocationState extends State<CurrentLocation2> {
                     SizedBox(
                       width: 20,
                     ),
-                    Text("حفظ المكان",
+                    Text(  "حفظ الموقع",
                         style: TextStyle(fontSize: 20.0, color: Colors.white),
                         textAlign: TextAlign.center),
                     SizedBox(
@@ -115,7 +111,7 @@ _getAddressFromLatLng(double lt, double lg) async {
       setState(() {
         _currentAddress = 
         "${name}, ${subLocality}, ${locality}, ${administrativeArea} ${postalCode}, ${country}";
-            
+
       });
     } catch (e) {
       print(e);
@@ -123,9 +119,9 @@ _getAddressFromLatLng(double lt, double lg) async {
   }
 
   void _onAddMarker(BuildContext context)async {
-    if (_myLoc == null) _myLoc = _lastMapPostion;
+    if (_myLoc != null) _myLoc = _lastMapPostion;
     await _getAddressFromLatLng(_myLoc.latitude , _myLoc.longitude);
-     print("\n\n\n\n\n\n\n"+_currentAddress+"\n\n\n\n\n\n");
+    // print("\n\n\n\n\n\n\n"+_currentAddress+"\n\n\n\n\n\n");
     //add _currentAddress to args
     Map <String , dynamic > sendData = Map();
     sendData["loc_latLng"] = _myLoc;
@@ -191,39 +187,7 @@ _getAddressFromLatLng(double lt, double lg) async {
     });
   }
 
-//   _saveMyLocation(BuildContext context)async{
-//     if( _myLoc != null){
-//       FirebaseDatabase.instance.reference()
-//           .child(DefConstants().DB_COIFFURE_DATA).child(widget._coifId).update(
-//           {"lat":_myLoc.latitude.toString()}
-//       ).then((_) {
-//         print('Transaction  committed.');
-//       });
-//       FirebaseDatabase.instance.reference()
-//           .child(DefConstants().DB_COIFFURE_DATA).child(widget._coifId).update(
-//           {"lng":_myLoc.longitude.toString()}
-//       ).then((_) {
-//         print('Transaction  committed.');
-//       });
-//       HelperFunc.showToast("Successfully saved", Colors.green);
-//       //Navigator.pop(context);
-// //      Navigator.pushReplacement(context,
-// //          MaterialPageRoute(builder: (context) =>
-// //              CoifProfileProlile(
-// //                widget._coifId ,
-// //                widget._coifImg,
-// //                widget._coifName,
-// //              )));
-//       Navigator.pushReplacement(context,
-//           MaterialPageRoute(builder: (context) =>
-//               CoiffureHome(selectPage:2 ,coiffureId:  widget._coifId ,
-//                   coiffurecUri: widget._coifImg,
-//                   coiffureName: widget._coifName )));
 
-//     }else{
-//       HelperFunc.showToast("Your Location not defined yet ,\n Make sure GPS enabled!", Colors.red);
-//     }
-//   }
 
   checkGPS(settingsName) async {
     isLocationEnabled = await Geolocator().isLocationServiceEnabled();
@@ -235,11 +199,11 @@ _getAddressFromLatLng(double lt, double lg) async {
   void _showDialog(BuildContext context, String settingsName) {
     showAlert(
       context: context,
-      title: "Enable GPS ?",
-      body: "Should enable GPS to define your location?",
+      title:  "نفعيل تحديد الموقع",
+      body:    "نفعيل تحديد الموقع",
       actions: [
         AlertAction(
-          text: "enable",
+          text:   "تفعيل",
           isDestructiveAction: true,
           onPressed: () {
             // TODO
@@ -256,7 +220,10 @@ _getAddressFromLatLng(double lt, double lg) async {
 
     try {
       isLocationEnabled =
-          await AccessSettingsMenu.openSettings(settingsType: settingsName);
+          await AccessSettingsMenu.openSettings(settingsType: settingsName).then((value) {
+            _getCurrentLocation();
+            //  print("aabb$value");
+          });
     } catch (e) {
       isLocationEnabled = false;
     }
