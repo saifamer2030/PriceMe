@@ -291,10 +291,10 @@ class _HomePageState extends State<HomePage> {
                     center: Alignment(-0.93, 0.0),
                     radius: 1.092,
                     colors: [
-                      const Color(0xffff2121),
-                      const Color(0xffff5423),
-                      const Color(0xffff7024),
-                      const Color(0xffff904a)
+                      const Color(0xffff2121).withOpacity(.6),
+                      const Color(0xffff5423).withOpacity(.6),
+                      const Color(0xffff7024).withOpacity(.6),
+                      const Color(0xffff904a).withOpacity(.6),
                     ],
                     stops: [0.0, 0.562, 0.867, 1.0],
                     transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837, 0.0,
@@ -304,7 +304,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: Text(
                   "قطع غيار",
-                  style: TextStyle(color: Colors.white, fontSize: 20),
+                  style: TextStyle(color: Colors.black, fontSize: 20),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -385,8 +385,15 @@ class _HomePageState extends State<HomePage> {
                               //         builder: (context) => AddAdv(widget.sparepartsList,"قطع غيار",mfault, sparepartsList[index].sName)));
                             },
                             child: Container(
-                              width: 100,
-                              height: 100,
+                              width: 110,
+                              height: 110,
+                              decoration: BoxDecoration(
+                                border: new Border.all(
+                                  color: Colors.black,
+                                  width: 1.0,
+                                ),
+                                shape: BoxShape.rectangle,
+                              ),
                               child: Column(
                                 children: [
                                   Container(
@@ -398,10 +405,7 @@ class _HomePageState extends State<HomePage> {
                                     //
                                     // ),
                                     decoration: BoxDecoration(
-                                      border: new Border.all(
-                                        color: Colors.black,
-                                        width: 1.0,
-                                      ),
+
                                       image: DecorationImage(
                                         image: NetworkImage(
                                             sparepartsList[index].surl),
@@ -438,7 +442,7 @@ class _HomePageState extends State<HomePage> {
                           child: subsparesList.length == 0
                               ? Center(child: new Text("برجاء الإنتظار"))
                               : Card(
-                                  color: Colors.grey[100],
+                                  color: Colors.white,
                                   elevation: 10,
                                   shape: new RoundedRectangleBorder(
                                       side: new BorderSide(
@@ -620,10 +624,10 @@ class _HomePageState extends State<HomePage> {
                   center: Alignment(-0.93, 0.0),
                   radius: 1.092,
                   colors: [
-                    const Color(0xffff2121),
-                    const Color(0xffff5423),
-                    const Color(0xffff7024),
-                    const Color(0xffff904a)
+                    const Color(0xffff2121).withOpacity(.6),
+                    const Color(0xffff5423).withOpacity(.6),
+                    const Color(0xffff7024).withOpacity(.6),
+                    const Color(0xffff904a).withOpacity(.6),
                   ],
                   stops: [0.0, 0.562, 0.867, 1.0],
                   transform: GradientXDTransform(
@@ -632,7 +636,7 @@ class _HomePageState extends State<HomePage> {
               ),
               child: Text(
                 "الاعطال",
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                style: TextStyle(color: Colors.black, fontSize: 20),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -703,8 +707,15 @@ class _HomePageState extends State<HomePage> {
                               });
                             },
                             child: Container(
-                              width: 100,
-                              height: 100,
+                              width: 110,
+                              height: 110,
+                              decoration: BoxDecoration(
+                                border: new Border.all(
+                                  color: Colors.black,
+                                  width: 1.0,
+                                ),
+                                shape: BoxShape.rectangle,
+                              ),
                               child: Column(
                                 children: [
                                   Container(
@@ -716,10 +727,7 @@ class _HomePageState extends State<HomePage> {
                                     //
                                     // ),
                                     decoration: BoxDecoration(
-                                      border: new Border.all(
-                                        color: Colors.black,
-                                        width: 1,
-                                      ),
+
                                       image: DecorationImage(
                                         image: NetworkImage(
                                             faultsList[index].surl),
@@ -756,7 +764,7 @@ class _HomePageState extends State<HomePage> {
                           child: subfaultsList.length == 0
                               ? Center(child: new Text("برجاء الإنتظار"))
                               : Card(
-                                  color: Colors.grey[100],
+                                  color: Colors.white,
                                   elevation: 10,
                                   shape: new RoundedRectangleBorder(
                                       side: new BorderSide(

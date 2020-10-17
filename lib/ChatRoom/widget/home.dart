@@ -17,7 +17,6 @@ import 'package:priceme/ChatRoom/widget/loading.dart';
 import 'package:priceme/ChatRoom/widget/settings.dart';
 import 'package:priceme/main.dart';
 
-
 class HomeScreen extends StatefulWidget {
   final String currentUserId;
 
@@ -30,6 +29,7 @@ class HomeScreen extends StatefulWidget {
 class HomeScreenState extends State<HomeScreen> {
   HomeScreenState({Key key, @required this.currentUserId});
 
+  DateTime backbuttonpressedTime;
   final String currentUserId;
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
@@ -241,6 +241,19 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: <Color>[
+                    const Color(0xffff2121),
+                    const Color(0xffff5423),
+                    const Color(0xffff7024),
+                    const Color(0xffff904a),
+                  ])
+          ),
+        ),
         title: Text(
           'المحادثة',
           style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
@@ -273,14 +286,12 @@ class HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: WillPopScope(
-        child: Stack(
+      body: Stack(
           children: <Widget>[
             // List
             Container(
               child: StreamBuilder(
-                stream:
-                 Firestore.instance.collection('users').snapshots(),
+                stream: Firestore.instance.collection('users').snapshots(),
                 builder: (context, snapshot) {
                   if (!snapshot.hasData) {
                     return Center(
@@ -307,7 +318,7 @@ class HomeScreenState extends State<HomeScreen> {
           ],
         ),
 //        onWillPop: onBackPress,
-      ),
+
     );
   }
 
@@ -389,6 +400,23 @@ class HomeScreenState extends State<HomeScreen> {
         margin: EdgeInsets.only(bottom: 10.0, left: 5.0, right: 5.0),
       );
     }
+  }
+
+  Future<bool> onWillPop() async {
+    DateTime currentTime = DateTime.now();
+    //Statement 1 Or statement2
+    bool backButton = backbuttonpressedTime == null ||
+        currentTime.difference(backbuttonpressedTime) > Duration(seconds: 3);
+
+    if (backButton) {
+      backbuttonpressedTime = currentTime;
+      Fluttertoast.showToast(
+          msg: "إضغط الرجرع مرتين للخروج من التطبيق ",
+          backgroundColor: Colors.black,
+          textColor: Colors.white);
+      return false;
+    }
+    return true;
   }
 }
 
