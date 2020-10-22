@@ -188,7 +188,7 @@ Navigator.push(
                   ),
                 )),
             Positioned(
-                bottom: 5,
+                bottom: 10,
                 right: 5,
                 child: Container(
                   child: Text( document['ctitle']==null||document['ctitle']==""?"عنوان غير معلوم":document['ctitle']

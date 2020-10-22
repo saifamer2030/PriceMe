@@ -94,11 +94,23 @@ class _VideoTabsState extends State<VideoTabs> with SingleTickerProviderStateMix
       ),
       appBar: AppBar(
         elevation: 8,
-        backgroundColor:  Colors.orange,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: <Color>[
+                    const Color(0xffff2121),
+                    const Color(0xffff5423),
+                    const Color(0xffff7024),
+                    const Color(0xffff904a),
+                  ])
+          ),
+        ),
         title: Directionality(
           textDirection: TextDirection.rtl,
           child: TabBar(
-            unselectedLabelColor: Colors.white,
+            unselectedLabelColor: Colors.black,
             labelColor: Colors.amber,
             tabs: [
 
@@ -109,7 +121,7 @@ class _VideoTabsState extends State<VideoTabs> with SingleTickerProviderStateMix
                       fontSize: 14,
                      // fontFamily: MyFonts.fontFamily,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                      color: Colors.black),
                 ),
               ),
               new Tab(
@@ -119,12 +131,12 @@ class _VideoTabsState extends State<VideoTabs> with SingleTickerProviderStateMix
                       fontSize: 14,
                       //fontFamily: MyFonts.fontFamily,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                      color: Colors.black),
                 ),
               ),
             ],
             controller: _tabController,
-            indicatorColor: Colors.white,
+            indicatorColor: Colors.black,
             indicatorSize: TabBarIndicatorSize.tab,
           ),
         ),
