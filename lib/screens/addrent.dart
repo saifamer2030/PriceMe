@@ -786,7 +786,7 @@ setState(() {
         'workshopname': _cWorkshopname,
         'ccar':model1,
         'ccarversion':model2,
-        'price': priceController.text,
+        'price': int.parse(priceController.text),
         'color': colorController.text,
         'km': kmController.text,
         'ctitle': titleController.text,
