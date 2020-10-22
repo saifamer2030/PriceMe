@@ -15,13 +15,13 @@ import 'package:toast/toast.dart';
 
 import 'advdetail.dart';
 
-class MyAdvertisement extends StatefulWidget {
-  MyAdvertisement();
+class Advertisements extends StatefulWidget {
+  Advertisements();
   @override
-  _MyAdvertisementState createState() => _MyAdvertisementState();
+  _AdvertisementsState createState() => _AdvertisementsState();
 }
 
-class _MyAdvertisementState extends State<MyAdvertisement> {
+class _AdvertisementsState extends State<Advertisements> {
   List<AdvClass> advlist = [];
   bool _load = false;
   String _userId="";
@@ -76,7 +76,7 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
       body: Container(
         child:  StreamBuilder(
           stream: Firestore.instance.collection('advertisments').orderBy('carrange', descending: true)//.where("cproblemtype", isEqualTo:"قطع غيار")
-              .where("userId", isEqualTo:_userId).snapshots(),
+             .snapshots(),
           //print an integer every 2secs, 10 times
           builder: (context, snapshot) {
             if (!snapshot.hasData) {

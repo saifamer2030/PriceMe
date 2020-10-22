@@ -13,6 +13,7 @@ import 'package:priceme/UserRating/RatingClass.dart';
 import 'package:priceme/UserRating/UserRatingPage.dart';
 import 'package:priceme/classes/CommentClass.dart';
 import 'package:priceme/classes/CommentClassString.dart';
+import 'package:priceme/screens/allrents.dart';
 import 'package:priceme/screens/map_view.dart';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -32,7 +33,7 @@ class RentDetail extends StatefulWidget {
 
 class _RentDetailState extends State<RentDetail> {
   String _userId;
-  String _username;
+  String _username,cType;
   String _userphone;
   AudioPlayer audioPlayer = AudioPlayer();
   Duration duration= new Duration();
@@ -98,7 +99,7 @@ class _RentDetailState extends State<RentDetail> {
     userQuery.getDocuments().then((data){
       if (data.documents.length > 0){
         setState(() {
-
+        cType = data.documents[0].data['cType'];
           _username = data.documents[0].data['name'];
           _userphone = data.documents[0].data['phone'];
         String  rating =(data.documents[0].data['rating']) ;
@@ -450,7 +451,6 @@ class _RentDetailState extends State<RentDetail> {
                               ),
                             ),
                           ),
-
                           Positioned(
                             top: 120,
                             right: 5,
@@ -486,8 +486,6 @@ class _RentDetailState extends State<RentDetail> {
                               ),
                             ),
                           ),
-
-
                           Positioned(
                             top: 140,
                             right: 5,
@@ -522,6 +520,67 @@ class _RentDetailState extends State<RentDetail> {
                                 color: Colors.grey,
                                 ),**/
                           ),
+                        cType=="admin"?  Positioned(
+                            top: 70,
+                            left: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                height: 25,
+                                child: IconButton(
+                                  icon: Icon(Icons.delete,size:50 ,),
+                                  color: Colors.red,
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                      new CupertinoAlertDialog(
+                                        title: new Text("تنبية"),
+                                        content: new Text("تبغي تحذف اعلانك؟"),
+                                        actions: [
+                                          CupertinoDialogAction(
+                                              isDefaultAction: false,
+                                              child: new FlatButton(
+                                                onPressed: () {
+
+                                                  setState(() {
+                                                    Firestore.instance.collection("rents")
+                                                        .document(widget.advid)
+                                                        .delete().whenComplete(() =>
+                                                        setState(() async {
+                                                          Navigator.pop(context);
+                                                          Toast.show("تم الحذف", context,
+                                                              duration: Toast.LENGTH_SHORT,
+                                                              gravity: Toast.BOTTOM);
+                                                          Navigator.pushReplacement(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: (context) => AllRents()));
+                                                        }));
+                                                  });
+                                                }
+                                                ,
+                                                child: Text("موافق"),
+                                              )),
+                                          CupertinoDialogAction(
+                                              isDefaultAction: false,
+                                              child: new FlatButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                                child: Text("إلغاء"),
+                                              )),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),),
+                            ),
+                            /** Icon(
+                                Icons.calendar_today,
+                                color: Colors.grey,
+                                ),**/
+                          ):Container(),
+
                         ],
                       )),
                 ),
@@ -829,7 +888,8 @@ class _RentDetailState extends State<RentDetail> {
                                       );
                                     }),
                           )),
-                          Padding(
+                          //****************
+                          (_userId==null)?Container():  Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Row(
                               children: <Widget>[
@@ -918,40 +978,6 @@ class _RentDetailState extends State<RentDetail> {
                                     }
                                   },
                                 ),
-//                                 InkWell(
-//                                   onTap: () async {
-//                                     if (_formKey1.currentState
-//                                         .validate()) {
-//                                       try {
-//                                         final result =
-//                                             await InternetAddress.lookup(
-//                                                 'google.com');
-//                                         if (result.isNotEmpty &&
-//                                             result[0]
-//                                                 .rawAddress
-//                                                 .isNotEmpty) {
-//                                           createRecord();
-//                                         }
-//                                       } on SocketException catch (_) {
-//                                         //  print('not connected');
-//                                         Toast.show(
-//                                             "انت غير متصل بشبكة إنترنت طال عمرك",
-//                                             context,
-//                                             duration: Toast.LENGTH_LONG,
-//                                             gravity: Toast.BOTTOM);
-//                                       }
-//
-// //                                                setState(() {
-// //                                                  _load2 = true;
-// //                                                });
-//
-//                                     }
-//                                   },
-//                                   child: Icon(
-//                                     Icons.add_comment,
-//                                     color: Colors.grey,
-//                                   ),
-//                                 ),
                               ],
                             ),
                           ),
@@ -1026,26 +1052,30 @@ class _RentDetailState extends State<RentDetail> {
           commentlist.insert(0, commentclass);
           _commentController.text = "";
         });
-        DocumentReference documentReference =
-        Firestore.instance.collection('Alarm').document(widget.userId).collection('Alarmid').document();
-        documentReference.setData({
-          'ownerId': widget.userId,
-          'traderid': _userId,
-          'advID': widget.advid,
-          'alarmid':documentReference.documentID,
-          'cdate': now.toString(),
-          'tradname': _username,
-          'ownername': ownerName,
-          'price': _commentController.text,
-          'rate':traderating,
-          'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
-          'cType': "profilecomment",
+        if (_username != widget.userId) {
+          DocumentReference documentReference =
+          Firestore.instance.collection('Alarm')
+              .document(widget.userId)
+              .collection('Alarmid')
+              .document();
+          documentReference.setData({
+            'ownerId': widget.userId,
+            'traderid': _userId,
+            'advID': widget.advid,
+            'alarmid': documentReference.documentID,
+            'cdate': now.toString(),
+            'tradname': _username,
+            'ownername': ownerName,
+            'price': _commentController.text,
+            'rate': traderating,
+            'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
+            'cType': "rentcomment",
 
-        }).whenComplete(() {
-          Toast.show("تم التعليق بنجاح", context,
-              duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-        });
-
+          }).whenComplete(() {
+            Toast.show("تم التعليق بنجاح", context,
+                duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+          });
+        }
         //  _controller.animateTo(0.0,curve: Curves.easeInOut, duration: Duration(seconds: 1));
       }).catchError((e) {
         Toast.show(e, context,
@@ -1089,7 +1119,7 @@ class _RentDetailState extends State<RentDetail> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      _userId == commentlist[index].traderid
+                      (_userId == commentlist[index].traderid||cType=="admin")
                           ? FlatButton(
                               onPressed: () {
                                 showDialog(
@@ -1105,13 +1135,11 @@ class _RentDetailState extends State<RentDetail> {
                                             onPressed: () {
                                               setState(() {
                                                 print("kkkkkkkkkkkk");
-                                                if (_userId ==
-                                                    commentlist[index]
-                                                        .traderid) {
+                                                if (_userId == commentlist[index].traderid||cType=="admin") {
                                                   FirebaseDatabase.instance
                                                       .reference()
                                                       .child("commentsrentdata")
-                                                      .child(widget.userId)
+                                                      .child(commentlist[index].traderid)
                                                       .child(advID)
                                                       .child(commentlist[index]
                                                           .commentid)

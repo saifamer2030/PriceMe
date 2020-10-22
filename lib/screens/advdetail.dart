@@ -10,6 +10,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:priceme/UserRating/RatingClass.dart';
 import 'package:priceme/UserRating/UserRatingPage.dart';
 import 'package:priceme/classes/CommentClass.dart';
+import 'package:priceme/screens/advertisements.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,7 +29,7 @@ class AdvDetail extends StatefulWidget {
 
 class _AdvDetailState extends State<AdvDetail> {
   String _userId;
-  String _username;
+  String _username,cType;
   String _userphone;
   AudioPlayer audioPlayer = AudioPlayer();
   Duration duration= new Duration();
@@ -94,6 +95,7 @@ class _AdvDetailState extends State<AdvDetail> {
     userQuery.getDocuments().then((data){
       if (data.documents.length > 0){
         setState(() {
+          cType = data.documents[0].data['cType'];
 
           _username = data.documents[0].data['name'];
           _userphone = data.documents[0].data['phone'];
@@ -479,6 +481,68 @@ class _AdvDetailState extends State<AdvDetail> {
                                 color: Colors.grey,
                                 ),**/
                           ),
+                          cType=="admin"?  Positioned(
+                            top: 70,
+                            left: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                height: 25,
+                                child: IconButton(
+                                  icon: Icon(Icons.delete,size:50 ,),
+                                  color: Colors.red,
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                      new CupertinoAlertDialog(
+                                        title: new Text("تنبية"),
+                                        content: new Text("تبغي تحذف اعلانك؟"),
+                                        actions: [
+                                          CupertinoDialogAction(
+                                              isDefaultAction: false,
+                                              child: new FlatButton(
+                                                onPressed: () {
+
+                                                  setState(() {
+                                                    Firestore.instance.collection("advertisments")
+                                                        .document(widget.advid)
+                                                        .delete().whenComplete(() =>
+                                                        setState(() async {
+                                                          Navigator.pop(context);
+                                                          Toast.show("تم الحذف", context,
+                                                              duration: Toast.LENGTH_SHORT,
+                                                              gravity: Toast.BOTTOM);
+
+                                                          Navigator.pushReplacement(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: (context) => Advertisements()));
+                                                        }));
+                                                  });
+                                                }
+                                                ,
+                                                child: Text("موافق"),
+                                              )),
+                                          CupertinoDialogAction(
+                                              isDefaultAction: false,
+                                              child: new FlatButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                                child: Text("إلغاء"),
+                                              )),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),),
+                            ),
+                            /** Icon(
+                                Icons.calendar_today,
+                                color: Colors.grey,
+                                ),**/
+                          ):Container(),
+
                         ],
                       )),
                 ),
@@ -954,7 +1018,7 @@ class _AdvDetailState extends State<AdvDetail> {
                                       );
                                     }),
                           )),
-                          Padding(
+                          (_userId==widget.userId||_userId==null)?Container():   Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Row(
                               children: <Widget>[
@@ -1183,7 +1247,7 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
           'price': _commentController.text,
           'rate':traderating,
           'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
-          'cType': "profilecomment",
+          'cType': "advcomment",
 
         }).whenComplete(() {
           Toast.show("تم التعليق بنجاح", context,
@@ -1233,7 +1297,7 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      _userId == commentlist[index].traderid
+                      (_userId == commentlist[index].traderid||cType=="admin")
                           ? FlatButton(
                               onPressed: () {
                                 showDialog(
@@ -1249,13 +1313,11 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
                                             onPressed: () {
                                               setState(() {
                                                 print("kkkkkkkkkkkk");
-                                                if (_userId ==
-                                                    commentlist[index]
-                                                        .traderid) {
+                                                if  (_userId == commentlist[index].traderid||cType=="admin") {
                                                   FirebaseDatabase.instance
                                                       .reference()
                                                       .child("commentsdata")
-                                                      .child(widget.userId)
+                                                      .child(commentlist[index].traderid)
                                                       .child(advID)
                                                       .child(commentlist[index]
                                                           .commentid)

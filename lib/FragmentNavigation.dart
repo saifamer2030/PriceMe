@@ -14,6 +14,7 @@ import 'package:priceme/screens/allrents.dart';
 import 'package:priceme/screens/homepage.dart';
 import 'package:priceme/screens/hometest.dart';
 import 'package:priceme/screens/myadvertisement.dart';
+import 'package:priceme/screens/myalarms.dart';
 import 'package:priceme/screens/myoffers.dart';
 import 'package:priceme/screens/myrents.dart';
 
@@ -40,7 +41,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
 
   List<Widget> screens() => [
         MorePriceMe(),
-        MyAdvertisement(),
+    MyAlarms(),
     VideoTabs(),
         HomePage(),
       ]; // to store nested tabs
@@ -117,7 +118,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                     onPressed: () {
                       setState(() {
                         currentScreen =
-                            MyOffers(); // if user taps on this dashboard tab will be active
+                            MyAlarms(); // if user taps on this dashboard tab will be active
                         currentTab = 2;
                       });
                     },
