@@ -29,7 +29,7 @@ class _AllRentsState extends State<AllRents> {
   String _userId="";
   String  worktype="";
   String tradertype="";
-
+  int _currentSliderValue1=200;
   double _currentSliderValue = 200;
   @override List<String> carlist = ["السيارة","هونداى","فيات","تويوتا"];
   var _carcurrentItemSelected = '';
@@ -109,7 +109,9 @@ class _AllRentsState extends State<AllRents> {
                 label: _currentSliderValue.round().toString(),
                 onChanged: (double value) {
                   setState(() {
-                    _currentSliderValue = value;
+                    _currentSliderValue=value;
+                    _currentSliderValue1 =int.parse(value.toStringAsFixed(0));
+
                   });
                 },
               ),
@@ -160,8 +162,7 @@ class _AllRentsState extends State<AllRents> {
                       descending:
                           true) //.where("cproblemtype", isEqualTo:"قطع غيار")
                   .where("ccar", isEqualTo:filt)
-                  .where("price", isLessThanOrEqualTo:_currentSliderValue)
-
+                 .where("price", isLessThanOrEqualTo:_currentSliderValue1)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {

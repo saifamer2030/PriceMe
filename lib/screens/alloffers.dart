@@ -28,7 +28,8 @@ class _AllOffersState extends State<AllOffers> {
   String _userId="";
   String  worktype="";
   String tradertype="";
-  double _currentSliderValue = 200;
+  double _currentSliderValue = 200;  int _currentSliderValue1=200;
+
   List<String> proplemtype = ["العروض","اعطال","قطع غيار"];
   var _probtypecurrentItemSelected = '';
   String filt;
@@ -108,6 +109,8 @@ class _AllOffersState extends State<AllOffers> {
                 onChanged: (double value) {
                   setState(() {
                     _currentSliderValue = value;
+                    _currentSliderValue1 =int.parse(value.toStringAsFixed(0));
+
                   });
                 },
               ),
@@ -158,7 +161,7 @@ class _AllOffersState extends State<AllOffers> {
                           true) //.where("cproblemtype", isEqualTo:"قطع غيار")
                   // .where("mfaultarray", arrayContains: worktype)
                 .where("cproblemtype", isEqualTo:filt)
-                .where("price", isLessThanOrEqualTo:_currentSliderValue)
+                  .where("price", isLessThanOrEqualTo:_currentSliderValue1)
                   .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
