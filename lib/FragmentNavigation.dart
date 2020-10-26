@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:priceme/screens/MorePriceMe.dart';
+import 'package:priceme/screens/ProfileAdv.dart';
 import 'package:priceme/screens/addadv.dart';
 import 'package:priceme/screens/addoffer.dart';
 import 'package:priceme/screens/addrent.dart';
@@ -35,14 +36,14 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
   List<ModelClass> faultsList = [];
   List<String> sparepartsList = [];
 
-  int currentTab = 5; // to keep track of active tab index
+  int currentTab = 3; // to keep track of active tab index
 //  List<Widget> _children() => [
 
   List<Widget> screens() => [
         MorePriceMe(),
         MyAdvertisement(),
     VideoTabs(),
-        HomePage(),
+    ProfileAdv(),
       ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
   final GlobalKey<NavigatorState> navigatorKey =
@@ -53,7 +54,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
     super.initState();
     //getData();
     setState(() {
-      currentScreen = HomePage();
+      currentScreen = ProfileAdv();
     });
 
 //    _currentIndex = widget.selectPage != null ? widget.selectPage : 4;
@@ -182,7 +183,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = HomePage(); // if user taps on this dashboard tab will be active
+                        currentScreen =  ProfileAdv();    /*HomePage()*/ // if user taps on this dashboard tab will be active
                         currentTab = 3;
                       });
                     },

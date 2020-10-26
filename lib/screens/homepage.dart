@@ -424,13 +424,13 @@ class _HomePageState extends State<HomePage> {
                             child: Container(
                               width: 110,
                               height: 110,
-                              decoration: BoxDecoration(
-                                border: new Border.all(
-                                  color: Colors.black,
-                                  width: 1.0,
-                                ),
-                                shape: BoxShape.rectangle,
-                              ),
+//                              decoration: BoxDecoration(
+//                                border: new Border.all(
+//                                  color: Colors.black,
+//                                  width: 1.0,
+//                                ),
+//                                shape: BoxShape.circle,
+//                              ),
                               child: Column(
                                 children: [
                                   Container(
@@ -442,7 +442,10 @@ class _HomePageState extends State<HomePage> {
                                     //
                                     // ),
                                     decoration: BoxDecoration(
-
+                                      border: new Border.all(
+                                        color: Colors.black,
+                                        width: 1.0,
+                                      ),
                                       image: DecorationImage(
                                         image: NetworkImage(
                                             sparepartsList[index].surl),
@@ -473,19 +476,19 @@ class _HomePageState extends State<HomePage> {
                         height: 250,
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 50),
+                        padding: const EdgeInsets.only(top: 40),
                         child: Container(
                           height: 200,
                           child: subsparesList.length == 0
                               ? Center(child: new Text("برجاء الإنتظار"))
                               : Card(
                                   color: Colors.white,
-                                  elevation: 10,
+                                  elevation: 2,
                                   shape: new RoundedRectangleBorder(
-                                      side: new BorderSide(
-                                          color: Colors.black,
-                                          //color: subfaultsList[index].ccolor,
-                                          width: 1.0),
+//                                      side: new BorderSide(
+////                                          color: Colors.black,
+//                                          //color: subfaultsList[index].ccolor,
+//                                          width: 1.0),
                                       borderRadius:
                                           BorderRadius.circular(10.0)),
                                   child: new ListView.builder(
@@ -746,13 +749,13 @@ class _HomePageState extends State<HomePage> {
                             child: Container(
                               width: 110,
                               height: 110,
-                              decoration: BoxDecoration(
-                                border: new Border.all(
-                                  color: Colors.black,
-                                  width: 1.0,
-                                ),
-                                shape: BoxShape.rectangle,
-                              ),
+//                              decoration: BoxDecoration(
+//                                border: new Border.all(
+//                                  color: Colors.black,
+//                                  width: 1.0,
+//                                ),
+//                                shape: BoxShape.rectangle,
+//                              ),
                               child: Column(
                                 children: [
                                   Container(
@@ -764,7 +767,10 @@ class _HomePageState extends State<HomePage> {
                                     //
                                     // ),
                                     decoration: BoxDecoration(
-
+                                      border: new Border.all(
+                                        color: Colors.black,
+                                        width: 1.0,
+                                      ),
                                       image: DecorationImage(
                                         image: NetworkImage(
                                             faultsList[index].surl),
@@ -802,12 +808,12 @@ class _HomePageState extends State<HomePage> {
                               ? Center(child: new Text("برجاء الإنتظار"))
                               : Card(
                                   color: Colors.white,
-                                  elevation: 10,
+                                  elevation: 2,
                                   shape: new RoundedRectangleBorder(
-                                      side: new BorderSide(
-                                          color: Colors.black,
-                                          //color: subfaultsList[index].ccolor,
-                                          width: 1.0),
+//                                      side: new BorderSide(
+//                                          color: Colors.black,
+//                                          //color: subfaultsList[index].ccolor,
+//                                          width: 1.0),
                                       borderRadius:
                                           BorderRadius.circular(10.0)),
                                   child: new ListView.builder(
