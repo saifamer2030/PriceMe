@@ -20,6 +20,7 @@ import 'package:priceme/classes/OutputClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:priceme/screens/cur_loc.dart';
+import 'package:priceme/screens/myoffers.dart';
 import 'package:priceme/screens/network_connection.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:priceme/screens/signin.dart';
@@ -31,26 +32,44 @@ import 'dart:math' as Math;
 
 import '../Splash.dart';
 
-class AddRent extends StatefulWidget {
+class EditOffer extends StatefulWidget {
+int index,length,carrange;
+String cdate,cdiscribtion,cimagelist,cproblemtype,ctitle,curi,fPlaceName,offerid,pname,pphone,
+    price,userId,fromPLat,fromPLng;
+
+EditOffer(
+      this.index,
+      this.length,
+    this.carrange,
+      this.cdate,
+      this.cdiscribtion,
+      this.cimagelist,
+      this.cproblemtype,
+      this.ctitle,
+      this.curi,
+      this.fPlaceName,
+    this.fromPLat,
+this.fromPLng,
+      this.offerid,
+      this.pname,
+      this.pphone,
+      this.price,
+      this.userId,
+     );
 
   @override
-  _AddRentState createState() => _AddRentState();
+  _EditOfferState createState() => _EditOfferState();
 }
 
-class _AddRentState extends State<AddRent> {
+class _EditOfferState extends State<EditOffer> {
   bool _load1 = false;
   String url1;
   String imagepathes = '';
   List<String> urlList = [];
-  List<String> motiontype = ["اوتوماتيك","يدوي"];
-  List<String> indyearlist = [];
-
+  List<String> proplemtype = ["اعطال","قطع غيار"];
   var _probtypecurrentItemSelected = '';
-  var _motiontypecurrentItemSelected = '';
-  var _indyearcurrentItemSelected="";
 
-  String model1="";
-  String model2="";
+
   List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
   var _formKey = GlobalKey<FormState>();
@@ -69,19 +88,26 @@ String _userId;
   TextEditingController titleController = TextEditingController();
   TextEditingController priceController = TextEditingController();
   TextEditingController discController = TextEditingController();
-  TextEditingController kmController = TextEditingController();
-  TextEditingController colorController = TextEditingController();
+
 
 
   @override
   void initState() {
     super.initState();
-    _motiontypecurrentItemSelected=motiontype[0];
+    titleController = TextEditingController(text: widget.ctitle);
+    priceController = TextEditingController(text: widget.price);
+    discController = TextEditingController(text: widget.cdiscribtion);
+    _probtypecurrentItemSelected=widget.cproblemtype;
+     fromPlaceLat=widget.fromPLat;
+   fromPlaceLng=widget.fromPLng;
+    fPlaceName=widget.fPlaceName;
 
-    DateTime now = DateTime.now();
-    indyearlist=new List<String>.generate(50, (i) =>  NumberUtility.changeDigit((now.year+1 -i).toString(), NumStrLanguage.English));
-    indyearlist[0]=("الموديل");
-    _indyearcurrentItemSelected=indyearlist[0];
+    urlList =widget.cimagelist
+        .replaceAll(" ", "")
+        .replaceAll("[", "")
+        .replaceAll("]", "")
+        .split(",");
+
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? Navigator.pushReplacement(
         context,
@@ -95,7 +121,7 @@ String _userId;
           _cName = data.documents[0].data['name'];
           _cMobile = data.documents[0].data['phone'];
           _cEmail=data.documents[0].data['email'];
-          // _cWorkshopname=data.documents[0].data['workshopname'];
+           _cWorkshopname=data.documents[0].data['workshopname'];
           // if(_cWorkshopname==null){_cWorkshopname="اسم غير معلوم";}
           if(_cName==null){
             if(user.displayName==null||user.displayName==""){
@@ -150,7 +176,7 @@ String _userId;
                             top: _minimumPadding * 5, bottom: _minimumPadding),
                         child: Center(
                           child: Text(
-                            "إضافة سيارة",
+                            "تعديل العرض",
                             style: TextStyle(
                                 color: const Color(0xffF1AB37),
                                 fontSize: 20,
@@ -179,7 +205,7 @@ String _userId;
                                 }
                               },
                               decoration: InputDecoration(
-                                labelText: 'العنوان ',
+                                labelText: 'عنوان العرض',
                                 //hintText: 'Name',
                                 labelStyle: textStyle,
                                 errorStyle: TextStyle(
@@ -209,7 +235,7 @@ String _userId;
                                 }
                               },
                               decoration: InputDecoration(
-                                labelText: 'السعر بالدينار الاردنى',
+                                labelText:  'السعر بالدينار الاردنى',
                                 //hintText: 'Name',
                                 labelStyle: textStyle,
                                 errorStyle: TextStyle(
@@ -218,68 +244,6 @@ String _userId;
                               ),
                             ),
                           )),
-                      SizedBox(
-                        height: _minimumPadding,
-                        width: _minimumPadding,
-                      ),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              top: _minimumPadding, bottom: _minimumPadding),
-                          child: Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: TextFormField(
-                              textAlign: TextAlign.right,
-                              keyboardType: TextInputType.number,
-                              style: textStyle,
-                              //textDirection: TextDirection.rtl,
-                              controller: kmController,
-                              validator: (String value) {
-                                if (value.isEmpty) {
-                                  return 'برجاء إدخال الكيلومترات';
-                                }
-                              },
-                              decoration: InputDecoration(
-                                labelText: 'عدد الكيلومترات',
-                                //hintText: 'Name',
-                                labelStyle: textStyle,
-                                errorStyle: TextStyle(
-                                    color: Colors.red, fontSize: 15.0),
-                                // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
-                              ),
-                            ),
-                          )),
-
-            SizedBox(
-              height: _minimumPadding,
-              width: _minimumPadding,
-            ),
-                      Padding(
-                          padding: EdgeInsets.only(
-                              top: _minimumPadding, bottom: _minimumPadding),
-                          child: Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: TextFormField(
-                              textAlign: TextAlign.right,
-                              keyboardType: TextInputType.text,
-                              style: textStyle,
-                              //textDirection: TextDirection.rtl,
-                              controller: colorController,
-                              validator: (String value) {
-                                if (value.isEmpty) {
-                                  return 'برجاء إدخال اللون';
-                                }
-                              },
-                              decoration: InputDecoration(
-                                labelText: 'اللون',
-                                //hintText: 'Name',
-                                labelStyle: textStyle,
-                                errorStyle: TextStyle(
-                                    color: Colors.red, fontSize: 15.0),
-                                // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
-                              ),
-                            ),
-                          )),
-
                       SizedBox(
                         height: _minimumPadding,
                         width: _minimumPadding,
@@ -297,7 +261,7 @@ String _userId;
                               child: Align(
                                 alignment: Alignment.centerRight,
                                 child: DropdownButton<String>(
-                                  items: motiontype.map((String value) {
+                                  items: proplemtype.map((String value) {
                                     return DropdownMenuItem<String>(
                                         value: value,
                                         child: Text(
@@ -308,108 +272,20 @@ String _userId;
                                               fontWeight: FontWeight.bold),
                                         ));
                                   }).toList(),
-                                  value: _motiontypecurrentItemSelected,
+                                  value: _probtypecurrentItemSelected,
                                   onChanged: (String newValueSelected) {
                                     // Your code to execute, when a menu item is selected from dropdown
-                                    _onDropDownItemSelectedmotion(
+                                    _onDropDownItemSelectedproblem(
                                         newValueSelected);
                                   },
                                 ),
                               )),
                         ),
                       ),
-                      SizedBox(
-                        height: _minimumPadding,
-                        width: _minimumPadding,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(
-                                top: _minimumPadding, bottom: _minimumPadding),
-                            child: Container(
-                              height: 40.0,
-                              child: Material(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  shadowColor: const Color(0xffdddddd),
-                                  color: const Color(0xffe7e7e7),
-                                  elevation: 2.0,
-                                  child: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: DropdownButton<String>(
-                                      items: indyearlist.map((String value) {
-                                        return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(
-                                              value,
-                                              style: TextStyle(
-                                                  color: const Color(0xffF1AB37),
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold),
-                                            ));
-                                      }).toList(),
-                                      value: _indyearcurrentItemSelected,
-                                      onChanged: (String newValueSelected) {
-                                        // Your code to execute, when a menu item is selected from dropdown
-                                        _onDropDownItemSelectedindyear(
-                                            newValueSelected);
-                                      },
-                                    ),
-                                  )),
-                            ),
-                          ),
-
-                          Container(
-                            height: 40,
-                            color: Colors.grey,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => MyForm3(
-                                            "نوع السيارة",
-                                            onSubmit3: onSubmit3)));
-
-//                                    setState(() {
-//                                      showDialog(
-//                                          context: context,
-//                                          builder: (context) => MyForm3(
-//                                              widget.department,
-//                                              onSubmit3: onSubmit3));
-//                                    });
-//showBottomSheet();
-                              },
-                              child: Card(
-                                elevation: 0.0,
-                                color: const Color(0xff171732),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "نوع السيارة",
-                                      textDirection: TextDirection.rtl,
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: _minimumPadding,
-                        width: _minimumPadding,
-                      ),
-
+            SizedBox(
+              height: _minimumPadding,
+              width: _minimumPadding,
+            ),
                       Padding(
                           padding: EdgeInsets.only(
                               top: _minimumPadding, bottom: _minimumPadding),
@@ -423,7 +299,7 @@ String _userId;
                               controller: discController,
                               validator: (String value) {
                                 if (value.isEmpty) {
-                                  return 'برجاء إدخال الوصف ';
+                                  return 'برجاء إدخال وصف العرض';
                                 }
                               },
                               maxLength: 100,
@@ -434,8 +310,8 @@ String _userId;
                                       vertical: 100.0),
                                   errorStyle: TextStyle(
                                       color: Colors.red, fontSize: 15.0),
-                                  labelText: 'الوصف ',
-                                  hintText: 'الوصف ',
+                                  labelText: 'وصف العرض',
+                                  hintText: 'وصف العرض',
                                   border: OutlineInputBorder(
                                       borderRadius: BorderRadius.all(
                                           Radius.circular(5.0)))),
@@ -451,93 +327,6 @@ String _userId;
                         height: _minimumPadding,
                         width: _minimumPadding,
                       ),
-                      /**
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(
-                                top: _minimumPadding, bottom: _minimumPadding),
-                            child: Container(
-                              height: 40.0,
-                              child: Material(
-                                  borderRadius: BorderRadius.circular(5.0),
-                                  shadowColor: const Color(0xffdddddd),
-                                  color: const Color(0xffe7e7e7),
-                                  elevation: 2.0,
-                                  child: Align(
-                                    alignment: Alignment.centerRight,
-                                    child: DropdownButton<String>(
-                                      items: indyearlist.map((String value) {
-                                        return DropdownMenuItem<String>(
-                                            value: value,
-                                            child: Text(
-                                              value,
-                                              style: TextStyle(
-                                                  color: const Color(0xffF1AB37),
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.bold),
-                                            ));
-                                      }).toList(),
-                                      value: _indyearcurrentItemSelected,
-                                      onChanged: (String newValueSelected) {
-                                        // Your code to execute, when a menu item is selected from dropdown
-                                        _onDropDownItemSelectedindyear(
-                                            newValueSelected);
-                                      },
-                                    ),
-                                  )),
-                            ),
-                          ),
-
-                          Container(
-                            height: 40,
-                            color: Colors.grey,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => MyForm3(
-                                            "نوع السيارة",
-                                            onSubmit3: onSubmit3)));
-
-//                                    setState(() {
-//                                      showDialog(
-//                                          context: context,
-//                                          builder: (context) => MyForm3(
-//                                              widget.department,
-//                                              onSubmit3: onSubmit3));
-//                                    });
-//showBottomSheet();
-                              },
-                              child: Card(
-                                elevation: 0.0,
-                                color: const Color(0xff171732),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "نوع السيارة",
-                                      textDirection: TextDirection.rtl,
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-**/
-///////////////////////////////////////
-
                       SizedBox(
                         height: _minimumPadding,
                         width: _minimumPadding,
@@ -659,7 +448,7 @@ setState(() {
                               onTap: () async {
                                 if (_formKey.currentState.validate()) {
 
-                                  if(images.length == 0||  model1 == null || model2 == null||fromPlaceLat==null||fromPlaceLng==null){
+                                  if(fromPlaceLat==null||fromPlaceLng==null){
                                     Toast.show("برجاء التأكد من إضافة كل البيانات المطلوبة",context,duration: Toast.LENGTH_LONG,gravity:  Toast.BOTTOM);
                                   }else{
                                     try {
@@ -683,7 +472,7 @@ setState(() {
                               },
                               child: Center(
                                 child: Text(
-                                  'الإضافة و النشر',
+                                  'تعديل',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.white,
@@ -708,11 +497,15 @@ setState(() {
     );
   }
   Future uploadpp0() async {
-    // String url1;
+    setState(() {
+      _load1 = true;
+    });
+    if (images.length != 0) {
+      urlList.clear();
     final StorageReference storageRef =
     FirebaseStorage.instance.ref().child('myimage');
     int i = 0;
-    for(var f in images){
+    for (var f in images) {
       //  images.forEach((f) async {
       var byteData = await f.getByteData(quality: 50);
 
@@ -737,10 +530,14 @@ setState(() {
         createRecord(urlList);
       }
     }
-    setState(() {
-      _load1 = true;
-    });
 
+  }else{
+      if(urlList.length==0){
+        Toast.show("برجاء أضافة صورة واحدة على الاقل", context,
+            duration: Toast.LENGTH_SHORT,
+            gravity: Toast.BOTTOM);
+      }else{createRecord(urlList);}
+      }
   }
   void createRecord(urlList) {
     FirebaseAuth.instance.currentUser().then((user) => user == null
@@ -769,56 +566,36 @@ setState(() {
       }
       String date1 = '${now.year}-${b}-${c} ${d}:${e}:00';
       int arrange = int.parse('${now.year}${b}${c}${d}${e}');
-      DocumentReference documentReference =
-      Firestore.instance.collection('rents').document();
-      documentReference.setData({
-        //'timestamp': FieldValue.serverTimestamp(), to arrange data using orderby
 
+
+      Firestore.instance
+          .collection('offers')
+          .document(widget.offerid)
+          .updateData({
         'carrange': arrange,
-        'offerid': documentReference.documentID,
+        'offerid': widget.offerid,
         'userId': _userId,
         'cdate': date1,
+        'cdiscribtion': discController.text,
         'cpublished': false,
         'curi': urlList[0],
-        'cimagelist': urlList.toString(),
         'pphone': _cMobile,
         'pname': _cName,
         'workshopname': _cWorkshopname,
-        'ccar':model1,
-        'ccarversion':model2,
-        'price': int.parse(priceController.text),
-        'color': colorController.text,
-        'km': kmController.text,
-        'ctitle': titleController.text,
-        'cdiscribtion': discController.text,
-
+        'price': priceController.text,
         'cproblemtype':_probtypecurrentItemSelected,
-        'cmotion':_motiontypecurrentItemSelected,
-        'cyear':_indyearcurrentItemSelected,
-
+        'ctitle': titleController.text,
         'fromPLat': fromPlaceLat,
         'fromPLng': fromPlaceLng,
         'fPlaceName':fPlaceName,
+        'cimagelist': urlList.toString(),
 
 
       }).whenComplete(() {
-        setState(() {
-         // _load2 = false;
-          urlList.clear();
-          images.clear();
-          titleController.text = "";
-          discController.text = "";
-          priceController.text = "";
-          kmController.text = "";
-          colorController.text = "";
-
-          _indyearcurrentItemSelected=indyearlist[0];
-          model1=null;model2=null;
-
-          fromPlaceLat=null; fromPlaceLng=null; fPlaceName =null;
-            _load1 = false;
-
-        });
+        Navigator.push(
+            context,
+            new MaterialPageRoute(
+                builder: (context) => MyOffers()));
       });
 
     }));
@@ -857,149 +634,10 @@ setState(() {
 
     });
   }
-
-  void _onDropDownItemSelectedmotion(String newValueSelected) {
+  void _onDropDownItemSelectedproblem(String newValueSelected) {
     setState(() {
-      this._motiontypecurrentItemSelected = newValueSelected;
-    });
-  }
-  void _onDropDownItemSelectedindyear(String newValueSelected) {
-    setState(() {
-      this._indyearcurrentItemSelected = newValueSelected;
-    });
-  }
-  void onSubmit3(String result) {
-    setState(() {
-      model1 = result.split(",")[0];
-      model2 = result.split(",")[1];
-      Toast.show(
-          "${result.split(",")[0]}///////${result.split(",")[1]}", context,
-          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      this._probtypecurrentItemSelected = newValueSelected;
     });
   }
 
 }
-//////////////////////////////////
-typedef void MyFormCallback3(String result);
-class MyForm3 extends StatefulWidget {
-  final MyFormCallback3 onSubmit3;
-  String model;
-  MyForm3(this.model, {this.onSubmit3});
-  @override
-  _MyForm3State createState() => _MyForm3State();
-}
-class _MyForm3State extends State<MyForm3> {
-  String _currentValue = '';
-  String _currentValue1 = '';
-
-  List<ModelClass> modelList = [];
-
-  @override
-  void initState() {
-    super.initState();
-    _currentValue = widget.model;
-    modelList = [
-      new ModelClass("تويوتا",["كورولا","ياريس"]),
-      new ModelClass("هونداى",["اكسينت","اكسيل","ماتريكس"]),
-      new ModelClass("فيات",["128","132"]),
-
-    ];
-  }
-
-  @override
-  Widget build(BuildContext context) {
-//    Widget cancelButton = FlatButton(
-//      child: Text(
-//        "إلغاء",
-//        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-//      ),
-//      onPressed: () {
-//        setState(() {
-//          Navigator.pop(context);
-//        });
-//      },
-//    );
-//    Widget continueButton = FlatButton(
-//      child: Text(
-//        "حفظ",
-//        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-//      ),
-//      onPressed: () {
-//        setState(() {
-//          Navigator.pop(context);
-//          widget.onSubmit3(_currentValue1.toString() + "," + _currentValue.toString());
-//        });
-//      },
-//    );
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xff171732),
-        centerTitle:true ,
-        title: Text(
-          widget.model,
-          style: TextStyle(fontWeight: FontWeight.bold),
-          textDirection: TextDirection.rtl,
-        ),
-
-      ),
-      body: Stack(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top:18.0),
-            child: ListView.builder(
-              itemCount: modelList.length,
-              itemBuilder: (context, i) {
-                return new ExpansionTile(
-                  title: new Text(
-                    modelList[i].title,
-                    style: new TextStyle(
-                        fontSize: 20.0,
-                        fontWeight: FontWeight.bold,
-                        fontStyle: FontStyle.italic),
-                  ),
-                  children: <Widget>[
-                    Column(
-                      // padding: EdgeInsets.all(8.0),
-                      children: modelList[i].subtitle
-                          .map((value) => RadioListTile(
-                        groupValue: _currentValue,
-                        title: Text(
-                          value,
-                          textDirection: TextDirection.rtl,
-                        ),
-                        value: value,
-                        onChanged: (val) {
-                          setState(() {
-                            debugPrint('VAL = $val');
-                            _currentValue = val;
-                            _currentValue1 = modelList[i].title;
-                            Navigator.pop(context);
-                            widget.onSubmit3(_currentValue1.toString() + "," + _currentValue.toString());
-                          });
-                        },
-                      ))
-                          .toList(),
-                    ),
-//              new Column(
-//                children:
-//                _buildExpandableContent(regionlist[i]),
-//              ),
-                  ],
-                );
-              },
-            ),
-          ),
-//          Row(
-//            mainAxisAlignment: MainAxisAlignment.spaceAround,
-//            children: <Widget>[
-//              cancelButton,
-//              continueButton,
-//            ],
-//          )
-
-        ],
-      ),
-    );
-  }
-}
-////////////////////////////////

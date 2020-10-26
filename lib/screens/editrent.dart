@@ -20,6 +20,7 @@ import 'package:priceme/classes/OutputClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:priceme/screens/cur_loc.dart';
+import 'package:priceme/screens/myrents.dart';
 import 'package:priceme/screens/network_connection.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:priceme/screens/signin.dart';
@@ -31,13 +32,36 @@ import 'dart:math' as Math;
 
 import '../Splash.dart';
 
-class AddRent extends StatefulWidget {
+class EditRent extends StatefulWidget {
+  int index,length,carrange;
+  String cdate,cdiscribtion,cimagelist,cproblemtype,ctitle,curi,fPlaceName,offerid,
+      pname,pphone,price,userId,fromPLat,fromPLng,ccar,ccarversion,cmotion,color,cyear,km;
+
+  EditRent(
+      this.index,
+      this.length,
+      this.carrange,
+      this.cdate,
+      this.cdiscribtion,
+      this.cimagelist,
+      this.cproblemtype,
+      this.ctitle,
+      this.curi,
+      this.fPlaceName,
+      this.fromPLat,
+      this.fromPLng,
+      this.offerid,
+      this.pname,
+      this.pphone,
+      this.price,
+      this.userId,this.ccar,this.ccarversion,this.cmotion,this.color,this.cyear,this.km
+      );
 
   @override
-  _AddRentState createState() => _AddRentState();
+  _EditRentState createState() => _EditRentState();
 }
 
-class _AddRentState extends State<AddRent> {
+class _EditRentState extends State<EditRent> {
   bool _load1 = false;
   String url1;
   String imagepathes = '';
@@ -49,8 +73,8 @@ class _AddRentState extends State<AddRent> {
   var _motiontypecurrentItemSelected = '';
   var _indyearcurrentItemSelected="";
 
-  String model1="";
-  String model2="";
+  String model1;
+  String model2;
   List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
   var _formKey = GlobalKey<FormState>();
@@ -76,12 +100,28 @@ String _userId;
   @override
   void initState() {
     super.initState();
-    _motiontypecurrentItemSelected=motiontype[0];
+    titleController = TextEditingController(text: widget.ctitle);
+    priceController = TextEditingController(text: widget.price);
+    discController = TextEditingController(text: widget.cdiscribtion);
+     kmController = TextEditingController(text: widget.km);
+     colorController = TextEditingController(text: widget.color);
+
+    _motiontypecurrentItemSelected=widget.cmotion;
+    model1 = widget.ccar;model2 =widget.ccarversion;
+    fromPlaceLat=widget.fromPLat;
+    fromPlaceLng=widget.fromPLng;
+    fPlaceName=widget.fPlaceName;
+
+    urlList =widget.cimagelist
+        .replaceAll(" ", "")
+        .replaceAll("[", "")
+        .replaceAll("]", "")
+        .split(",");
 
     DateTime now = DateTime.now();
     indyearlist=new List<String>.generate(50, (i) =>  NumberUtility.changeDigit((now.year+1 -i).toString(), NumStrLanguage.English));
     indyearlist[0]=("الموديل");
-    _indyearcurrentItemSelected=indyearlist[0];
+    _indyearcurrentItemSelected=widget.cyear;
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? Navigator.pushReplacement(
         context,
@@ -369,7 +409,7 @@ String _userId;
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => MyForm3(
-                                            "نوع السيارة",
+                                            widget.ccar,widget.ccarversion,
                                             onSubmit3: onSubmit3)));
 
 //                                    setState(() {
@@ -659,7 +699,7 @@ setState(() {
                               onTap: () async {
                                 if (_formKey.currentState.validate()) {
 
-                                  if(images.length == 0||  model1 == null || model2 == null||fromPlaceLat==null||fromPlaceLng==null){
+                                  if( model1 == null || model2 == null||fromPlaceLat==null||fromPlaceLng==null){
                                     Toast.show("برجاء التأكد من إضافة كل البيانات المطلوبة",context,duration: Toast.LENGTH_LONG,gravity:  Toast.BOTTOM);
                                   }else{
                                     try {
@@ -683,7 +723,7 @@ setState(() {
                               },
                               child: Center(
                                 child: Text(
-                                  'الإضافة و النشر',
+                                  'تعديل',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.white,
@@ -708,38 +748,47 @@ setState(() {
     );
   }
   Future uploadpp0() async {
-    // String url1;
-    final StorageReference storageRef =
-    FirebaseStorage.instance.ref().child('myimage');
-    int i = 0;
-    for(var f in images){
-      //  images.forEach((f) async {
-      var byteData = await f.getByteData(quality: 50);
-
-      DateTime now = DateTime.now();
-      final file = File('${(await getTemporaryDirectory()).path}/$f');
-      await file.writeAsBytes(byteData.buffer
-          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-      final StorageUploadTask uploadTask =
-      storageRef.child('$now.jpg').putFile(file);
-      var Imageurl = await (await uploadTask.onComplete).ref.getDownloadURL();
-      Toast.show("تم تحميل صورة ", context,
-          duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-      setState(() {
-        url1 = Imageurl.toString();
-        urlList.add(url1);
-        //  print('URL Is${images.length} ///$url1///$urlList');
-        i++;
-        // _load2 = false;
-      });
-      if (i == images.length) {
-        // print('gggg${images.length} ///$i');
-        createRecord(urlList);
-      }
-    }
     setState(() {
       _load1 = true;
     });
+    if (images.length != 0) {
+      urlList.clear();
+      final StorageReference storageRef =
+      FirebaseStorage.instance.ref().child('myimage');
+      int i = 0;
+      for(var f in images){
+        //  images.forEach((f) async {
+        var byteData = await f.getByteData(quality: 50);
+
+        DateTime now = DateTime.now();
+        final file = File('${(await getTemporaryDirectory()).path}/$f');
+        await file.writeAsBytes(byteData.buffer
+            .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+        final StorageUploadTask uploadTask =
+        storageRef.child('$now.jpg').putFile(file);
+        var Imageurl = await (await uploadTask.onComplete).ref.getDownloadURL();
+        Toast.show("تم تحميل صورة ", context,
+            duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+        setState(() {
+          url1 = Imageurl.toString();
+          urlList.add(url1);
+          //  print('URL Is${images.length} ///$url1///$urlList');
+          i++;
+          // _load2 = false;
+        });
+        if (i == images.length) {
+          // print('gggg${images.length} ///$i');
+          createRecord(urlList);
+        }
+      }
+
+    }else{
+      if(urlList.length==0){
+        Toast.show("برجاء أضافة صورة واحدة على الاقل", context,
+            duration: Toast.LENGTH_SHORT,
+            gravity: Toast.BOTTOM);
+      }else{createRecord(urlList);}
+    }
 
   }
   void createRecord(urlList) {
@@ -769,13 +818,13 @@ setState(() {
       }
       String date1 = '${now.year}-${b}-${c} ${d}:${e}:00';
       int arrange = int.parse('${now.year}${b}${c}${d}${e}');
-      DocumentReference documentReference =
-      Firestore.instance.collection('rents').document();
-      documentReference.setData({
-        //'timestamp': FieldValue.serverTimestamp(), to arrange data using orderby
 
+      Firestore.instance
+          .collection('rents')
+          .document(widget.offerid)
+          .updateData({
         'carrange': arrange,
-        'offerid': documentReference.documentID,
+        'offerid': widget.offerid,
         'userId': _userId,
         'cdate': date1,
         'cpublished': false,
@@ -786,7 +835,7 @@ setState(() {
         'workshopname': _cWorkshopname,
         'ccar':model1,
         'ccarversion':model2,
-        'price': int.parse(priceController.text),
+        'price': priceController.text,
         'color': colorController.text,
         'km': kmController.text,
         'ctitle': titleController.text,
@@ -802,23 +851,10 @@ setState(() {
 
 
       }).whenComplete(() {
-        setState(() {
-         // _load2 = false;
-          urlList.clear();
-          images.clear();
-          titleController.text = "";
-          discController.text = "";
-          priceController.text = "";
-          kmController.text = "";
-          colorController.text = "";
-
-          _indyearcurrentItemSelected=indyearlist[0];
-          model1=null;model2=null;
-
-          fromPlaceLat=null; fromPlaceLng=null; fPlaceName =null;
-            _load1 = false;
-
-        });
+        Navigator.push(
+            context,
+            new MaterialPageRoute(
+                builder: (context) => MyRents()));
       });
 
     }));
@@ -884,7 +920,9 @@ typedef void MyFormCallback3(String result);
 class MyForm3 extends StatefulWidget {
   final MyFormCallback3 onSubmit3;
   String model;
-  MyForm3(this.model, {this.onSubmit3});
+  String model1;
+
+  MyForm3(this.model,this.model1, {this.onSubmit3});
   @override
   _MyForm3State createState() => _MyForm3State();
 }
@@ -897,7 +935,7 @@ class _MyForm3State extends State<MyForm3> {
   @override
   void initState() {
     super.initState();
-    _currentValue = widget.model;
+    _currentValue = widget.model1;
     modelList = [
       new ModelClass("تويوتا",["كورولا","ياريس"]),
       new ModelClass("هونداى",["اكسينت","اكسيل","ماتريكس"]),
@@ -908,29 +946,6 @@ class _MyForm3State extends State<MyForm3> {
 
   @override
   Widget build(BuildContext context) {
-//    Widget cancelButton = FlatButton(
-//      child: Text(
-//        "إلغاء",
-//        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-//      ),
-//      onPressed: () {
-//        setState(() {
-//          Navigator.pop(context);
-//        });
-//      },
-//    );
-//    Widget continueButton = FlatButton(
-//      child: Text(
-//        "حفظ",
-//        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-//      ),
-//      onPressed: () {
-//        setState(() {
-//          Navigator.pop(context);
-//          widget.onSubmit3(_currentValue1.toString() + "," + _currentValue.toString());
-//        });
-//      },
-//    );
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff171732),

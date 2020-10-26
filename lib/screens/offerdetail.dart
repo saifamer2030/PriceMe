@@ -13,6 +13,7 @@ import 'package:priceme/UserRating/RatingClass.dart';
 import 'package:priceme/UserRating/UserRatingPage.dart';
 import 'package:priceme/classes/CommentClass.dart';
 import 'package:priceme/classes/CommentClassString.dart';
+import 'package:priceme/screens/alloffers.dart';
 import 'package:priceme/screens/map_view.dart';
 
 import 'package:url_launcher/url_launcher.dart';
@@ -33,7 +34,7 @@ class OfferDetail extends StatefulWidget {
 class _OfferDetailState extends State<OfferDetail> {
   String _userId;
   String _username;
-  String _userphone;
+  String _userphone,cType;
   AudioPlayer audioPlayer = AudioPlayer();
   Duration duration= new Duration();
   Duration position= new Duration();
@@ -99,6 +100,7 @@ class _OfferDetailState extends State<OfferDetail> {
     userQuery.getDocuments().then((data){
       if (data.documents.length > 0){
         setState(() {
+          cType = data.documents[0].data['cType'];
 
           _username = data.documents[0].data['name'];
           _userphone = data.documents[0].data['phone'];
@@ -478,6 +480,68 @@ class _OfferDetailState extends State<OfferDetail> {
                                 color: Colors.grey,
                                 ),**/
                           ),
+                          cType=="admin"?  Positioned(
+                            top: 70,
+                            left: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                height: 25,
+                                child: IconButton(
+                                  icon: Icon(Icons.delete,size:50 ,),
+                                  color: Colors.red,
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                      new CupertinoAlertDialog(
+                                        title: new Text("تنبية"),
+                                        content: new Text("تبغي تحذف اعلانك؟"),
+                                        actions: [
+                                          CupertinoDialogAction(
+                                              isDefaultAction: false,
+                                              child: new FlatButton(
+                                                onPressed: () {
+
+                                                  setState(() {
+                                                    Firestore.instance.collection("offers")
+                                                        .document(widget.advid)
+                                                        .delete().whenComplete(() =>
+                                                        setState(() async {
+                                                          Navigator.pop(context);
+                                                          Toast.show("تم الحذف", context,
+                                                              duration: Toast.LENGTH_SHORT,
+                                                              gravity: Toast.BOTTOM);
+
+                                                          Navigator.pushReplacement(
+                                                              context,
+                                                              MaterialPageRoute(
+                                                                  builder: (context) => AllOffers()));
+                                                        }));
+                                                  });
+                                                }
+                                                ,
+                                                child: Text("موافق"),
+                                              )),
+                                          CupertinoDialogAction(
+                                              isDefaultAction: false,
+                                              child: new FlatButton(
+                                                onPressed: () =>
+                                                    Navigator.pop(context),
+                                                child: Text("إلغاء"),
+                                              )),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),),
+                            ),
+                            /** Icon(
+                                Icons.calendar_today,
+                                color: Colors.grey,
+                                ),**/
+                          ):Container(),
+
                         ],
                       )),
                 ),
@@ -743,7 +807,7 @@ class _OfferDetailState extends State<OfferDetail> {
                                       );
                                     }),
                           )),
-                          Padding(
+                          (_userId==null)?Container():  Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Row(
                               children: <Widget>[
@@ -889,44 +953,48 @@ class _OfferDetailState extends State<OfferDetail> {
         'comment':_commentController.text,
       'rate':0.0,
       }).whenComplete(() {
-
         Toast.show("ارسالنا تعليقك طال عمرك", context,
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         CommentClassString commentclass = new CommentClassString(
           widget.userId,
           _userId,
           widget.advid,
-            commentid,
+          commentid,
           _username,
           ownerName,
           now.toString(),
           _commentController.text,
-         0.0,0,
+          0.0,
+          0,
         );
         setState(() {
           commentlist.insert(0, commentclass);
           _commentController.text = "";
         });
+        if (_username != widget.userId) {
         DocumentReference documentReference =
-        Firestore.instance.collection('Alarm').document(widget.userId).collection('Alarmid').document();
+        Firestore.instance.collection('Alarm')
+            .document(widget.userId)
+            .collection('Alarmid')
+            .document();
         documentReference.setData({
           'ownerId': widget.userId,
           'traderid': _userId,
           'advID': widget.advid,
-          'alarmid':documentReference.documentID,
+          'alarmid': documentReference.documentID,
           'cdate': now.toString(),
           'tradname': _username,
           'ownername': ownerName,
           'comment': _commentController.text,
-          'rate':traderating,
+          'rate': traderating,
           'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
-          'cType': "profilecomment",
+          'cType': "offercomment",
 
         }).whenComplete(() {
           Toast.show("تم التعليق بنجاح", context,
               duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         });
-
+      }
         //  _controller.animateTo(0.0,curve: Curves.easeInOut, duration: Duration(seconds: 1));
       }).catchError((e) {
         Toast.show(e, context,
@@ -970,7 +1038,7 @@ class _OfferDetailState extends State<OfferDetail> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: <Widget>[
-                      _userId == commentlist[index].traderid
+                      (_userId == commentlist[index].traderid||cType=="admin")
                           ? FlatButton(
                               onPressed: () {
                                 showDialog(
@@ -986,13 +1054,11 @@ class _OfferDetailState extends State<OfferDetail> {
                                             onPressed: () {
                                               setState(() {
                                                 print("kkkkkkkkkkkk");
-                                                if (_userId ==
-                                                    commentlist[index]
-                                                        .traderid) {
+                                                if (_userId == commentlist[index].traderid||cType=="admin"){
                                                   FirebaseDatabase.instance
                                                       .reference()
                                                       .child("offercommentsofferdata")
-                                                      .child(widget.userId)
+                                                      .child(commentlist[index].traderid)
                                                       .child(advID)
                                                       .child(commentlist[index]
                                                           .commentid)

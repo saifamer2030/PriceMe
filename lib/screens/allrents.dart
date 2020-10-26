@@ -29,10 +29,15 @@ class _AllRentsState extends State<AllRents> {
   String _userId="";
   String  worktype="";
   String tradertype="";
+  int _currentSliderValue1=200;
+  double _currentSliderValue = 200;
+  @override List<String> carlist = ["السيارة","هونداى","فيات","تويوتا"];
+  var _carcurrentItemSelected = '';
+  String filt;
 
-  @override
   void initState() {
     super.initState();
+    _carcurrentItemSelected=carlist[0];
 
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
@@ -91,33 +96,92 @@ class _AllRentsState extends State<AllRents> {
           ),
         ),
       ),
-      body: Container(
-        child: StreamBuilder(
-          stream: Firestore.instance
-              .collection('rents')
-              .orderBy('carrange',
-                  descending:
-                      true) //.where("cproblemtype", isEqualTo:"قطع غيار")
-              // .where("mfaultarray", arrayContains: worktype)
-              // .where("cproblemtype", isEqualTo: tradertype)
+      body: ListView(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Slider(
+                value: _currentSliderValue,
+                min: 0,
+                max: 200,
+                divisions: 5,
+                label: _currentSliderValue.round().toString(),
+                onChanged: (double value) {
+                  setState(() {
+                    _currentSliderValue=value;
+                    _currentSliderValue1 =int.parse(value.toStringAsFixed(0));
 
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(child: Text("Loading.."));
-            }
+                  });
+                },
+              ),
+              Container(
+                height: 50,width: 150,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Card(
+                    elevation: 0.0,
+                    color: const Color(0xff171732),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                        child: ButtonTheme(
+                          alignedDropdown: true,
+                          child: DropdownButton<String>(
+                            items: carlist
+                                .map((String value) {
+                              return new DropdownMenuItem<String>(
+                                value: value,
+                                child: new Text(value),
+                              );
+                            }).toList(),
+                            value: _carcurrentItemSelected,
+                            onChanged: (String newValueSelected) {
+                              // Your code to execute, when a menu item is selected from dropdown
+                              _onDropDownItemSelectedcar(
+                                  newValueSelected);
+                            },
+                            style: new TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        )),
+                  ),
+                ),
+              ),
 
-            return new ListView.builder(
-                physics: BouncingScrollPhysics(),
-                shrinkWrap: true,
-                controller: _controller,
-                itemCount: snapshot.data.documents.length,
-                itemBuilder: (context, index) {
-                  return firebasedata(
-                      context, index, snapshot.data.documents[index]);
-                });
-          },
-        ),
+            ],
+          ),
+
+          Container(
+            child: StreamBuilder(
+              stream: Firestore.instance
+                  .collection('rents')
+                  .orderBy('carrange',
+                      descending:
+                          true) //.where("cproblemtype", isEqualTo:"قطع غيار")
+                  .where("ccar", isEqualTo:filt)
+                 .where("price", isLessThanOrEqualTo:_currentSliderValue1)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: Text("لا يوجد بيانات"));
+                }
+
+                return new ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    controller: _controller,
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (context, index) {
+                      return firebasedata(
+                          context, index, snapshot.data.documents[index]);
+                    });
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -286,4 +350,19 @@ class _AllRentsState extends State<AllRents> {
       ),
     );
   }
+  void _onDropDownItemSelectedcar(String newValueSelected) {
+    print("kkk$newValueSelected");
+    if(newValueSelected=="السيارة"){
+      setState(() {
+        this._carcurrentItemSelected = newValueSelected;
+        filt=null;
+      });
+    }else{
+      setState(() {
+        this._carcurrentItemSelected = newValueSelected;
+        filt=_carcurrentItemSelected;
+      });
+    }
+  }
+
 }

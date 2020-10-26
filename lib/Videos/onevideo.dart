@@ -18,16 +18,15 @@ import 'package:toast/toast.dart';
 import 'package:video_player/video_player.dart';
 
 
-class AllVideos extends StatefulWidget {
-String cdepart;
-int carrange;
-  AllVideos(this.carrange,this.cdepart);
+class OneVideo extends StatefulWidget {
+String videoid;
+OneVideo(this.videoid);
 
   @override
-  _AllVideosState createState() => _AllVideosState();
+  _OneVideoState createState() => _OneVideoState();
 }
 
-class _AllVideosState extends State<AllVideos> {
+class _OneVideoState extends State<OneVideo> {
   List<AdvClass> advlist = [];
   bool _load = false;
   String _userId="";
@@ -100,10 +99,10 @@ class _AllVideosState extends State<AllVideos> {
         child: StreamBuilder(
           stream: Firestore.instance
               .collection('videos')
-              .orderBy('carrange',
-                  descending:
-                      true) .where("carrange", isLessThanOrEqualTo:widget.carrange).limit(5)
-              .where("cdepart", isEqualTo:widget.cdepart)
+              // .orderBy('carrange',
+              //     descending:
+              //         true) .where("carrange", isLessThanOrEqualTo:widget.carrange).limit(5)
+              .where("cId", isEqualTo:widget.videoid)
              .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {

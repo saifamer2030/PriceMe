@@ -140,7 +140,7 @@ Navigator.push(
                 bottom: 5,
                 right: 5,
                 child: Container(
-                  child: Text( document['cname']==null||document['cname']==""?"اسم غير معلوم":document['cname']
+                  child: Text( document['ctitle']==null||document['ctitle']==""?"عنوان غير معلوم":document['ctitle']
                     ,style: TextStyle(
                         color: Colors.white,
                         fontSize: 15,

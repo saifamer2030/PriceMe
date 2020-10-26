@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:priceme/ChatRoom/widget/home.dart';
+import 'package:priceme/Videos/photosvideomine.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
+import 'package:priceme/screens/advertisements.dart';
 import 'package:priceme/screens/alloffers.dart';
 import 'package:priceme/screens/allrents.dart';
 import 'package:priceme/screens/myoffers.dart';
@@ -127,6 +129,62 @@ class _MorePriceMeState extends State<MorePriceMe> {
                     ),
                     InkWell(
                       onTap: () {
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => Advertisements()));
+
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Icon(
+                            Icons.keyboard_arrow_left,
+                            color: const Color(0xff171732),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Text(
+                                'الاعلانات',
+                                style: TextStyle(
+//                                      fontFamily: 'Estedad-Black',
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xff171732),
+                                  height: 1.2307692307692308,
+                                ),
+                                textAlign: TextAlign.right,
+                              ),
+
+                              // Adobe XD layer: 'world-wide-web-icon…' (shape)
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+
+                                child: new Icon(
+                                  Icons.email,
+                                  color: Colors.grey,
+                                ),
+
+//                                    child:  new Icon(
+//                                      Icons.chat,
+//                                      color: Colors.grey,
+//
+//                                    ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: .2,
+                      color: Colors.grey,
+                    ),
+                    InkWell(
+                      onTap: () {
                         if (_userId == null) {
                           Navigator.push(
                               context,
@@ -222,11 +280,13 @@ class _MorePriceMeState extends State<MorePriceMe> {
                         ],
                       ),
                     ),
+
                     Container(
                       width: MediaQuery.of(context).size.width,
                       height: .2,
                       color: Colors.grey,
                     ),
+
 
 
 
@@ -452,6 +512,61 @@ class _MorePriceMeState extends State<MorePriceMe> {
                     ),
 
 
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => VidiosPhotoMine()));
+
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Icon(
+                            Icons.keyboard_arrow_left,
+                            color: const Color(0xff171732),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Text(
+                                'فيديوهاتي',
+                                style: TextStyle(
+//                                      fontFamily: 'Estedad-Black',
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xff171732),
+                                  height: 1.2307692307692308,
+                                ),
+                                textAlign: TextAlign.right,
+                              ),
+
+                              // Adobe XD layer: 'world-wide-web-icon…' (shape)
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+
+                                child: new Icon(
+                                  Icons.email,
+                                  color: Colors.grey,
+                                ),
+
+//                                    child:  new Icon(
+//                                      Icons.chat,
+//                                      color: Colors.grey,
+//
+//                                    ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: .2,
+                      color: Colors.grey,
+                    ),
 
 
 
@@ -560,49 +675,6 @@ class _MorePriceMeState extends State<MorePriceMe> {
                                   color: Colors.grey,
                                 ),
                               ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        // Navigator.push(
-                        //     context,
-                        //     new MaterialPageRoute(
-                        //         builder: (context) => CommissionNajran()));
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Icon(
-                            Icons.keyboard_arrow_left,
-                            color: const Color(0xff171732),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              Text(
-                                'عمولة بوابة نجران',
-                                style: TextStyle(
-//                                      fontFamily: 'Estedad-Black',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xff171732),
-                                  height: 1.2307692307692308,
-                                ),
-                                textAlign: TextAlign.right,
-                              ),
-
-                              // Adobe XD layer: 'world-wide-web-icon…' (shape)
-                              Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: new Icon(
-                                    Icons.monetization_on,
-                                    color: Colors.grey,
-                                  ) // Adobe XD layer: 'terms' (shape)
-
-                                  ),
                             ],
                           ),
                         ],

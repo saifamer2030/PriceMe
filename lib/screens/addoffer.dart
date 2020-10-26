@@ -625,7 +625,7 @@ setState(() {
         'pname': _cName,
         'workshopname': _cWorkshopname,
 
-        'price': priceController.text,
+        'price': int.parse(priceController.text),
 
         'cproblemtype':_probtypecurrentItemSelected,
 

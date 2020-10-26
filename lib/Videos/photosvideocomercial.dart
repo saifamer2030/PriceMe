@@ -29,11 +29,19 @@ class VidiosPhotoComercial extends StatefulWidget {
 class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
 
   String filePath;
+  List<String> sortlist = ["الاحدث","الاكثر شهرة"];
+  List<String> carlist = ["السيارة","هونداى","فيات","تويوتا"];
+  var _sortcurrentItemSelected = '';
+  var _carcurrentItemSelected = '';
+  String filt;
 
   @override
   void initState() {
     super.initState();
-   }
+    _sortcurrentItemSelected=sortlist[0];
+    _carcurrentItemSelected=carlist[0];
+
+  }
 
   @override
   void dispose() {
@@ -51,47 +59,157 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
       // appBar: AppBar(
       // title: const Text('AppBar Demo'),),
       backgroundColor: const Color(0xffffffff),
-      body: Container(
-        width: width,
-        height: height,
-        child: StreamBuilder(
-          stream: Firestore.instance
-              .collection('videos').where("cdepart", isEqualTo:"تجارى")
-              .orderBy('carrange',
-              descending:
-              true)
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(child: Text("Loading..",));
-            }
-
-            return new GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount:2,
-                    //crossAxisCount: (orientation == Orientation.portrait) ? 2 : 3
+      body: ListView(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                height: 50,width: 150,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Card(
+                    elevation: 0.0,
+                    color: const Color(0xff171732),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                        child: ButtonTheme(
+                          alignedDropdown: true,
+                          child: DropdownButton<String>(
+                            items: sortlist
+                                .map((String value) {
+                              return new DropdownMenuItem<String>(
+                                value: value,
+                                child: new Text(value),
+                              );
+                            }).toList(),
+                            value: _sortcurrentItemSelected,
+                            onChanged: (String newValueSelected) {
+                              // Your code to execute, when a menu item is selected from dropdown
+                              _onDropDownItemSelectedsort(
+                                  newValueSelected);
+                            },
+                            style: new TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        )),
+                  ),
                 ),
-                //add item count depending on your list
-                //itemCount: list.length,
+              ),
+              Container(
+                height: 50,width: 150,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Card(
+                    elevation: 0.0,
+                    color: const Color(0xff171732),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                        child: ButtonTheme(
+                          alignedDropdown: true,
+                          child: DropdownButton<String>(
+                            items: carlist
+                                .map((String value) {
+                              return new DropdownMenuItem<String>(
+                                value: value,
+                                child: new Text(value),
+                              );
+                            }).toList(),
+                            value: _carcurrentItemSelected,
+                            onChanged: (String newValueSelected) {
+                              // Your code to execute, when a menu item is selected from dropdown
+                              _onDropDownItemSelectedcar(
+                                  newValueSelected);
+                            },
+                            style: new TextStyle(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        )),
+                  ),
+                ),
+              ),
 
-                //added scrolldirection
-                //reverse: true,
-                physics: BouncingScrollPhysics(),
-                shrinkWrap: true,
-               // controller: _controller,
-                itemCount: snapshot.data.documents.length,
-                itemBuilder: (context, index) {
-                  return firebasedata(
-                      context, index, snapshot.data.documents[index]);
-                });
-          },
-        ),
+            ],
+          ),
+
+          Container(
+            width: width,
+            height: height,
+            child: StreamBuilder(
+              stream: _sortcurrentItemSelected==sortlist[0]? Firestore.instance
+                  .collection('videos')
+                  .where("cdepart", isEqualTo:"تجارى")
+                  .where("ccar", isEqualTo:filt)
+                  .orderBy('carrange',
+                  descending:
+                  true)
+                  .snapshots():Firestore.instance
+                  .collection('videos')
+                  .where("cdepart", isEqualTo:"تجارى")
+                  .where("ccar", isEqualTo:filt)
+                  .orderBy('seens',
+                  descending:
+                  true)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: Text("لا يوجد بيانات...",));
+                }
+                print("kkk1$filt");
+
+                return new GridView.builder(
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount:2,
+                        //crossAxisCount: (orientation == Orientation.portrait) ? 2 : 3
+                    ),
+                    //add item count depending on your list
+                    //itemCount: list.length,
+
+                    //added scrolldirection
+                    //reverse: true,
+                    physics: BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                   // controller: _controller,
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (context, index) {
+                      return firebasedata(
+                          context, index, snapshot.data.documents[index]);
+                    });
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
 
+  void _onDropDownItemSelectedcar(String newValueSelected) {
+    print("kkk$newValueSelected");
+      if(newValueSelected=="السيارة"){
+        setState(() {
+          this._carcurrentItemSelected = newValueSelected;
+          filt=null;
+        });
+      }else{
+        setState(() {
+          this._carcurrentItemSelected = newValueSelected;
+          filt=_carcurrentItemSelected;
+        });
+      }
+  }
 
+  void _onDropDownItemSelectedsort(String newValueSelected) {
+    setState(() {
+      this._sortcurrentItemSelected = newValueSelected;
 
+    });
+  }
   Widget firebasedata(
       BuildContext context, int index, DocumentSnapshot document) {
 
@@ -140,7 +258,7 @@ Navigator.push(
                 bottom: 10,
                 right: 5,
                 child: Container(
-                  child: Text( document['cname']==null||document['cname']==""?"اسم غير معلوم":document['cname']
+                  child: Text( document['ctitle']==null||document['ctitle']==""?"عنوان غير معلوم":document['ctitle']
                     ,style: TextStyle(
                         color: Colors.white,
                         fontSize: 15,
@@ -178,4 +296,5 @@ Navigator.push(
       ),
     );
   }
+
 }

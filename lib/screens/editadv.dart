@@ -20,6 +20,7 @@ import 'package:priceme/classes/OutputClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:priceme/screens/cur_loc.dart';
+import 'package:priceme/screens/myadvertisement.dart';
 import 'package:priceme/screens/network_connection.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:priceme/screens/signin.dart';
@@ -31,18 +32,48 @@ import 'dart:math' as Math;
 
 import '../Splash.dart';
 
-class AddAdv extends StatefulWidget {
+class EditAdv extends StatefulWidget{
+
+
+int index,length,carrange;
+String advid,cNew,caudiourl,cbody,ccar,ccarversion,cdate,cdiscribtion,cimagelist,cmodel,cproblemtype,
+    ctitle,curi,mfault,pname,pphone,sparepart,subfault,userId,fPlaceName,fromPLat,fromPLng;
+
   final LocalFileSystem localFileSystem;
-  String probtype0, selecteditem0,mfault;
-  AddAdv(this.probtype0,this.mfault, this.selecteditem0,  {localFileSystem})
-      : this.localFileSystem = localFileSystem ?? LocalFileSystem();
+
+EditAdv(
+      this.index,
+      this.length,
+      this.carrange,
+      this.advid,
+      this.cNew,
+      this.caudiourl,
+      this.cbody,
+      this.ccar,
+      this.ccarversion,
+      this.cdate,
+      this.cdiscribtion,
+      this.cimagelist,
+      this.cmodel,
+      this.cproblemtype,
+      this.ctitle,
+      this.curi,
+      this.mfault,
+      this.pname,
+      this.pphone,
+      this.sparepart,
+      this.subfault,
+      this.userId,
+      this.fPlaceName,
+      this.fromPLat,
+      this.fromPLng,  {localFileSystem}) : this.localFileSystem = localFileSystem ?? LocalFileSystem();
 
   @override
-  _AddAdvState createState() => _AddAdvState();
+  _EditAdvState createState() => _EditAdvState();
 }
 enum SingingCharacter4 { used, New, NO }
 
-class _AddAdvState extends State<AddAdv> {
+class _EditAdvState extends State<EditAdv> {
   bool _load1 = false;
   String url1;
   String imagepathes = '';
@@ -60,6 +91,7 @@ class _AddAdvState extends State<AddAdv> {
 
   List<SparePartsClass> mainfaultsList = [];
   List<SparePartsClass> mainsparsList = [];
+  String cNew;
 
 
   String subfault="";
@@ -77,8 +109,8 @@ class _AddAdvState extends State<AddAdv> {
   String model2;
   String fault1;
   String fault2;
-  double _value=0.0;
-  String _userId;
+double _value=0.0;
+String _userId,audiourl;
   var song;  //var _typearray = DefConstants.countriesArray;
   SingingCharacter4 _character4 = SingingCharacter4.New;
 
@@ -87,7 +119,6 @@ class _AddAdvState extends State<AddAdv> {
   String _cMobile;
   String _cEmail="";
   TextEditingController titleController = TextEditingController();
-
   TextEditingController discController = TextEditingController();
   TextEditingController bodyController = TextEditingController();
   var _indyearcurrentItemSelected="";
@@ -99,7 +130,7 @@ class _AddAdvState extends State<AddAdv> {
   RecordingStatus _currentStatus = RecordingStatus.Unset;
   void getDataf() {
     setState(() {
-      //  print("ooooooo${widget.sparepartsList[0]}");
+    //  print("ooooooo${widget.sparepartsList[0]}");
       final SparePartsReference = Firestore.instance;
       final SparePartsReference1 = Firestore.instance;
 
@@ -117,22 +148,22 @@ class _AddAdvState extends State<AddAdv> {
           );
 
 
-          setState(() {
+        setState(() {
 
-            mainfaultsList.add(spc);
-            // print(sparepartsList.length.toString() + "llll");
-          });
+          mainfaultsList.add(spc);
+          // print(sparepartsList.length.toString() + "llll");
+        });
 
         });
       }).whenComplete(() {
         faultsList.clear();
-        int i=0;
+       int i=0;
         // subcheckList.add(false);
 
         for(var mfaults in mainfaultsList){
-          //setState(() {  subfaultsList.clear;});
+            //setState(() {  subfaultsList.clear;});
 
-          SparePartsReference1.collection("subfaults").document(mfaults.sid).collection("subfaultid")
+            SparePartsReference1.collection("subfaults").document(mfaults.sid).collection("subfaultid")
               .getDocuments()
               .then((QuerySnapshot snapshot) {
             snapshot.documents.forEach((fault) {
@@ -154,18 +185,18 @@ class _AddAdvState extends State<AddAdv> {
               });
             });
           }).whenComplete(() {
-            setState(() {
-              print(mfaults.sName+"////"+subfaultsList.length.toString());
-              faultsList.add(new FaultStringClass(mfaults.sName,subfault,subcheck));
-              subfault="";
-              subcheck="";
+              setState(() {
+                print(mfaults.sName+"////"+subfaultsList.length.toString());
+                faultsList.add(new FaultStringClass(mfaults.sName,subfault,subcheck));
+                subfault="";
+                subcheck="";
 
-              i=0;
-              subfaultsList.clear();
-              subcheckList.clear();
+                i=0;
+                subfaultsList.clear();
+                subcheckList.clear();
 
+              });
             });
-          });
 
         }//////
 
@@ -225,13 +256,13 @@ class _AddAdvState extends State<AddAdv> {
                 subsparesList.add(fault.data['fsubName']);
                 subfault1=subfault1+fault.data['fsubName']+",";
                 subcheck1=subcheck1+"false"+",";
-                //    print(fault.data['fsubName'] + "llll"+mfaults.sName);
+            //    print(fault.data['fsubName'] + "llll"+mfaults.sName);
 
               });
             });
           }).whenComplete(() {
             setState(() {
-              // print(mfaults.sName+"////"+subfaultsList.length.toString());
+             // print(mfaults.sName+"////"+subfaultsList.length.toString());
               sparesList.add(new FaultStringClass(mfaults.sName,subfault1,subcheck1));
               subfault1="";
               subcheck1="";
@@ -254,12 +285,51 @@ class _AddAdvState extends State<AddAdv> {
   void initState() {
     super.initState();
     _init();
+    titleController = TextEditingController(text: widget.ctitle);
+    bodyController = TextEditingController(text: widget.cbody);
+    discController = TextEditingController(text: widget.cdiscribtion);
+    cNew=widget.cNew;
+    cNew= _character4.toString().contains("used")
+        ? "مستعملة"
+        : _character4.toString().contains("New")
+        ? "جديدة"
+        : "جديدة/مستعملة";
+print("new:$cNew");
+     _character4 =
+     cNew=="مستعملة"? SingingCharacter4.used
+         :cNew=="جديدة"? SingingCharacter4.New
+         : cNew=="جديدة/مستعملة"?SingingCharacter4.NO
+         :null;
+
+
+
+    model1 = widget.ccar;
+    model2 =widget.ccarversion;
+    fromPlaceLat=widget.fromPLat;
+    fromPlaceLng=widget.fromPLng;
+    fPlaceName=widget.fPlaceName;
+    fault1=widget.mfault;
+    fault2=widget.subfault;
+    audiourl=widget.caudiourl;
+    urlList =widget.cimagelist
+        .replaceAll(" ", "")
+        .replaceAll("[", "")
+        .replaceAll("]", "")
+        .split(",");
+
+    DateTime now = DateTime.now();
+    indyearlist=new List<String>.generate(50, (i) =>  NumberUtility.changeDigit((now.year+1 -i).toString(), NumStrLanguage.English));
+    indyearlist[0]=("الموديل");
+    _indyearcurrentItemSelected=widget.cmodel;
+    _sparecurrentItemSelected=widget.sparepart;
+    _probtypecurrentItemSelected=widget.cproblemtype=="قطع غيار"?widget.cproblemtype:proplemtype[0];
+    // _sparecurrentItemSelected =  widget.probtype0=="قطع غيار"?widget.selecteditem0:widget.sparepartsList[0];
 
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? Navigator.pushReplacement(
         context,
         MaterialPageRoute(
-            builder: (context) => SignIn()))
+            builder: (context) => Splash()))
         : setState(() {_userId = user.uid;
     var userQuery = Firestore.instance.collection('users').where('uid', isEqualTo: _userId).limit(1);
     userQuery.getDocuments().then((data){
@@ -289,14 +359,6 @@ class _AddAdvState extends State<AddAdv> {
     });
     }));
 
-    DateTime now = DateTime.now();
-    indyearlist=new List<String>.generate(50, (i) =>  NumberUtility.changeDigit((now.year+1 -i).toString(), NumStrLanguage.English));
-    indyearlist[0]=("الموديل");
-    _indyearcurrentItemSelected=indyearlist[0];
-    _probtypecurrentItemSelected=widget.probtype0=="قطع غيار"?widget.probtype0:proplemtype[0];
-    // _sparecurrentItemSelected =  widget.probtype0=="قطع غيار"?widget.selecteditem0:widget.sparepartsList[0];
-    fault1=widget.mfault;
-    fault2=widget.selecteditem0;
     getDataf();
     getDatas();
   }
@@ -407,7 +469,7 @@ class _AddAdvState extends State<AddAdv> {
                                     context,
                                     MaterialPageRoute(
                                         builder: (context) => MyForm3(
-                                            "نوع السيارة",
+                                            widget.ccar,widget.ccarversion,
                                             onSubmit3: onSubmit3)));
 
 //                                    setState(() {
@@ -456,7 +518,7 @@ class _AddAdvState extends State<AddAdv> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => MyForm4(
-                                        faultsList,widget.selecteditem0,widget.mfault,
+                                        faultsList,widget.subfault,widget.mfault,
                                         onSubmit4: onSubmit4)));
 
                           },
@@ -677,45 +739,45 @@ class _AddAdvState extends State<AddAdv> {
                       ),
 
                       _probtypecurrentItemSelected==proplemtype[0]?Container():Padding(
-                          padding: EdgeInsets.only(
-                              top: _minimumPadding, bottom: _minimumPadding),
-                          child: Container(
-                            height: 40,
-                            color: Colors.grey,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => MyForm4(
-                                            sparesList,widget.selecteditem0,widget.mfault,
-                                            onSubmit4: onSubmit4)));
+                        padding: EdgeInsets.only(
+                            top: _minimumPadding, bottom: _minimumPadding),
+                        child: Container(
+                          height: 40,
+                          color: Colors.grey,
+                          child: InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MyForm4(
+                                          sparesList,widget.subfault,widget.mfault,
+                                          onSubmit4: onSubmit4)));
 
-                              },
-                              child: Card(
-                                elevation: 0.0,
-                                color: const Color(0xff171732),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "نوع قطع الغيار",
-                                      textDirection: TextDirection.rtl,
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    ),
+                            },
+                            child: Card(
+                              elevation: 0.0,
+                              color: const Color(0xff171732),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    "نوع قطع الغيار",
+                                    textDirection: TextDirection.rtl,
+                                    style: TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ),
                             ),
-                          )
+                          ),
+                        )
                       ),
-                      // Container(
+                                           // Container(
                       //   //decoration: BoxDecoration(border: Border.all(color: Colors.teal)),
                       //   child: new Directionality(textDirection: TextDirection.rtl,
                       //     child: CheckboxListTile(
@@ -743,10 +805,10 @@ class _AddAdvState extends State<AddAdv> {
                       new Slider(value:_value??0.0,
                           max: 62.0,min: 0.0,
                           onChanged: (double value){
-                            setState(() {
-                              value= double.parse(_current?.duration.inSeconds.toString());
+                        setState(() {
+                          value= double.parse(_current?.duration.inSeconds.toString());
 
-                            });
+                        });
                           }),
                       Center(
                         child: new Text(
@@ -837,49 +899,10 @@ class _AddAdvState extends State<AddAdv> {
                                   color: Color(0xFFe0f2f1)),
                             ),
                           ),
-//                          new FlatButton(
-//                            onPressed:
-//                            _currentStatus != RecordingStatus.Unset ? _stop : null,
-//                            child:
-//                            new Icon(
-//                              Icons.stop,
-//                              color: Colors.white,
-//                            ),
-//                            color: Colors.blueAccent.withOpacity(0.5),
-//                          ),
-//                           SizedBox(
-//                             width: 8,
-//                           ),
-//                           InkWell(
-//                             onTap:onPlayAudio,//uploadaudio,//onPlayAudio,
-//                             child: Container(
-//                               width: 60,
-//                               height: 60,
-//                               child: Icon(Icons.file_upload, size: 20,),
-//                               decoration: BoxDecoration(
-//                                   shape: BoxShape.circle,
-//                                   color: Color(0xFFe0f2f1)),
-//                             ),
-//                           ),
-//                          new FlatButton(
-//                            onPressed: onPlayAudio,
-//                            child:
-//                            new Text("Play", style: TextStyle(color: Colors.white)),
-//                            color: Colors.blueAccent.withOpacity(0.5),
-//                          ),
+
                         ],
                       ),
-//                      new Text("Status : $_currentStatus"),
-//                      new Text('Avg Power: ${_current?.metering?.averagePower}'),
-//                      new Text('Peak Power: ${_current?.metering?.peakPower}'),
-//                      new Text("File path of the record: ${_current?.path}"),
-//                      new Text("Format: ${_current?.audioFormat}"),
-//                      new Text(
-//                          "isMeteringEnabled: ${_current?.metering?.isMeteringEnabled}"),
-//                      new Text("Extension : ${_current?.extension}"),
 
-
-                      //////////////////////////////////////////
                       SizedBox(
                         height: _minimumPadding,
                         width: _minimumPadding,
@@ -944,16 +967,16 @@ class _AddAdvState extends State<AddAdv> {
 
                                 // print("\n\n\n\n\n\n\nfromPlaceLng>>>>"+
                                 //     fromPlaceLng+fPlaceName+"\n\n\n\n\n\n");
-                                setState(() {
-                                  fromPlace = sendData["loc_latLng"];
-                                  fromPlaceLat = fromPlace.latitude.toString();
-                                  fromPlaceLng = fromPlace.longitude.toString();
-                                  fPlaceName = sendData["loc_name"];
-                                });
+setState(() {
+  fromPlace = sendData["loc_latLng"];
+  fromPlaceLat = fromPlace.latitude.toString();
+  fromPlaceLng = fromPlace.longitude.toString();
+  fPlaceName = sendData["loc_name"];
+});
                               } ,
                               child: Icon(
                                 fromPlaceLat == null ? Icons.gps_fixed : Icons.check_circle
-                                ,
+                                    ,
                                 color: Colors.purpleAccent,
                                 size: 50,
                               ),
@@ -997,31 +1020,30 @@ class _AddAdvState extends State<AddAdv> {
                               onTap: () async {
                                 if (_formKey.currentState.validate()) {
 
-                                  if(images.length == 0 || song == null||  model1 == null || model2 == null||  fault1 == null || fault2 == null){
-                                    Toast.show("برجاء التأكد من إضافة كل البيانات المطلوبة",context,duration: Toast.LENGTH_LONG,gravity:  Toast.BOTTOM);
-                                  }else{
+
                                     try {
                                       final result = await InternetAddress.lookup('google.com');
                                       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
                                         setState(() {
                                           _load1 = true;
                                         });
-                                        uploadaudio();
+                                        if(song==null){uploadpp0();}else{uploadaudio();}
+
 
 
                                       }
                                     } on SocketException catch (_) {
                                       //  print('not connected');
-                                      Toast.show("برجاء مراجعة الاتصال بالشبكة",context,duration: Toast.LENGTH_LONG,gravity:  Toast.BOTTOM);
+                                       Toast.show("برجاء مراجعة الاتصال بالشبكة",context,duration: Toast.LENGTH_LONG,gravity:  Toast.BOTTOM);
 
-                                    }}
+                                    }//}
 
                                 } else
                                   print('correct');
                               },
                               child: Center(
                                 child: Text(
-                                  'الإضافة و النشر',
+                                  'تعديل',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                       color: Colors.white,
@@ -1045,8 +1067,12 @@ class _AddAdvState extends State<AddAdv> {
       ),
     );
   }
-  Future uploadpp0(audiourl) async {
-    // String url1;
+  Future uploadpp0() async {
+    setState(() {
+      _load1 = true;
+    });
+    if (images.length != 0) {
+      urlList.clear();
     final StorageReference storageRef =
     FirebaseStorage.instance.ref().child('myimage');
     int i = 0;
@@ -1075,9 +1101,14 @@ class _AddAdvState extends State<AddAdv> {
         createRecord(audiourl,urlList);
       }
     }
-    setState(() {
-      _load1 = true;
-    });
+
+    }else{
+      if(urlList.length==0){
+        Toast.show("برجاء أضافة صورة واحدة على الاقل", context,
+            duration: Toast.LENGTH_SHORT,
+            gravity: Toast.BOTTOM);
+      }else{ createRecord(audiourl,urlList);}
+    }
 
   }
   void createRecord(audiourl,urlList) {
@@ -1107,13 +1138,13 @@ class _AddAdvState extends State<AddAdv> {
       }
       String date1 = '${now.year}-${b}-${c} ${d}:${e}:00';
       int arrange = int.parse('${now.year}${b}${c}${d}${e}');
-      DocumentReference documentReference =
-      Firestore.instance.collection('advertisments').document();
-      documentReference.setData({
-        //'timestamp': FieldValue.serverTimestamp(), to arrange data using orderby
 
+      Firestore.instance
+          .collection('advertisments')
+          .document(widget.advid)
+          .updateData({
         'carrange': arrange,
-        'advid': documentReference.documentID,
+        'advid': widget.advid,
         'userId': _userId,
         'cdate': date1,
         'cdiscribtion': discController.text,
@@ -1150,35 +1181,16 @@ class _AddAdvState extends State<AddAdv> {
             : null,
 
       }).whenComplete(() {
-        setState(() {
-          // _load2 = false;
-          urlList.clear();
-          images.clear();
-          song=null;
-          titleController.text = "";
-          discController.text = "";
-          bodyController.text = "";
-          // _sparecurrentItemSelected = widget.probtype0=="قطع غيار"?widget.selecteditem0:widget.sparepartsList[0];
-          // _probtypecurrentItemSelected=widget.probtype0=="قطع غيار"?widget.probtype0:proplemtype[0];
-          _indyearcurrentItemSelected=indyearlist[0];
-          model1=null;model2=null;fault1=null;fault2=null;
-          _value = 0;
-          fromPlaceLat=null; fromPlaceLng=null; fPlaceName =null;
-          _load1 = false;
-          fault1=widget.mfault;
-          fault2=widget.selecteditem0;
-          _init();
-        });
+        Navigator.push(
+            context,
+            new MaterialPageRoute(
+                builder: (context) => MyAdvertisement()));
       });
 
     }));
   }
 
-//  void _onDropDownItemSelectedType(String newValueSelected) {
-//    setState(() {
-//      this._typecurrentItemSelected = newValueSelected;
-//    });
-//  }
+
   void _onDropDownItemSelectedSpares(String newValueSelected) {
     setState(() {
       this._sparecurrentItemSelected = newValueSelected;
@@ -1240,26 +1252,15 @@ class _AddAdvState extends State<AddAdv> {
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
     });
   }
-  void onSubmit4(List<OutputClass> result) {
+  void onSubmit4(String result1,String result2) {
     setState(() {
-      //result.clear();
-      for(int i = 0; i < result.length; i++){
-        // setState(() {
-        fault1 = fault1+","+result[i].title;
-        fault2 = fault2+","+result[i].subtitle;
-        // });
-        print("${result[i].title}///////${result[i].subtitle}");
-      }
-      // fault1 = result.split(",")[0];
-      // fault2 = result.split(",")[1];
-      Toast.show(
-          "$fault1///////${fault2}", context,
-          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
-      result.clear();
+      fault1=result1;
+      fault2=result2;
 
     });
 
   }
+
   _init() async {
     try {
       if (await FlutterAudioRecorder.hasPermissions) {
@@ -1364,7 +1365,7 @@ class _AddAdvState extends State<AddAdv> {
       case RecordingStatus.Initialized:
         {
           text = 'Start';
-          icon=Icons.record_voice_over;
+         icon=Icons.record_voice_over;
 
           break;
         }
@@ -1387,7 +1388,7 @@ class _AddAdvState extends State<AddAdv> {
           text = 'Init';
           icon=Icons.cancel;
 
-          break;
+        break;
         }
       default:
         break;
@@ -1417,14 +1418,14 @@ class _AddAdvState extends State<AddAdv> {
     );
     setState(() async {
       var Audiourl = await (await uploadTask.onComplete).ref.getDownloadURL();
-      var  url2 = Audiourl.toString();
-      print("$_extension  mmm$url2");
+        audiourl = Audiourl.toString();
+    //  print("$_extension  mmm$url2");
       setState(() {
         _load1 = true;
       });
       Toast.show("تم تحميل التسجيل الصوتى", context,
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-      uploadpp0(url2);
+      uploadpp0();
     });
 
   }
@@ -1435,7 +1436,9 @@ typedef void MyFormCallback3(String result);
 class MyForm3 extends StatefulWidget {
   final MyFormCallback3 onSubmit3;
   String model;
-  MyForm3(this.model, {this.onSubmit3});
+  String model1;
+
+  MyForm3(this.model,this.model1, {this.onSubmit3});
   @override
   _MyForm3State createState() => _MyForm3State();
 }
@@ -1448,7 +1451,7 @@ class _MyForm3State extends State<MyForm3> {
   @override
   void initState() {
     super.initState();
-    _currentValue = widget.model;
+    _currentValue = widget.model1;
     modelList = [
       new ModelClass("تويوتا",["كورولا","ياريس"]),
       new ModelClass("هونداى",["اكسينت","اكسيل","ماتريكس"]),
@@ -1459,29 +1462,7 @@ class _MyForm3State extends State<MyForm3> {
 
   @override
   Widget build(BuildContext context) {
-//    Widget cancelButton = FlatButton(
-//      child: Text(
-//        "إلغاء",
-//        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-//      ),
-//      onPressed: () {
-//        setState(() {
-//          Navigator.pop(context);
-//        });
-//      },
-//    );
-//    Widget continueButton = FlatButton(
-//      child: Text(
-//        "حفظ",
-//        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-//      ),
-//      onPressed: () {
-//        setState(() {
-//          Navigator.pop(context);
-//          widget.onSubmit3(_currentValue1.toString() + "," + _currentValue.toString());
-//        });
-//      },
-//    );
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff171732),
@@ -1556,11 +1537,11 @@ class _MyForm3State extends State<MyForm3> {
 ////////////////////////////////
 
 //////////////////////////////////
-typedef void MyFormCallback4(List<OutputClass> result);
+typedef void MyFormCallback4(String result1,String result2);
 class MyForm4 extends StatefulWidget {
   final MyFormCallback4 onSubmit4;
   List<FaultStringClass> faultsList = [];
-  String selecteditem,mainitem;
+String selecteditem,mainitem;
   MyForm4(this.faultsList,this.selecteditem,this.mainitem,{this.onSubmit4});
   @override
   _MyForm4State createState() => _MyForm4State();
@@ -1580,36 +1561,33 @@ class _MyForm4State extends State<MyForm4> {
     outputList.clear();
     _currentValuesub = widget.selecteditem;
     _currentValuem=widget.mainitem;
-    if (widget.mainitem==""||widget.selecteditem==""){}else{ outputList.add(OutputClass(widget.mainitem,widget.selecteditem));}
+   // if (widget.mainitem.substring(1).contains(",")||widget.selecteditem.contains(",")){
+   //   List<String> mi=widget.mainitem.substring(1).split(",");
+   //   List<String> si=widget.selecteditem.split(",");
+   //   for(var j=0;j<mi.length;j++){
+   //     outputList.add(OutputClass(mi[j],si[j]));
+   //   }
+   //
+   // }else{ outputList.add(OutputClass(widget.mainitem,widget.selecteditem));}
+
     for(int i = 0; i < widget.faultsList.length; i++){
-      // checlist.clear();
-      // for(int n = 0; n < widget.faultsList[i].subtitle.split(",").length; n++){
-      //   if (widget.faultsList[i].subtitle.split(",")[n]==_currentValue){
-      //     print("rrrrrr"+widget.faultsList[i].subtitle.split(",")[n]+"1"+_currentValue);
-      //       checlist.add(true);
-      //   }else{
-      //       checlist.add(false);
-      //
-      //     print("rrrrrr"+widget.faultsList[i].subtitle.split(",")[n]+"0"+_currentValue);
-      //
-      //   }
-      // }
+
       setState(() {
         print("rrrrrrr"+checlist.toString());
         aList.add(AClass(i,
             widget.faultsList[i].title,
             widget.faultsList[i].subtitle.split(","),
-            //checlist
-            // List.filled(widget.faultsList[i].subtitle.split(",").length, false),
+
             List<bool>.generate(widget.faultsList[i].subtitle.split(",").length,
-                    (k) => widget.faultsList[i].subtitle.split(",")[k]==_currentValuesub)
+                    (k) =>
+                        _currentValuesub.contains(widget.faultsList[i].subtitle.split(",")[k]) )
 
         ));
       });
 
 
     }
-    // modelList = widget.faultsList;
+    outputList.clear();
   }
   @override
   Widget build(BuildContext context) {
@@ -1619,7 +1597,7 @@ class _MyForm4State extends State<MyForm4> {
         backgroundColor: const Color(0xff171732),
         centerTitle:true ,
         title: Text(
-          "اختر العطل",
+         "اختر العطل",
           style: TextStyle(fontWeight: FontWeight.bold),
           textDirection: TextDirection.rtl,
         ),
@@ -1633,11 +1611,6 @@ class _MyForm4State extends State<MyForm4> {
               itemCount:aList.length,
               itemBuilder: (context, i) {
                 if(  aList[i].subtitle.contains(widget.selecteditem)){
-                  //_currentValuem=aList[i].title;
-                  // print(_currentValuem+"ppp");
-                  // widget.onSubmit4(_currentValue1.toString() + "," + _currentValue.toString());
-                  //   subcheck.clear();
-                  // subcheck = List.filled(widget.faultsList[i].subtitle.split(",").length, false);
                 }
                 return new ExpansionTile(
                   title: new Text(
@@ -1650,58 +1623,35 @@ class _MyForm4State extends State<MyForm4> {
                   children: <Widget>[
                     Column(
                       // padding: EdgeInsets.all(8.0),widget.faultsList[i].subtitle.substring(0, widget.faultsList[i].subtitle.length() - 1)
-                        children:  List.generate( aList[i].subtitle.length, (j) => aList[i].subtitle[j]==""||aList[i].subtitle[j].length==0?Container(): CheckboxListTile(
-                          //  groupValue: _currentValue,
-                          title: Text(
-                            aList[i].subtitle[j],
-                            textDirection: TextDirection.rtl,
-                          ),
-                          //  value: value,
-                          value: aList[i].checklist[j],
+                      children:  List.generate( aList[i].subtitle.length, (j) => aList[i].subtitle[j]==""||aList[i].subtitle[j].length==0?Container(): CheckboxListTile(
+                //  groupValue: _currentValue,
+                title: Text(
+                  aList[i].subtitle[j],
+                textDirection: TextDirection.rtl,
+                ),
+                //  value: value,
+                value: aList[i].checklist[j],
 
-                          onChanged: (val) {
-                            setState(() {
-                              aList[i].checklist[j]=val;
-                            });
-                            if(val){
-                              setState(() {
-                                outputList.add(OutputClass(aList[i].title,aList[i].subtitle[j]));
-                                print("hhh${outputList.length}//"+aList[i].title+aList[i].subtitle[j]);
-                                // _currentValuesub=aList[i].subtitle[j];
-                                //   _currentValuem =aList[i].title;
-                              });
-                            }else{
-                              outputList.removeWhere((item) => item.subtitle == aList[i].subtitle[j]);
-                              print("hhh${outputList.length}//"+aList[i].title+aList[i].subtitle[j]);
+                onChanged: (val) {
+                  setState(() {
+                    aList[i].checklist[j]=val;
+                  });
+                  if(val){
+                    setState(() {
+                     // outputList.add(OutputClass(aList[i].title,aList[i].subtitle[j]));
+                      _currentValuesub = _currentValuesub+","+aList[i].subtitle[j];
+                      _currentValuem=_currentValuem+","+aList[i].title[j];
+                    });
+                  }else{
+                    _currentValuesub = _currentValuesub.replaceAll(aList[i].subtitle[j], "");
+                    _currentValuem=_currentValuem.replaceFirst(aList[i].title[j], "");
+                    // outputList.removeWhere((item) => item.subtitle == aList[i].subtitle[j]);
+                    // print("hhh${outputList.length}//"+aList[i].title+aList[i].subtitle[j]);
 
-                            }
-                          },
-                        ))),
+                  }
+                },
+                ))),
 
-                    // widget.faultsList[i].subtitle.split(",")
-                    //     .mapIndexed((value,i) =>value==""?Container(): CheckboxListTile(
-                    // //  groupValue: _currentValue,
-                    //   title: Text(
-                    //     value,
-                    //     textDirection: TextDirection.rtl,
-                    //   ),
-                    // //  value: value,
-                    //   value: false,
-                    //
-                    //   onChanged: (val) {
-                    //     setState(() {
-                    //       debugPrint('VAL = $val');
-                    //       _isChecked = val;
-                    //       _currentValue1 =  widget.faultsList[i].title;
-                    //       });
-                    //   },
-                    // ))
-                    //     .toList(),
-                    //  ),
-//              new Column(
-//                children:
-//                _buildExpandableContent(regionlist[i]),
-//              ),
                   ],
                 );
               },
@@ -1716,7 +1666,7 @@ class _MyForm4State extends State<MyForm4> {
               children: <Widget>[
                 RaisedButton(
                   onPressed: () {
-                    widget.onSubmit4(outputList/**_currentValuem.toString() + "," + _currentValuesub.toString()**/);
+                    widget.onSubmit4(_currentValuem,_currentValuesub);
                     Navigator.pop(context);
 
                   },

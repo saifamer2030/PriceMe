@@ -7,6 +7,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:priceme/classes/AdvClass.dart';
 import 'package:priceme/screens/addrent.dart';
+import 'package:priceme/screens/editrent.dart';
 import 'package:priceme/screens/rentdetail.dart';
 import 'package:priceme/screens/signin.dart';
 
@@ -126,6 +127,49 @@ class _MyRentsState extends State<MyRents> {
                     child: firebasedata(
                         context, index, snapshot.data.documents[index]),
                     secondaryActions: <Widget>[
+                      Container(
+                        padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                        child: IconSlideAction(
+                          caption: 'تعديل',
+                          color: Colors.green,
+                          icon: Icons.edit,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              new MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                  new EditRent(
+                                    index,
+                                    snapshot.data.documents.length,
+                                    snapshot.data.documents[index]["carrange"],
+                                    snapshot.data.documents[index]["cdate"],
+                                    snapshot.data.documents[index]["cdiscribtion"],
+                                    snapshot.data.documents[index]["cimagelist"],
+                                    snapshot.data.documents[index]["cproblemtype"],
+                                    snapshot.data.documents[index]["ctitle"],
+                                    snapshot.data.documents[index]["curi"],
+                                    snapshot.data.documents[index]["fPlaceName"],
+                                    snapshot.data.documents[index]["fromPLat"],
+                                    snapshot.data.documents[index]["fromPLng"],
+                                    snapshot.data.documents[index]["offerid"],
+                                    snapshot.data.documents[index]["pname"],
+                                    snapshot.data.documents[index]["pphone"],
+                                    snapshot.data.documents[index]["price"],
+                                    snapshot.data.documents[index]["userId"],
+
+
+                                    snapshot.data.documents[index]["ccar"],
+                                    snapshot.data.documents[index]["ccarversion"],
+                                    snapshot.data.documents[index]["cmotion"],
+                                    snapshot.data.documents[index]["color"],
+                                    snapshot.data.documents[index]["cyear"],
+                                    snapshot.data.documents[index]["km"],
+
+                                  )),
+                            );
+                          },
+                        ),
+                      )
 
                     ],
                     actions: <Widget>[

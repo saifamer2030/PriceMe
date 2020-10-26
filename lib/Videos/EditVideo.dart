@@ -6,6 +6,7 @@ import 'package:firebase_database/firebase_database.dart';
 // import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:flutter_video_compress/flutter_video_compress.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:priceme/Videos/photosvideomine.dart';
 import 'package:priceme/classes/ModelClass.dart';
 import 'package:toast/toast.dart';
 
@@ -26,14 +27,20 @@ import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
 import '../Splash.dart';
 
-class AddVideo extends StatefulWidget {
-  AddVideo();
+class EditVideo extends StatefulWidget {
+
+  int carrange;
+  String cId,cuserId,cname,cphotourl,cdate,cdepart,cdetail,curi,imgurl,ctitle,ccar,ccarversion,cyear;
+
+  EditVideo(this.carrange, this.cId, this.cuserId, this.cname, this.cphotourl,
+      this.cdate, this.cdepart, this.cdetail, this.curi, this.imgurl,this.ctitle
+      ,this.ccar,this.ccarversion,this.cyear);
 
   @override
-  _AddVideoState createState() => _AddVideoState();
+  _EditVideoState createState() => _EditVideoState();
 }
 
-class _AddVideoState extends State<AddVideo> {
+class _EditVideoState extends State<EditVideo> {
   final double _minimumPadding = 5.0;
   var _formKey = GlobalKey<FormState>();
   bool _load2 = false;
@@ -50,28 +57,36 @@ class _AddVideoState extends State<AddVideo> {
   TextEditingController _titleController = TextEditingController();
   TextEditingController _detailController = TextEditingController();
   var _departcurrentItemSelected = '';
-  String imgurl;
+  String imgurl,urlvideo,cphotourl;
   List<Asset> images = List<Asset>();
  double _currentSliderValue=0.0;
   int vd=0;
-  List<String> indyearlist = [];
   var _indyearcurrentItemSelected="";
+  List<String> indyearlist = [];
+
   String model1;
   String model2;
+
   @override
   void initState() {
     super.initState();
-    _departcurrentItemSelected=departlist[0];
+    _titleController = TextEditingController(text: widget.ctitle);
+    _detailController = TextEditingController(text: widget.cdetail);
+    _departcurrentItemSelected=widget.cdepart;
+    urlvideo=widget.curi;
+    imgurl=widget.imgurl;
+    model1 = widget.ccar;model2 =widget.ccarversion;
     DateTime now = DateTime.now();
     indyearlist=new List<String>.generate(50, (i) =>  NumberUtility.changeDigit((now.year+1 -i).toString(), NumStrLanguage.English));
     indyearlist[0]=("الموديل");
-    _indyearcurrentItemSelected=indyearlist[0];
+    _indyearcurrentItemSelected=widget.cyear;
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (context) => Splash()))
         : setState(() {_userId = user.uid;
+
     var userQuery = Firestore.instance.collection('users').where('uid', isEqualTo: _userId).limit(1);
     userQuery.getDocuments().then((data){
       if (data.documents.length > 0){
@@ -123,63 +138,25 @@ class _AddVideoState extends State<AddVideo> {
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
-                          InkWell(
-                            onTap: () async {
-
-                               videofile =  await ImagePicker.pickVideo(source: ImageSource.gallery,).whenComplete(() => setState(()  {
-                                 videocheck=true;
-
-                                 // final FlutterFFmpeg _flutterFFmpeg = new FlutterFFmpeg();
-                                 // _flutterFFmpeg
-                                 //     .getMediaInformation(videofile.path)
-                                 //     .then((info) => print("aaa$info"));
-
-                                 Future.delayed(Duration(seconds: 0), () async {
-                                     MediaInfo info = await FlutterVideoCompress().getMediaInfo(videofile.path).then((value) async {
-                                       print("${(value.duration/2000).round()}");
-                                       thumbnailurlfile = await FlutterVideoCompress().getThumbnailWithFile(
-                                           videofile.path,
-                                           quality: 50, // default(100)
-                                           position: (value.duration/2000).round() // default(-1)
-                                       );
-                                     });
-
-                                 });
-                               })
-                               );
-                            },
-                            child: Center(
-                              child: Container(
-                                width: 200,
-                                height: 150,
-                                color: Colors.grey[300],
-                                child:Padding(
-                                  padding: const EdgeInsets.only(top: 25.0),
-                                  child: Column(
-                                    children: <Widget>[
-                                      Padding(
-                                         padding:
-                                         const EdgeInsets.all( 0.0),
-                                         child: Icon(
-                                           Icons.video_call,
-                                           color: Colors.grey,
-                                           size: 70,
-                                         ),
-                                       ),
-                                      Padding(
-                                        padding:
-                                        const EdgeInsets.only(top: 10.0),
-                                        child: !videocheck?Icon(
-                                          Icons.add_circle,
-                                          color: Colors.grey,
-                                        ):Icon(
-                                          Icons.check_circle,
-                                          color: Colors.green,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
+                          Center(
+                            child: Container(
+                              width: 200,
+                              height: 150,
+                              decoration: BoxDecoration(
+                                border: new Border.all(
+                                  color: Colors.white,
+                                  width: 0,
                                 ),
+                                image: imgurl == null?DecorationImage(
+                                  image: AssetImage("assets/images/ic_background.png" ),
+                                  fit: BoxFit.fill,
+                                ):DecorationImage(
+                                  image:  NetworkImage(
+                                      imgurl             ),
+
+                                  fit: BoxFit.fill,
+                                ),
+                                borderRadius: BorderRadius.circular(0.0),
                               ),
                             ),
                           ),
@@ -233,7 +210,7 @@ class _AddVideoState extends State<AddVideo> {
                               ),
                             ),
                           ):Container(),
-                          _departcurrentItemSelected==departlist[1]? Row(
+                          _departcurrentItemSelected==departlist[1]?  Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               Padding(
@@ -280,7 +257,7 @@ class _AddVideoState extends State<AddVideo> {
                                         context,
                                         MaterialPageRoute(
                                             builder: (context) => MyForm3(
-                                                "نوع السيارة",
+                                                widget.ccar,widget.ccarversion,
                                                 onSubmit3: onSubmit3)));
 
 //                                    setState(() {
@@ -316,10 +293,7 @@ class _AddVideoState extends State<AddVideo> {
                               ),
                             ],
                           ):Container(),
-                          SizedBox(
-                            height: _minimumPadding,
-                            width: _minimumPadding,
-                          ),
+
                           Padding(
                             padding: const EdgeInsets.only(top: 10),
                             child: Row(
@@ -347,10 +321,6 @@ class _AddVideoState extends State<AddVideo> {
                                 ),
                               ],
                             ),
-                          ),
-                          SizedBox(
-                            height: _minimumPadding,
-                            width: _minimumPadding,
                           ),
                           Container(
                             height: 80,
@@ -471,7 +441,7 @@ class _AddVideoState extends State<AddVideo> {
                                     ),
                                   ),
                                   new Text(
-                                    "إضافة",
+                                    "تعديل",
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                       fontSize: 18,
@@ -484,7 +454,6 @@ class _AddVideoState extends State<AddVideo> {
                               color: const Color(0xff171732),
                               onPressed: () async {
                                 if (_formKey.currentState.validate()) {
-                                  if ( videofile != null ) {
                                     try {
                                       final result =
                                           await InternetAddress.lookup(
@@ -493,7 +462,7 @@ class _AddVideoState extends State<AddVideo> {
                                           result[0].rawAddress.isNotEmpty) {
                                         print("mmmmm1");
 
-                                        uploadpp0();
+                                        createRecord();
                                         //uploadToFirebase();
 
                                         setState(() {
@@ -507,13 +476,7 @@ class _AddVideoState extends State<AddVideo> {
                                           duration: Toast.LENGTH_LONG,
                                           gravity: Toast.BOTTOM);
                                     }
-                                  } else {
-                                    Toast.show(
-                                        "ضيف صورة علي الاقل حق إعلانك طال عمرك",
-                                        context,
-                                        duration: Toast.LENGTH_SHORT,
-                                        gravity: Toast.BOTTOM);
-                                  }
+
                                 }
                               },
                               shape: new RoundedRectangleBorder(
@@ -544,44 +507,8 @@ class _AddVideoState extends State<AddVideo> {
 
 
 
-  Future uploadpp0() async {
-    print("mmmmm2");
 
-    DateTime now = DateTime.now();
-    StorageReference ref = FirebaseStorage.instance.ref().child("video").child('$now.mp4');
-    StorageUploadTask uploadTask = ref.putFile(videofile);
-    var videourl = await (await uploadTask.onComplete).ref.getDownloadURL();
-    final String vurl = videourl.toString();
-
-
-    // Uri downloadUrl = (await uploadTask.onComplete).downloadUrl;
-    print(vurl);
-    setState(() {
-      _load2 = true;
-    });
-
-    uploadpp1(vurl);
-  }
-  Future uploadpp1(vurl) async {
-    print("mmmmm3");
-
-    DateTime now = DateTime.now();
-    StorageReference ref = FirebaseStorage.instance.ref().child("thumbnail").child('$now.jpg');
-    StorageUploadTask uploadTask = ref.putFile(thumbnailurlfile);
-    var thumbnailurl = await (await uploadTask.onComplete).ref.getDownloadURL();
-    final String gurl = thumbnailurl.toString();
-
-
-    // Uri downloadUrl = (await uploadTask.onComplete).downloadUrl;
-    print(gurl);
-    setState(() {
-      _load2 = true;
-    });
-
-    createRecord(vurl,gurl);
-  }
-
-  void createRecord(urlvideo,urlgif) {
+  void createRecord() {
     print("mmmmm4");
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? null
@@ -610,10 +537,12 @@ class _AddVideoState extends State<AddVideo> {
       String date1 = '${now.year}-${b}-${c} ${d}:${e}:00';
       int arrange = int.parse('${now.year}${b}${c}${d}${e}');
 
-      DocumentReference documentReference =
-      Firestore.instance.collection('videos').document();
-      documentReference.setData({
-        'cId': documentReference.documentID,
+
+      Firestore.instance
+          .collection('videos')
+          .document(widget.cId)
+          .updateData({
+        'cId': widget.cId,
         'carrange': arrange,
         'cuserId': _userId,
         'cname': _cName,
@@ -622,12 +551,8 @@ class _AddVideoState extends State<AddVideo> {
         'ctitle': _titleController.text,
         'cdepart': _departcurrentItemSelected,
         'cdetail': _detailController.text,
-        'cpublished': false,
         'curi': urlvideo,
-        'likes': 0,
-        'seens': 0,
-        'imgurl': urlgif,
-        'favcheck': false,
+        'imgurl': imgurl,
         'ccar':model1,
         'ccarversion':model2,
         'cyear':_indyearcurrentItemSelected,
@@ -635,17 +560,10 @@ class _AddVideoState extends State<AddVideo> {
 
       }).whenComplete(() {
 
-        setState(() {
-          _load2 = false;
-          urlvideo="";
-          urlgif="";
-          videofile=null;
-          _titleController.text = "";
-          _detailController.text = "";
-          _departcurrentItemSelected = departlist[0];
-          videocheck=false;model1="";model2="";    _indyearcurrentItemSelected=indyearlist[0];
-
-        });
+        Navigator.push(
+            context,
+            new MaterialPageRoute(
+                builder: (context) => VidiosPhotoMine()));
 
 
         showAlertDialog(context);
@@ -712,14 +630,15 @@ class _AddVideoState extends State<AddVideo> {
           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
     });
   }
-
-}
+ }
 //////////////////////////////////
 typedef void MyFormCallback3(String result);
 class MyForm3 extends StatefulWidget {
   final MyFormCallback3 onSubmit3;
   String model;
-  MyForm3(this.model, {this.onSubmit3});
+  String model1;
+
+  MyForm3(this.model,this.model1, {this.onSubmit3});
   @override
   _MyForm3State createState() => _MyForm3State();
 }
@@ -732,7 +651,7 @@ class _MyForm3State extends State<MyForm3> {
   @override
   void initState() {
     super.initState();
-    _currentValue = widget.model;
+    _currentValue = widget.model1;
     modelList = [
       new ModelClass("تويوتا",["كورولا","ياريس"]),
       new ModelClass("هونداى",["اكسينت","اكسيل","ماتريكس"]),
@@ -743,29 +662,6 @@ class _MyForm3State extends State<MyForm3> {
 
   @override
   Widget build(BuildContext context) {
-//    Widget cancelButton = FlatButton(
-//      child: Text(
-//        "إلغاء",
-//        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-//      ),
-//      onPressed: () {
-//        setState(() {
-//          Navigator.pop(context);
-//        });
-//      },
-//    );
-//    Widget continueButton = FlatButton(
-//      child: Text(
-//        "حفظ",
-//        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-//      ),
-//      onPressed: () {
-//        setState(() {
-//          Navigator.pop(context);
-//          widget.onSubmit3(_currentValue1.toString() + "," + _currentValue.toString());
-//        });
-//      },
-//    );
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xff171732),
@@ -837,4 +733,4 @@ class _MyForm3State extends State<MyForm3> {
     );
   }
 }
-////////////////////////////////
+///////////////////////////////

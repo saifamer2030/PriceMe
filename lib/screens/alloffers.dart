@@ -28,10 +28,16 @@ class _AllOffersState extends State<AllOffers> {
   String _userId="";
   String  worktype="";
   String tradertype="";
+  double _currentSliderValue = 200;  int _currentSliderValue1=200;
 
+  List<String> proplemtype = ["العروض","اعطال","قطع غيار"];
+  var _probtypecurrentItemSelected = '';
+  String filt;
   @override
   void initState() {
     super.initState();
+    _probtypecurrentItemSelected=proplemtype[0];
+
 
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
@@ -41,15 +47,13 @@ class _AllOffersState extends State<AllOffers> {
             var userQuery = Firestore.instance
                 .collection('users')
                 .where('uid', isEqualTo: _userId)
+
+
                 .limit(1);
             userQuery.getDocuments().then((data) {
               if (data.documents.length > 0) {
                 setState(() {
-                  // firstName = data.documents[0].data['firstName'];
-                  // lastName = data.documents[0].data['lastName'];
-                  // tradertype = data.documents[0].data['traderType'];
-                  // worktype = data.documents[0].data['worktype'];
-                  // tradertype=="تاجر صيانة"?tradertype="اعطال":tradertype="قطع غيار";
+
                   print("mmm" + worktype);
                 });
               }
@@ -90,33 +94,93 @@ class _AllOffersState extends State<AllOffers> {
           ),
         ),
       ),
-      body: Container(
-        child: StreamBuilder(
-          stream: Firestore.instance
-              .collection('offers')
-              .orderBy('carrange',
-                  descending:
-                      true) //.where("cproblemtype", isEqualTo:"قطع غيار")
-              // .where("mfaultarray", arrayContains: worktype)
-              // .where("cproblemtype", isEqualTo: tradertype)
+      body: ListView(
+        children: [
 
-              .snapshots(),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(child: Text("Loading.."));
-            }
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Slider(
+                value: _currentSliderValue,
+                min: 0,
+                max: 200,
+                divisions: 5,
+                label: _currentSliderValue.round().toString(),
+                onChanged: (double value) {
+                  setState(() {
+                    _currentSliderValue = value;
+                    _currentSliderValue1 =int.parse(value.toStringAsFixed(0));
 
-            return new ListView.builder(
-                physics: BouncingScrollPhysics(),
-                shrinkWrap: true,
-                controller: _controller,
-                itemCount: snapshot.data.documents.length,
-                itemBuilder: (context, index) {
-                  return firebasedata(
-                      context, index, snapshot.data.documents[index]);
-                });
-          },
-        ),
+                  });
+                },
+              ),
+              Padding(
+                padding: EdgeInsets.only(
+                    top: _minimumPadding, bottom: _minimumPadding),
+                child: Container(
+                  height: 40.0,
+                  child: Material(
+                      borderRadius: BorderRadius.circular(5.0),
+                      shadowColor: const Color(0xffdddddd),
+                      color: const Color(0xffe7e7e7),
+                      elevation: 2.0,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: DropdownButton<String>(
+                          items: proplemtype.map((String value) {
+                            return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(
+                                  value,
+                                  style: TextStyle(
+                                      color: const Color(0xffF1AB37),
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                ));
+                          }).toList(),
+                          value: _probtypecurrentItemSelected,
+                          onChanged: (String newValueSelected) {
+                            // Your code to execute, when a menu item is selected from dropdown
+                            _onDropDownItemSelectedproblem(
+                                newValueSelected);
+                          },
+                        ),
+                      )),
+                ),
+              ),
+
+            ],
+          ),
+
+          Container(
+            child: StreamBuilder(
+              stream: Firestore.instance
+                  .collection('offers')
+                  .orderBy('carrange',
+                      descending:
+                          true) //.where("cproblemtype", isEqualTo:"قطع غيار")
+                  // .where("mfaultarray", arrayContains: worktype)
+                .where("cproblemtype", isEqualTo:filt)
+                  .where("price", isLessThanOrEqualTo:_currentSliderValue1)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(child: Text("لا يوجد بيانات..."));
+                }
+
+                return new ListView.builder(
+                    physics: BouncingScrollPhysics(),
+                    shrinkWrap: true,
+                    controller: _controller,
+                    itemCount: snapshot.data.documents.length,
+                    itemBuilder: (context, index) {
+                      return firebasedata(
+                          context, index, snapshot.data.documents[index]);
+                    });
+              },
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -303,4 +367,21 @@ class _AllOffersState extends State<AllOffers> {
       ),
     );
   }
+
+  void _onDropDownItemSelectedproblem(String newValueSelected) {
+    print("kkk$newValueSelected");
+    if(newValueSelected=="السيارة"){
+      setState(() {
+        this._probtypecurrentItemSelected = newValueSelected;
+        filt=null;
+      });
+    }else{
+      setState(() {
+        this._probtypecurrentItemSelected = newValueSelected;
+        filt=_probtypecurrentItemSelected;
+      });
+    }
+  }
+
+
 }

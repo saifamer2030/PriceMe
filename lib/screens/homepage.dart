@@ -106,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                bottom: 10,
                 right: 5,
                 child: Container(
-                  child: Text( document['cname']==null||document['cname']==""?"اسم غير معلوم":document['cname']
+                  child: Text( document['ctitle']==null||document['ctitle']==""?"عنوان غير معلوم":document['ctitle']
                     ,style: TextStyle(
                       color: Colors.white,
                       fontSize: 15,
@@ -252,7 +252,7 @@ class _HomePageState extends State<HomePage> {
               child: StreamBuilder(
                 stream: Firestore.instance
                     .collection('videos')
-                    .orderBy('carrange', descending: true)
+                    .orderBy('seens', descending: true)
                     .limit(5) //.where("cproblemtype", isEqualTo:"قطع غيار")
                     .snapshots(),
                 builder: (context, snapshot) {
