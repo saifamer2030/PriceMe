@@ -4,7 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:priceme/screens/signin.dart';
+import 'package:priceme/Splash.dart';
 import 'package:toast/toast.dart';
 
 class PersonalPage extends StatefulWidget {
@@ -39,7 +39,7 @@ class __PersonalPageState extends State<PersonalPage> {
 
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
-        builder: (context) => SignIn(), maintainState: false))
+        builder: (context) => Splash(), maintainState: false))
         : setState(() {_userId = user.uid;
     var userQuery = Firestore.instance.collection('users').where('uid', isEqualTo: _userId).limit(1);
     userQuery.getDocuments().then((data){

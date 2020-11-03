@@ -10,7 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:priceme/Videos/addVideo.dart';
-
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:priceme/classes/FaultsClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/SparePartsSizesClass.dart';
@@ -54,39 +54,68 @@ class _VidiosPhotoState extends State<VidiosPhoto> {
       body: Container(
         width: width,
         height: height,
-        child: StreamBuilder(
+        child:
+        StreamBuilder(
           stream: Firestore.instance
-              .collection('videos')
-              .orderBy('carrange',
-              descending:
-              true)
-              .snapshots(),
+                  .collection('videos')
+                  .orderBy('carrange',
+                  descending:
+                  true)
+                  .snapshots(), //imgColRef.snapshots(includeMetadataChanges: true),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(child: Text("Loading..",));
-            }
+            if (snapshot.data?.documents == null || !snapshot.hasData)
+              return Center(child: Text("لا يوجد بيانات...",));
 
-            return new GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount:2,
-                    //crossAxisCount: (orientation == Orientation.portrait) ? 2 : 3
-                ),
-                //add item count depending on your list
-                //itemCount: list.length,
-
-                //added scrolldirection
-                //reverse: true,
-                physics: BouncingScrollPhysics(),
-                shrinkWrap: true,
-               // controller: _controller,
-                itemCount: snapshot.data.documents.length,
-                itemBuilder: (context, index) {
-                  return firebasedata(
-                      context, index, snapshot.data.documents[index]);
-                });
+            return Hero(
+              tag: 'imageHero',
+              child: Container(
+                child: StaggeredGridView.countBuilder(
+                    itemCount: snapshot.data.documents.length,
+                    crossAxisCount: 2,
+    itemBuilder: (context, index) {
+              return firebasedata(
+                  context, index, snapshot.data.documents[index]);
+            },
+                    staggeredTileBuilder: (index) =>
+                        StaggeredTile.count(1, index.isEven ? 1.2 : 1.8)),
+              ),
+            );
           },
         ),
       ),
+        // StreamBuilder(
+        //   stream: Firestore.instance
+        //       .collection('videos')
+        //       .orderBy('carrange',
+        //       descending:
+        //       true)
+        //       .snapshots(),
+        //   builder: (context, snapshot) {
+        //     if (!snapshot.hasData) {
+        //       return Center(child: Text("Loading..",));
+        //     }
+        //
+        //     return new GridView.builder(
+        //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        //             crossAxisCount:2,
+        //             //crossAxisCount: (orientation == Orientation.portrait) ? 2 : 3
+        //         ),
+        //         //add item count depending on your list
+        //         //itemCount: list.length,
+        //
+        //         //added scrolldirection
+        //         //reverse: true,
+        //         physics: BouncingScrollPhysics(),
+        //         shrinkWrap: true,
+        //        // controller: _controller,
+        //         itemCount: snapshot.data.documents.length,
+        //         itemBuilder: (context, index) {
+        //           return firebasedata(
+        //               context, index, snapshot.data.documents[index]);
+        //         });
+        //   },
+        // ),
+    //  ),
     );
   }
 
@@ -108,7 +137,7 @@ Navigator.push(
         child: Stack(
           children: [
             Container(
-              height: 200,
+             // height: 200,
               decoration: BoxDecoration(
                 border: new Border.all(
                   color: Colors.white,

@@ -5,7 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:priceme/screens/signin.dart';
+import 'package:priceme/Splash.dart';
 import 'package:toast/toast.dart';
 
 import 'RatingClass.dart';
@@ -56,7 +56,7 @@ class _UserRatingPageState extends State<UserRatingPage> {
   Future<dynamic> getRatingAvrage() async {
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
-            builder: (context) => SignIn(), maintainState: false))
+            builder: (context) => Splash(), maintainState: false))
         : setState(() {
             _userId = user.uid;
             var userQuery = Firestore.instance

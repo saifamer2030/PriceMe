@@ -10,7 +10,6 @@ import 'package:priceme/FragmentNavigation.dart';
 import 'package:priceme/screens/alladvertisement.dart';
 import 'package:priceme/screens/hometest.dart';
 import 'package:priceme/screens/network_connection.dart';
-import 'package:priceme/screens/signin.dart';
 import 'package:priceme/screens/signinphone.dart';
 import 'package:priceme/trader/Fragmenttrader.dart';
 
@@ -204,8 +203,9 @@ String _userId,cType;
                       setState(() {
                         _load = true;
                       });
-                      signInWithGoogle().whenComplete(() {
-                        Navigator.of(context).push(
+                      signInWithGoogle().then((val) {
+                        print("////////$val");
+                        Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
                             builder: (context) {
                               return FragmentPriceMe();
@@ -286,8 +286,12 @@ String _userId,cType;
                   padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
                   child: InkWell(
                     onTap: () {
-                      // _login();
-                    },
+
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => FragmentPriceMe()));
+                      },
                     child: Container(
                       width: 308.0,
                       height: 47.0,

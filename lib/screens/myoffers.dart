@@ -5,11 +5,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:priceme/Splash.dart';
 import 'package:priceme/classes/AdvClass.dart';
 import 'package:priceme/screens/addoffer.dart';
 import 'package:priceme/screens/editoffer.dart';
-import 'package:priceme/screens/signin.dart';
-
 import 'package:toast/toast.dart';
 
 import 'advdetail.dart';
@@ -38,7 +37,7 @@ class _MyOffersState extends State<MyOffers> {
 
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
-            builder: (context) => SignIn(), maintainState: false))
+            builder: (context) => Splash(), maintainState: false))
         : setState(() {
             _userId = user.uid;
             var userQuery = Firestore.instance

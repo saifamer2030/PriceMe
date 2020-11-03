@@ -5,11 +5,11 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:priceme/Splash.dart';
 import 'package:priceme/Videos/onevideo.dart';
 import 'package:priceme/screens/advdetail.dart';
 import 'package:priceme/screens/offerdetail.dart';
 import 'package:priceme/screens/rentdetail.dart';
-import 'package:priceme/screens/signin.dart';
 
 class MyAlarms extends StatefulWidget {
 
@@ -34,7 +34,7 @@ class _MyAlarmsState extends State<MyAlarms> {
 
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
-        builder: (context) => SignIn(), maintainState: false))
+        builder: (context) => Splash(), maintainState: false))
 
         : setState(() {
             _userId = user.uid;

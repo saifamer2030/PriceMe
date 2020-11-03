@@ -264,10 +264,6 @@ class _HomePageState extends State<HomePage> {
                   }
 
                   return new ListView.builder(
-                      //add item count depending on your list
-                      //itemCount: list.length,
-
-                      //added scrolldirection
                       reverse: true,
                       physics: BouncingScrollPhysics(),
                       scrollDirection: Axis.horizontal,

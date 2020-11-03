@@ -44,7 +44,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
         MorePriceMe(),
     MyAlarms(),
     VideoTabs(),
-    ProfileAdv(),
+    HomePage(),
       ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
   final GlobalKey<NavigatorState> navigatorKey =
@@ -55,7 +55,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
     super.initState();
     //getData();
     setState(() {
-      currentScreen = ProfileAdv();
+      currentScreen = HomePage();
     });
 
 //    _currentIndex = widget.selectPage != null ? widget.selectPage : 4;
@@ -184,7 +184,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen =  ProfileAdv();    /*HomePage()*/ // if user taps on this dashboard tab will be active
+                        currentScreen =  HomePage();    /*HomePage()*/ // if user taps on this dashboard tab will be active
                         currentTab = 3;
                       });
                     },

@@ -13,7 +13,6 @@ import 'package:priceme/screens/allrents.dart';
 import 'package:priceme/screens/myoffers.dart';
 import 'package:priceme/screens/myrents.dart';
 import 'package:priceme/screens/personalpage.dart';
-import 'package:priceme/screens/signin.dart';
 import '../Splash.dart';
 import 'homepage.dart';
 import 'myadvertisement.dart';

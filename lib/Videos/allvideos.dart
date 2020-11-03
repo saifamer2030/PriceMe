@@ -10,10 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:priceme/Splash.dart';
 import 'package:priceme/Videos/photosvideo.dart';
 import 'package:priceme/classes/AdvClass.dart';
-import 'package:priceme/screens/signin.dart';
-
 import 'package:toast/toast.dart';
 import 'package:video_player/video_player.dart';
 
@@ -39,8 +39,7 @@ class _AllVideosState extends State<AllVideos> {
     super.initState();
 
     FirebaseAuth.instance.currentUser().then((user) => user == null
-        ? Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
-            builder: (context) => SignIn(), maintainState: false))
+        ? setState(() {})
         : setState(() {
             _userId = user.uid;
             var userQuery = Firestore.instance
@@ -75,28 +74,29 @@ class _AllVideosState extends State<AllVideos> {
         : new Container();
     TextStyle textStyle = Theme.of(context).textTheme.subtitle;
     return Scaffold(
-      backgroundColor: const Color(0xffffffff),
-      floatingActionButton: Container(
-        height: 30.0,
-        width: 30.0,
-        child: FittedBox(
-          child: FloatingActionButton(
-            heroTag: "unique9",
-            onPressed: () {
-              _controller.animateTo(0.0,
-                  curve: Curves.easeInOut, duration: Duration(seconds: 1));
-            },
-            backgroundColor: Colors.white,
-            elevation: 20.0,
-            child: Icon(
-              Icons.arrow_drop_up,
-              size: 50,
-              color: const Color(0xff171732),
-            ),
-          ),
-        ),
-      ),
+      backgroundColor: Colors.black,
+      // floatingActionButton: Container(
+      //   height: 30.0,
+      //   width: 30.0,
+      //   child: FittedBox(
+      //     child: FloatingActionButton(
+      //       heroTag: "unique9",
+      //       onPressed: () {
+      //         _controller.animateTo(0.0,
+      //             curve: Curves.easeInOut, duration: Duration(seconds: 1));
+      //       },
+      //       backgroundColor: Colors.white,
+      //       elevation: 20.0,
+      //       child: Icon(
+      //         Icons.arrow_drop_up,
+      //         size: 50,
+      //         color: const Color(0xff171732),
+      //       ),
+      //     ),
+      //   ),
+      // ),
       body: Container(
+        // color: ,
         child: StreamBuilder(
           stream: Firestore.instance
               .collection('videos')
@@ -156,136 +156,7 @@ class _AllVideosState extends State<AllVideos> {
     );
   }
 
-//   Widget firebasedata(
-//       BuildContext context, int index, DocumentSnapshot document) {
-//     return Padding(
-//       padding: const EdgeInsets.all(2.0),
-//       child: Card(
-//         shape: new RoundedRectangleBorder(
-//             borderRadius: BorderRadius.circular(4.0)),
-//         //borderOnForeground: true,
-//         elevation: 10.0,
-//         margin: EdgeInsets.only(right: 1, left: 1, bottom: 2),
-//         child: InkWell(
-//           onTap: () {
-//             // Navigator.push(
-//             //     context,
-//             //     MaterialPageRoute(
-//             //         builder: (context) =>
-//             //             AdvDetail(document['userId'], document['advid'])));
-//           },
-//           child: Container(
-//               child: Row(
-//             children: <Widget>[
-//               Column(
-//                 children: <Widget>[
-//                   Container(
-//                     color: Colors.white,
-//                     child: Center(
-//                       child: document['curi'] == null
-//                           ? new Image.asset(
-//                               "assets/images/ic_logo2.png",
-//                             )
-//                           : new Image.network(
-//                               document['curi'],
-//                               fit: BoxFit.fitHeight,
-//                             ),
-//                     ),
-//                     width: 100,
-//                     height: 130,
-//                   ),
-//                   Container(
-//                       child:
-//                       SingleChildScrollView(
-//                         physics: new BouncingScrollPhysics(),
-//                         scrollDirection: Axis.vertical,
-//                         child: Column(
-//                           mainAxisSize: MainAxisSize.min,
-//                           children: <Widget>[
-//                             ListView.separated(
-//                               shrinkWrap: true,
-//                               cacheExtent: 1000,
-//                               physics: NeverScrollableScrollPhysics(),
-//                               scrollDirection: Axis.vertical,
-//                               key: PageStorageKey(widget.position),
-//                               addAutomaticKeepAlives: true,
-//                               itemCount: itemList.isEmpty ? 0 : itemList.length,
-//                               itemBuilder: (BuildContext context, int index) =>
-//                                   Container(
-//                                     width: double.infinity,
-//                                     height: 350.0,
-//                                     alignment: Alignment.center,
-//
-//                                     child: Container(
-//                                         key: new PageStorageKey(
-//                                           "keydata$index",
-//                                         ),
-//
-//                                         child: VideoWidget(
-//                                           play: true,
-//
-//                                           url: itemList.elementAt(index),
-//                                         )
-//                                     ),
-//                                   ),
-//                               separatorBuilder: (context, index) {
-//                                 return Divider();
-//                               },
-//                             ),
-//                           ],
-//                         ),
-//                       )
-//                   )
-//                   Padding(
-//                     padding: const EdgeInsets.only(right: 5),
-//                     child: Text(
-//                       "منذ: ${document['cdate']}",
-//                       textDirection: TextDirection.rtl,
-//                       textAlign: TextAlign.right,
-//                       style: TextStyle(
-//                           color: Colors.black,
-//                           fontSize: 10,
-// //                                  fontFamily: 'Estedad-Black',
-//                           fontStyle: FontStyle.normal),
-//                     ),
-//                   ),
-//                   Padding(
-//                     padding: const EdgeInsets.all(5.0),
-//                     child: Text(
-//                       document['ctitle'],
-//                       textDirection: TextDirection.rtl,
-//                       textAlign: TextAlign.right,
-//                       style: TextStyle(
-//                           color: Colors.green,
-// //                                  fontFamily: 'Estedad-Black',
-//                           fontWeight: FontWeight.bold,
-//                           fontSize: 15.0,
-//                           fontStyle: FontStyle.normal),
-//                     ),
-//                   ),
-//                   Padding(
-//                     padding: const EdgeInsets.all(5.0),
-//                     child: Text(
-//                       document['cdetail'],
-//                       textDirection: TextDirection.rtl,
-//                       textAlign: TextAlign.right,
-//                       style: TextStyle(
-//                           color: Colors.green,
-// //                                  fontFamily: 'Estedad-Black',
-//                           fontWeight: FontWeight.bold,
-//                           fontSize: 15.0,
-//                           fontStyle: FontStyle.normal),
-//                     ),
-//                   ),
-//
-//                 ],
-//               ),
-//             ],
-//           )),
-//         ),
-//       ),
-//     );
-//   }
+
 }
 class VideoWidget extends StatefulWidget {
 
@@ -314,11 +185,12 @@ class _VideoWidgetState extends State<VideoWidget> {
  String a,_userId;
   //var list = new List<int>.generate(10, (i) => i + 1);
   // List<int> seens = new List<int>.generate(widget.len, (i) => 0);
-
+// bool isplay=false;
   List<int> seens=[];
   List<int> likes=[];
   List<bool> seencheck=[];
   List<bool> favcheck=[];
+  List<bool> isplay=[];
  //  int likes;
  // bool seencheck=true;
  //  bool favcheck;
@@ -329,6 +201,7 @@ class _VideoWidgetState extends State<VideoWidget> {
     likes = new List<int>.generate(widget.len, (i) => 0);
     seencheck = new List<bool>.generate(widget.len, (i) => true);
     favcheck = new List<bool>.generate(widget.len, (i) => false);
+    isplay = new List<bool>.generate(widget.len, (i) => false);
 
     favcheck[widget.itr]= widget.document['favcheck'];
     seens[widget.itr]=widget.document['seens'];
@@ -345,6 +218,16 @@ class _VideoWidgetState extends State<VideoWidget> {
       setState(() {});
     });
     videoPlayerController.addListener(() {
+      if (  videoPlayerController.value.isPlaying){
+        if( !isplay[widget.itr])
+        setState(() {
+          isplay[widget.itr] =true;
+        });
+      }else{
+        if( isplay[widget.itr])
+        setState(() {
+          isplay[widget.itr] =false;
+        });      }
       if (videoPlayerController.value.position ==
           videoPlayerController.value.duration) {
         //print('video Ended');
@@ -380,267 +263,344 @@ class _VideoWidgetState extends State<VideoWidget> {
             return new Container(
               // width: MediaQuery.of(context).size.width,
               // height: MediaQuery.of(context).size.height,
-              child: Card(
-                key: new PageStorageKey(widget.document['curi']),
-                elevation: 5.0,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
+              child: Stack(
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.all(0.0),
+                    child: Chewie(
+                      key: new PageStorageKey(widget.document['curi']),
+                      controller: ChewieController(
+                        videoPlayerController: videoPlayerController,
+                        aspectRatio:MediaQuery.of(context).size.width / (MediaQuery.of(context).size.height-16),// 4 / 3,
+                        // Prepare the video to be played and display the first frame
+                        autoInitialize: true,
+                        looping: false,
+                        autoPlay: false,
+
+                        // Errors can occur for example when trying to play a video
+                        // from a non-existent URL
+                        errorBuilder: (context, errorMessage) {
+                          return Center(
+                            child: Text(
+                              errorMessage,
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+
+                  Positioned(
+                    top: 15,
+                    right:10,
+                    child:     (_userId == widget.document['cuserId']||widget.cType=="admin")
+                        ?  Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Chewie(
-                        key: new PageStorageKey(widget.document['curi']),
-                        controller: ChewieController(
-                          videoPlayerController: videoPlayerController,
-                          aspectRatio: 4 / 3,
-                          // Prepare the video to be played and display the first frame
-                          autoInitialize: true,
-                          looping: false,
-                          autoPlay: false,
-                          // Errors can occur for example when trying to play a video
-                          // from a non-existent URL
-                          errorBuilder: (context, errorMessage) {
-                            return Center(
-                              child: Text(
-                                errorMessage,
-                                style: TextStyle(color: Colors.white),
+                      child: Container(
+                        height: 25,
+                        child: IconButton(
+                          icon: Icon(Icons.delete,size:40 ,),
+                          color: Colors.red,
+                          onPressed: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                              new CupertinoAlertDialog(
+                                title: new Text("تنبية"),
+                                content: new Text("تبغي تحذف اعلانك؟"),
+                                actions: [
+                                  CupertinoDialogAction(
+                                      isDefaultAction: false,
+                                      child: new FlatButton(
+                                        onPressed: () {
+
+                                          setState(() {
+                                            Firestore.instance.collection("videos")
+                                                .document(widget.document['cId'])
+                                                .delete().whenComplete(() =>
+                                                setState(() async {
+                                                  Navigator.pop(context);
+                                                  Toast.show("تم الحذف", context,
+                                                      duration: Toast.LENGTH_SHORT,
+                                                      gravity: Toast.BOTTOM);
+
+                                                  Navigator.pushReplacement(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) => VidiosPhoto()));
+                                                }));
+                                          });
+                                        }
+                                        ,
+                                        child: Text("موافق"),
+                                      )),
+                                  CupertinoDialogAction(
+                                      isDefaultAction: false,
+                                      child: new FlatButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context),
+                                        child: Text("إلغاء"),
+                                      )),
+                                ],
                               ),
                             );
                           },
+                        ),),
+                    ):Container(),
+                  ),
+
+                  Positioned(
+                    top: 25,
+                    left:70,
+                    right:  MediaQuery.of(context).size.width/3,
+                    child:    Text(widget.document['cname']==null?"اسم غير معلوم":widget.document['cname'],
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+
+                  Positioned(
+                    top: 45,
+                    left:70,
+                    right:  MediaQuery.of(context).size.width/3,
+                    child:    Text(widget.document['cdate'],
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+
+                  Positioned(
+                    top: 15,
+                    left: 5,
+                    child: Container(
+                      height: 50,
+                      width: 50,
+                      // child: Text(
+                      //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
+                      // ),textAlign: TextAlign.center,
+                      //
+                      // ),
+                      decoration: BoxDecoration(
+                        border: new Border.all(
+                          color: Colors.black,
+                          width: 1.0,
                         ),
+                        image: DecorationImage(
+                          image: NetworkImage(widget.document['cphotourl']==null||widget.document['cphotourl']==""?
+                          "https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg"  :widget.document['cphotourl']),
+                          fit: BoxFit.fill,
+                        ),
+                        shape: BoxShape.circle,
                       ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(right:10.0, left: 10.0),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
 
-                          InkWell(
-                            onTap: () {
+                  ),
+                  Positioned(
+                    bottom: 60,
+                    right:100,
+                    left: 100,
+                    child:    Text(widget.document['cdetail'],textDirection: TextDirection.rtl,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+                  Positioned(
+                    bottom: 55,
+                    left: 8,
+                    child:    InkWell(
+                      onTap: () {
+                        setState(() {
+                          setState(() {
+                            favcheck[widget.itr] =
+                            ! favcheck[widget.itr] ; //boolean value
+                          });
+                          if (_userId == null) {
+                            //if(favchecklist[position] ){
+                            Toast.show(
+                                "ابشر .. سجل دخول الاول طال عمرك",
+                                context,
+                                duration: Toast.LENGTH_LONG,
+                                gravity: Toast.BOTTOM);
+                            setState(() {
+                              favcheck[widget.itr]= false; //boolean value
+                            });
+                          }else if(_userId==widget.document['cuserId']){
+                            Toast.show(
+                                "لا يمكن عمل اعجاب بفيديوهاتك",
+                                context,
+                                duration: Toast.LENGTH_LONG,
+                                gravity: Toast.BOTTOM);
+                            setState(() {
+                              favcheck[widget.itr]= false; //boolean value
+                            });
+                          } else {
+                            if (favcheck[widget.itr]) {
                               setState(() {
-                                setState(() {
-                                  favcheck[widget.itr] =
-                                  ! favcheck[widget.itr] ; //boolean value
-                                });
-                                if (_userId == null) {
-                                  //if(favchecklist[position] ){
-                                  Toast.show(
-                                      "ابشر .. سجل دخول الاول طال عمرك",
-                                      context,
-                                      duration: Toast.LENGTH_LONG,
-                                      gravity: Toast.BOTTOM);
-                                  setState(() {
-                                    favcheck[widget.itr]= false; //boolean value
-                                  });
-                                }else if(_userId==widget.document['cuserId']){
-                                  Toast.show(
-                                      "لا يمكن عمل اعجاب بفيديوهاتك",
-                                      context,
-                                      duration: Toast.LENGTH_LONG,
-                                      gravity: Toast.BOTTOM);
-                                  setState(() {
-                                    favcheck[widget.itr]= false; //boolean value
-                                  });
-                                } else {
-                                      if (favcheck[widget.itr]) {
-                                        setState(() {
-                                          likes[widget.itr]=likes[widget.itr]+1;
-                                        });
-                                        Firestore.instance.collection('videos')
-                                            .document(widget.document['cId'])
-                                            .updateData({
-                                          'likes':likes[widget.itr],
-                                        }).whenComplete(() {
-                                          DateTime now = DateTime.now();
-                                          String b = now.month.toString();
-                                          if (b.length < 2) {
-                                            b = "0" + b;
-                                          }
-                                          String c = now.day.toString();
-                                          if (c.length < 2) {
-                                            c = "0" + c;
-                                          }
-                                          String d = now.hour.toString();
-                                          if (d.length < 2) {
-                                            d = "0" + d;
-                                          }
-                                          String e = now.minute.toString();
-                                          if (e.length < 2) {
-                                            e = "0" + e;
-                                          }
-                                          String f = now.second.toString();
-                                          if (f.length < 2) {
-                                            f = "0" + f;
-                                          }
-
-                                          DocumentReference documentReference =
-                                          Firestore.instance.collection('Alarm')
-                                              .document(widget.document['cuserId'])
-                                              .collection('Alarmid')
-                                              .document();
-                                          documentReference.setData({
-                                            'ownerId': widget.document['cuserId'],
-                                            'traderid': _userId,
-                                            'advID': widget.document['cId'],
-                                            'alarmid': documentReference.documentID,
-                                            'cdate': DateTime.now().toString(),
-                                            'tradname': widget.username,
-                                            'ownername': widget.document['cname'],
-                                            'comment': widget.document['ctitle'],
-                                            'rate': 0.0,
-                                            'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
-                                            'cType': "videofav",
-
-                                          });
-                                        });
-                                        print("rrrrr$_userId");
-                                        Firestore.instance
-                                          .collection('favorite')
-                                          .document(_userId)
-                                          .collection("fav_offer_id")
-                                          .document(widget.document['cId'])
-                                          .setData({
-                                        'cId': widget.document['cId'],
-                                        'carrange':widget.document['carrange'],
-                                        'cuserId': widget.document['cuserId'],
-                                        'cname': widget.document['cname'],
-                                        'cphotourl': widget.document['cphotourl'],
-                                        'cdate': widget.document['cdate'],
-                                        'ctitle': widget.document['ctitle'],
-                                        'cdepart': widget.document['cdepart'],
-                                        'cdetail': widget.document['cdetail'],
-                                        'cpublished': false,
-                                        'curi':widget.document['curi'],
-                                        'likes': likes[widget.itr],
-                                        'seens': seens[widget.itr],
-                                        'imgurl': widget.document['imgurl'],
-                                        'favcheck': true,
-                                      });
-                                        //////////*******************************************
-
-                                      } else {
-                                        setState(() {
-                                          likes[widget.itr]=likes[widget.itr]-1;
-
-                                        });
-                                        Firestore.instance.collection('videos')
-                                            .document(widget.document['cId'])
-                                            .updateData({
-                                          'likes':likes[widget.itr],
-                                        });
-                                        Firestore.instance
-                                            .collection("favorite")
-                                            .document(_userId)
-                                            .collection("fav_offer_id")
-                                            .document(widget.document['cId'])
-                                            .delete();
-
-                                    Toast.show("تم الحذف فى المفضلة",
-                                        context,
-                                        duration: Toast.LENGTH_SHORT,
-                                        gravity: Toast.BOTTOM);
-                                  }
-
-                                  ////////////////*************************
-                                }
+                                likes[widget.itr]=likes[widget.itr]+1;
                               });
-                            },
-                            child: Container(
-                              //decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
-                              child: Padding(
-                                padding: const EdgeInsets.only(
-                                    top: 10.0, bottom: 10.0),
-                                child: favcheck[widget.itr]
-                                    ? Icon(
-                                  Icons.favorite,
-                                  size: 40.0,
-                                  color: Colors.red,
-                                )
+                              Firestore.instance.collection('videos')
+                                  .document(widget.document['cId'])
+                                  .updateData({
+                                'likes':likes[widget.itr],
+                              }).whenComplete(() {
+                                DateTime now = DateTime.now();
+                                String b = now.month.toString();
+                                if (b.length < 2) {
+                                  b = "0" + b;
+                                }
+                                String c = now.day.toString();
+                                if (c.length < 2) {
+                                  c = "0" + c;
+                                }
+                                String d = now.hour.toString();
+                                if (d.length < 2) {
+                                  d = "0" + d;
+                                }
+                                String e = now.minute.toString();
+                                if (e.length < 2) {
+                                  e = "0" + e;
+                                }
+                                String f = now.second.toString();
+                                if (f.length < 2) {
+                                  f = "0" + f;
+                                }
+
+                                DocumentReference documentReference =
+                                Firestore.instance.collection('Alarm')
+                                    .document(widget.document['cuserId'])
+                                    .collection('Alarmid')
+                                    .document();
+                                documentReference.setData({
+                                  'ownerId': widget.document['cuserId'],
+                                  'traderid': _userId,
+                                  'advID': widget.document['cId'],
+                                  'alarmid': documentReference.documentID,
+                                  'cdate': DateTime.now().toString(),
+                                  'tradname': widget.username,
+                                  'ownername': widget.document['cname'],
+                                  'comment': widget.document['ctitle'],
+                                  'rate': 0.0,
+                                  'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
+                                  'cType': "videofav",
+
+                                });
+                              });
+                              print("rrrrr$_userId");
+                              Firestore.instance
+                                  .collection('favorite')
+                                  .document(_userId)
+                                  .collection("fav_offer_id")
+                                  .document(widget.document['cId'])
+                                  .setData({
+                                'cId': widget.document['cId'],
+                                'carrange':widget.document['carrange'],
+                                'cuserId': widget.document['cuserId'],
+                                'cname': widget.document['cname'],
+                                'cphotourl': widget.document['cphotourl'],
+                                'cdate': widget.document['cdate'],
+                                'ctitle': widget.document['ctitle'],
+                                'cdepart': widget.document['cdepart'],
+                                'cdetail': widget.document['cdetail'],
+                                'cpublished': false,
+                                'curi':widget.document['curi'],
+                                'likes': likes[widget.itr],
+                                'seens': seens[widget.itr],
+                                'imgurl': widget.document['imgurl'],
+                                'favcheck': true,
+                              });
+                              //////////*******************************************
+
+                            } else {
+                              setState(() {
+                                likes[widget.itr]=likes[widget.itr]-1;
+
+                              });
+                              Firestore.instance.collection('videos')
+                                  .document(widget.document['cId'])
+                                  .updateData({
+                                'likes':likes[widget.itr],
+                              });
+                              Firestore.instance
+                                  .collection("favorite")
+                                  .document(_userId)
+                                  .collection("fav_offer_id")
+                                  .document(widget.document['cId'])
+                                  .delete();
+
+                              Toast.show("تم الحذف فى المفضلة",
+                                  context,
+                                  duration: Toast.LENGTH_SHORT,
+                                  gravity: Toast.BOTTOM);
+                            }
+
+                            ////////////////*************************
+                          }
+                        });
+                      },
+                      child: Container(
+                        //decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
+                        child: Padding(
+                          padding: const EdgeInsets.only(
+                              top: 0.0, bottom: 0.0),
+                          child: favcheck[widget.itr]
+                              ? Icon(
+                            Icons.favorite,
+                            size: 40.0,
+                            color: Colors.red,
+                          )
 ////
-                                    : Column(
-                                  children: <Widget>[
-                                    Icon(
-                                      Icons.favorite_border,
-                                      size: 40.0,
-                                      color: Colors.red,
-                                    ),
-                                  ],
-                                ),
+                              : Column(
+                            children: <Widget>[
+                              Icon(
+                                Icons.favorite_border,
+                                size: 40.0,
+                                color: Colors.red,
                               ),
-                            ),
+                            ],
                           ),
-                          Text("مشاهدات:${seens[widget.itr]}"),
-                          Text(widget.document['ctitle']),
-                        ],
+                        ),
                       ),
                     ),
-                    Row(
-                      mainAxisAlignment:MainAxisAlignment.spaceBetween ,
-                      children: [
-                        //widget.cType=="admin"
-                          (_userId == widget.document['cuserId']||widget.cType=="admin")
-                            ?  Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            height: 25,
-                            child: IconButton(
-                              icon: Icon(Icons.delete,size:50 ,),
-                              color: Colors.red,
-                              onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) =>
-                                  new CupertinoAlertDialog(
-                                    title: new Text("تنبية"),
-                                    content: new Text("تبغي تحذف اعلانك؟"),
-                                    actions: [
-                                      CupertinoDialogAction(
-                                          isDefaultAction: false,
-                                          child: new FlatButton(
-                                            onPressed: () {
-
-                                              setState(() {
-                                                Firestore.instance.collection("videos")
-                                                    .document(widget.document['cId'])
-                                                    .delete().whenComplete(() =>
-                                                    setState(() async {
-                                                      Navigator.pop(context);
-                                                      Toast.show("تم الحذف", context,
-                                                          duration: Toast.LENGTH_SHORT,
-                                                          gravity: Toast.BOTTOM);
-
-                                                      Navigator.pushReplacement(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) => VidiosPhoto()));
-                                                    }));
-                                              });
-                                            }
-                                            ,
-                                            child: Text("موافق"),
-                                          )),
-                                      CupertinoDialogAction(
-                                          isDefaultAction: false,
-                                          child: new FlatButton(
-                                            onPressed: () =>
-                                                Navigator.pop(context),
-                                            child: Text("إلغاء"),
-                                          )),
-                                    ],
-                                  ),
-                                );
-                              },
-                            ),),
-                        ):Container(),
-
-                        Align(
-                            child: Text(widget.document['cdetail'],textDirection: TextDirection.rtl,),
-                        ),
-                      ],
-                    ),
-
-                  ],
-                ),
+                  ),
+                  Positioned(
+                    bottom: 55,
+                    left: 50,
+                    child: Text("${likes[widget.itr]}",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+                  Positioned(
+                    bottom: 55,
+                    right: 8,
+                    child: Text("مشاهدات:${seens[widget.itr]}",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+                  Positioned(
+                    top: 70,
+                    left:10,
+                    right:  MediaQuery.of(context).size.width/3,
+                    child:    Text(widget.document['ctitle'],
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 14.0,
+                          fontWeight: FontWeight.bold,
+                        )),
+                  ),
+                ],
               ),
             );
           }

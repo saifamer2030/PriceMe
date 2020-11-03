@@ -23,7 +23,6 @@ import 'package:priceme/screens/cur_loc.dart';
 import 'package:priceme/screens/myrents.dart';
 import 'package:priceme/screens/network_connection.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:priceme/screens/signin.dart';
 import 'dart:io' as io;
 
 import 'package:toast/toast.dart';

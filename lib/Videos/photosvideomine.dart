@@ -9,14 +9,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:priceme/Splash.dart';
 import 'package:priceme/Videos/EditVideo.dart';
 import 'package:priceme/Videos/addVideo.dart';
 
 import 'package:priceme/classes/FaultsClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/SparePartsSizesClass.dart';
-import 'package:priceme/screens/signin.dart';
 import 'package:toast/toast.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -37,7 +38,7 @@ class _VidiosPhotoMineState extends State<VidiosPhotoMine> {
     super.initState();
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
-        builder: (context) => SignIn(), maintainState: false))
+        builder: (context) => Splash(), maintainState: false))
 
         : setState(() {_userId = user.uid;}));
    }
@@ -86,7 +87,8 @@ class _VidiosPhotoMineState extends State<VidiosPhotoMine> {
       body: Container(
         width: width,
         height: height,
-        child: StreamBuilder(
+        child:
+        StreamBuilder(
           stream: Firestore.instance
               .collection('videos').where("cuserId", isEqualTo:_userId)
               .orderBy('carrange',
@@ -94,114 +96,25 @@ class _VidiosPhotoMineState extends State<VidiosPhotoMine> {
               true)
               .snapshots(),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(child: Text("Loading..",));
-            }
-
-            return new GridView.builder(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount:2,
-                ),
-                physics: BouncingScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: snapshot.data.documents.length,
-                itemBuilder: (context, index) {
-                  return Slidable(
-                    child: firebasedata(
-                        context, index, snapshot.data.documents[index]),
-
-                    actionPane: SlidableDrawerDismissal(),
-                    secondaryActions: <Widget>[
-                      Container(
-                        padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                        child: IconSlideAction(
-                          caption: 'تعديل',
-                          color: Colors.green,
-                          icon: Icons.edit,
-                          onTap: () {
-
-                            Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (BuildContext context) =>
-                                  new EditVideo(
-                                    snapshot.data.documents[index]["carrange"],
-                                    snapshot.data.documents[index]["cId"],
-                                    snapshot.data.documents[index]["cuserId"],
-                                    snapshot.data.documents[index]["cname"],
-                                    snapshot.data.documents[index]["cphotourl"],
-                                    snapshot.data.documents[index]["cdate"],
-                                    snapshot.data.documents[index]["cdepart"],
-                                    snapshot.data.documents[index]["cdetail"],
-                                    snapshot.data.documents[index]["curi"],
-                                    snapshot.data.documents[index]["imgurl"],
-                                    snapshot.data.documents[index]["ctitle"],
-                                    snapshot.data.documents[index]["ccar"],
-                                    snapshot.data.documents[index]["ccarversion"],
-                                    snapshot.data.documents[index]["cyear"],
-                                  )),
-                           );
-                          },
-                        ),
-                      ),
-
-                    ],
-                    actions: <Widget>[
-                      Container(
-                          padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                          child: IconSlideAction(
-                            caption: 'Delete',
-                            color: Colors.red,
-                            icon: Icons.delete,
-                            onTap: () {
-                              showDialog(
-                                context: context,
-                                builder: (BuildContext context) =>
-                                new CupertinoAlertDialog(
-                                  title: new Text("تنبية"),
-                                  content: new Text("تبغي تحذف اعلانك؟"),
-                                  actions: [
-                                    CupertinoDialogAction(
-                                        isDefaultAction: false,
-                                        child: new FlatButton(
-                                          onPressed: () {
-
-                                            setState(() {
-                                              Firestore.instance.collection("videos")
-                                                  .document(snapshot.data.documents[index]["cId"])
-                                                  .delete().whenComplete(() =>
-                                                  setState(() async {
-                                                    Navigator.pop(context);
-                                                    Toast.show("تم الحذف", context,
-                                                        duration: Toast.LENGTH_SHORT,
-                                                        gravity: Toast.BOTTOM);
-
-                                                  }));
-                                            });
-                                          }
-                                          ,
-                                          child: Text("موافق"),
-                                        )),
-                                    CupertinoDialogAction(
-                                        isDefaultAction: false,
-                                        child: new FlatButton(
-                                          onPressed: () =>
-                                              Navigator.pop(context),
-                                          child: Text("إلغاء"),
-                                        )),
-                                  ],
-                                ),
-                              );
-                            },
-                          )),
-                    ],
-
-                  );
-
-
-                });
+            if (snapshot.data?.documents == null || !snapshot.hasData)
+              return Center(child: Text("لا يوجد بيانات...",));
+            return Hero(
+              tag: 'imageHero',
+              child: Container(
+                child: StaggeredGridView.countBuilder(
+                    itemCount: snapshot.data.documents.length,
+                    crossAxisCount: 2,
+                    itemBuilder: (context, index) {
+                      return firebasedata(
+                          context, index, snapshot.data.documents[index]);
+                    },
+                    staggeredTileBuilder: (index) =>
+                        StaggeredTile.count(1, index.isEven ? 1.2 : 1.8)),
+              ),
+            );
           },
         ),
+
       ),
     );
   }
@@ -224,7 +137,7 @@ Navigator.push(
         child: Stack(
           children: [
             Container(
-              height: 200,
+            //  height: 200,
               decoration: BoxDecoration(
                 border: new Border.all(
                   color: Colors.white,

@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:priceme/Videos/addVideo.dart';
 
@@ -141,48 +142,85 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
           Container(
             width: width,
             height: height,
-            child: StreamBuilder(
-              stream: _sortcurrentItemSelected==sortlist[0]? Firestore.instance
-                  .collection('videos')
-                  .where("cdepart", isEqualTo:"تجارى")
-                  .where("ccar", isEqualTo:filt)
-                  .orderBy('carrange',
-                  descending:
-                  true)
-                  .snapshots():Firestore.instance
-                  .collection('videos')
-                  .where("cdepart", isEqualTo:"تجارى")
-                  .where("ccar", isEqualTo:filt)
-                  .orderBy('seens',
-                  descending:
-                  true)
-                  .snapshots(),
+            child:
+            StreamBuilder(
+                stream: _sortcurrentItemSelected==sortlist[0]? Firestore.instance
+                    .collection('videos')
+                    .where("cdepart", isEqualTo:"تجارى")
+                    .where("ccar", isEqualTo:filt)
+                    .orderBy('carrange',
+                    descending:
+                    true)
+                    .snapshots():Firestore.instance
+                    .collection('videos')
+                    .where("cdepart", isEqualTo:"تجارى")
+                    .where("ccar", isEqualTo:filt)
+                    .orderBy('seens',
+                    descending:
+                    true)
+                    .snapshots(),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) {
+                if (snapshot.data?.documents == null || !snapshot.hasData)
                   return Center(child: Text("لا يوجد بيانات...",));
-                }
-                print("kkk1$filt");
-
-                return new GridView.builder(
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount:2,
-                        //crossAxisCount: (orientation == Orientation.portrait) ? 2 : 3
-                    ),
-                    //add item count depending on your list
-                    //itemCount: list.length,
-
-                    //added scrolldirection
-                    //reverse: true,
-                    physics: BouncingScrollPhysics(),
-                    shrinkWrap: true,
-                   // controller: _controller,
-                    itemCount: snapshot.data.documents.length,
-                    itemBuilder: (context, index) {
-                      return firebasedata(
-                          context, index, snapshot.data.documents[index]);
-                    });
+                return Hero(
+                  tag: 'imageHero',
+                  child: Container(
+                    child: StaggeredGridView.countBuilder(
+                        itemCount: snapshot.data.documents.length,
+                        crossAxisCount: 2,
+                        itemBuilder: (context, index) {
+                          return firebasedata(
+                              context, index, snapshot.data.documents[index]);
+                        },
+                        staggeredTileBuilder: (index) =>
+                            StaggeredTile.count(1, index.isEven ? 1.2 : 1.8)),
+                  ),
+                );
               },
             ),
+
+            // StreamBuilder(
+            //   stream: _sortcurrentItemSelected==sortlist[0]? Firestore.instance
+            //       .collection('videos')
+            //       .where("cdepart", isEqualTo:"تجارى")
+            //       .where("ccar", isEqualTo:filt)
+            //       .orderBy('carrange',
+            //       descending:
+            //       true)
+            //       .snapshots():Firestore.instance
+            //       .collection('videos')
+            //       .where("cdepart", isEqualTo:"تجارى")
+            //       .where("ccar", isEqualTo:filt)
+            //       .orderBy('seens',
+            //       descending:
+            //       true)
+            //       .snapshots(),
+            //   builder: (context, snapshot) {
+            //     if (!snapshot.hasData) {
+            //       return Center(child: Text("لا يوجد بيانات...",));
+            //     }
+            //     print("kkk1$filt");
+            //
+            //     return new GridView.builder(
+            //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            //             crossAxisCount:2,
+            //             //crossAxisCount: (orientation == Orientation.portrait) ? 2 : 3
+            //         ),
+            //         //add item count depending on your list
+            //         //itemCount: list.length,
+            //
+            //         //added scrolldirection
+            //         //reverse: true,
+            //         physics: BouncingScrollPhysics(),
+            //         shrinkWrap: true,
+            //        // controller: _controller,
+            //         itemCount: snapshot.data.documents.length,
+            //         itemBuilder: (context, index) {
+            //           return firebasedata(
+            //               context, index, snapshot.data.documents[index]);
+            //         });
+            //   },
+            // ),
           ),
         ],
       ),
@@ -226,7 +264,7 @@ Navigator.push(
         child: Stack(
           children: [
             Container(
-              height: 200,
+           //   height: 200,
               decoration: BoxDecoration(
                 border: new Border.all(
                   color: Colors.white,

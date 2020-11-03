@@ -199,7 +199,7 @@ class _SignInPhoneState extends State<SignInPhone> {
     FirebaseAuth _auth = FirebaseAuth.instance;
 
     _auth.verifyPhoneNumber(
-        //phoneNumber: "+966$phone",
+       // phoneNumber: "+966$phone",
         phoneNumber: "+2$phone",
         timeout: Duration(seconds: 60),
         verificationCompleted: (AuthCredential credential) async {
@@ -213,7 +213,7 @@ class _SignInPhoneState extends State<SignInPhone> {
           Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                  builder: (context) => HomeTest()));
+                  builder: (context) => FragmentPriceMe()));
           //FirebaseUser user = result.user;
           // Navigator.of(context).pushReplacementNamed('/fragmentsouq');
 
