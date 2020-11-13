@@ -4,23 +4,23 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:priceme/Videos/videotabs1.dart';
 import 'package:priceme/screens/MorePriceMe.dart';
 import 'package:priceme/screens/ProfileAdv.dart';
 import 'package:priceme/screens/addadv.dart';
 import 'package:priceme/screens/addoffer.dart';
 import 'package:priceme/screens/addrent.dart';
+import 'package:priceme/screens/advertismenttabs.dart';
 import 'package:priceme/screens/alladvertisement.dart';
 import 'package:priceme/screens/alloffers.dart';
 import 'package:priceme/screens/allrents.dart';
 import 'package:priceme/screens/homepage.dart';
-import 'package:priceme/screens/hometest.dart';
 import 'package:priceme/screens/myadvertisement.dart';
 import 'package:priceme/screens/myalarms.dart';
 import 'package:priceme/screens/myoffers.dart';
 import 'package:priceme/screens/myrents.dart';
 
 import 'Videos/allvideos.dart';
-import 'Videos/videotabs.dart';
 import 'classes/ModelClass.dart';
 import 'classes/SparePartsClass.dart';
 
@@ -43,7 +43,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
   List<Widget> screens() => [
         MorePriceMe(),
     MyAlarms(),
-    VideoTabs(),
+    VideoTabs1(),
     HomePage(),
       ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
@@ -156,7 +156,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                     onPressed: () {
                       setState(() {
                         currentScreen =
-                            VideoTabs(); // if user taps on this dashboard tab will be active
+                            VideoTabs1(); // if user taps on this dashboard tab will be active
                         currentTab = 1;
                       });
                     },
@@ -278,7 +278,7 @@ class _MyFloatingButtonState extends State<MyFloatingButton> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AddAdv("قطع غيار", "", "")));
+                      builder: (context) => AddAdv("","","")));
 //        FirebaseAuth.instance.currentUser().then((user) => user == null
 //            ? Navigator.of(context, rootNavigator: false).push(
 //            MaterialPageRoute(

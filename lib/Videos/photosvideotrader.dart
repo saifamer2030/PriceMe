@@ -8,9 +8,13 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:priceme/Videos/addVideo.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:priceme/Splash.dart';
+import 'package:priceme/Videos/EditVideo.dart';
+import 'package:priceme/Videos/addVideo.dart';
+
 import 'package:priceme/classes/FaultsClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/SparePartsSizesClass.dart';
@@ -19,20 +23,23 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'allvideos.dart';
 
-class VidiosPhoto extends StatefulWidget {
-  VidiosPhoto();
-
+class VidiosPhotoTrader extends StatefulWidget {
+  String traderid;
+  VidiosPhotoTrader(this.traderid);
   @override
-  _VidiosPhotoState createState() => _VidiosPhotoState();
+  _VidiosPhotoTraderState createState() => _VidiosPhotoTraderState();
 }
 
-class _VidiosPhotoState extends State<VidiosPhoto> {
+class _VidiosPhotoTraderState extends State<VidiosPhotoTrader> {
 
-  String filePath;
+  String filePath,_userId;
 
   @override
   void initState() {
     super.initState();
+    FirebaseAuth.instance.currentUser().then((user) => user == null
+        ? _userId=null
+        : setState(() {_userId = user.uid;}));
    }
 
   @override
@@ -48,8 +55,6 @@ class _VidiosPhotoState extends State<VidiosPhoto> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      // appBar: AppBar(
-      // title: const Text('AppBar Demo'),),
       backgroundColor: const Color(0xffffffff),
       body: Container(
         width: width,
@@ -57,65 +62,32 @@ class _VidiosPhotoState extends State<VidiosPhoto> {
         child:
         StreamBuilder(
           stream: Firestore.instance
-                  .collection('videos')
-                  .orderBy('carrange',
-                  descending:
-                  true)
-                  .snapshots(), //imgColRef.snapshots(includeMetadataChanges: true),
+              .collection('videos').where("cuserId", isEqualTo:widget.traderid)
+              .orderBy('carrange',
+              descending:
+              true)
+              .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.data?.documents == null || !snapshot.hasData)
               return Center(child: Text("لا يوجد بيانات...",));
-
             return Hero(
               tag: 'imageHero',
               child: Container(
                 child: StaggeredGridView.countBuilder(
                     itemCount: snapshot.data.documents.length,
                     crossAxisCount: 2,
-    itemBuilder: (context, index) {
-              return firebasedata(
-                  context, index, snapshot.data.documents[index]);
-            },
+                    itemBuilder: (context, index) {
+                      return firebasedata(
+                          context, index, snapshot.data.documents[index]);
+                    },
                     staggeredTileBuilder: (index) =>
                         StaggeredTile.count(1, index.isEven ? 1.2 : 1.8)),
               ),
             );
           },
         ),
+
       ),
-        // StreamBuilder(
-        //   stream: Firestore.instance
-        //       .collection('videos')
-        //       .orderBy('carrange',
-        //       descending:
-        //       true)
-        //       .snapshots(),
-        //   builder: (context, snapshot) {
-        //     if (!snapshot.hasData) {
-        //       return Center(child: Text("Loading..",));
-        //     }
-        //
-        //     return new GridView.builder(
-        //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        //             crossAxisCount:2,
-        //             //crossAxisCount: (orientation == Orientation.portrait) ? 2 : 3
-        //         ),
-        //         //add item count depending on your list
-        //         //itemCount: list.length,
-        //
-        //         //added scrolldirection
-        //         //reverse: true,
-        //         physics: BouncingScrollPhysics(),
-        //         shrinkWrap: true,
-        //        // controller: _controller,
-        //         itemCount: snapshot.data.documents.length,
-        //         itemBuilder: (context, index) {
-        //           return firebasedata(
-        //               context, index, snapshot.data.documents[index]);
-        //         });
-        //   },
-        // ),
-    //  ),
     );
   }
 
@@ -129,7 +101,7 @@ class _VidiosPhotoState extends State<VidiosPhoto> {
 Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => AllVideos(document['carrange'],document['cdepart'])));
+                builder: (context) => AllVideos(document['carrange'],document['cdepart'],document['cuserId'])));
 
       },
       child: Padding(
@@ -137,7 +109,7 @@ Navigator.push(
         child: Stack(
           children: [
             Container(
-             // height: 200,
+            //  height: 200,
               decoration: BoxDecoration(
                 border: new Border.all(
                   color: Colors.white,

@@ -256,7 +256,7 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
 Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => AllVideos(document['carrange'],document['cdepart'])));
+                builder: (context) => AllVideos(document['carrange'],document['cdepart'],null)));
 
       },
       child: Padding(

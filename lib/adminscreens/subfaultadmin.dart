@@ -402,10 +402,11 @@ class _SubFaultAdminState extends State<SubFaultAdmin> {
             fault.data['fsubName'],
             fault.data['fsubDesc'],
             fault.data['fsubUrl'],
+            const Color(0xff8C8C96),
+            false,
           );
           setState(() {
             faultsList.add(fp);
-            // print(sparepartsList.length.toString() + "llll");
           });
         });
       }).timeout(Duration(seconds: 20), onTimeout: () {
@@ -502,7 +503,8 @@ class _SubFaultAdminState extends State<SubFaultAdmin> {
           documentReference.documentID,
           _spareNameController.text,
             _sparedescribController.text,
-            urlList
+            urlList,   const Color(0xff8C8C96),
+          false,
         ));
         _spareNameController.text="";
         _sparedescribController.text="";

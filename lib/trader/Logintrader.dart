@@ -46,6 +46,8 @@ class _Logintrader extends State<Logintrader> {
           fault.data['sid'],
           fault.data['sName'],
           fault.data['surl'],
+          const Color(0xff8C8C96),
+          false,
         );
         setState(() {
           faultsList.add(fault.data['sName']);
@@ -64,6 +66,8 @@ class _Logintrader extends State<Logintrader> {
           sparepart.data['sid'],
           sparepart.data['sName'],
           sparepart.data['surl'],
+          const Color(0xff8C8C96),
+          false,
         );
         setState(() {
           sparesList.add(sparepart.data['sName']);

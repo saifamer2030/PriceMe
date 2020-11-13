@@ -5,15 +5,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:priceme/Videos/allvideos.dart';
-import 'package:priceme/Videos/photosvideo.dart';
+import 'package:priceme/Videos/videotabs1.dart';
 import 'package:priceme/classes/ModelClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/screens/MorePriceMe.dart';
 import 'package:priceme/screens/addadv.dart';
 import 'package:priceme/screens/alladvertisement.dart';
 import 'package:priceme/screens/homepage.dart';
-import 'package:priceme/screens/hometest.dart';
 import 'package:priceme/screens/myadvertisement.dart';
+import 'package:priceme/screens/myalarms.dart';
 
 class FragmentTrader extends StatefulWidget {
 
@@ -34,8 +34,8 @@ class _FragmentTraderState extends State<FragmentTrader> {
 
   List<Widget> screens() => [
     MorePriceMe(),
-    MyAdvertisement(),
-    VidiosPhoto(),
+    MyAlarms(),
+    VideoTabs1(),
     AllAdvertisement(),
       ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
@@ -110,7 +110,7 @@ class _FragmentTraderState extends State<FragmentTrader> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = MyAdvertisement(); // if user taps on this dashboard tab will be active
+                        currentScreen = MyAlarms(); // if user taps on this dashboard tab will be active
                         currentTab = 2;
                       });
                     },
@@ -146,7 +146,7 @@ class _FragmentTraderState extends State<FragmentTrader> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = VidiosPhoto(); // if user taps on this dashboard tab will be active
+                        currentScreen = VideoTabs1(); // if user taps on this dashboard tab will be active
                         currentTab = 1;
                       });
                     },
@@ -217,6 +217,8 @@ class _FragmentTraderState extends State<FragmentTrader> {
             sparepart.data['sid'],
             sparepart.data['sName'],
             sparepart.data['surl'],
+            const Color(0xff8C8C96),
+            false,
           );
           setState(() {
             sparepartsList.add(sparepart.data['sName']);
@@ -252,7 +254,7 @@ class _MyFloatingButtonState extends State<MyFloatingButton> {
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AddAdv("قطع غيار","", "")));
+                      builder: (context) => AddAdv("","","")));
 //        FirebaseAuth.instance.currentUser().then((user) => user == null
 //            ? Navigator.of(context, rootNavigator: false).push(
 //            MaterialPageRoute(

@@ -55,23 +55,27 @@ dependencies:
   geoflutterfire: ^2.0.3+2
   location: ^2.3.5
   google_maps_flutter: ^0.4.0
+
   shared_preferences: ^0.5.10
   persian_number_utility: ^0.1.2
   flutter_audio_recorder: ^0.5.5
   audioplayers: ^0.16.0
   file: ^5.2.1
+
   flutter_rating_bar: ^2.0.0
-  image_picker: ^0.6.7+11
+  image_picker: ^0.5.4+3
   video_player: ^0.10.12+2
   chewie: ^0.9.10
   flutter_video_compress: ^0.3.0
   cached_network_image: ^2.2.0+1
+
   intl: ^0.16.1 #0.15.7
   firebase_messaging:
   flutter_local_notifications: 1.4.4+4 #1.4.0
   photo_view: ^0.10.2 #0.5.0
   flutter_staggered_grid_view: ^0.3.2
-
+  scroll_snap_list: ^0.5.1
+  flutter_datetime_picker: ^1.4.0
 
 
 dev_dependencies:

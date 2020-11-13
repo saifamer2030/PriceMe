@@ -11,11 +11,14 @@ import 'package:priceme/UserRating/RatingClass.dart';
 import 'package:priceme/UserRating/UserRatingPage.dart';
 import 'package:priceme/classes/CommentClass.dart';
 import 'package:priceme/screens/advertisements.dart';
+import 'package:priceme/screens/traderuserprofile.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:toast/toast.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+import 'bookingpage.dart';
 
 class AdvDetail extends StatefulWidget {
   String userId;
@@ -80,6 +83,8 @@ class _AdvDetailState extends State<AdvDetail> {
   final double _minimumPadding = 5.0;
   bool _load = false;
   TextEditingController _commentController = TextEditingController();
+  TextEditingController _commentdetailController = TextEditingController();
+
   List<String> _imageUrls;
 
 
@@ -181,6 +186,7 @@ class _AdvDetailState extends State<AdvDetail> {
           comment.data['tradname'],
           comment.data['ownername'],
           comment.data['cdate'],
+          comment.data['details'],
           comment.data['price'],
           comment.data['rate'],
 
@@ -322,12 +328,10 @@ class _AdvDetailState extends State<AdvDetail> {
                               padding: const EdgeInsets.all(5.0),
                               child: Row(
                                 children: <Widget>[
-                                  mfault == ""
-                                      ? Text(sparepart)
-                                      : Padding(
+                                 Padding(
                                     padding: const EdgeInsets.only(
                                         top: 8.0),
-                                    child:  Text("$mfault-$subfault"
+                                    child:  Text("$subfault"
                                       ,
                                       textDirection:
                                       TextDirection.rtl,
@@ -384,41 +388,41 @@ class _AdvDetailState extends State<AdvDetail> {
                               ),
                             ),
                           ),
-                          Positioned(
-                            top: 45,
-                            right: 5,
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Row(
-                                children: <Widget>[
-                                  fPlaceName == null
-                                      ? Container()
-                                      : Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 8.0),
-                                    child: Text(
-                                      fPlaceName,
-                                      textDirection:
-                                      TextDirection.rtl,
-                                      textAlign: TextAlign.right,
-                                      style: TextStyle(
-                                          fontSize: 15.0,
-                                          color: const Color(
-                                              0xff171732),
-//                                                      fontFamily:
-//                                                          'Gamja Flower',
-                                          fontStyle:
-                                          FontStyle.normal),
-                                    ),
-                                  ),
-                                  Icon(
-                                    Icons.location_on,
-                                    color: const Color(0xff171732),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+//                           Positioned(
+//                             top: 45,
+//                             right: 5,
+//                             child: Padding(
+//                               padding: const EdgeInsets.all(5.0),
+//                               child: Row(
+//                                 children: <Widget>[
+//                                   fPlaceName == null
+//                                       ? Container()
+//                                       : Padding(
+//                                     padding: const EdgeInsets.only(
+//                                         top: 8.0),
+//                                     child: Text(
+//                                       fPlaceName,
+//                                       textDirection:
+//                                       TextDirection.rtl,
+//                                       textAlign: TextAlign.right,
+//                                       style: TextStyle(
+//                                           fontSize: 15.0,
+//                                           color: const Color(
+//                                               0xff171732),
+// //                                                      fontFamily:
+// //                                                          'Gamja Flower',
+//                                           fontStyle:
+//                                           FontStyle.normal),
+//                                     ),
+//                                   ),
+//                                   Icon(
+//                                     Icons.location_on,
+//                                     color: const Color(0xff171732),
+//                                   ),
+//                                 ],
+//                               ),
+//                             ),
+//                           ),
                           /**    Positioned(
                               top: 50,
                               left: 5,
@@ -783,117 +787,6 @@ class _AdvDetailState extends State<AdvDetail> {
                         child: new RaisedButton(
                           child: Row(
                             mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              new Text(
-                                "تواصل عبر الدردشة",
-                                style: TextStyle(
-                                  color: const Color(0xff171732),
-                                  fontSize: 10,
-                                ),
-                              ),
-                              Icon(
-                                Icons.mail_outline,
-                                color: const Color(0xff171732),
-                              ),
-                            ],
-                          ),
-                          textColor: const Color(0xff171732),
-                          color: Colors.grey[400],
-                          onPressed: () {
-                           // sortrate();
-                            // if (_userId == null) {
-                            //   Toast.show(
-                            //       "ابشر .. سجل دخول الاول طال عمرك",
-                            //       context,
-                            //       duration: Toast.LENGTH_LONG,
-                            //       gravity: Toast.BOTTOM);
-                            // } else {
-                            //   // Navigator.push(
-                            //   //   context,
-                            //   //   new MaterialPageRoute(
-                            //   //       builder: (BuildContext context) =>
-                            //   //           new ChatPage(
-                            //   //               name: widget.cName,
-                            //   //               uid: widget.cId)),
-                            //   // );
-                            // }
-                          },
-
-//
-                          shape: new RoundedRectangleBorder(
-                              borderRadius:
-                                  new BorderRadius.circular(10.0)),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Container(
-                        width: 150 /*MediaQuery.of(context).size.width*/,
-                        height: 40,
-                        child: new RaisedButton(
-                          child: Row(
-                            mainAxisAlignment:
-                                MainAxisAlignment.spaceEvenly,
-                            children: <Widget>[
-                              new Text(
-                                "تواصل برقم الجوال",
-                                style: TextStyle(
-                                  color: const Color(0xff171732),
-                                  fontSize: 10,
-                                ),
-                              ),
-                              Icon(
-                                Icons.phone,
-                                color: const Color(0xff171732),
-                              ),
-                            ],
-                          ),
-                          textColor: const Color(0xff171732),
-                          color: Colors.grey[400],
-                          onPressed: () {
-                            if (_userId == null) {
-                              Toast.show(
-                                  "برجاء .. تسجيل الدخول اولا",
-                                  context,
-                                  duration: Toast.LENGTH_LONG,
-                                  gravity: Toast.BOTTOM);
-                            } else {
-                              if (ownerPhone != null) {
-                                _makePhoneCall(
-                                    'tel:${ownerPhone}');
-                              } else {
-                                Toast.show("حاول تاني طال عمرك", context,
-                                    duration: Toast.LENGTH_LONG,
-                                    gravity: Toast.BOTTOM);
-                              }
-                            }
-                          },
-//
-                          shape: new RoundedRectangleBorder(
-                              borderRadius:
-                                  new BorderRadius.circular(10.0)),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 2 * _minimumPadding,
-                  width: _minimumPadding,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.only(left: 10.0),
-                      child: Container(
-                        width: 150 /*MediaQuery.of(context).size.width*/,
-                        height: 40,
-                        child: new RaisedButton(
-                          child: Row(
-                            mainAxisAlignment:
                             MainAxisAlignment.spaceEvenly,
                             children: <Widget>[
                               new Text(
@@ -1011,6 +904,7 @@ class _AdvDetailState extends State<AdvDetail> {
                                           commentlist[index].tradname,
                                           commentlist[index].ownername,
                                           commentlist[index].cdate,
+                                          commentlist[index].details,
                                           commentlist[index].price,
                                           commentlist[index].rate,
                                         ),
@@ -1018,58 +912,116 @@ class _AdvDetailState extends State<AdvDetail> {
                                       );
                                     }),
                           )),
-                          (_userId==widget.userId||_userId==null)?Container():   Padding(
+                          (cType=="trader")?
+                          Padding(
                             padding: const EdgeInsets.all(5.0),
                             child: Row(
                               children: <Widget>[
-                                Container(
-                                  width: 300,
-                                  height: 60,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(5.0),
-                                    child: Card(
-                                      elevation: 0.0,
-                                      color: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(5),
-                                      ),
-                                      child: Directionality(
-                                        textDirection: TextDirection.rtl,
-                                        child: TextFormField(
-                                          textAlign: TextAlign.right,
-                                          keyboardType:
-                                              TextInputType.number,
-                                          textDirection:
-                                              TextDirection.rtl,
-                                          controller: _commentController,
-                                          validator: (String value) {
-                                            if ((value.isEmpty)) {
-                                              return 'ابشر .. لكن اكتب السعر الاول طال عمرك';
-                                            }
-                                          },
+                                Flexible(
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        width: 200,
+                                        height: 60,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(1.0),
+                                          child: Card(
+                                            elevation: 0.0,
+                                            color: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(5),
+                                            ),
+                                            child: Directionality(
+                                              textDirection: TextDirection.rtl,
+                                              child: TextFormField(
+                                                textAlign: TextAlign.right,
+                                                keyboardType:
+                                                    TextInputType.text,
+                                                textDirection:
+                                                    TextDirection.rtl,
+                                                controller: _commentdetailController,
+                                                validator: (String value) {
+                                                  if ((value.isEmpty)) {
+                                                    return 'ابشر .. لكن اكتب  الاول طال عمرك';
+                                                  }
+                                                },
 
-                                          onChanged: (value) {},
-                                          //  controller: controller,
-                                          decoration: InputDecoration(
-                                              errorStyle: TextStyle(
-                                                  color: Colors.red,
-                                                  fontSize: 15.0),
-                                              labelText: "السعر بالدينار الاردنى",
-                                              // hintText: "التعليق",
+                                                onChanged: (value) {},
+                                                //  controller: controller,
+                                                decoration: InputDecoration(
+                                                    errorStyle: TextStyle(
+                                                        color: Colors.red,
+                                                        fontSize: 15.0),
+                                                    labelText: "حل المشكلة",
+                                                    // hintText: "التعليق",
 
 //                                prefixIcon: Icon(
 //                                  Icons.phone_iphone,
 //                                  color: Colors.pinkAccent,
 //                                ),
-                                              border: OutlineInputBorder(
-                                                  borderRadius:
-                                                      BorderRadius.all(
-                                                          Radius.circular(
-                                                              5.0)))),
+                                                    border: OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius.all(
+                                                                Radius.circular(
+                                                                    5.0)))),
+                                              ),
+                                            ),
+                                          ),
                                         ),
                                       ),
-                                    ),
+                                      Container(
+                                        width: 100,
+                                        height: 60,
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(1.0),
+                                          child: Card(
+                                            elevation: 0.0,
+                                            color: Colors.white,
+                                            shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                              BorderRadius.circular(5),
+                                            ),
+                                            child: Directionality(
+                                              textDirection: TextDirection.rtl,
+                                              child: TextFormField(
+                                                textAlign: TextAlign.right,
+                                                keyboardType:
+                                                TextInputType.number,
+                                                textDirection:
+                                                TextDirection.rtl,
+                                                controller: _commentController,
+                                                validator: (String value) {
+                                                  if ((value.isEmpty)) {
+                                                    return 'ابشر .. لكن اكتب السعر الاول طال عمرك';
+                                                  }
+                                                },
+
+                                                onChanged: (value) {},
+                                                //  controller: controller,
+                                                decoration: InputDecoration(
+                                                    errorStyle: TextStyle(
+                                                        color: Colors.red,
+                                                        fontSize: 15.0),
+                                                    labelText: "السعر",
+                                                    // hintText: "التعليق",
+
+//                                prefixIcon: Icon(
+//                                  Icons.phone_iphone,
+//                                  color: Colors.pinkAccent,
+//                                ),
+                                                    border: OutlineInputBorder(
+                                                        borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                5.0)))),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+
+                                    ],
                                   ),
                                 ),
                                 IconButton(
@@ -1143,7 +1095,7 @@ class _AdvDetailState extends State<AdvDetail> {
 //                                 ),
                               ],
                             ),
-                          ),
+                          ):Container(),
                         ],
                       )),
                 ),
@@ -1182,7 +1134,7 @@ class _AdvDetailState extends State<AdvDetail> {
       String date =
           '${now.year}-${now.month}-${now.day}-${now.hour}-${now.minute}-00';
       DocumentReference documentReference =
-      Firestore.instance.collection('commentsdata').document(widget.userId).collection(widget.advid).document();
+      Firestore.instance.collection('commentsdata').document( widget.userId).collection(widget.advid).document();
       String commentid= documentReference.documentID;
       String price;
 if( _commentController.text.contains('.')){price=_commentController.text;}else{price= "${_commentController.text}.0";}
@@ -1194,6 +1146,7 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
       'cdate': now.toString(),
       'tradname': _username,
       'ownername': ownerName,
+        'details': _commentdetailController.text,
         'price': double.parse(price),
       'rate':traderating,
       }).whenComplete(() {
@@ -1208,11 +1161,12 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
           _username,
           ownerName,
           now.toString(),
+          _commentdetailController.text,
           double.parse(price),
           5.0-double.parse(price),
         );
         setState(() {
-          commentlist.add(commentclass);
+          commentlist.insert(0,commentclass);
 // aaa(commentlist);
         _commentController.text = "";
           if( bestprice>double.parse(price)){
@@ -1276,6 +1230,7 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
    tradname,
    ownername,
    cdate,
+      details,
    price,
    rate,
   ) {
@@ -1288,17 +1243,17 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
         //borderOnForeground: true,
         elevation: 10.0,
         margin: EdgeInsets.all(1),
-        child: InkWell(
-          onTap: () {},
-          child: Container(
-              padding: EdgeInsets.all(8),
-              child: Container(
-                  width: 350,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      (_userId == commentlist[index].traderid||cType=="admin")
-                          ? FlatButton(
+        child: Container(
+            padding: EdgeInsets.all(8),
+            child: Container(
+                width: 350,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    (_userId == commentlist[index].traderid||cType=="admin")
+                        ? Container(
+                      width: 50,
+                          child: FlatButton(
                               onPressed: () {
                                 showDialog(
                                   context: context,
@@ -1314,15 +1269,8 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
                                               setState(() {
                                                 print("kkkkkkkkkkkk");
                                                 if  (_userId == commentlist[index].traderid||cType=="admin") {
-                                                  FirebaseDatabase.instance
-                                                      .reference()
-                                                      .child("commentsdata")
-                                                      .child(commentlist[index].traderid)
-                                                      .child(advID)
-                                                      .child(commentlist[index]
-                                                          .commentid)
-                                                      .remove()
-                                                      .whenComplete(() {
+                                                  Firestore.instance.collection("commentsdata").document(widget.userId).collection(advID)
+                                                      .document(commentlist[index].commentid).delete().whenComplete(() {
                                                     setState(() {
                                                       commentlist
                                                           .removeAt(index);
@@ -1365,54 +1313,114 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
                                 Icons.more_vert,
                                 color: Colors.black,
                               ),
-                            )
-                          : Container(),
-                      Column(
-                        children: <Widget>[
-                          Padding(
-                            padding: const EdgeInsets.all(2.0),
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  width: 200,
-                                  child: Align(
-                                      alignment: Alignment.topRight,
-                                      child: Text(
-                                        tradname,
-                                        style: TextStyle(
-                                          color: Colors.blue,
-                                          fontSize: 15,
-                                        ),
-                                        textDirection: TextDirection.rtl,
-                                      )),
-                                ),
-                                Icon(
-                                  Icons.person,
-                                  size: 25,
-                                  color: Colors.black,
-                                ),
-                              ],
                             ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(
-                                top: 2.0, right: 0.0, bottom: 2, left: 2.0),
-                            child: Align(
-                                alignment: Alignment.topRight,
+                        )
+                        : Container(),
+                    Column(
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.all(2.0),
+                          child: Row(
+/**
+                            ownerId,
+                            traderid,
+                            advID,
+                            commentid,
+                            tradname,
+                            ownername,
+                            cdate,
+                            details,
+                            price,
+                            **/
+                            children: <Widget>[
+                              (_userId== ownerId||_userId== traderid)?  FlatButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => BookingPage(ownerId,traderid,advID,commentid)));
+                                },
                                 child: Text(
-                                  price.toString(),
-                                  textDirection: TextDirection.rtl,
+                                  "تاكيد",
                                   style: TextStyle(
-                                    color: Colors.black,
+                                    color: Colors.green,
                                     fontSize: 15,
                                   ),
-                                )),
+                                  textDirection: TextDirection.ltr,
+                                ),
+                              ):Container(),
+                              (_userId== ownerId||_userId== traderid)?  FlatButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => TraderUserProlile(traderid)));
+
+                                },
+                                child: Text(
+                                  "مراسلة",
+                                  style: TextStyle(
+                                    color: Colors.deepOrange,
+                                    fontSize: 15,
+                                  ),
+                                  textDirection: TextDirection.ltr,
+                                ),
+                              ):Container(),
+
+                              Text(
+                                tradname,
+                                style: TextStyle(
+                                  color: Colors.blue,
+                                  fontSize: 15,
+                                ),
+                                textDirection: TextDirection.rtl,
+                              ),
+                              Icon(
+                                Icons.person,
+                                size: 25,
+                                color: Colors.black,
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ],
-                  ))),
-        ),
+                        ),
+                        Row(
+                          children: [
+
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                  top: 2.0, right: 0.0, bottom: 2, left: 2.0),
+                              child: Align(
+                                  alignment: Alignment.topRight,
+                                  child: Text(
+                                    price.toString(),
+                                    textDirection: TextDirection.rtl,
+                                    style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 15,
+                                    ),
+                                  )),
+                            ),
+                          ],
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(
+                              top: 2.0, right: 0.0, bottom: 2, left: 2.0),
+                          child: Align(
+                              alignment: Alignment.topRight,
+                              child: Text(
+                                details.toString(),
+                                textDirection: TextDirection.rtl,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 15,
+                                ),
+                              )),
+                        ),
+
+                      ],
+                    ),
+                  ],
+                ))),
       ),
     );
   }

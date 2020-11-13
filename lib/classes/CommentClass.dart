@@ -6,6 +6,7 @@ class CommentClass {
   String tradname;
   String ownername;
   String cdate;
+  String details;
   double price;
   double rate;
 
@@ -18,6 +19,7 @@ class CommentClass {
   this.tradname,
   this.ownername,
       this.cdate,
+      this.details,
       this.price,
       this.rate,
      );

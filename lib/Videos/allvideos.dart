@@ -12,7 +12,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:priceme/Splash.dart';
-import 'package:priceme/Videos/photosvideo.dart';
+import 'package:priceme/Videos/videotabs1.dart';
 import 'package:priceme/classes/AdvClass.dart';
 import 'package:toast/toast.dart';
 import 'package:video_player/video_player.dart';
@@ -21,7 +21,9 @@ import 'package:video_player/video_player.dart';
 class AllVideos extends StatefulWidget {
 String cdepart;
 int carrange;
-  AllVideos(this.carrange,this.cdepart);
+String useridid;
+
+  AllVideos(this.carrange,this.cdepart,this.useridid);
 
   @override
   _AllVideosState createState() => _AllVideosState();
@@ -110,46 +112,43 @@ class _AllVideosState extends State<AllVideos> {
               return Center(child: Text("Loading.."));
             }
 
-            return SingleChildScrollView(
-              physics: new BouncingScrollPhysics(),
+            return new PageView.builder(
               scrollDirection: Axis.vertical,
-              child: new ListView.separated(
-                shrinkWrap: true,
-                cacheExtent: 1000,
-                physics: NeverScrollableScrollPhysics(),
-                scrollDirection: Axis.vertical,
-                key: PageStorageKey(""),
-                addAutomaticKeepAlives: true,
-                  controller: _controller,
-                  itemCount: snapshot.data.documents.length,
-                  itemBuilder: (context, index) {
-                    return Container(
-                      width: double.infinity,
+              pageSnapping:false,
+              onPageChanged:(num){
+                print("currentpage$num" );
+              },
+              key: PageStorageKey(""),
+              // addAutomaticKeepAlives: true,
+                //controller: _controller,
+                itemCount: snapshot.data.documents.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    width: double.infinity,
 //                      height: 300.0,
-                      alignment: Alignment.center,
+                    alignment: Alignment.center,
 
-                      child: Container(
-                          key: new PageStorageKey(
-                            "keydata$index",
-                          ),
+                    child: Container(
+                        key: new PageStorageKey(
+                          "keydata$index",
+                        ),
 
-                          child: VideoWidget(
-                              play: false,
-                              document:snapshot.data.documents[index],
-                            itr: index,
-                              len:snapshot.data.documents.length,
-                            cType: cType,
-                              username:username
-                          )
-                      ),
-                    );
-                    //firebasedata(context, index, snapshot.data.documents[index]);
-                  },
-                separatorBuilder: (context, index) {
-                  return Divider();
+                        child: VideoWidget(
+                            play: false,
+                            document:snapshot.data.documents[index],
+                          itr: index,
+                            len:snapshot.data.documents.length,
+                          cType: cType,
+                            username:username
+                        )
+                    ),
+                  );
+                  //firebasedata(context, index, snapshot.data.documents[index]);
                 },
-    ),
-            );
+              // separatorBuilder: (context, index) {
+              //   return Divider();
+              // },
+    );
           },
         ),
       ),
@@ -191,7 +190,9 @@ class _VideoWidgetState extends State<VideoWidget> {
   List<bool> seencheck=[];
   List<bool> favcheck=[];
   List<bool> isplay=[];
- //  int likes;
+  List<bool> autoplay=[];
+
+  //  int likes;
  // bool seencheck=true;
  //  bool favcheck;
   @override
@@ -202,6 +203,7 @@ class _VideoWidgetState extends State<VideoWidget> {
     seencheck = new List<bool>.generate(widget.len, (i) => true);
     favcheck = new List<bool>.generate(widget.len, (i) => false);
     isplay = new List<bool>.generate(widget.len, (i) => false);
+    autoplay = new List<bool>.generate(widget.len, (i)=> (i==0)? true : false);
 
     favcheck[widget.itr]= widget.document['favcheck'];
     seens[widget.itr]=widget.document['seens'];
@@ -219,6 +221,7 @@ class _VideoWidgetState extends State<VideoWidget> {
     });
     videoPlayerController.addListener(() {
       if (  videoPlayerController.value.isPlaying){
+        autoplay[widget.itr]=false;
         if( !isplay[widget.itr])
         setState(() {
           isplay[widget.itr] =true;
@@ -275,7 +278,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                         // Prepare the video to be played and display the first frame
                         autoInitialize: true,
                         looping: false,
-                        autoPlay: false,
+                        autoPlay: autoplay[widget.itr],
 
                         // Errors can occur for example when trying to play a video
                         // from a non-existent URL
@@ -328,7 +331,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                                                   Navigator.pushReplacement(
                                                       context,
                                                       MaterialPageRoute(
-                                                          builder: (context) => VidiosPhoto()));
+                                                          builder: (context) => VideoTabs1()));
                                                 }));
                                           });
                                         }

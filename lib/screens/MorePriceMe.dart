@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:priceme/screens/allrents.dart';
 import 'package:priceme/screens/myoffers.dart';
 import 'package:priceme/screens/myrents.dart';
 import 'package:priceme/screens/personalpage.dart';
+import 'package:priceme/trader/myphotos.dart';
 import '../Splash.dart';
 import 'homepage.dart';
 import 'myadvertisement.dart';
@@ -41,40 +43,14 @@ class _MorePriceMeState extends State<MorePriceMe> {
         ? null
         : setState(() {
             _userId = user.uid;
-            // final userdatabaseReference =
-            //     FirebaseDatabase.instance.reference().child("userdata");
-            // userdatabaseReference
-            //     .child(_userId)
-            //     .child("cPhone")
-            //     .once()
-            //     .then((DataSnapshot snapshot5) {
-            //   setState(() {
-            //     _cMobile = snapshot5.value;
-            //   });
-            // });
-            // //////////////////////////
-            // userdatabaseReference
-            //     .child(_userId)
-            //     .child("cName")
-            //     .once()
-            //     .then((DataSnapshot snapshot5) {
-            //   setState(() {
-            //     _cName = snapshot5.value;
-            //   });
-            // });
-            //
-            // ////////////////////////
-            // userdatabaseReference
-            //     .child(_userId)
-            //     .child("cType")
-            //     .once()
-            //     .then((DataSnapshot snapshot5) {
-            //   setState(() {
-            //     setState(() {
-            //       _cType = snapshot5.value;
-            //     });
-            //   });
-            // });
+            var userQuery = Firestore.instance.collection('users').where('uid', isEqualTo: _userId).limit(1);
+            userQuery.getDocuments().then((data){
+              if (data.documents.length > 0){
+                setState(() {
+                  _cType = data.documents[0].data['cType'];
+                });
+              }
+            });
           }));
 
 //    FirebaseAuth.instance.currentUser().then((user) => user == null
@@ -126,6 +102,8 @@ class _MorePriceMeState extends State<MorePriceMe> {
                         ),
                       ],
                     ),
+
+
                     InkWell(
                       onTap: () {
                         Navigator.push(
@@ -145,7 +123,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
                               Text(
-                                'الاعلانات',
+                                'الطلبات',
                                 style: TextStyle(
 //                                      fontFamily: 'Estedad-Black',
                                   fontSize: 13,
@@ -191,10 +169,18 @@ class _MorePriceMeState extends State<MorePriceMe> {
                                   builder: (context) => Splash()));
                         } else {
                           if (_userId != null && _cType != null) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MyAdvertisement()));
+    if ( _cType == "user") {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MyAdvertisement()));
+    }else if(_cType == "trader"){
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => MyAdvertisement()));
+    }
+
                           } else {
                             showDialog(
                               context: context,
@@ -207,7 +193,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
                                       ),
                                 ),
                                 content: new Text(
-                                  "نبغاك تخبرنا عن نوع حسابك",
+                                  "برجاء تسجيل الدخول اولا",
                                   style: TextStyle(
 //                                      fontFamily: 'Estedad-Black',
                                       ),
@@ -248,7 +234,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
                               Text(
-                                'إعلاناتي',
+                                'تسعيراتى',
                                 style: TextStyle(
 //                                      fontFamily: 'Estedad-Black',
                                   fontSize: 13,
@@ -262,18 +248,11 @@ class _MorePriceMeState extends State<MorePriceMe> {
                               // Adobe XD layer: 'world-wide-web-icon…' (shape)
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: Container(
-                                  width: 20,
-                                  height: 20,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                      alignment: Alignment.center,
-                                      image: AssetImage(
-                                          "assets/images/ic_ads.png"),
-                                    ),
-                                  ),
-                                ),
-                              ),
+
+                                child: new Icon(
+                                  Icons.email,
+                                  color: Colors.grey,
+                                    )),
                             ],
                           ),
                         ],
@@ -285,10 +264,105 @@ class _MorePriceMeState extends State<MorePriceMe> {
                       height: .2,
                       color: Colors.grey,
                     ),
+                    ( _cType =="trader")? InkWell(
+                      onTap: () {
+                        if (_userId == null) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Splash()));
+                        } else {
+                          if (_userId != null && _cType =="trader") {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MyPhotos()));
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                              new CupertinoAlertDialog(
+                                title: new Text(
+                                  "تنبية",
+                                  style: TextStyle(
+//                                      fontFamily: 'Estedad-Black',
+                                  ),
+                                ),
+                                content: new Text(
+                                  "برجاء تسجيل الدخول اولا",
+                                  style: TextStyle(
+//                                      fontFamily: 'Estedad-Black',
+                                  ),
+                                ),
+                                actions: [
+                                  CupertinoDialogAction(
+                                      isDefaultAction: false,
+                                      child: new FlatButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, false);
+                                          Navigator.push(
+                                              context,
+                                              new MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Splash()));
+                                        },
+                                        child: Text(
+                                          "موافق",
+                                          style: TextStyle(
+//                                              fontFamily: 'Estedad-Black',
+                                          ),
+                                        ),
+                                      )),
+                                ],
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Icon(
+                            Icons.keyboard_arrow_left,
+                            color: const Color(0xff171732),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Text(
+                                'صورى',
+                                style: TextStyle(
+//                                      fontFamily: 'Estedad-Black',
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.bold,
+                                  color: const Color(0xff171732),
+                                  height: 1.2307692307692308,
+                                ),
+                                textAlign: TextAlign.right,
+                              ),
+
+                              // Adobe XD layer: 'world-wide-web-icon…' (shape)
+                              Padding(
+                                  padding: const EdgeInsets.all(8.0),
+
+                                  child: new Icon(
+                                    Icons.email,
+                                    color: Colors.grey,
+                                  )),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ):Container(),
+
+                    ( _cType =="trader")? Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: .2,
+                      color: Colors.grey,
+                    ):Container(),
 
 
-
-
+/**
                     InkWell(
                       onTap: () {
                         Navigator.push(
@@ -509,7 +583,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
                       height: .2,
                       color: Colors.grey,
                     ),
-
+**/
 
                     InkWell(
                       onTap: () {
@@ -756,54 +830,54 @@ class _MorePriceMeState extends State<MorePriceMe> {
 //                                ),
 //                          ],
 //                        ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: .2,
-                      color: Colors.grey,
-                    ),
-                    InkWell(
-                      onTap: () {
-                        if (_userId == null) {
-                          Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (context) => Splash()));
-                        } else {
-                          // Navigator.push(
-                          //     context,
-                          //     new MaterialPageRoute(
-                          //         builder: (context) => SmsForUserPage(
-                          //             SmsForUser(_userId, _cName, "", "",
-                          //                 _cMobile, ""))));
-
-                        }
-                      },
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: <Widget>[
-                          Text(
-                            'الشكاوي',
-                            style: TextStyle(
-//                                  fontFamily: 'Estedad-Black',
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                              color: const Color(0xff171732),
-                              height: 1.2307692307692308,
-                            ),
-                            textAlign: TextAlign.right,
-                          ),
-
-                          // Adobe XD layer: 'world-wide-web-icon…' (shape)
-                          Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: new Icon(
-                                Icons.report,
-                                color: Colors.grey,
-                              ) // Adobe XD layer: 'terms' (shape)
-                              ),
-                        ],
-                      ),
-                    ),
+//                     Container(
+//                       width: MediaQuery.of(context).size.width,
+//                       height: .2,
+//                       color: Colors.grey,
+//                     ),
+//                     InkWell(
+//                       onTap: () {
+//                         if (_userId == null) {
+//                           Navigator.push(
+//                               context,
+//                               new MaterialPageRoute(
+//                                   builder: (context) => Splash()));
+//                         } else {
+//                           // Navigator.push(
+//                           //     context,
+//                           //     new MaterialPageRoute(
+//                           //         builder: (context) => SmsForUserPage(
+//                           //             SmsForUser(_userId, _cName, "", "",
+//                           //                 _cMobile, ""))));
+//
+//                         }
+//                       },
+//                       child: Row(
+//                         mainAxisAlignment: MainAxisAlignment.end,
+//                         children: <Widget>[
+//                           Text(
+//                             'الشكاوي',
+//                             style: TextStyle(
+// //                                  fontFamily: 'Estedad-Black',
+//                               fontSize: 13,
+//                               fontWeight: FontWeight.bold,
+//                               color: const Color(0xff171732),
+//                               height: 1.2307692307692308,
+//                             ),
+//                             textAlign: TextAlign.right,
+//                           ),
+//
+//                           // Adobe XD layer: 'world-wide-web-icon…' (shape)
+//                           Padding(
+//                               padding: const EdgeInsets.all(8.0),
+//                               child: new Icon(
+//                                 Icons.report,
+//                                 color: Colors.grey,
+//                               ) // Adobe XD layer: 'terms' (shape)
+//                               ),
+//                         ],
+//                       ),
+//                     ),
                     Container(
                       width: MediaQuery.of(context).size.width,
                       height: .2,

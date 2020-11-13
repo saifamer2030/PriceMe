@@ -8,40 +8,36 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:priceme/Splash.dart';
-import 'package:priceme/Videos/EditVideo.dart';
 import 'package:priceme/Videos/addVideo.dart';
-
+import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:priceme/classes/FaultsClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/SparePartsSizesClass.dart';
+import 'package:priceme/screens/addphoto.dart';
+import 'package:priceme/screens/displayphoto.dart';
 import 'package:toast/toast.dart';
 import 'package:firebase_core/firebase_core.dart';
 
-import 'allvideos.dart';
-
-class VidiosPhotoMine extends StatefulWidget {
+class TradePhotos extends StatefulWidget {
+  String traderid;
+  TradePhotos(this.traderid);
 
   @override
-  _VidiosPhotoMineState createState() => _VidiosPhotoMineState();
+  _TradePhotosState createState() => _TradePhotosState();
 }
 
-class _VidiosPhotoMineState extends State<VidiosPhotoMine> {
+class _TradePhotosState extends State<TradePhotos> {
 
   String filePath,_userId;
+
 
   @override
   void initState() {
     super.initState();
-    FirebaseAuth.instance.currentUser().then((user) => user == null
-        ? Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
-        builder: (context) => Splash(), maintainState: false))
 
-        : setState(() {_userId = user.uid;}));
-   }
+  }
 
   @override
   void dispose() {
@@ -56,32 +52,6 @@ class _VidiosPhotoMineState extends State<VidiosPhotoMine> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      floatingActionButton: Container(
-        height: 30.0,
-        width: 30.0,
-        child: FittedBox(
-          child: FloatingActionButton(
-            heroTag: "unique129",
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          AddVideo()));
-            },
-            //backgroundColor: Colors.white,
-            // elevation: 20.0,
-            child: Container(
-              height: 100,
-              child: Icon(
-                Icons.add,
-                //size: 50,
-                color: const Color(0xff171732),
-              ),
-            ),
-          ),
-        ),
-      ),
 
       backgroundColor: const Color(0xffffffff),
       body: Container(
@@ -90,31 +60,31 @@ class _VidiosPhotoMineState extends State<VidiosPhotoMine> {
         child:
         StreamBuilder(
           stream: Firestore.instance
-              .collection('videos').where("cuserId", isEqualTo:_userId)
-              .orderBy('carrange',
-              descending:
-              true)
-              .snapshots(),
+                  .collection('photos')
+                  .orderBy('carrange',
+                  descending:
+                  true).where("cuserId", isEqualTo:widget.traderid)
+                  .snapshots(), //imgColRef.snapshots(includeMetadataChanges: true),
           builder: (context, snapshot) {
             if (snapshot.data?.documents == null || !snapshot.hasData)
               return Center(child: Text("لا يوجد بيانات...",));
+
             return Hero(
               tag: 'imageHero',
               child: Container(
                 child: StaggeredGridView.countBuilder(
                     itemCount: snapshot.data.documents.length,
                     crossAxisCount: 2,
-                    itemBuilder: (context, index) {
-                      return firebasedata(
-                          context, index, snapshot.data.documents[index]);
-                    },
+    itemBuilder: (context, index) {
+              return firebasedata(
+                  context, index, snapshot.data.documents[index]);
+            },
                     staggeredTileBuilder: (index) =>
                         StaggeredTile.count(1, index.isEven ? 1.2 : 1.8)),
               ),
             );
           },
         ),
-
       ),
     );
   }
@@ -129,7 +99,7 @@ class _VidiosPhotoMineState extends State<VidiosPhotoMine> {
 Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => AllVideos(document['carrange'],document['cdepart'],_userId)));
+                builder: (context) => DisplayPhoto(document['imgurl'])));
 
       },
       child: Padding(
@@ -137,7 +107,7 @@ Navigator.push(
         child: Stack(
           children: [
             Container(
-            //  height: 200,
+             // height: 200,
               decoration: BoxDecoration(
                 border: new Border.all(
                   color: Colors.white,
@@ -148,7 +118,8 @@ Navigator.push(
                   fit: BoxFit.fill,
                 ):DecorationImage(
                   image:  NetworkImage(
-                      document['imgurl']              ),
+                      document['imgurl']
+                  ),
 
                   fit: BoxFit.fill,
                 ),
@@ -156,52 +127,16 @@ Navigator.push(
               ),
             ),
             Positioned(
-                top: 90,
-                left: 60,
-                child: Container(
-                  child: Icon(
-                    Icons.play_circle_outline,
-                    color: Colors.white,
-                    size: 35,
-                  ),
-                )),
-            Positioned(
                 bottom: 5,
                 right: 5,
                 child: Container(
+                  color: Colors.black38,
                   child: Text( document['ctitle']==null||document['ctitle']==""?"عنوان غير معلوم":document['ctitle']
                     ,style: TextStyle(
                         color: Colors.white,
                         fontSize: 15,
                         fontWeight: FontWeight.bold),),
                 )),
-
-            Positioned(
-              top: 5,
-              left: 5,
-              child: Container(
-                height: 50,
-                width: 50,
-                // child: Text(
-                //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
-                // ),textAlign: TextAlign.center,
-                //
-                // ),
-                decoration: BoxDecoration(
-                  border: new Border.all(
-                    color: Colors.black,
-                    width: 1.0,
-                  ),
-                  image: DecorationImage(
-                    image: NetworkImage(document['cphotourl']==null||document['cphotourl']==""?
-                    "https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg"  :document['cphotourl']),
-                    fit: BoxFit.fill,
-                  ),
-                  shape: BoxShape.circle,
-                ),
-              ),
-
-            ),
           ],
         ),
       ),

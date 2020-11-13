@@ -167,7 +167,7 @@ workshoptype=_faultcurrentItemSelected;
                               controller: nameController,
                               validator: (String value) {
                                 if (value.isEmpty) {
-                                  return 'برجاء ادخال اسم مزود الخدمة';
+                                  return 'برجاء ادخال اسم التاجر ';
                                 }
                               },
                               decoration: InputDecoration(
@@ -498,49 +498,7 @@ workshoptype=_faultcurrentItemSelected;
                         height: _minimumPadding,
                         width: _minimumPadding,
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            top: _minimumPadding * 5, bottom: _minimumPadding),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            InkWell(
-                              onTap: (){loadAssets();} ,
-                              child: Icon(
-                                images.length>0 ? Icons.check_circle : Icons
-                                    .add_photo_alternate,
-                                color: const Color(0xffff904a),
-                                size: 50,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10.0,
-                            ),
-                            Expanded(
-                              child: Text(
-                                "يرجى الضغط على الصورة لتحميل صور الاعمال السابقة",
-                                textDirection: TextDirection.rtl,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.topCenter,
-                              child: Icon(
-                                Icons.star,
-                                color: Colors.red,
-                                size: 15,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: _minimumPadding,
-                        width: _minimumPadding,
-                      ),
+
                       Padding(
                         padding: EdgeInsets.only(
                             top: _minimumPadding * 5, bottom: _minimumPadding),
@@ -626,7 +584,7 @@ workshoptype=_faultcurrentItemSelected;
                                     try {
                                       final result = await InternetAddress.lookup('google.com');
                                       if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-                                        uploadpp0();
+                                        _uploaddata();
 
                                         setState(() {
                                           _load1 = true;
@@ -686,39 +644,7 @@ workshoptype=_faultcurrentItemSelected;
 
     });
   }
-  Future<void> loadAssets() async {
-    List<Asset> resultList = List<Asset>();
-    String error = 'No Error Dectected';
-
-    try {
-      resultList = await MultiImagePicker.pickImages(
-        maxImages: 7,
-        enableCamera: false,
-        selectedAssets: images,
-        cupertinoOptions: CupertinoOptions(takePhotoIcon: "اعلان"),
-        materialOptions: MaterialOptions(
-          statusBarColor: "#000000",
-          actionBarColor: "#000000",
-          actionBarTitle: "price me",
-          allViewTitle: "كل الصور",
-          useDetailsView: false,
-          selectCircleStrokeColor: "#000000",
-        ),
-      );
-    } on Exception catch (e) {
-      error = e.toString();
-    }
-
-
-    if (!mounted) return;
-
-    setState(() {
-      images = resultList;
-      _error = error;
-
-    });
-  }
-  void _uploaddata(urlList) {
+  void _uploaddata() {
     //print("kkk"+urlList[0].toString());
 
     FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -727,23 +653,14 @@ workshoptype=_faultcurrentItemSelected;
     ).then((signedInUser) {
       print("kkk"+signedInUser.toString());
 
-      adduser(signedInUser.user, urlList);
+      adduser(signedInUser.user);
     }).catchError((e) {
       Toast.show(e,context,duration: Toast.LENGTH_LONG,gravity:  Toast.BOTTOM);
       //  print(e);
     });
 
-
-//    var alertDialog = AlertDialog(
-//      title: Text("مبارك"),
-//        Toast.show("تم تسجيل الدخول بنجاح",context,duration: Toast.LENGTH_SHORT,gravity:  Toast.BOTTOM);  content: Text("تم الحجز بنجاح"),
-//    );
-//
-//    showDialog(
-//        context: context,
-//        builder: (BuildContext context) => alertDialog);
   }
-  void adduser( signedInUser, urlList) {
+  void adduser( signedInUser) {
     print("kkk"+signedInUser.uid);
     Firestore.instance.collection('users').document(signedInUser.uid).setData({
       'uid': signedInUser.uid,
@@ -751,7 +668,6 @@ workshoptype=_faultcurrentItemSelected;
       'name': nameController.text,
       'phone': phoneController.text,
       'photourl': signedInUser.photoUrl,
-      'curilist': urlList.toString(),
       "provider": signedInUser.providerData[1].providerId,
       'fromPLat': fromPlaceLat,
       'fromPLng': fromPlaceLng,
@@ -771,47 +687,6 @@ workshoptype=_faultcurrentItemSelected;
     });
   }
 
-  Future uploadpp0() async {
-    //print("xxx");
-    if (images.length == 0) {
-      _uploaddata("");
-
-    } else {
-    final StorageReference storageRef =
-    FirebaseStorage.instance.ref().child('myimage');
-    int i = 0;
-    for (var f in images) {
-      //  images.forEach((f) async {
-      var byteData = await f.getByteData(quality: 50);
-//      final String path1 = await getApplicationDocumentsDirectory().path;
-//      var file=await getImageFileFromAssets(path);
-      // final byteData = await rootBundle.load('$f');
-      DateTime now = DateTime.now();
-      final file = File('${(await getTemporaryDirectory()).path}/$f');
-      await file.writeAsBytes(byteData.buffer
-          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-      final StorageUploadTask uploadTask =
-      storageRef.child('$now.jpg').putFile(file);
-      var Imageurl = await (await uploadTask.onComplete).ref.getDownloadURL();
-      Toast.show("تم تحميل صورة طال عمرك", context,
-          duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-      setState(() {
-        url1 = Imageurl.toString();
-        urlList.add(url1);
-        //  print('URL Is${images.length} ///$url1///$urlList');
-        i++;
-        // _load2 = false;
-      });
-      if (i == images.length) {
-        // print('gggg${images.length} ///$i');
-        _uploaddata(urlList);
-      }
-    }
-    setState(() {
-      _load1 = true;
-    });
-  }
-  }
 
 
 }

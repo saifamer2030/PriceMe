@@ -7,8 +7,10 @@ class FaultsClass{
   String fsubName;
   String fsubDesc;
   String fsubUrl;
-
-  FaultsClass (this.fid,this.fName,this.fsubId,this.fsubName,this.fsubDesc,this.fsubUrl);
+  Color ccolor;
+  bool ccolorcheck;
+  FaultsClass (this.fid,this.fName,this.fsubId,this.fsubName,this.fsubDesc,this.fsubUrl,  this.ccolor,
+      this.ccolorcheck);
 
 
 }

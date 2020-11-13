@@ -32,8 +32,8 @@ import '../Splash.dart';
 
 class AddAdv extends StatefulWidget {
   final LocalFileSystem localFileSystem;
-  String probtype0, selecteditem0,mfault;
-  AddAdv(this.probtype0,this.mfault, this.selecteditem0,  {localFileSystem})
+  String probtype0, selecteditem0, selecteditemid;
+  AddAdv(this.probtype0, this.selecteditem0, this.selecteditemid,  {localFileSystem})
       : this.localFileSystem = localFileSystem ?? LocalFileSystem();
 
   @override
@@ -43,22 +43,28 @@ enum SingingCharacter4 { used, New, NO }
 
 class _AddAdvState extends State<AddAdv> {
   bool _load1 = false;
+  bool fault_s_apear = false;
+  bool spare_s_apear = false;
+
   String url1;
   String imagepathes = '';
   List<String> urlList = [];
   List<String> proplemtype = ["اعطال","قطع غيار"];
   List<String> indyearlist = [];
-  List<String> subfaultsList = [];
-  List<bool> subcheckList = [];
 
-  List<String> subsparesList = [];
   List<bool> subcheckList1 = [];
-
+  List<bool> subcheckList = [];
   List<FaultStringClass> sparesList = [];
   List<FaultStringClass> faultsList = [];
 
+  List<FaultsClass> subfaultsList = [];
+  List<FaultsClass> subsparesList = [];
+
   List<SparePartsClass> mainfaultsList = [];
   List<SparePartsClass> mainsparsList = [];
+
+  List<String> faultoutput= [];
+  List<String> faultoutputsub= [];
 
 
   String subfault="";
@@ -74,7 +80,7 @@ class _AddAdvState extends State<AddAdv> {
   Map <String , dynamic > sendData = Map();
   String model1;
   String model2;
-  String fault1;
+  String fault1,faultid;
   String fault2;
   double _value=0.0;
   String _userId;
@@ -100,7 +106,6 @@ class _AddAdvState extends State<AddAdv> {
     setState(() {
       //  print("ooooooo${widget.sparepartsList[0]}");
       final SparePartsReference = Firestore.instance;
-      final SparePartsReference1 = Firestore.instance;
 
       mainfaultsList.clear;
 
@@ -112,62 +117,14 @@ class _AddAdvState extends State<AddAdv> {
             sparepart.data['sid'],
             sparepart.data['sName'],
             sparepart.data['surl'],
-
+              sparepart.data['sid']==widget.selecteditemid?const Color(0xff171732):const Color(0xff8C8C96),
+            sparepart.data['sid']==widget.selecteditemid?true:false,
           );
-
-
+          // const Color(0xff171732);
           setState(() {
-
             mainfaultsList.add(spc);
-            // print(sparepartsList.length.toString() + "llll");
           });
-
         });
-      }).whenComplete(() {
-        faultsList.clear();
-        int i=0;
-        // subcheckList.add(false);
-
-        for(var mfaults in mainfaultsList){
-          //setState(() {  subfaultsList.clear;});
-
-          SparePartsReference1.collection("subfaults").document(mfaults.sid).collection("subfaultid")
-              .getDocuments()
-              .then((QuerySnapshot snapshot) {
-            snapshot.documents.forEach((fault) {
-              FaultsClass fp = FaultsClass(
-                fault.data['fid'],
-                fault.data['fName'],
-                fault.data['fsubId'],
-                fault.data['fsubName'],
-                fault.data['fsubDesc'],
-                fault.data['fsubUrl'],
-              );
-              setState(() {
-                i++;
-                subfaultsList.add(fault.data['fsubName']);
-                subfault=subfault+fault.data['fsubName']+",";
-                subcheck=subcheck+"false"+",";
-                print(fault.data['fsubName'] + "llll"+mfaults.sName);
-
-              });
-            });
-          }).whenComplete(() {
-            setState(() {
-              print(mfaults.sName+"////"+subfaultsList.length.toString());
-              faultsList.add(new FaultStringClass(mfaults.sName,subfault,subcheck));
-              subfault="";
-              subcheck="";
-
-              i=0;
-              subfaultsList.clear();
-              subcheckList.clear();
-
-            });
-          });
-
-        }//////
-
       });
     });
 
@@ -178,7 +135,7 @@ class _AddAdvState extends State<AddAdv> {
       final SparePartsReference = Firestore.instance;
       final SparePartsReference1 = Firestore.instance;
 
-      mainfaultsList.clear;
+      mainsparsList.clear;
 
       SparePartsReference.collection("spareparts")
           .getDocuments()
@@ -188,7 +145,8 @@ class _AddAdvState extends State<AddAdv> {
             sparepart.data['sid'],
             sparepart.data['sName'],
             sparepart.data['surl'],
-
+            sparepart.data['sid']==widget.selecteditemid?const Color(0xff171732):const Color(0xff8C8C96),
+            sparepart.data['sid']==widget.selecteditemid?true:false,
           );
 
 
@@ -199,56 +157,63 @@ class _AddAdvState extends State<AddAdv> {
           });
 
         });
-      }).whenComplete(() {
-        sparesList.clear();
-        int i=0;
-        // subcheckList.add(false);
-
-        for(var mfaults in mainsparsList){
-          //setState(() {  subfaultsList.clear;});
-
-          SparePartsReference1.collection("subspares").document(mfaults.sid).collection("subsparesid")
-              .getDocuments()
-              .then((QuerySnapshot snapshot) {
-            snapshot.documents.forEach((fault) {
-              FaultsClass fp = FaultsClass(
-                fault.data['fid'],
-                fault.data['fName'],
-                fault.data['fsubId'],
-                fault.data['fsubName'],
-                fault.data['fsubDesc'],
-                fault.data['fsubUrl'],
-              );
-              setState(() {
-                i++;
-                subsparesList.add(fault.data['fsubName']);
-                subfault1=subfault1+fault.data['fsubName']+",";
-                subcheck1=subcheck1+"false"+",";
-                //    print(fault.data['fsubName'] + "llll"+mfaults.sName);
-
-              });
-            });
-          }).whenComplete(() {
-            setState(() {
-              // print(mfaults.sName+"////"+subfaultsList.length.toString());
-              sparesList.add(new FaultStringClass(mfaults.sName,subfault1,subcheck1));
-              subfault1="";
-              subcheck1="";
-
-              i=0;
-              subsparesList.clear();
-              subcheckList1.clear();
-
-            });
-          });
-
-        }//////
-
       });
     });
 
   }
+  void getsubdatainitial(){
+  if(_probtypecurrentItemSelected=="اعطال"&&faultid!=null){
+    final SparePartsReference1 = Firestore.instance;
+    SparePartsReference1.collection("subfaults").document( faultid).collection("subfaultid")
+        .getDocuments()
+        .then((QuerySnapshot snapshot) {
+      FaultsClass fp;
+      snapshot.documents.forEach((fault) {
+        fp = FaultsClass(
+          fault.data['fid'],
+          fault.data['fName'],
+          fault.data['fsubId'],
+          fault.data['fsubName'],
+          fault.data['fsubDesc'],
+          fault.data['fsubUrl'],
+          const Color(0xff8C8C96),
+          false,
+        );
+        setState(() {
+          subfaultsList.add(fp);
+        });
+      });
+    }).whenComplete(() => setState((){ fault_s_apear = true;}));
 
+  }else  if(_probtypecurrentItemSelected=="قطع غيار"&&faultid!=null){
+
+    final SparePartsReference1 = Firestore.instance;
+    SparePartsReference1.collection("subspares").document( faultid).collection("subsparesid")
+        .getDocuments()
+        .then((QuerySnapshot snapshot) {
+      FaultsClass fp;
+      snapshot.documents.forEach((fault) {
+        fp = FaultsClass(
+          fault.data['fid'],
+          fault.data['fName'],
+          fault.data['fsubId'],
+          fault.data['fsubName'],
+          fault.data['fsubDesc'],
+          fault.data['fsubUrl'],
+          const Color(0xff8C8C96),
+          false,
+        );
+        setState(() {
+          subsparesList.add(fp);
+
+
+        });
+      });
+    }).whenComplete(() => setState((){ spare_s_apear = true;}));
+
+  }
+
+}
   @override
   void initState() {
     super.initState();
@@ -294,10 +259,13 @@ class _AddAdvState extends State<AddAdv> {
     _indyearcurrentItemSelected=indyearlist[0];
     _probtypecurrentItemSelected=widget.probtype0=="قطع غيار"?widget.probtype0:proplemtype[0];
     // _sparecurrentItemSelected =  widget.probtype0=="قطع غيار"?widget.selecteditem0:widget.sparepartsList[0];
-    fault1=widget.mfault;
-    fault2=widget.selecteditem0;
+    //fault1=widget.mfault;
+    fault1=widget.selecteditem0;
+    faultid=widget.selecteditemid;
     getDataf();
     getDatas();
+    getsubdatainitial();
+
   }
 
   @override
@@ -358,7 +326,368 @@ class _AddAdvState extends State<AddAdv> {
                               )),
                         ),
                       ),
+                      SizedBox(
+                        height: _minimumPadding,
+                        width: _minimumPadding,
+                      ),
+                      _probtypecurrentItemSelected==proplemtype[0]?  Container(
+                        height: 35,
+                        child: mainfaultsList.length == 0
+                            ? new Text("برجاء الإنتظار")
+                            : new ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            reverse: true,
+                            itemCount: mainfaultsList.length,
+                            itemBuilder: (BuildContext ctxt, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 1.0, right: 5.0, left: 5.0),
+                                child: Card(
+                                  color: const Color(0xff8C8C96),
+                                  shape: new RoundedRectangleBorder(
+                                      side: new BorderSide(
+                                          color: mainfaultsList[index].ccolor, width: 3.0),
+                                      borderRadius: BorderRadius.circular(100.0)),
+                                  //borderOnForeground: true,
+                                  elevation: 10.0,
+                                  margin: EdgeInsets.all(1),
+                                  child: InkWell(
+                                    onTap: () {
+                                      subfaultsList.clear();
+                                      setState(() {
+                                        fault_s_apear=true;
+                                        mainfaultsList[index].ccolorcheck =
+                                        !mainfaultsList[index].ccolorcheck;
+                                        if (mainfaultsList[index].ccolorcheck) {
+                                          mainfaultsList[index].ccolor =
+                                          const Color(0xff171732);
+                                          for (var i = 0; i < mainfaultsList.length; i++) {
+                                            if (i != index) {
+                                              mainfaultsList[i].ccolor =
+                                              const Color(0xff8C8C96);
+                                            }
+                                          }
+                                        } else {
+                                          mainfaultsList[index].ccolor =
+                                          const Color(0xff8C8C96);
+                                        }
+                                      });
 
+                                      setState((){
+                                        final SparePartsReference1 = Firestore.instance;
+                                        SparePartsReference1.collection("subfaults").document( mainfaultsList[index].sid).collection("subfaultid")
+                                            .getDocuments()
+                                            .then((QuerySnapshot snapshot) {
+                                          FaultsClass fp;
+                                          snapshot.documents.forEach((fault) {
+                                            fp = FaultsClass(
+                                              fault.data['fid'],
+                                              fault.data['fName'],
+                                              fault.data['fsubId'],
+                                              fault.data['fsubName'],
+                                              fault.data['fsubDesc'],
+                                              fault.data['fsubUrl'],
+                                              const Color(0xff8C8C96),
+                                              false,
+                                            );
+
+                                            if(faultoutputsub.contains( fault.data['fsubName'])){
+                                              fp = FaultsClass(
+                                                fault.data['fid'],
+                                                fault.data['fName'],
+                                                fault.data['fsubId'],
+                                                fault.data['fsubName'],
+                                                fault.data['fsubDesc'],
+                                                fault.data['fsubUrl'],
+                                                const Color(0xff171732),
+                                                true,
+                                              );
+                                            }
+
+                                            setState(() {
+                                              subfaultsList.add(fp);
+                                            });
+                                          });
+                                        });
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text(
+                                          mainfaultsList[index].sName,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: "",
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 11,
+                                            letterSpacing: 0.5,
+                                            height: 1,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                      ):Container(),
+                      SizedBox(
+                        height: _minimumPadding,
+                        width: _minimumPadding,
+                      ),
+                      _probtypecurrentItemSelected==proplemtype[0]? fault_s_apear?  Container(
+                        height: 35,
+                        child:
+                        // subfaultsList.length == 0
+                        //     ? new Text("")
+                        //     :
+                        new ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            reverse: true,
+                            itemCount: subfaultsList.length,
+                            itemBuilder: (BuildContext ctxt, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 1.0, right: 5.0, left: 5.0),
+                                child: Card(
+                                  color: const Color(0xff8C8C96),
+                                  shape: new RoundedRectangleBorder(
+                                      side: new BorderSide(
+                                          color: subfaultsList[index].ccolor, width: 3.0),
+                                      borderRadius: BorderRadius.circular(100.0)),
+                                  //borderOnForeground: true,
+                                  elevation: 10.0,
+                                  margin: EdgeInsets.all(1),
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        subfaultsList[index].ccolorcheck =
+                                        !subfaultsList[index].ccolorcheck;
+                                        if (subfaultsList[index].ccolorcheck) {
+                                          subfaultsList[index].ccolor =
+                                          const Color(0xff171732);
+                                          faultoutput.add(subfaultsList[index].fName);
+                                          faultoutputsub.add(subfaultsList[index].fsubName);
+                                        } else {
+                                          subfaultsList[index].ccolor =
+                                          const Color(0xff8C8C96);
+                                          faultoutput.remove(subfaultsList[index].fName);
+                                          faultoutputsub.remove(subfaultsList[index].fsubName);//removeWhere((item){item==subfaultsList[index].fsubName;});
+                                        }
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text(
+                                          subfaultsList[index].fsubName,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.black,
+//                                                  const Color(0xff171732),
+                                            fontFamily: "",
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 11,
+                                            letterSpacing: 0.5,
+                                            height: 1,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                      ):Container():Container(),
+                      SizedBox(
+                        height: _minimumPadding,
+                        width: _minimumPadding,
+                      ),
+                      _probtypecurrentItemSelected==proplemtype[1]? Container(
+                        height: 35,
+                        child: mainsparsList.length == 0
+                            ? new Text("برجاء الإنتظار")
+                            : new ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            reverse: true,
+                            itemCount: mainsparsList.length,
+                            itemBuilder: (BuildContext ctxt, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 1.0, right: 5.0, left: 5.0),
+                                child: Card(
+                                  color: const Color(0xff8C8C96),
+                                  shape: new RoundedRectangleBorder(
+                                      side: new BorderSide(
+                                          color: mainsparsList[index].ccolor, width: 3.0),
+                                      borderRadius: BorderRadius.circular(100.0)),
+                                  //borderOnForeground: true,
+                                  elevation: 10.0,
+                                  margin: EdgeInsets.all(1),
+                                  child: InkWell(
+                                    onTap: () {
+                                      subsparesList.clear();
+                                      setState(() {
+                                        spare_s_apear=true;
+                                        mainsparsList[index].ccolorcheck =
+                                        !mainsparsList[index].ccolorcheck;
+                                        if (mainsparsList[index].ccolorcheck) {
+                                          mainsparsList[index].ccolor =
+                                          const Color(0xff171732);
+                                          for (var i = 0; i < mainsparsList.length; i++) {
+                                            if (i != index) {
+                                              mainsparsList[i].ccolor =
+                                              const Color(0xff8C8C96);
+                                            }
+                                          }
+                                        } else {
+                                          mainsparsList[index].ccolor =
+                                          const Color(0xff8C8C96);
+                                        }
+                                      });
+
+                                      setState((){
+                                        final SparePartsReference1 = Firestore.instance;
+                                        SparePartsReference1.collection("subspares").document( mainsparsList[index].sid).collection("subsparesid")
+                                            .getDocuments()
+                                            .then((QuerySnapshot snapshot) {
+                                          FaultsClass fp;
+                                          snapshot.documents.forEach((fault) {
+                                            fp = FaultsClass(
+                                              fault.data['fid'],
+                                              fault.data['fName'],
+                                              fault.data['fsubId'],
+                                              fault.data['fsubName'],
+                                              fault.data['fsubDesc'],
+                                              fault.data['fsubUrl'],
+                                              const Color(0xff8C8C96),
+                                              false,
+                                            );
+
+                                            if(faultoutputsub.contains( fault.data['fsubName'])){
+                                              fp = FaultsClass(
+                                                fault.data['fid'],
+                                                fault.data['fName'],
+                                                fault.data['fsubId'],
+                                                fault.data['fsubName'],
+                                                fault.data['fsubDesc'],
+                                                fault.data['fsubUrl'],
+                                                const Color(0xff171732),
+                                                true,
+                                              );
+                                            }
+
+                                            setState(() {
+                                              subsparesList.add(fp);
+                                            });
+                                          });
+                                        });
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text(
+                                          mainsparsList[index].sName,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: "",
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 11,
+                                            letterSpacing: 0.5,
+                                            height: 1,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                      ):Container(),
+                      SizedBox(
+                        height: _minimumPadding,
+                        width: _minimumPadding,
+                      ),
+                      _probtypecurrentItemSelected==proplemtype[1]? spare_s_apear?  Container(
+                        height: 35,
+                        child:
+                        new ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            reverse: true,
+                            itemCount: subsparesList.length,
+                            itemBuilder: (BuildContext ctxt, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 1.0, right: 5.0, left: 5.0),
+                                child: Card(
+                                  color: const Color(0xff8C8C96),
+                                  shape: new RoundedRectangleBorder(
+                                      side: new BorderSide(
+                                          color: subsparesList[index].ccolor, width: 3.0),
+                                      borderRadius: BorderRadius.circular(100.0)),
+                                  //borderOnForeground: true,
+                                  elevation: 10.0,
+                                  margin: EdgeInsets.all(1),
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        subsparesList[index].ccolorcheck =
+                                        !subsparesList[index].ccolorcheck;
+                                        if (subsparesList[index].ccolorcheck) {
+                                          subsparesList[index].ccolor =
+                                          const Color(0xff171732);
+                                          faultoutput.add(subsparesList[index].fName);
+                                          faultoutputsub.add(subsparesList[index].fsubName);
+                                        } else {
+                                          subsparesList[index].ccolor =
+                                          const Color(0xff8C8C96);
+                                          faultoutput.remove(subsparesList[index].fName);
+                                          faultoutputsub.remove(subsparesList[index].fsubName);//removeWhere((item){item==subfaultsList[index].fsubName;});
+                                        }
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text(
+                                          subsparesList[index].fsubName,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.black,
+//                                                  const Color(0xff171732),
+                                            fontFamily: "",
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 11,
+                                            letterSpacing: 0.5,
+                                            height: 1,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                      ):Container():Container(),
+                      Container(
+                        height: 50,
+                        child:Center(child: Text(faultoutputsub.toString())),),
+                      SizedBox(
+                        height: _minimumPadding,
+                        width: _minimumPadding,
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -442,45 +771,56 @@ class _AddAdvState extends State<AddAdv> {
                           ),
                         ],
                       ),
-                      _probtypecurrentItemSelected==proplemtype[0]?SizedBox(
+                      SizedBox(
                         height: _minimumPadding,
                         width: _minimumPadding,
-                      ):Container(),
-                      _probtypecurrentItemSelected==proplemtype[0]?Container(
-                        height: 40,
-                        color: Colors.grey,
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MyForm4(
-                                        faultsList,widget.selecteditem0,widget.mfault,
-                                        onSubmit4: onSubmit4)));
+                      ),
+                      // _probtypecurrentItemSelected==proplemtype[0]?Container(
+                      //   height: 40,
+                      //   color: Colors.grey,
+                      //   child: InkWell(
+                      //     onTap: () {
+                      //       // Navigator.push(
+                      //       //     context,
+                      //       //     MaterialPageRoute(
+                      //       //         builder: (context) => MyForm4(
+                      //       //             faultsList,widget.selecteditem0,widget.mfault,
+                      //       //             onSubmit4: onSubmit4)));
+                      //
+                      //     },
+                      //     child: Card(
+                      //       elevation: 0.0,
+                      //       color: const Color(0xff171732),
+                      //       shape: RoundedRectangleBorder(
+                      //         borderRadius: BorderRadius.circular(5),
+                      //       ),
+                      //       child: Center(
+                      //         child: Padding(
+                      //           padding: const EdgeInsets.all(8.0),
+                      //           child: Text(
+                      //             "نوع العطل",
+                      //             textDirection: TextDirection.rtl,
+                      //             style: TextStyle(
+                      //                 color: Colors.grey,
+                      //                 fontSize: 12,
+                      //                 fontWeight: FontWeight.bold),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ):Container(),
+//  List<SparePartsClass> mainfaultsList = [];
 
-                          },
-                          child: Card(
-                            elevation: 0.0,
-                            color: const Color(0xff171732),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "نوع العطل",
-                                  textDirection: TextDirection.rtl,
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ):Container(),
+
+
+
+
+
+
+
+
+
                       Padding(
                         padding: EdgeInsets.only(
                             top: _minimumPadding * 5, bottom: _minimumPadding),
@@ -675,45 +1015,45 @@ class _AddAdvState extends State<AddAdv> {
                         ],
                       ),
 
-                      _probtypecurrentItemSelected==proplemtype[0]?Container():Padding(
-                          padding: EdgeInsets.only(
-                              top: _minimumPadding, bottom: _minimumPadding),
-                          child: Container(
-                            height: 40,
-                            color: Colors.grey,
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) => MyForm4(
-                                            sparesList,widget.selecteditem0,widget.mfault,
-                                            onSubmit4: onSubmit4)));
-
-                              },
-                              child: Card(
-                                elevation: 0.0,
-                                color: const Color(0xff171732),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Center(
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Text(
-                                      "نوع قطع الغيار",
-                                      textDirection: TextDirection.rtl,
-                                      style: TextStyle(
-                                          color: Colors.grey,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
-                      ),
+                      // _probtypecurrentItemSelected==proplemtype[0]?Container():Padding(
+                      //     padding: EdgeInsets.only(
+                      //         top: _minimumPadding, bottom: _minimumPadding),
+                      //     child: Container(
+                      //       height: 40,
+                      //       color: Colors.grey,
+                      //       child: InkWell(
+                      //         onTap: () {
+                      //           // Navigator.push(
+                      //           //     context,
+                      //           //     MaterialPageRoute(
+                      //           //         builder: (context) => MyForm4(
+                      //           //             sparesList,widget.selecteditem0,widget.mfault,
+                      //           //             onSubmit4: onSubmit4)));
+                      //
+                      //         },
+                      //         child: Card(
+                      //           elevation: 0.0,
+                      //           color: const Color(0xff171732),
+                      //           shape: RoundedRectangleBorder(
+                      //             borderRadius: BorderRadius.circular(5),
+                      //           ),
+                      //           child: Center(
+                      //             child: Padding(
+                      //               padding: const EdgeInsets.all(8.0),
+                      //               child: Text(
+                      //                 "نوع قطع الغيار",
+                      //                 textDirection: TextDirection.rtl,
+                      //                 style: TextStyle(
+                      //                     color: Colors.grey,
+                      //                     fontSize: 12,
+                      //                     fontWeight: FontWeight.bold),
+                      //               ),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     )
+                      // ),
                       // Container(
                       //   //decoration: BoxDecoration(border: Border.all(color: Colors.teal)),
                       //   child: new Directionality(textDirection: TextDirection.rtl,
@@ -926,62 +1266,62 @@ class _AddAdvState extends State<AddAdv> {
                         height: _minimumPadding,
                         width: _minimumPadding,
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            top: _minimumPadding * 5, bottom: _minimumPadding),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            InkWell(
-                              onTap: () async {
-                                sendData = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          CurrentLocation2()),
-                                );
-
-                                // print("\n\n\n\n\n\n\nfromPlaceLng>>>>"+
-                                //     fromPlaceLng+fPlaceName+"\n\n\n\n\n\n");
-                                setState(() {
-                                  fromPlace = sendData["loc_latLng"];
-                                  fromPlaceLat = fromPlace.latitude.toString();
-                                  fromPlaceLng = fromPlace.longitude.toString();
-                                  fPlaceName = sendData["loc_name"];
-                                });
-                              } ,
-                              child: Icon(
-                                fromPlaceLat == null ? Icons.gps_fixed : Icons.check_circle
-                                ,
-                                color: Colors.purpleAccent,
-                                size: 50,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10.0,
-                            ),
-                            Expanded(
-                              child: Text(
-                                "يرجى الضغط على الصورة لتحديد موقع المحل",
-                                textDirection: TextDirection.rtl,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.topCenter,
-                              child: Icon(
-                                Icons.star,
-                                color: Colors.red,
-                                size: 15,
-                              ),
-                            ),
-
-                          ],
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: EdgeInsets.only(
+                      //       top: _minimumPadding * 5, bottom: _minimumPadding),
+                      //   child: Row(
+                      //     mainAxisAlignment: MainAxisAlignment.center,
+                      //     children: <Widget>[
+                      //       InkWell(
+                      //         onTap: () async {
+                      //           sendData = await Navigator.push(
+                      //             context,
+                      //             MaterialPageRoute(
+                      //                 builder: (context) =>
+                      //                     CurrentLocation2()),
+                      //           );
+                      //
+                      //           // print("\n\n\n\n\n\n\nfromPlaceLng>>>>"+
+                      //           //     fromPlaceLng+fPlaceName+"\n\n\n\n\n\n");
+                      //           setState(() {
+                      //             fromPlace = sendData["loc_latLng"];
+                      //             fromPlaceLat = fromPlace.latitude.toString();
+                      //             fromPlaceLng = fromPlace.longitude.toString();
+                      //             fPlaceName = sendData["loc_name"];
+                      //           });
+                      //         } ,
+                      //         child: Icon(
+                      //           fromPlaceLat == null ? Icons.gps_fixed : Icons.check_circle
+                      //           ,
+                      //           color: Colors.purpleAccent,
+                      //           size: 50,
+                      //         ),
+                      //       ),
+                      //       SizedBox(
+                      //         width: 10.0,
+                      //       ),
+                      //       Expanded(
+                      //         child: Text(
+                      //           "يرجى الضغط على الصورة لتحديد موقع المحل",
+                      //           textDirection: TextDirection.rtl,
+                      //           style: TextStyle(
+                      //               color: Colors.black,
+                      //               fontSize: 15,
+                      //               fontWeight: FontWeight.bold),
+                      //         ),
+                      //       ),
+                      //       Align(
+                      //         alignment: Alignment.topCenter,
+                      //         child: Icon(
+                      //           Icons.star,
+                      //           color: Colors.red,
+                      //           size: 15,
+                      //         ),
+                      //       ),
+                      //
+                      //     ],
+                      //   ),
+                      // ),
                       Padding(
                         padding: EdgeInsets.only(
                             top: _minimumPadding, bottom: _minimumPadding),
@@ -996,7 +1336,7 @@ class _AddAdvState extends State<AddAdv> {
                               onTap: () async {
                                 if (_formKey.currentState.validate()) {
 
-                                  if(images.length == 0 || song == null||  model1 == null || model2 == null||  fault1 == null || fault2 == null){
+                                  if(images.length == 0 || song == null||  model1 == null || model2 == null||  faultoutputsub.length == 0 ){
                                     Toast.show("برجاء التأكد من إضافة كل البيانات المطلوبة",context,duration: Toast.LENGTH_LONG,gravity:  Toast.BOTTOM);
                                   }else{
                                     try {
@@ -1130,16 +1470,16 @@ class _AddAdvState extends State<AddAdv> {
         'ccarversion':model2,
         'cmodel':_indyearcurrentItemSelected,
 
-        'mfault':fault1,
-        'subfault':fault2,
-        'mfaultarray':fault1.split(","),
-
-        'sparepart':_sparecurrentItemSelected,
+        'mfault':faultoutput.toString(),
+        'subfault':faultoutputsub.toString(),
+        'mfaultarray':faultoutput,
+        'subfaultarray':faultoutputsub,
+        'sparepart':"",
 
         'ctitle': titleController.text,
-        'fromPLat': fromPlaceLat,
-        'fromPLng': fromPlaceLng,
-        'fPlaceName':fPlaceName,
+        // 'fromPLat': fromPlaceLat,
+        // 'fromPLng': fromPlaceLng,
+        // 'fPlaceName':fPlaceName,
         'cNew':  _probtypecurrentItemSelected==proplemtype[1]
             ? _character4.toString().contains("used")
             ? "مستعملة"
@@ -1162,10 +1502,15 @@ class _AddAdvState extends State<AddAdv> {
           _indyearcurrentItemSelected=indyearlist[0];
           model1=null;model2=null;fault1=null;fault2=null;
           _value = 0;
-          fromPlaceLat=null; fromPlaceLng=null; fPlaceName =null;
+        //  fromPlaceLat=null; fromPlaceLng=null; fPlaceName =null;
           _load1 = false;
-          fault1=widget.mfault;
-          fault2=widget.selecteditem0;
+          fault1="";
+          faultid="";
+           fault_s_apear = false;
+           spare_s_apear = false;
+
+          faultoutput.clear();
+          faultoutputsub.clear();
           _init();
         });
       });
@@ -1192,6 +1537,11 @@ class _AddAdvState extends State<AddAdv> {
   void _onDropDownItemSelectedproblem(String newValueSelected) {
     setState(() {
       this._probtypecurrentItemSelected = newValueSelected;
+      faultoutput.clear();
+      faultoutputsub.clear();
+       fault_s_apear = false;
+       spare_s_apear = false;
+
     });
   }
 

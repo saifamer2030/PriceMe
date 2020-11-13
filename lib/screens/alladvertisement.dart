@@ -100,27 +100,39 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
 
               .snapshots(),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return Center(child: Text("Loading.."));
-            }
-
-            return new ListView.builder(
-                physics: BouncingScrollPhysics(),
+            if (snapshot.data?.documents == null || !snapshot.hasData)
+              return Center(child: Text("لا يوجد بيانات...",));
+            return Container(
+              child: ListView(
                 shrinkWrap: true,
-                controller: _controller,
-                itemCount: snapshot.data.documents.length,
-                itemBuilder: (context, index) {
-                  return firebasedata(
-                      context, index, snapshot.data.documents[index]);
-                });
+                children: <Widget>[
+                  Container(
+                      padding: EdgeInsets.all(10),
+                      child: SingleChildScrollView(
+                        child: GridView.builder(
+                          physics: ScrollPhysics(),
+                          shrinkWrap: true,
+                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 6,
+                            childAspectRatio: MediaQuery.of(context).size.width /
+                                (MediaQuery.of(context).size.height*1),
+                          ),
+                          itemCount:snapshot.data.documents.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return  firebasedata(context,index, snapshot.data.documents[index]);
+                          },
+                        ),
+                      ))
+                ],
+              ),
+            );
           },
         ),
       ),
     );
   }
-
-  Widget firebasedata(
-      BuildContext context, int index, DocumentSnapshot document) {
+  Widget firebasedata(BuildContext context,int index, DocumentSnapshot document) {
     return Padding(
       padding: const EdgeInsets.all(2.0),
       child: Card(
@@ -131,40 +143,44 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
         margin: EdgeInsets.only(right: 1, left: 1, bottom: 2),
         child: InkWell(
           onTap: () {
+
             Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) =>
                         AdvDetail(document['userId'], document['advid'])));
+
+
+
           },
           child: Container(
-              child: Row(
-            children: <Widget>[
-              Column(
+            // height: 1000,
+              child: Column(
                 children: <Widget>[
-                  Container(
-                    color: Colors.white,
-                    child: Stack(
-                      children: <Widget>[
-                        Center(
-                          child: document['curi'] == null
-                              ? new Image.asset(
-                                  "assets/images/ic_logo2.png",
-                                )
-                              : new Image.network(
-                                  document['curi'],
-                                  fit: BoxFit.fitHeight,
-                                ),
+                  Stack(
+                    children: [
+                      Container(
+                        height: 200,
+                        child:  document['curi'] == null
+                            ? new Image.asset("assets/images/ic_logo2.png",
+                        )
+                            : new Image.network(
+                          document['curi'],
+                          fit: BoxFit.cover,
                         ),
-                        Container(
+                      ),
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(2.0),
-                            color: const Color(0xff444460),
+                            color:const Color(0xff444460),
                           ),
                           child: Padding(
                               padding: const EdgeInsets.all(5.0),
-                              child: Text(
-                                document['cproblemtype'],
+                              child:  Text(
+                                document['cproblemtype'].toString(),
                                 textDirection: TextDirection.rtl,
                                 textAlign: TextAlign.right,
                                 style: TextStyle(
@@ -172,137 +188,80 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
                                     fontSize: 12,
 //                                          fontFamily: 'Estedad-Black',
                                     fontStyle: FontStyle.normal),
-                              )),
+                              )
+                          ),
+
                         ),
-                      ],
-                    ),
-                    width: 100,
-                    height: 130,
+                      ),
+                      Positioned(
+                        top: 0,
+                        right: 0,
+                        child: Container(
+                            width: 100,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(2.0),
+                              color:Colors.black54,
+                            ),
+                            child:  Padding(
+                              padding: const EdgeInsets.only(right: 5),
+                              child: Text(
+                                "منذ: ${ document['cdate'].toString()}",
+                                textDirection: TextDirection.rtl,
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 10,
+//                                  fontFamily: 'Estedad-Black',
+                                    fontStyle: FontStyle.normal),
+                              ),
+                            )
+
+                        ),
+                      ),
+
+                    ],
                   ),
-                  Container(
-                      width: 100,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(2.0),
-                        color: Colors.black12,
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.only(right: 5),
-                        child: Text(
-                          "منذ: ${document['cdate']}",
-                          textDirection: TextDirection.rtl,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 10,
+
+                  Padding(
+                    padding: const EdgeInsets.all(5.0),
+                    child: Text(
+                      document['ctitle'].toString(),
+                      textDirection: TextDirection.rtl,
+                      textAlign: TextAlign.right,
+                      style: TextStyle(
+                          color: Colors.green,
 //                                  fontFamily: 'Estedad-Black',
-                              fontStyle: FontStyle.normal),
-                        ),
-                      )),
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15.0,
+                          fontStyle: FontStyle.normal),
+                    ),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[
+
+
+                      Text(
+                        "${document['subfault']}",
+                        textDirection: TextDirection.rtl,
+                        textAlign: TextAlign.right,
+                        style: TextStyle(
+//                                      fontFamily: 'Estedad-Black',
+                            fontSize: 10.0,
+                            fontStyle: FontStyle.normal),
+                      ),
+                      new Icon(
+                        Icons.directions_car,
+                        color: Colors.black,
+                        size: 15,
+                      ),
+                    ],
+                  ),
                 ],
-              ),
-              Container(
-                height: 130,
-                child: Stack(
-                  //alignment: Alignment.bottomCenter,
-                  children: <Widget>[
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Text(
-                          document['ctitle'],
-                          textDirection: TextDirection.rtl,
-                          textAlign: TextAlign.right,
-                          style: TextStyle(
-                              color: Colors.green,
-//                                  fontFamily: 'Estedad-Black',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 15.0,
-                              fontStyle: FontStyle.normal),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      top: 50,
-                      right: 0,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          SizedBox(
-                            height: _minimumPadding,
-                            width: _minimumPadding * 4,
-                          ),
-                          SizedBox(
-                            height: _minimumPadding,
-                            width: _minimumPadding,
-                          ),
-                          document['mfault'] == ""
-                              ? Text(document['sparepart'])
-                              : Text(
-                                  "${document['mfault']}-${document['subfault']}",
-                                  textDirection: TextDirection.rtl,
-                                  textAlign: TextAlign.right,
-                                  style: TextStyle(
-//                                      fontFamily: 'Estedad-Black',
-                                      fontSize: 10.0,
-                                      fontStyle: FontStyle.normal),
-                                ),
-                          new Icon(
-                            Icons.directions_car,
-                            color: Colors.black,
-                            size: 15,
-                          ),
-                        ],
-                      ),
-                    ),
-                    Positioned(
-                      top: 100,
-                      right: 0,
-                      child: Padding(
-                        padding: const EdgeInsets.all(0.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: <Widget>[
-                            Text(
-                              document['fPlaceName'],
-                              textDirection: TextDirection.rtl,
-                              textAlign: TextAlign.right,
-                              style: TextStyle(
-//                                      fontFamily: 'Estedad-Black',
-                                  fontSize: 10.0,
-                                  fontStyle: FontStyle.normal),
-                            ),
-                            new Icon(
-                              Icons.location_on,
-                              color: Colors.black,
-                              size: 15,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: 10, right: 5, top: 5, bottom: 5),
-                          child: Text(
-                            "                                                                    ",
-                            textDirection: TextDirection.rtl,
-                            textAlign: TextAlign.right,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          )),
+              )),
         ),
       ),
     );
   }
+
 }

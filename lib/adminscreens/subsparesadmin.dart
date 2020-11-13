@@ -402,6 +402,8 @@ class _SubSparesAdminState extends State<SubSparesAdmin> {
             fault.data['fsubName'],
             fault.data['fsubDesc'],
             fault.data['fsubUrl'],
+            const Color(0xff8C8C96),
+            false,
           );
           setState(() {
             faultsList.add(fp);
@@ -502,7 +504,9 @@ class _SubSparesAdminState extends State<SubSparesAdmin> {
           documentReference.documentID,
           _spareNameController.text,
             _sparedescribController.text,
-            urlList
+            urlList,
+          const Color(0xff8C8C96),
+          false,
         ));
         _spareNameController.text="";
         _sparedescribController.text="";

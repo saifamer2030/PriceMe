@@ -8,7 +8,6 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:priceme/FragmentNavigation.dart';
 import 'package:priceme/screens/alladvertisement.dart';
-import 'package:priceme/screens/hometest.dart';
 import 'package:priceme/screens/network_connection.dart';
 import 'package:priceme/screens/signinphone.dart';
 import 'package:priceme/trader/Fragmenttrader.dart';

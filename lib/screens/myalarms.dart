@@ -8,6 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:priceme/Splash.dart';
 import 'package:priceme/Videos/onevideo.dart';
 import 'package:priceme/screens/advdetail.dart';
+import 'package:priceme/screens/bookingpage.dart';
 import 'package:priceme/screens/offerdetail.dart';
 import 'package:priceme/screens/rentdetail.dart';
 
@@ -169,6 +170,13 @@ class _MyAlarmsState extends State<MyAlarms> {
                         builder: (context) =>
                             OneVideo(document['advID'])));
               }
+              else if( document['cType'] == "book"){
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => BookingPage( document['ownerId'],document['traderid'],document['advID'],document['alarmid'])));
+
+              }
             });
           },
           child: Container(
@@ -180,7 +188,12 @@ class _MyAlarmsState extends State<MyAlarms> {
                   children: <Widget>[
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child:document['cType'] == "videofav"
+                      child:document['cType'] == "book"?
+                      new Icon(
+                        Icons.settings,
+                        color: Colors.black,
+                      ):
+                      document['cType'] == "videofav"
                           ? new Icon(
                               Icons.favorite,
                               color: Colors.black,
@@ -198,8 +211,19 @@ class _MyAlarmsState extends State<MyAlarms> {
                           Column(
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: document['cType'] == "videofav"
+                                padding: const EdgeInsets.all(4.0),
+                                child: document['cType'] == "book"?
+                                Text(
+                                  " بخصوص عملية حجز ${ document['ownername']},${ document['tradname']} ",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 13,
+                                    //    fontWeight: FontWeight.bold
+                                  ),
+                                ):
+
+                                document['cType'] == "videofav"
                                     ? Text(
                                         " ${document['tradname']} منحك اعجاب لفيديو ${document['cType']} ",
                                         textAlign: TextAlign.center,

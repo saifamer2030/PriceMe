@@ -2,17 +2,18 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:priceme/Videos/addVideo.dart';
-import 'package:priceme/Videos/photosvideo.dart';
 import 'package:priceme/Videos/photosvideocomercial.dart';
 import 'package:priceme/Videos/photosvideoentertainment.dart';
+import 'package:priceme/screens/advertisements.dart';
+import 'package:priceme/screens/myadvertisement.dart';
 
 
-class VideoTabs extends StatefulWidget {
+class AdvertismentTabs extends StatefulWidget {
   @override
-  _VideoTabsState createState() => _VideoTabsState();
+  _AdvertismentTabsState createState() => _AdvertismentTabsState();
 }
 
-class _VideoTabsState extends State<VideoTabs> with SingleTickerProviderStateMixin {
+class _AdvertismentTabsState extends State<AdvertismentTabs> with SingleTickerProviderStateMixin {
   TabController _tabController;
   PageController _pageController;
 
@@ -61,23 +62,7 @@ class _VideoTabsState extends State<VideoTabs> with SingleTickerProviderStateMix
               context,
               MaterialPageRoute(
                   builder: (context) => AddVideo()));
-//        FirebaseAuth.instance.currentUser().then((user) => user == null
-//            ? Navigator.of(context, rootNavigator: false).push(
-//            MaterialPageRoute(
-//                builder: (context) => LoginScreen2(widget.regionlist),
-//                maintainState: false))
-//            : setState(() {
-//          var sheetController = showBottomSheet(
-//              context: context,
-//              builder: (context) =>
-//                  BottomSheetWidget(widget.regionlist));
-//
-//          _showButton(false);
-//
-//          sheetController.closed.then((value) {
-//            _showButton(true);
-//          });
-//        }));
+
         },
       ),
 
@@ -86,13 +71,14 @@ class _VideoTabsState extends State<VideoTabs> with SingleTickerProviderStateMix
       body: TabBarView(
         physics: NeverScrollableScrollPhysics(),
         children: [
-          VidiosPhotoEntertainment(),
-          VidiosPhotoComercial(),
+          Advertisements(),
+          MyAdvertisement(),
 
         ],
         controller: _tabController,
       ),
       appBar: AppBar(
+        leading: new Container(),
         elevation: 8,
         flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -116,7 +102,7 @@ class _VideoTabsState extends State<VideoTabs> with SingleTickerProviderStateMix
 
               new Tab(
                 child: Text(
-                  "ترفيهي",
+                  "الطلبات",
                   style: TextStyle(
                       fontSize: 14,
                      // fontFamily: MyFonts.fontFamily,
@@ -126,7 +112,7 @@ class _VideoTabsState extends State<VideoTabs> with SingleTickerProviderStateMix
               ),
               new Tab(
                 child: Text(
-                  "تجاري",
+                  "تسعيراتى",
                   style: TextStyle(
                       fontSize: 14,
                       //fontFamily: MyFonts.fontFamily,

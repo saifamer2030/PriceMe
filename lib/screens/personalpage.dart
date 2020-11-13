@@ -1,10 +1,20 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:multi_image_picker/multi_image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:priceme/Splash.dart';
+import 'package:priceme/classes/SparePartsClass.dart';
+import 'package:priceme/screens/cur_loc.dart';
+import 'package:priceme/screens/map_view.dart';
 import 'package:toast/toast.dart';
 
 class PersonalPage extends StatefulWidget {
@@ -23,15 +33,24 @@ class __PersonalPageState extends State<PersonalPage> {
   TextEditingController phoneController;
   TextEditingController nameController;
   TextEditingController emailController;
+  TextEditingController workshopnameController;
   FirebaseAuth _firebaseAuth;
   String _cName = "";
   String _cMobile;
-  String _cType = "";
+  String cType = "";
   String _cEmail="";
   String provider;
   String _userId;
+  String photourl,fPlaceName,worktype,
+      workshopname,traderType;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   var _formKey = GlobalKey<FormState>();
+  LatLng fromPlace, toPlace ;
+  String fromPlaceLat , fromPlaceLng;
+  Map <String , dynamic > sendData = Map();
+  List<Asset> images = List<Asset>();
+  String _error = 'No Error Dectected';
+  bool _load2 = false;
 
   @override
   void initState() {
@@ -48,7 +67,22 @@ class __PersonalPageState extends State<PersonalPage> {
           _cName = data.documents[0].data['name'];
           _cMobile = data.documents[0].data['phone'];
           _cEmail=data.documents[0].data['email'];
-         // if(_cName==null){_cName=user.displayName??"اسم غير معلوم";}
+          cType = data.documents[0].data['cType'].toString();
+          photourl = data.documents[0].data['photourl'].toString();
+          fromPlaceLat = data.documents[0].data['fromPLat'].toString();
+          fromPlaceLng = data.documents[0].data['fromPLng'].toString();
+          fPlaceName = data.documents[0].data['fPlaceName'].toString();
+          worktype = data.documents[0].data['worktype'].toString();
+          workshopname = data.documents[0].data['workshopname'].toString();
+          traderType = data.documents[0].data['traderType'].toString();
+
+          workshopname==null? workshopname="اسم محل غير معلوم" : workshopname=workshopname;
+          fPlaceName==null? fPlaceName="عنوان غير معلوم" : fPlaceName=fPlaceName;
+          traderType==null? traderType="نوع التاجر غير معلوم" : traderType=traderType;
+          worktype==null? worktype="نوع العمل غير معلوم" : worktype=worktype;
+          print("hhh$cType///$_userId");
+
+          // if(_cName==null){_cName=user.displayName??"اسم غير معلوم";}
           if(_cName==null){
             if(user.displayName==null||user.displayName==""){
               _cName="ايميل غير معلوم";
@@ -68,7 +102,7 @@ class __PersonalPageState extends State<PersonalPage> {
             nameController = TextEditingController(text: _cName);
             phoneController = TextEditingController(text: _cMobile);
             emailController = TextEditingController(text: _cEmail);
-
+            workshopnameController= TextEditingController(text: workshopname);
           });
         });
       }
@@ -80,18 +114,94 @@ class __PersonalPageState extends State<PersonalPage> {
   }
 
 
+  Future<void> loadAssets() async {
+    List<Asset> resultList = List<Asset>();
+    String error = 'No Error Dectected';
+//print("hhhhhhhhh");
+    try {
+      resultList = await MultiImagePicker.pickImages(
+        maxImages: 1,
+        enableCamera: false,
+        selectedAssets: images,
+        cupertinoOptions: CupertinoOptions(takePhotoIcon: "صورة شخصية"),
+        materialOptions: MaterialOptions(
+          statusBarColor: "#000000",
+          actionBarColor: "#000000",
+          actionBarTitle: "سعرلي",
+          allViewTitle: "كل الصور",
+          useDetailsView: false,
+          selectCircleStrokeColor: "#000000",
+        ),
+      );
+    } on Exception catch (e) {
+      error = e.toString();
+      // print("hhh$e");
+    }
+
+    // If the widget was removed from the tree while the asynchronous platform
+    // message was in flight, we want to discard the reply rather than calling
+    // setState to update our non-existent appearance.
+    if (!mounted) return;
+
+    setState(() {
+      images = resultList;
+      _error = error;
+      _load2 = true;
+
+      uploadpp0();
+
+    });
+  }
+  Future uploadpp0() async {
+
+    // String url1;
+    final StorageReference storageRef =
+    FirebaseStorage.instance.ref().child('myimage');
+    for (var f in images) {
+      var byteData = await f.getByteData(quality: 20);
+      DateTime now = DateTime.now();
+      final file = File('${(await getTemporaryDirectory()).path}/$f');
+      await file.writeAsBytes(byteData.buffer
+          .asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
+      final StorageUploadTask uploadTask =
+      storageRef.child('$_userId$now.jpg').putFile(file);
+      var Imageurl = await (await uploadTask.onComplete).ref.getDownloadURL();
+      //  print("oooo8");
+      setState(() {
+        //createRecord(Imageurl.toString());
+        Firestore.instance
+            .collection('users')
+            .document(_userId)
+            .updateData({
+          "photourl": Imageurl.toString(),
+        }).then((_) {
+          setState(() {
+            photourl = Imageurl.toString();
+            _load2 = false;
+          });
+        });
+      });
+
+    }
+
+
+  }
 
   @override
   Widget build(BuildContext context) {
-    bool checkingFlight = false;
-    bool success = false;
-
+    Widget loadingIndicator = _load2
+        ? new Container(
+      child: SpinKitCircle(
+        color: const Color(0xff171732),
+      ),
+    )
+        : new Container();
     return Scaffold(
       key: _scaffoldKey,
       body: Form(
         child: Padding(
           padding: EdgeInsets.only(
-              top: _minimumPadding * 23,
+              top: _minimumPadding * 2,
               bottom: _minimumPadding * 2,
               right: _minimumPadding * 2,
               left: _minimumPadding * 2),
@@ -115,6 +225,39 @@ class __PersonalPageState extends State<PersonalPage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
+                    Container(
+                      height:200,
+                      width:200,
+                      child:  Padding(
+                        padding: const EdgeInsets.only(left: 180,top:150),
+                        child: InkWell(
+                            onTap: () {
+                              loadAssets();
+                            },
+                            child: _load2?Center(
+                              child: loadingIndicator,
+                            ):
+                            Icon(Icons.mode_edit,color: Colors.red,)),
+                      ),
+                      decoration: BoxDecoration(
+                        border: new Border.all(
+                          color: Colors.black,
+                          width: 1.0,
+                        ),
+                        image: DecorationImage(
+                          image: NetworkImage(photourl==null?"https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg":photourl),
+                          fit: BoxFit.fill,
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    Center(child: loadingIndicator),
+                    Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: 5,
+                    ),
+
+
                     Card(
                       elevation: 2,
                       shadowColor: Colors.blueAccent,
@@ -218,7 +361,7 @@ class __PersonalPageState extends State<PersonalPage> {
                               padding: const EdgeInsets.only(right: 8),
                               child: Icon(Icons.email),
                             ),
-                            provider=="google.com"?Container(): Padding(
+                            (provider=="google.com"||provider=="password")?Container(): Padding(
                               padding: const EdgeInsets.only(left: 8),
                               child: InkWell(
                                   onTap: () {
@@ -238,63 +381,230 @@ class __PersonalPageState extends State<PersonalPage> {
                       height: .2,
                       color: Colors.grey,
                     ),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(top: 10),
-                    //   child: Card(
-                    //     elevation: 2,
-                    //     shadowColor: Colors.blueAccent,
-                    //     child: Row(
-                    //       mainAxisAlignment: MainAxisAlignment.end,
-                    //       children: <Widget>[
-                    //         InkWell(
-                    //             onTap: () {
-                    //               return showInSnackBar(
-                    //                   "يجب الافصاح عن نوع حسابك");
-                    //             },
-                    //             child: Icon(Icons.help)),
-                    //         Directionality(
-                    //           textDirection: TextDirection.rtl,
-                    //           child: Padding(
-                    //             padding: const EdgeInsets.all(8.0),
-                    //             child: Text(
-                    //               _cType != null ? _cType : "النوع",
-                    //             ),
-                    //           ),
-                    //         ),
-                    //         Padding(
-                    //           padding: const EdgeInsets.only(right: 8),
-                    //           child: Icon(Icons.title),
-                    //         ),
-                    //         InkWell(
-                    //           onTap: () {
-                    //             setState(() {
-                    //               showDialog(
-                    //                   context: context,
-                    //                   builder: (context) => MyForm4(_cType,
-                    //                       onSubmit4: onSubmit4));
-                    //             });
-                    //           },
-                    //           child: Padding(
-                    //             padding: const EdgeInsets.only(left: 8),
-                    //             child: Icon(Icons.mode_edit),
-                    //           ),
-                    //         )
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
-                    // Container(
-                    //   width: MediaQuery.of(context).size.width,
-                    //   height: .2,
-                    //   color: Colors.grey,
-                    // ),
+
+                    (cType=="trader")? Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Card(
+                        elevation: 2,
+                        shadowColor: Colors.blueAccent,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  workshopname != null
+                                      ? workshopname
+                                      : "اسم المحل",
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: Icon(Icons.apartment),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      showAlertDialogworkshopname(
+                                          context, workshopname);
+                                    });
+                                  },
+                                  child: Icon(Icons.mode_edit)),
+                            )
+                          ],
+                        ),
+                      ),
+                    ):Container(),
+                    (cType=="trader")? Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: .2,
+                      color: Colors.grey,
+                    ):Container(),
+
+                    (cType=="trader")?  Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Card(
+                        elevation: 2,
+                        shadowColor: Colors.blueAccent,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  traderType != null
+                                      ? traderType
+                                      : "نوع التاجر",
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: Icon(Icons.water_damage),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      showDialog(
+                                          context: context,
+                                          builder: (context) => MyForm4(
+                                              traderType,
+                                              onSubmit4: onSubmit4));
+                                    });
+                                  },
+                                  child: Icon(Icons.mode_edit)),
+                            )
+                          ],
+                        ),
+                      ),
+                    ):Container(),
+                    (cType=="trader")?Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: .2,
+                      color: Colors.grey,
+                    ):Container(),
+
+                    (cType=="trader")?  Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Card(
+                        elevation: 2,
+                        shadowColor: Colors.blueAccent,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  worktype != null
+                                      ? worktype
+                                      : "نوع العمل",
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: Icon(Icons.settings),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) => MyForm3(
+                                                traderType,worktype,
+                                                onSubmit3: onSubmit3));
+                                     // }
+                                    });
+                                  },
+                                  child: Icon(Icons.mode_edit)),
+                            )
+                          ],
+                        ),
+                      ),
+                    ):Container(),
+                    (cType=="trader")?Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: .2,
+                      color: Colors.grey,
+                    ):Container(),
+
+
+                    (cType=="trader")? InkWell(
+                        onTap: (){
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => MapView(workshopname,
+                                      double.parse(fromPlaceLat) , double.parse(fromPlaceLng)  )));
+
+                        },
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: Expanded(
+                          child: Card(
+                            elevation: 2,
+                            shadowColor: Colors.blueAccent,
+                            child: Container(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+
+                                  Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Expanded(
+
+                                        child: Text(
+                                          fPlaceName != null
+                                              ? fPlaceName
+                                              : "العنوان",maxLines: 3,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: Icon(Icons.location_on_rounded),
+                                  ),
+                                  Flexible(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 8),
+                                      child: InkWell(
+                                          onTap: () async {
+                                            sendData = await Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      CurrentLocation2()),
+                                            );
+                                            setState(() {
+                                              fromPlace = sendData["loc_latLng"];
+                                              fromPlaceLat = fromPlace.latitude.toString();
+                                              fromPlaceLng = fromPlace.longitude.toString();
+                                              fPlaceName = sendData["loc_name"];
+                                              Firestore.instance
+                                                  .collection('users')
+                                                  .document(_userId)
+                                                  .updateData({
+                                                "fromPLat": fromPlaceLat,
+                                                "fromPLat": fromPlaceLng,
+                                                "fPlaceName":fPlaceName,
+                                              });
+                                            });
+
+                                        },
+                                          child: Icon(Icons.mode_edit)),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ):Container(),
+                    (cType=="trader")?Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: .2,
+                      color: Colors.grey,
+                    ):Container(),
                   ],
                 ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsets.only(top: 100, left: 50, right: 50),
-                child: SheetButton(),
               ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -310,7 +620,7 @@ class __PersonalPageState extends State<PersonalPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Center(
-                          child: Text("إتفاقية الاستخدام",style: TextStyle(
+                          child: Text("سياسة الاستخدام",style: TextStyle(
                             fontSize: 10,
                             color: Colors.blue,
                             fontWeight: FontWeight.bold,
@@ -332,25 +642,6 @@ class __PersonalPageState extends State<PersonalPage> {
     );
   }
 
-  void showInSnackBar(String value) {
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(
-      content: Row(
-        children: <Widget>[
-          Icon(
-            Icons.live_help,
-            color: Colors.yellow,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 20),
-            child: new Text(
-              value,
-              style: TextStyle(color: Colors.redAccent),
-            ),
-          ),
-        ],
-      ),
-    ));
-  }
 
   showAlertDialogname(BuildContext context, name) {
     nameController = TextEditingController(text: name);
@@ -610,54 +901,190 @@ class __PersonalPageState extends State<PersonalPage> {
     );
   }
 
+  showAlertDialogworkshopname(BuildContext context, workshopname1) {
+    workshopnameController = TextEditingController(text: workshopname1);
+
+    // set up the buttons
+    Widget cancelButton = FlatButton(
+      child: Text(
+        "إلغاء",
+        style: TextStyle(color: Colors.black),
+      ),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text(
+        "حفظ",
+        style: TextStyle(color: Colors.black),
+      ),
+      onPressed: () {
+        setState(() {
+          if (_formKey.currentState.validate()) {
+
+            Firestore.instance
+                .collection('users')
+                .document(_userId)
+                .updateData({
+              "workshopname": workshopnameController.text,
+            }).then((_) {
+              setState(() {
+                workshopname = workshopnameController.text;
+                Navigator.of(context).pop();
+              });
+            });
+
+          }
+        });
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("تأكيد"),
+      content: Form(
+        key: _formKey,
+        child: Padding(
+            padding:
+            EdgeInsets.only(top: _minimumPadding, bottom: _minimumPadding),
+            child: Directionality(
+              textDirection: TextDirection.rtl,
+              child: TextFormField(
+                textAlign: TextAlign.right,
+                keyboardType: TextInputType.text,
+                //style: textStyle,
+                //textDirection: TextDirection.rtl,
+                controller: workshopnameController,
+                validator: (String value) {
+                  if (value.isEmpty) {
+                    return 'برجاء إدخال اسم المحل';
+                  }
+
+                },
+                decoration: InputDecoration(
+                  labelText: 'اسم المحل',
+                  //hintText: '$name',
+                  //labelStyle: textStyle,
+                  errorStyle: TextStyle(color: Colors.red, fontSize: 15.0),
+                  // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
+                ),
+              ),
+            )),
+      ),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
   void onSubmit4(String result) {
-//    print(result);
-//    Toast.show("${result}", context,
-//        duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+
     setState(() {
-      final userdatabaseReference =
-          FirebaseDatabase.instance.reference().child("userdata");
-      userdatabaseReference.child(_userId).update({
-        "cType": result,
+      Firestore.instance
+          .collection('users')
+          .document(_userId)
+          .updateData({
+        "traderType": result,
       }).then((_) {
         setState(() {
-          _cType = result;
-          //   Navigator.of(context).pop();
+          traderType = result;
+          Navigator.of(context).pop();
         });
       });
     });
   }
+
+  void onSubmit3(String result) {
+
+    setState(() {
+      Firestore.instance
+          .collection('users')
+          .document(_userId)
+          .updateData({
+        "worktype": result,
+      }).then((_) {
+        setState(() {
+          worktype = result;
+          Navigator.of(context).pop();
+        });
+      });
+    });
+  }
+
 }
 ///////////////////////////////////
 
-typedef void MyFormCallback4(String result);
+typedef void MyFormCallback3(String result);
 
-class MyForm4 extends StatefulWidget {
-  final MyFormCallback4 onSubmit4;
+class MyForm3 extends StatefulWidget {
+  final MyFormCallback3 onSubmit3;
   String quarter11;
-
-  MyForm4(this.quarter11, {this.onSubmit4});
+  String traderType;
+  MyForm3(this.traderType,this.quarter11, {this.onSubmit3});
 
   @override
-  _MyForm4State createState() => _MyForm4State();
+  _MyForm3State createState() => _MyForm3State();
 }
 
-class _MyForm4State extends State<MyForm4> {
+class _MyForm3State extends State<MyForm3> {
   String _currentValue = '';
 
-  final _buttonOptions = [
-    'محل',
-    'مقر',
-    'معرض',
-    'فرد',
-  ];
+  List<String> _buttonOptions = [];
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
     _currentValue = widget.quarter11;
+    print("ssss${widget.traderType}");
+    if(widget.traderType=="تاجر صيانة"){
+      _buttonOptions.clear();
+      Firestore.instance.collection("faults")
+          .getDocuments()
+          .then((QuerySnapshot snapshot) {
+        snapshot.documents.forEach((sparepart) {
+          SparePartsClass spc = SparePartsClass(
+            sparepart.data['sid'],
+            sparepart.data['sName'],
+            sparepart.data['surl'],
+            const Color(0xff8C8C96),
+            false,
+          );
+          setState(() {
+            _buttonOptions.add(sparepart.data['sName']);
+          });
+        });
+      });
+    }else  if(widget.traderType=="تاجر قطع"){
+      _buttonOptions.clear();
+      Firestore.instance.collection("spareparts")
+          .getDocuments()
+          .then((QuerySnapshot snapshot) {
+        snapshot.documents.forEach((sparepart) {
+          SparePartsClass spc = SparePartsClass(
+            sparepart.data['sid'],
+            sparepart.data['sName'],
+            sparepart.data['surl'],
+            const Color(0xff8C8C96),
+            false,
+          );
+          setState(() {
+            _buttonOptions.add(sparepart.data['sName']);
+
+          });
+        });
+      });
+    }
   }
 
   @override
@@ -680,14 +1107,14 @@ class _MyForm4State extends State<MyForm4> {
       ),
       onPressed: () {
         setState(() {
-          Navigator.pop(context);
-          widget.onSubmit4(_currentValue.toString());
+          widget.onSubmit3(_currentValue.toString());
+          // Navigator.pop(context);
         });
       },
     );
     return AlertDialog(
       title: Text(
-        "النوع",
+        "نوع التاجر",
         style: TextStyle(fontWeight: FontWeight.bold),
         textDirection: TextDirection.rtl,
       ),
@@ -724,85 +1151,95 @@ class _MyForm4State extends State<MyForm4> {
   }
 }
 
-class DecoratedTextField extends StatelessWidget {
+
+///////////////////////////////////
+
+typedef void MyFormCallback4(String result);
+
+class MyForm4 extends StatefulWidget {
+  final MyFormCallback4 onSubmit4;
+  String quarter11;
+
+  MyForm4(this.quarter11, {this.onSubmit4});
+
+  @override
+  _MyForm4State createState() => _MyForm4State();
+}
+
+class _MyForm4State extends State<MyForm4> {
+  String _currentValue = '';
+
+  final _buttonOptions = ["تاجر صيانة","تاجر قطع"];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    _currentValue = widget.quarter11;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-      alignment: Alignment.center,
-      padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.grey[300],
-        borderRadius: BorderRadius.circular(10),
+    Widget cancelButton = FlatButton(
+      child: Text(
+        "إلغاء",
+        style: TextStyle(color: Colors.black),
       ),
-      child: TextField(
-        decoration:
-            InputDecoration.collapsed(hintText: 'Enter your reference number'),
+      onPressed: () {
+        setState(() {
+          Navigator.pop(context);
+        });
+      },
+    );
+    Widget continueButton = FlatButton(
+      child: Text(
+        "حفظ",
+        style: TextStyle(color: Colors.black),
       ),
+      onPressed: () {
+        setState(() {
+          widget.onSubmit4(_currentValue.toString());
+          // Navigator.pop(context);
+        });
+      },
+    );
+    return AlertDialog(
+      title: Text(
+        "نوع التاجر",
+        style: TextStyle(fontWeight: FontWeight.bold),
+        textDirection: TextDirection.rtl,
+      ),
+      content: Container(
+        width: MediaQuery.of(context).size.width * 0.9,
+        height: MediaQuery.of(context).size.height * 0.9,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: _buttonOptions
+                .map((value) => RadioListTile(
+              groupValue: _currentValue,
+              title: Text(
+                value,
+                textDirection: TextDirection.rtl,
+              ),
+              value: value,
+              onChanged: (val) {
+                setState(() {
+                  debugPrint('VAL = $val');
+                  _currentValue = val;
+                });
+              },
+            ))
+                .toList(),
+          ),
+        ),
+      ),
+      actions: [
+        cancelButton,
+        continueButton,
+      ],
     );
   }
 }
 
-class SheetButton extends StatefulWidget {
-  SheetButton();
-
-  _SheetButtonState createState() => _SheetButtonState();
-}
-
-class _SheetButtonState extends State<SheetButton> {
-  bool checkingFlight = false;
-  bool success = false;
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-  @override
-  Widget build(BuildContext context) {
-    return !checkingFlight
-        ? MaterialButton(
-            key: _scaffoldKey,
-            color: const Color(0xff171732),
-            onPressed: () async {
-              setState(() {
-                checkingFlight = true;
-              });
-
-              await Future.delayed(Duration(seconds: 2));
-
-              setState(() {
-                success = true;
-
-              });
-
-              await Future.delayed(Duration(seconds: 1));
-
-              // Navigator.pushReplacement(
-              //     context,
-              //     MaterialPageRoute(
-              //         builder: (context) => FragmentSouq1(widget.regionlist)));
-//              return showInSnackBar("تم تحديث حسابك");
-            },
-            child: Text(
-              'تحديث',
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-          )
-        : !success
-            ? CircularProgressIndicator()
-            : Icon(
-                Icons.check,
-                size: 100,
-                color: Colors.green,
-              );
-  }
-
-  void showInSnackBar(String value) {
-    _scaffoldKey.currentState.showSnackBar(new SnackBar(
-      content: new Text(
-        value,
-        style: TextStyle(color: const Color(0xffffffff)),
-      ),
-    ));
-  }
-}

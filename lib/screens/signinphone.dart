@@ -9,8 +9,7 @@ import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:toast/toast.dart';
 
 import '../FragmentNavigation.dart';
-import 'hometest.dart';
-import 'network_connection.dart';
+
 
 class SignInPhone extends StatefulWidget {
   List<String> regionlist = [];

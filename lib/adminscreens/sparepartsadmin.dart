@@ -452,6 +452,8 @@ class _SparePartsAdminState extends State<SparePartsAdmin> {
             sparepart.data['sid'],
             sparepart.data['sName'],
             sparepart.data['surl'],
+            const Color(0xff8C8C96),
+            false,
           );
           setState(() {
             sparepartsList.add(spc);
@@ -547,6 +549,8 @@ if(images.length==0){updatedata(url);}else {
           documentReference.documentID,
           _spareNameController.text,
           urlList,
+          const Color(0xff8C8C96),
+          false,
         ));
         _spareNameController.text="";
         images.clear();

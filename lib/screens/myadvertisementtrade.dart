@@ -15,13 +15,13 @@ import 'package:toast/toast.dart';
 
 import 'advdetail.dart';
 
-class Advertisements extends StatefulWidget {
-  Advertisements();
+class MyAdvertisementTrade extends StatefulWidget {
+  MyAdvertisementTrade();
   @override
-  _AdvertisementsState createState() => _AdvertisementsState();
+  _MyAdvertisementTradeState createState() => _MyAdvertisementTradeState();
 }
 
-class _AdvertisementsState extends State<Advertisements> {
+class _MyAdvertisementTradeState extends State<MyAdvertisementTrade> {
   List<AdvClass> advlist = [];
   bool _load = false;
   String _userId="";
@@ -73,10 +73,9 @@ class _AdvertisementsState extends State<Advertisements> {
           ),
         ),
       ),
-      body:
-      StreamBuilder(
-        stream: Firestore.instance.collection('advertisments').orderBy('carrange', descending: true)//.where("cproblemtype", isEqualTo:"قطع غيار")
-            .snapshots(),
+      body: StreamBuilder(
+        stream: Firestore.instance.collection('advertisments').orderBy('carrangetrade', descending: true)//.where("cproblemtype", isEqualTo:"قطع غيار")
+            .where("tradeidselected", isEqualTo:_userId).snapshots(),
         //print an integer every 2secs, 10 times
         builder: (context, snapshot) {
           if (snapshot.data?.documents == null || !snapshot.hasData)
@@ -99,7 +98,7 @@ class _AdvertisementsState extends State<Advertisements> {
                         ),
                         itemCount:snapshot.data.documents.length,
                         itemBuilder: (BuildContext context, int index) {
-                          return  firebasedata(context,index, snapshot.data.documents[index]);
+                          return firebasedata(context,index, snapshot.data.documents[index]);
                         },
                       ),
                     ))
@@ -109,7 +108,6 @@ class _AdvertisementsState extends State<Advertisements> {
 
         },
       ),
-
     );
   }
 
@@ -135,14 +133,14 @@ class _AdvertisementsState extends State<Advertisements> {
 
           },
           child: Container(
-           // height: 1000,
+            // height: 1000,
               child: Column(
                 children: <Widget>[
                   Stack(
                     children: [
                       Container(
                         height: 200,
-                      child:  document['curi'] == null
+                        child:  document['curi'] == null
                             ? new Image.asset("assets/images/ic_logo2.png",
                         )
                             : new Image.network(

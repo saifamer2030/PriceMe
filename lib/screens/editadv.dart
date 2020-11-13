@@ -36,7 +36,7 @@ class EditAdv extends StatefulWidget{
 
 int index,length,carrange;
 String advid,cNew,caudiourl,cbody,ccar,ccarversion,cdate,cdiscribtion,cimagelist,cmodel,cproblemtype,
-    ctitle,curi,mfault,pname,pphone,sparepart,subfault,userId,fPlaceName,fromPLat,fromPLng;
+    ctitle,curi,mfault,pname,pphone,sparepart,subfault,userId;
 
   final LocalFileSystem localFileSystem;
 
@@ -63,9 +63,7 @@ EditAdv(
       this.sparepart,
       this.subfault,
       this.userId,
-      this.fPlaceName,
-      this.fromPLat,
-      this.fromPLng,  {localFileSystem}) : this.localFileSystem = localFileSystem ?? LocalFileSystem();
+       {localFileSystem}) : this.localFileSystem = localFileSystem ?? LocalFileSystem();
 
   @override
   _EditAdvState createState() => _EditAdvState();
@@ -73,23 +71,30 @@ EditAdv(
 enum SingingCharacter4 { used, New, NO }
 
 class _EditAdvState extends State<EditAdv> {
+  bool fault_s_apear = false;
+  bool spare_s_apear = false;
+  List<FaultsClass> subfaultsList = [];
+  List<FaultsClass> subsparesList = [];
+ String faultid="";
+  List<SparePartsClass> mainfaultsList = [];
+  List<SparePartsClass> mainsparsList = [];
+
+  List<String> faultoutput= [];
+  List<String> faultoutputsub= [];
+
   bool _load1 = false;
   String url1;
   String imagepathes = '';
   List<String> urlList = [];
   List<String> proplemtype = ["اعطال","قطع غيار"];
   List<String> indyearlist = [];
-  List<String> subfaultsList = [];
   List<bool> subcheckList = [];
 
-  List<String> subsparesList = [];
   List<bool> subcheckList1 = [];
 
   List<FaultStringClass> sparesList = [];
   List<FaultStringClass> faultsList = [];
 
-  List<SparePartsClass> mainfaultsList = [];
-  List<SparePartsClass> mainsparsList = [];
   String cNew;
 
 
@@ -102,7 +107,7 @@ class _EditAdvState extends State<EditAdv> {
   String _error = 'No Error Dectected';
   var _formKey = GlobalKey<FormState>();
   LatLng fromPlace, toPlace ;
-  String fromPlaceLat , fromPlaceLng , fPlaceName ;
+  //String fromPlaceLat , fromPlaceLng , fPlaceName ;
   Map <String , dynamic > sendData = Map();
   String model1;
   String model2;
@@ -129,9 +134,8 @@ String _userId,audiourl;
   RecordingStatus _currentStatus = RecordingStatus.Unset;
   void getDataf() {
     setState(() {
-    //  print("ooooooo${widget.sparepartsList[0]}");
+      //  print("ooooooo${widget.sparepartsList[0]}");
       final SparePartsReference = Firestore.instance;
-      final SparePartsReference1 = Firestore.instance;
 
       mainfaultsList.clear;
 
@@ -143,63 +147,19 @@ String _userId,audiourl;
             sparepart.data['sid'],
             sparepart.data['sName'],
             sparepart.data['surl'],
-
+            faultoutput.contains(sparepart.data['sName'])?const Color(0xff171732):const Color(0xff8C8C96),
+            faultoutput.contains(sparepart.data['sName'])?true:false,
           );
-
-
-        setState(() {
-
-          mainfaultsList.add(spc);
-          // print(sparepartsList.length.toString() + "llll");
+          // const Color(0xff171732);
+          setState(() {
+            mainfaultsList.add(spc);
+            if(widget.cproblemtype=="اعطال"){
+            if(faultoutput.contains(sparepart.data['sName'])){
+              faultid= sparepart.data['sid'];
+            }}
+          });
         });
-
-        });
-      }).whenComplete(() {
-        faultsList.clear();
-       int i=0;
-        // subcheckList.add(false);
-
-        for(var mfaults in mainfaultsList){
-            //setState(() {  subfaultsList.clear;});
-
-            SparePartsReference1.collection("subfaults").document(mfaults.sid).collection("subfaultid")
-              .getDocuments()
-              .then((QuerySnapshot snapshot) {
-            snapshot.documents.forEach((fault) {
-              FaultsClass fp = FaultsClass(
-                fault.data['fid'],
-                fault.data['fName'],
-                fault.data['fsubId'],
-                fault.data['fsubName'],
-                fault.data['fsubDesc'],
-                fault.data['fsubUrl'],
-              );
-              setState(() {
-                i++;
-                subfaultsList.add(fault.data['fsubName']);
-                subfault=subfault+fault.data['fsubName']+",";
-                subcheck=subcheck+"false"+",";
-                print(fault.data['fsubName'] + "llll"+mfaults.sName);
-
-              });
-            });
-          }).whenComplete(() {
-              setState(() {
-                print(mfaults.sName+"////"+subfaultsList.length.toString());
-                faultsList.add(new FaultStringClass(mfaults.sName,subfault,subcheck));
-                subfault="";
-                subcheck="";
-
-                i=0;
-                subfaultsList.clear();
-                subcheckList.clear();
-
-              });
-            });
-
-        }//////
-
-      });
+      }).then((value) {getsubdatainitial();});
     });
 
   }
@@ -209,7 +169,7 @@ String _userId,audiourl;
       final SparePartsReference = Firestore.instance;
       final SparePartsReference1 = Firestore.instance;
 
-      mainfaultsList.clear;
+      mainsparsList.clear;
 
       SparePartsReference.collection("spareparts")
           .getDocuments()
@@ -219,67 +179,82 @@ String _userId,audiourl;
             sparepart.data['sid'],
             sparepart.data['sName'],
             sparepart.data['surl'],
-
+            faultoutput.contains(sparepart.data['sName'])?const Color(0xff171732):const Color(0xff8C8C96),
+            faultoutput.contains(sparepart.data['sName'])?true:false,
           );
 
 
           setState(() {
-
             mainsparsList.add(spc);
-            // print(sparepartsList.length.toString() + "llll");
+            if(widget.cproblemtype=="قطع غيار"){
+              if(faultoutput.contains(sparepart.data['sName'])){
+                faultid= sparepart.data['sid'];
+              }
+            }
+
           });
 
         });
-      }).whenComplete(() {
-        sparesList.clear();
-        int i=0;
-        // subcheckList.add(false);
-
-        for(var mfaults in mainsparsList){
-          //setState(() {  subfaultsList.clear;});
-
-          SparePartsReference1.collection("subspares").document(mfaults.sid).collection("subsparesid")
-              .getDocuments()
-              .then((QuerySnapshot snapshot) {
-            snapshot.documents.forEach((fault) {
-              FaultsClass fp = FaultsClass(
-                fault.data['fid'],
-                fault.data['fName'],
-                fault.data['fsubId'],
-                fault.data['fsubName'],
-                fault.data['fsubDesc'],
-                fault.data['fsubUrl'],
-              );
-              setState(() {
-                i++;
-                subsparesList.add(fault.data['fsubName']);
-                subfault1=subfault1+fault.data['fsubName']+",";
-                subcheck1=subcheck1+"false"+",";
-            //    print(fault.data['fsubName'] + "llll"+mfaults.sName);
-
-              });
-            });
-          }).whenComplete(() {
-            setState(() {
-             // print(mfaults.sName+"////"+subfaultsList.length.toString());
-              sparesList.add(new FaultStringClass(mfaults.sName,subfault1,subcheck1));
-              subfault1="";
-              subcheck1="";
-
-              i=0;
-              subsparesList.clear();
-              subcheckList1.clear();
-
-            });
-          });
-
-        }//////
-
-      });
+      }).then((value) {getsubdatainitial();});
     });
 
   }
+  void getsubdatainitial(){
+    print("vvv$faultid");
 
+    if(_probtypecurrentItemSelected=="اعطال"&&faultid!=""){
+      subfaultsList.clear();
+      final SparePartsReference1 = Firestore.instance;
+      SparePartsReference1.collection("subfaults").document( faultid).collection("subfaultid")
+          .getDocuments()
+          .then((QuerySnapshot snapshot) {
+        FaultsClass fp;
+        snapshot.documents.forEach((fault) {
+          fp = FaultsClass(
+            fault.data['fid'],
+            fault.data['fName'],
+            fault.data['fsubId'],
+            fault.data['fsubName'],
+            fault.data['fsubDesc'],
+            fault.data['fsubUrl'],
+            faultoutputsub.contains( fault.data['fsubName'])?const Color(0xff171732):const Color(0xff8C8C96),
+            faultoutputsub.contains( fault.data['fsubName'])?true:false,
+          );
+          setState(() {
+            subfaultsList.add(fp);
+          });
+        });
+      }).whenComplete(() => setState((){ fault_s_apear = true;}));
+
+    }else  if(_probtypecurrentItemSelected=="قطع غيار"&&faultid!=""){
+      subsparesList.clear();
+      final SparePartsReference1 = Firestore.instance;
+      SparePartsReference1.collection("subspares").document( faultid).collection("subsparesid")
+          .getDocuments()
+          .then((QuerySnapshot snapshot) {
+        FaultsClass fp;
+        snapshot.documents.forEach((fault) {
+          fp = FaultsClass(
+            fault.data['fid'],
+            fault.data['fName'],
+            fault.data['fsubId'],
+            fault.data['fsubName'],
+            fault.data['fsubDesc'],
+            fault.data['fsubUrl'],
+            faultoutputsub.contains( fault.data['fsubName'])?const Color(0xff171732):const Color(0xff8C8C96),
+            faultoutputsub.contains( fault.data['fsubName'])?true:false,
+          );
+          setState(() {
+            subsparesList.add(fp);
+
+
+          });
+        });
+      }).whenComplete(() => setState((){ spare_s_apear = true;}));
+
+    }
+
+  }
   @override
   void initState() {
     super.initState();
@@ -304,9 +279,16 @@ print("new:$cNew");
 
     model1 = widget.ccar;
     model2 =widget.ccarversion;
-    fromPlaceLat=widget.fromPLat;
-    fromPlaceLng=widget.fromPLng;
-    fPlaceName=widget.fPlaceName;
+    faultoutput=widget.mfault
+        .replaceAll(" ", "")
+        .replaceAll("[", "")
+        .replaceAll("]", "")
+        .split(",");
+    faultoutputsub=widget.subfault
+        .replaceAll(" ", "")
+        .replaceAll("[", "")
+        .replaceAll("]", "")
+        .split(",");
     fault1=widget.mfault;
     fault2=widget.subfault;
     audiourl=widget.caudiourl;
@@ -420,7 +402,340 @@ print("new:$cNew");
                               )),
                         ),
                       ),
+                      SizedBox(
+                        height: _minimumPadding,
+                        width: _minimumPadding,
+                      ),
+                      _probtypecurrentItemSelected==proplemtype[0]?  Container(
+                        height: 35,
+                        child: mainfaultsList.length == 0
+                            ? new Text("برجاء الإنتظار")
+                            : new ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            reverse: true,
+                            itemCount: mainfaultsList.length,
+                            itemBuilder: (BuildContext ctxt, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 1.0, right: 5.0, left: 5.0),
+                                child: Card(
+                                  color: const Color(0xff8C8C96),
+                                  shape: new RoundedRectangleBorder(
+                                      side: new BorderSide(
+                                          color: mainfaultsList[index].ccolor, width: 3.0),
+                                      borderRadius: BorderRadius.circular(100.0)),
+                                  //borderOnForeground: true,
+                                  elevation: 10.0,
+                                  margin: EdgeInsets.all(1),
+                                  child: InkWell(
+                                    onTap: () {
+                                      subfaultsList.clear();
+                                      setState(() {
+                                        fault_s_apear=true;
+                                        mainfaultsList[index].ccolorcheck =
+                                        !mainfaultsList[index].ccolorcheck;
+                                        if (mainfaultsList[index].ccolorcheck) {
+                                          mainfaultsList[index].ccolor =
+                                          const Color(0xff171732);
+                                          for (var i = 0; i < mainfaultsList.length; i++) {
+                                            if (i != index) {
+                                              mainfaultsList[i].ccolor =
+                                              const Color(0xff8C8C96);
+                                            }
+                                          }
+                                        } else {
+                                          mainfaultsList[index].ccolor =
+                                          const Color(0xff8C8C96);
+                                        }
+                                      });
 
+                                      setState((){
+                                        final SparePartsReference1 = Firestore.instance;
+                                        SparePartsReference1.collection("subfaults").document( mainfaultsList[index].sid).collection("subfaultid")
+                                            .getDocuments()
+                                            .then((QuerySnapshot snapshot) {
+                                          FaultsClass fp;
+                                          snapshot.documents.forEach((fault) {
+                                            fp = FaultsClass(
+                                              fault.data['fid'],
+                                              fault.data['fName'],
+                                              fault.data['fsubId'],
+                                              fault.data['fsubName'],
+                                              fault.data['fsubDesc'],
+                                              fault.data['fsubUrl'],
+                                              faultoutputsub.contains( fault.data['fsubName'])?const Color(0xff171732):const Color(0xff8C8C96),
+                                              faultoutputsub.contains( fault.data['fsubName'])?true:false,
+                                            );
+                                            setState(() {
+                                              subfaultsList.add(fp);
+                                            });
+                                          });
+                                        });
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text(
+                                          mainfaultsList[index].sName,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: "",
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 11,
+                                            letterSpacing: 0.5,
+                                            height: 1,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                      ):Container(),
+                      SizedBox(
+                        height: _minimumPadding,
+                        width: _minimumPadding,
+                      ),
+                      _probtypecurrentItemSelected==proplemtype[0]? fault_s_apear?  Container(
+                        height: 35,
+                        child:
+                        // subfaultsList.length == 0
+                        //     ? new Text("")
+                        //     :
+                        new ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            reverse: true,
+                            itemCount: subfaultsList.length,
+                            itemBuilder: (BuildContext ctxt, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 1.0, right: 5.0, left: 5.0),
+                                child: Card(
+                                  color: const Color(0xff8C8C96),
+                                  shape: new RoundedRectangleBorder(
+                                      side: new BorderSide(
+                                          color: subfaultsList[index].ccolor, width: 3.0),
+                                      borderRadius: BorderRadius.circular(100.0)),
+                                  //borderOnForeground: true,
+                                  elevation: 10.0,
+                                  margin: EdgeInsets.all(1),
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        subfaultsList[index].ccolorcheck =
+                                        !subfaultsList[index].ccolorcheck;
+                                        if (subfaultsList[index].ccolorcheck) {
+                                          subfaultsList[index].ccolor =
+                                          const Color(0xff171732);
+                                          faultoutput.add(subfaultsList[index].fName);
+                                          faultoutputsub.add(subfaultsList[index].fsubName);
+                                        } else {
+                                          subfaultsList[index].ccolor =
+                                          const Color(0xff8C8C96);
+                                          faultoutput.remove(subfaultsList[index].fName);
+                                          faultoutputsub.remove(subfaultsList[index].fsubName);//removeWhere((item){item==subfaultsList[index].fsubName;});
+                                        }
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text(
+                                          subfaultsList[index].fsubName,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.black,
+//                                                  const Color(0xff171732),
+                                            fontFamily: "",
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 11,
+                                            letterSpacing: 0.5,
+                                            height: 1,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                      ):Container():Container(),
+                      SizedBox(
+                        height: _minimumPadding,
+                        width: _minimumPadding,
+                      ),
+                      _probtypecurrentItemSelected==proplemtype[1]? Container(
+                        height: 35,
+                        child: mainsparsList.length == 0
+                            ? new Text("برجاء الإنتظار")
+                            : new ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            reverse: true,
+                            itemCount: mainsparsList.length,
+                            itemBuilder: (BuildContext ctxt, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 1.0, right: 5.0, left: 5.0),
+                                child: Card(
+                                  color: const Color(0xff8C8C96),
+                                  shape: new RoundedRectangleBorder(
+                                      side: new BorderSide(
+                                          color: mainsparsList[index].ccolor, width: 3.0),
+                                      borderRadius: BorderRadius.circular(100.0)),
+                                  //borderOnForeground: true,
+                                  elevation: 10.0,
+                                  margin: EdgeInsets.all(1),
+                                  child: InkWell(
+                                    onTap: () {
+                                      subsparesList.clear();
+                                      setState(() {
+                                        spare_s_apear=true;
+                                        mainsparsList[index].ccolorcheck =
+                                        !mainsparsList[index].ccolorcheck;
+                                        if (mainsparsList[index].ccolorcheck) {
+                                          mainsparsList[index].ccolor =
+                                          const Color(0xff171732);
+                                          for (var i = 0; i < mainsparsList.length; i++) {
+                                            if (i != index) {
+                                              mainsparsList[i].ccolor =
+                                              const Color(0xff8C8C96);
+                                            }
+                                          }
+                                        } else {
+                                          mainsparsList[index].ccolor =
+                                          const Color(0xff8C8C96);
+                                        }
+                                      });
+
+                                      setState((){
+                                        final SparePartsReference1 = Firestore.instance;
+                                        SparePartsReference1.collection("subspares").document( mainsparsList[index].sid).collection("subsparesid")
+                                            .getDocuments()
+                                            .then((QuerySnapshot snapshot) {
+                                          FaultsClass fp;
+                                          snapshot.documents.forEach((fault) {
+                                            fp = FaultsClass(
+                                              fault.data['fid'],
+                                              fault.data['fName'],
+                                              fault.data['fsubId'],
+                                              fault.data['fsubName'],
+                                              fault.data['fsubDesc'],
+                                              fault.data['fsubUrl'],
+                                              faultoutputsub.contains( fault.data['fsubName'])?const Color(0xff171732):const Color(0xff8C8C96),
+                                              faultoutputsub.contains( fault.data['fsubName'])?true:false,
+                                            );
+                                            setState(() {
+                                              subsparesList.add(fp);
+                                            });
+                                          });
+                                        });
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text(
+                                          mainsparsList[index].sName,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: "",
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 11,
+                                            letterSpacing: 0.5,
+                                            height: 1,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                      ):Container(),
+                      SizedBox(
+                        height: _minimumPadding,
+                        width: _minimumPadding,
+                      ),
+                      _probtypecurrentItemSelected==proplemtype[1]? spare_s_apear?  Container(
+                        height: 35,
+                        child:
+                        new ListView.builder(
+                            physics: BouncingScrollPhysics(),
+                            scrollDirection: Axis.horizontal,
+                            reverse: true,
+                            itemCount: subsparesList.length,
+                            itemBuilder: (BuildContext ctxt, int index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(
+                                    top: 1.0, right: 5.0, left: 5.0),
+                                child: Card(
+                                  color: const Color(0xff8C8C96),
+                                  shape: new RoundedRectangleBorder(
+                                      side: new BorderSide(
+                                          color: subsparesList[index].ccolor, width: 3.0),
+                                      borderRadius: BorderRadius.circular(100.0)),
+                                  //borderOnForeground: true,
+                                  elevation: 10.0,
+                                  margin: EdgeInsets.all(1),
+                                  child: InkWell(
+                                    onTap: () {
+                                      setState(() {
+                                        subsparesList[index].ccolorcheck =
+                                        !subsparesList[index].ccolorcheck;
+                                        if (subsparesList[index].ccolorcheck) {
+                                          subsparesList[index].ccolor =
+                                          const Color(0xff171732);
+                                          faultoutput.add(subsparesList[index].fName);
+                                          faultoutputsub.add(subsparesList[index].fsubName);
+                                        } else {
+                                          subsparesList[index].ccolor =
+                                          const Color(0xff8C8C96);
+                                          faultoutput.remove(subsparesList[index].fName);
+                                          faultoutputsub.remove(subsparesList[index].fsubName);//removeWhere((item){item==subfaultsList[index].fsubName;});
+                                        }
+                                      });
+                                    },
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(5.0),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(top: 5),
+                                        child: Text(
+                                          subsparesList[index].fsubName,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            color: Colors.black,
+//                                                  const Color(0xff171732),
+                                            fontFamily: "",
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 11,
+                                            letterSpacing: 0.5,
+                                            height: 1,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                      ):Container():Container(),
+                      Container(
+                        height: 50,
+                        child:Center(child: Text(faultoutputsub.toString())),),
+                      SizedBox(
+                        height: _minimumPadding,
+                        width: _minimumPadding,
+                      ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -504,45 +819,45 @@ print("new:$cNew");
                           ),
                         ],
                       ),
-                      _probtypecurrentItemSelected==proplemtype[0]?SizedBox(
-                        height: _minimumPadding,
-                        width: _minimumPadding,
-                      ):Container(),
-                      _probtypecurrentItemSelected==proplemtype[0]?Container(
-                        height: 40,
-                        color: Colors.grey,
-                        child: InkWell(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => MyForm4(
-                                        faultsList,widget.subfault,widget.mfault,
-                                        onSubmit4: onSubmit4)));
-
-                          },
-                          child: Card(
-                            elevation: 0.0,
-                            color: const Color(0xff171732),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "نوع العطل",
-                                  textDirection: TextDirection.rtl,
-                                  style: TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ):Container(),
+                      // _probtypecurrentItemSelected==proplemtype[0]?SizedBox(
+                      //   height: _minimumPadding,
+                      //   width: _minimumPadding,
+                      // ):Container(),
+                      // _probtypecurrentItemSelected==proplemtype[0]?Container(
+                      //   height: 40,
+                      //   color: Colors.grey,
+                      //   child: InkWell(
+                      //     onTap: () {
+                      //       Navigator.push(
+                      //           context,
+                      //           MaterialPageRoute(
+                      //               builder: (context) => MyForm4(
+                      //                   faultsList,widget.subfault,widget.mfault,
+                      //                   onSubmit4: onSubmit4)));
+                      //
+                      //     },
+                      //     child: Card(
+                      //       elevation: 0.0,
+                      //       color: const Color(0xff171732),
+                      //       shape: RoundedRectangleBorder(
+                      //         borderRadius: BorderRadius.circular(5),
+                      //       ),
+                      //       child: Center(
+                      //         child: Padding(
+                      //           padding: const EdgeInsets.all(8.0),
+                      //           child: Text(
+                      //             "نوع العطل",
+                      //             textDirection: TextDirection.rtl,
+                      //             style: TextStyle(
+                      //                 color: Colors.grey,
+                      //                 fontSize: 12,
+                      //                 fontWeight: FontWeight.bold),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ):Container(),
                       Padding(
                         padding: EdgeInsets.only(
                             top: _minimumPadding * 5, bottom: _minimumPadding),
@@ -737,45 +1052,45 @@ print("new:$cNew");
                         ],
                       ),
 
-                      _probtypecurrentItemSelected==proplemtype[0]?Container():Padding(
-                        padding: EdgeInsets.only(
-                            top: _minimumPadding, bottom: _minimumPadding),
-                        child: Container(
-                          height: 40,
-                          color: Colors.grey,
-                          child: InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MyForm4(
-                                          sparesList,widget.subfault,widget.mfault,
-                                          onSubmit4: onSubmit4)));
-
-                            },
-                            child: Card(
-                              elevation: 0.0,
-                              color: const Color(0xff171732),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Center(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Text(
-                                    "نوع قطع الغيار",
-                                    textDirection: TextDirection.rtl,
-                                    style: TextStyle(
-                                        color: Colors.grey,
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        )
-                      ),
+                      // _probtypecurrentItemSelected==proplemtype[0]?Container():Padding(
+                      //   padding: EdgeInsets.only(
+                      //       top: _minimumPadding, bottom: _minimumPadding),
+                      //   child: Container(
+                      //     height: 40,
+                      //     color: Colors.grey,
+                      //     child: InkWell(
+                      //       onTap: () {
+                      //         Navigator.push(
+                      //             context,
+                      //             MaterialPageRoute(
+                      //                 builder: (context) => MyForm4(
+                      //                     sparesList,widget.subfault,widget.mfault,
+                      //                     onSubmit4: onSubmit4)));
+                      //
+                      //       },
+                      //       child: Card(
+                      //         elevation: 0.0,
+                      //         color: const Color(0xff171732),
+                      //         shape: RoundedRectangleBorder(
+                      //           borderRadius: BorderRadius.circular(5),
+                      //         ),
+                      //         child: Center(
+                      //           child: Padding(
+                      //             padding: const EdgeInsets.all(8.0),
+                      //             child: Text(
+                      //               "نوع قطع الغيار",
+                      //               textDirection: TextDirection.rtl,
+                      //               style: TextStyle(
+                      //                   color: Colors.grey,
+                      //                   fontSize: 12,
+                      //                   fontWeight: FontWeight.bold),
+                      //             ),
+                      //           ),
+                      //         ),
+                      //       ),
+                      //     ),
+                      //   )
+                      // ),
                                            // Container(
                       //   //decoration: BoxDecoration(border: Border.all(color: Colors.teal)),
                       //   child: new Directionality(textDirection: TextDirection.rtl,
@@ -949,62 +1264,62 @@ print("new:$cNew");
                         height: _minimumPadding,
                         width: _minimumPadding,
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(
-                            top: _minimumPadding * 5, bottom: _minimumPadding),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            InkWell(
-                              onTap: () async {
-                                sendData = await Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          CurrentLocation2()),
-                                );
-
-                                // print("\n\n\n\n\n\n\nfromPlaceLng>>>>"+
-                                //     fromPlaceLng+fPlaceName+"\n\n\n\n\n\n");
-setState(() {
-  fromPlace = sendData["loc_latLng"];
-  fromPlaceLat = fromPlace.latitude.toString();
-  fromPlaceLng = fromPlace.longitude.toString();
-  fPlaceName = sendData["loc_name"];
-});
-                              } ,
-                              child: Icon(
-                                fromPlaceLat == null ? Icons.gps_fixed : Icons.check_circle
-                                    ,
-                                color: Colors.purpleAccent,
-                                size: 50,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10.0,
-                            ),
-                            Expanded(
-                              child: Text(
-                                "يرجى الضغط على الصورة لتحديد موقع المحل",
-                                textDirection: TextDirection.rtl,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.topCenter,
-                              child: Icon(
-                                Icons.star,
-                                color: Colors.red,
-                                size: 15,
-                              ),
-                            ),
-
-                          ],
-                        ),
-                      ),
+//                       Padding(
+//                         padding: EdgeInsets.only(
+//                             top: _minimumPadding * 5, bottom: _minimumPadding),
+//                         child: Row(
+//                           mainAxisAlignment: MainAxisAlignment.center,
+//                           children: <Widget>[
+//                             InkWell(
+//                               onTap: () async {
+//                                 sendData = await Navigator.push(
+//                                   context,
+//                                   MaterialPageRoute(
+//                                       builder: (context) =>
+//                                           CurrentLocation2()),
+//                                 );
+//
+//                                 // print("\n\n\n\n\n\n\nfromPlaceLng>>>>"+
+//                                 //     fromPlaceLng+fPlaceName+"\n\n\n\n\n\n");
+// setState(() {
+//   fromPlace = sendData["loc_latLng"];
+//   fromPlaceLat = fromPlace.latitude.toString();
+//   fromPlaceLng = fromPlace.longitude.toString();
+//   fPlaceName = sendData["loc_name"];
+// });
+//                               } ,
+//                               child: Icon(
+//                                 fromPlaceLat == null ? Icons.gps_fixed : Icons.check_circle
+//                                     ,
+//                                 color: Colors.purpleAccent,
+//                                 size: 50,
+//                               ),
+//                             ),
+//                             SizedBox(
+//                               width: 10.0,
+//                             ),
+//                             Expanded(
+//                               child: Text(
+//                                 "يرجى الضغط على الصورة لتحديد موقع المحل",
+//                                 textDirection: TextDirection.rtl,
+//                                 style: TextStyle(
+//                                     color: Colors.black,
+//                                     fontSize: 15,
+//                                     fontWeight: FontWeight.bold),
+//                               ),
+//                             ),
+//                             Align(
+//                               alignment: Alignment.topCenter,
+//                               child: Icon(
+//                                 Icons.star,
+//                                 color: Colors.red,
+//                                 size: 15,
+//                               ),
+//                             ),
+//
+//                           ],
+//                         ),
+//                       ),
                       Padding(
                         padding: EdgeInsets.only(
                             top: _minimumPadding, bottom: _minimumPadding),
@@ -1161,16 +1476,13 @@ setState(() {
         'ccarversion':model2,
         'cmodel':_indyearcurrentItemSelected,
 
-        'mfault':fault1,
-        'subfault':fault2,
-        'mfaultarray':fault1.split(","),
-
-        'sparepart':_sparecurrentItemSelected,
+        'mfault':faultoutput.toString(),
+        'subfault':faultoutputsub.toString(),
 
         'ctitle': titleController.text,
-        'fromPLat': fromPlaceLat,
-        'fromPLng': fromPlaceLng,
-        'fPlaceName':fPlaceName,
+        'mfaultarray':faultoutput,
+        'subfaultarray':faultoutputsub,
+        'sparepart':"",
         'cNew':  _probtypecurrentItemSelected==proplemtype[1]
             ? _character4.toString().contains("used")
             ? "مستعملة"
@@ -1204,13 +1516,17 @@ setState(() {
   void _onDropDownItemSelectedproblem(String newValueSelected) {
     setState(() {
       this._probtypecurrentItemSelected = newValueSelected;
+      faultoutput.clear();
+      faultoutputsub.clear();
+      fault_s_apear = false;
+      spare_s_apear = false;
+      faultid="";
     });
   }
 
   Future<void> loadAssets() async {
     List<Asset> resultList = List<Asset>();
     String error = 'No Error Dectected';
-
     try {
       resultList = await MultiImagePicker.pickImages(
         maxImages: 7,

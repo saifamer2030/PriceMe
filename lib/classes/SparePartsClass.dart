@@ -4,8 +4,11 @@ class SparePartsClass{
   String sid;
   String sName;
   String surl;
-
-  SparePartsClass (this.sid,this.sName,this.surl);
+  Color ccolor;
+  bool ccolorcheck;
+  SparePartsClass (this.sid,this.sName,this.surl,
+      this.ccolor,
+      this.ccolorcheck,);
 
 
 }
