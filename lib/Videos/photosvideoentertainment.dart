@@ -32,7 +32,7 @@ class _VidiosPhotoEntertainmentState extends State<VidiosPhotoEntertainment> {
   String filePath;
   List<String> sortlist = ["الاحدث","الاكثر شهرة"];
   var _sortcurrentItemSelected = '';
-
+ bool chechsearch=false;
   @override
   void initState() {
     super.initState();
@@ -53,12 +53,29 @@ class _VidiosPhotoEntertainmentState extends State<VidiosPhotoEntertainment> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      // appBar: AppBar(
-      // title: const Text('AppBar Demo'),),
+      floatingActionButton: Container(
+
+        child: FloatingActionButton(
+          heroTag: "unique55",
+          onPressed: () {
+            setState(() {
+              chechsearch=!chechsearch;
+            });
+          },
+          backgroundColor: Colors.orange,
+          elevation: 20.0,
+          child: Icon(
+            Icons.search,
+            size: 30,
+            color: const Color(0xff171732),
+          ),
+        ),
+      ),
+
       backgroundColor: const Color(0xffffffff),
       body: ListView(
         children: [
-          Center(
+          chechsearch?  Center(
             child: Container(
               width: 250,
               height: 50,
@@ -95,7 +112,7 @@ class _VidiosPhotoEntertainmentState extends State<VidiosPhotoEntertainment> {
                 ),
               ),
             ),
-          ),
+          ):Container(),
           Container(
             width: width,
             height: height,

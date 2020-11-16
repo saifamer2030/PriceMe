@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:priceme/ChatRoom/widget/home.dart';
 import 'package:priceme/Videos/photosvideomine.dart';
+import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:priceme/screens/advertisements.dart';
 import 'package:priceme/screens/alloffers.dart';
@@ -33,11 +34,72 @@ class _MorePriceMeState extends State<MorePriceMe> {
   String _cName = "";
   String _cMobile = "";
   String _cType = "";
+  List<String> mainfaultsList = [];
+  List<String> mainsparsList = [];
 
+  void getDataf() {
+    setState(() {
+      //  print("ooooooo${widget.sparepartsList[0]}");
+      final SparePartsReference = Firestore.instance;
+
+      mainfaultsList.clear;
+      mainfaultsList.add("الكل");
+
+      SparePartsReference.collection("faults")
+          .getDocuments()
+          .then((QuerySnapshot snapshot) {
+        snapshot.documents.forEach((sparepart) {
+          SparePartsClass spc = SparePartsClass(
+            sparepart.data['sid'],
+            sparepart.data['sName'],
+            sparepart.data['surl'],
+            const Color(0xff8C8C96),
+            false,
+          );
+          // const Color(0xff171732);
+          setState(() {
+            mainfaultsList.add(sparepart.data['sName']);
+          });
+        });
+      });
+    });
+
+  }
+  void getDatas() {
+    setState(() {
+      //  print("ooooooo${widget.sparepartsList[0]}");
+      final SparePartsReference = Firestore.instance;
+      final SparePartsReference1 = Firestore.instance;
+
+      mainsparsList.clear;
+      mainsparsList.add("الكل");
+
+      SparePartsReference.collection("spareparts")
+          .getDocuments()
+          .then((QuerySnapshot snapshot) {
+        snapshot.documents.forEach((sparepart) {
+          SparePartsClass spc = SparePartsClass(
+            sparepart.data['sid'],
+            sparepart.data['sName'],
+            sparepart.data['surl'],
+            const Color(0xff8C8C96),
+            false,
+          );
+          setState(() {
+            mainsparsList.add(sparepart.data['sName'],);
+            // print(sparepartsList.length.toString() + "llll");
+          });
+
+        });
+      });
+    });
+
+  }
   @override
   void initState() {
     super.initState();
 
+    getDatas(); getDataf();
     _firebaseAuth = FirebaseAuth.instance;
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? null
@@ -109,7 +171,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
                         Navigator.push(
                             context,
                             new MaterialPageRoute(
-                                builder: (context) => Advertisements()));
+                                builder: (context) => Advertisements(mainsparsList,mainfaultsList)));
 
                       },
                       child: Row(

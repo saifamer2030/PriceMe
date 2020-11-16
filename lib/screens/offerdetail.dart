@@ -552,56 +552,7 @@ class _OfferDetailState extends State<OfferDetail> {
 
 
 
-                _userId == widget.userId
-                    ? Container()
 
-                    : Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Container(
-                          width:
-                              300 /*MediaQuery.of(context).size.width*/,
-                          height: 40,
-                          child: new RaisedButton(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                new Text("الطلب"),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 10.0),
-                                  child: Icon(
-                                    Icons.check,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            textColor: Colors.white,
-                            color: const Color(0xff171732),
-                            onPressed: () {
-                              if (_userId == null) {
-                                Toast.show(
-                                    "ابشر .. سجل دخول الاول طال عمرك",
-                                    context,
-                                    duration: Toast.LENGTH_LONG,
-                                    gravity: Toast.BOTTOM);
-                              } else {
-                                 Navigator.push(
-                                   context,
-                                   new MaterialPageRoute(
-                                       builder: (BuildContext context) =>
-                                           new UserRatingPage(Rating(widget.userId,"",""))),
-                                 );
-                              }
-                            },
-//
-                            shape: new RoundedRectangleBorder(
-                                borderRadius:
-                                    new BorderRadius.circular(10.0)),
-                          ),
-                        ),
-                      ),
                 SizedBox(
                   height: 2 * _minimumPadding,
                   width: _minimumPadding,

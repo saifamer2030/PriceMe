@@ -79,7 +79,7 @@ class _AddAdvState extends State<AddAdv> {
   String fromPlaceLat , fromPlaceLng , fPlaceName ;
   Map <String , dynamic > sendData = Map();
   String model1;
-  String model2;
+  String model2="...";
   String fault1,faultid;
   String fault2;
   double _value=0.0;
@@ -220,11 +220,11 @@ class _AddAdvState extends State<AddAdv> {
     _init();
 
     FirebaseAuth.instance.currentUser().then((user) => user == null
-        ? Navigator.pushReplacement(
+        ?     Navigator.pushReplacement(
         context,
         MaterialPageRoute(
             builder: (context) => Splash()))
-        : setState(() {_userId = user.uid;
+   : setState(() {_userId = user.uid;
     var userQuery = Firestore.instance.collection('users').where('uid', isEqualTo: _userId).limit(1);
     userQuery.getDocuments().then((data){
       if (data.documents.length > 0){
@@ -757,7 +757,7 @@ class _AddAdvState extends State<AddAdv> {
                                   child: Padding(
                                     padding: const EdgeInsets.all(8.0),
                                     child: Text(
-                                      "نوع السيارة",
+                                      "نوع السيارة($model2)",
                                       textDirection: TextDirection.rtl,
                                       style: TextStyle(
                                           color: Colors.grey,
@@ -1336,7 +1336,7 @@ class _AddAdvState extends State<AddAdv> {
                               onTap: () async {
                                 if (_formKey.currentState.validate()) {
 
-                                  if(images.length == 0 || song == null||  model1 == null || model2 == null||  faultoutputsub.length == 0 ){
+                                  if(images.length == 0 || song == null||  model1 == null || model2 == null||model2=="..."||  faultoutputsub.length == 0 ){
                                     Toast.show("برجاء التأكد من إضافة كل البيانات المطلوبة",context,duration: Toast.LENGTH_LONG,gravity:  Toast.BOTTOM);
                                   }else{
                                     try {
@@ -1500,7 +1500,7 @@ class _AddAdvState extends State<AddAdv> {
           // _sparecurrentItemSelected = widget.probtype0=="قطع غيار"?widget.selecteditem0:widget.sparepartsList[0];
           // _probtypecurrentItemSelected=widget.probtype0=="قطع غيار"?widget.probtype0:proplemtype[0];
           _indyearcurrentItemSelected=indyearlist[0];
-          model1=null;model2=null;fault1=null;fault2=null;
+          model1=null;model2="...";fault1=null;fault2=null;
           _value = 0;
         //  fromPlaceLat=null; fromPlaceLng=null; fPlaceName =null;
           _load1 = false;

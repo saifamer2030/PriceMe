@@ -35,6 +35,7 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
   var _sortcurrentItemSelected = '';
   var _carcurrentItemSelected = '';
   String filt;
+  bool chechsearch=false;
 
   @override
   void initState() {
@@ -57,12 +58,29 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      // appBar: AppBar(
-      // title: const Text('AppBar Demo'),),
+      floatingActionButton: Container(
+
+        child: FloatingActionButton(
+          heroTag: "unique55",
+          onPressed: () {
+            setState(() {
+              chechsearch=!chechsearch;
+            });
+          },
+          backgroundColor: Colors.orange,
+          elevation: 20.0,
+          child: Icon(
+            Icons.search,
+            size: 30,
+            color: const Color(0xff171732),
+          ),
+        ),
+      ),
+
       backgroundColor: const Color(0xffffffff),
       body: ListView(
         children: [
-          Row(
+          chechsearch?   Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Container(
@@ -137,7 +155,7 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
               ),
 
             ],
-          ),
+          ):Container(),
 
           Container(
             width: width,

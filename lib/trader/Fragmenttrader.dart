@@ -14,6 +14,7 @@ import 'package:priceme/screens/alladvertisement.dart';
 import 'package:priceme/screens/homepage.dart';
 import 'package:priceme/screens/myadvertisement.dart';
 import 'package:priceme/screens/myalarms.dart';
+import 'file:///F:/android%20train/applications/1%20a%20flutter%20projects/priceme/priceMe20201010/PriceMe/lib/Videos/collapsing_tab.dart';
 
 class FragmentTrader extends StatefulWidget {
 
@@ -35,7 +36,7 @@ class _FragmentTraderState extends State<FragmentTrader> {
   List<Widget> screens() => [
     MorePriceMe(),
     MyAlarms(),
-    VideoTabs1(),
+    CollapsingTab(),
     AllAdvertisement(),
       ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
@@ -146,7 +147,7 @@ class _FragmentTraderState extends State<FragmentTrader> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen = VideoTabs1(); // if user taps on this dashboard tab will be active
+                        currentScreen = CollapsingTab(); // if user taps on this dashboard tab will be active
                         currentTab = 1;
                       });
                     },

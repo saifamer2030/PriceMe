@@ -19,6 +19,7 @@ import 'package:priceme/screens/myadvertisement.dart';
 import 'package:priceme/screens/myalarms.dart';
 import 'package:priceme/screens/myoffers.dart';
 import 'package:priceme/screens/myrents.dart';
+import 'file:///F:/android%20train/applications/1%20a%20flutter%20projects/priceme/priceMe20201010/PriceMe/lib/Videos/collapsing_tab.dart';
 
 import 'Videos/allvideos.dart';
 import 'classes/ModelClass.dart';
@@ -43,8 +44,8 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
   List<Widget> screens() => [
         MorePriceMe(),
     MyAlarms(),
-    VideoTabs1(),
-    HomePage(),
+    CollapsingTab(),
+    AdvertismentTabs(),
       ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
   final GlobalKey<NavigatorState> navigatorKey =
@@ -55,7 +56,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
     super.initState();
     //getData();
     setState(() {
-      currentScreen = HomePage();
+      currentScreen = AdvertismentTabs();
     });
 
 //    _currentIndex = widget.selectPage != null ? widget.selectPage : 4;
@@ -156,7 +157,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                     onPressed: () {
                       setState(() {
                         currentScreen =
-                            VideoTabs1(); // if user taps on this dashboard tab will be active
+                            CollapsingTab(); // if user taps on this dashboard tab will be active
                         currentTab = 1;
                       });
                     },
@@ -184,7 +185,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                     minWidth: 40,
                     onPressed: () {
                       setState(() {
-                        currentScreen =  HomePage();    /*HomePage()*/ // if user taps on this dashboard tab will be active
+                        currentScreen =  AdvertismentTabs();    /*HomePage()*/ // if user taps on this dashboard tab will be active
                         currentTab = 3;
                       });
                     },
@@ -275,10 +276,15 @@ class _MyFloatingButtonState extends State<MyFloatingButton> {
                   )),
             ),
             onPressed: () {
+
               Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => AddAdv("","","")));
+                      builder: (context) => HomePage()));
+              // Navigator.push(
+              //     context,
+              //     MaterialPageRoute(
+              //         builder: (context) => AddAdv("","","")));
 //        FirebaseAuth.instance.currentUser().then((user) => user == null
 //            ? Navigator.of(context, rootNavigator: false).push(
 //            MaterialPageRoute(

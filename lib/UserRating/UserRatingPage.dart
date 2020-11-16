@@ -11,9 +11,9 @@ import 'package:toast/toast.dart';
 import 'RatingClass.dart';
 
 class UserRatingPage extends StatefulWidget {
-  UserRatingPage(this.rating);
+  UserRatingPage(this.tradeid);
 
-  final Rating rating;
+String tradeid;
 
   @override
   _UserRatingPageState createState() => new _UserRatingPageState();
@@ -35,6 +35,7 @@ class _UserRatingPageState extends State<UserRatingPage> {
   FirebaseAuth _firebaseAuth;
   String _userId;
   SingingCharacter _character = SingingCharacter.done;
+  Rating rating;
 
   // تعريف الايتم المراد ادخال قيم فيها
   TextEditingController _rateController;
@@ -47,8 +48,8 @@ class _UserRatingPageState extends State<UserRatingPage> {
     _firebaseAuth = FirebaseAuth.instance;
     getRatingAvrage();
     // ربط الايتم بالقيم
-    _rateController = new TextEditingController(text: widget.rating.rate);
-    _commentController = new TextEditingController(text: widget.rating.comment);
+    _rateController = new TextEditingController(text: rating.rate);
+    _commentController = new TextEditingController(text: rating.comment);
   }
 
   dynamic data;
@@ -61,7 +62,7 @@ class _UserRatingPageState extends State<UserRatingPage> {
             _userId = user.uid;
             var userQuery = Firestore.instance
                 .collection('users')
-                .where('uid', isEqualTo: widget.rating.id)
+                .where('uid', isEqualTo: rating.id)
                 .limit(1);
             userQuery.getDocuments().then((data) {
               if (data.documents.length > 0) {
@@ -429,7 +430,7 @@ class _UserRatingPageState extends State<UserRatingPage> {
             if (user != null && com != "" && Rate != 0.0 && Rate2 != 0.0 && Rate3 != 0.0) {
               DocumentReference documentReference = Firestore.instance
                   .collection('Rating')
-                  .document(widget.rating.id)
+                  .document(rating.id)
                   .collection(_userId)
                   .document();
               String ratingid = documentReference.documentID;
@@ -443,7 +444,7 @@ class _UserRatingPageState extends State<UserRatingPage> {
                 setState(() {
                   Firestore.instance
                       .collection('users')
-                      .document(widget.rating.id)
+                      .document(rating.id)
                       .updateData({
                     'rating': (double.parse(_totalRate) + allRating.round()).toString(),
                     'custRate': _totalCust + 1,

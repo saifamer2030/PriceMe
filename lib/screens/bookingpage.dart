@@ -3,10 +3,12 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:ui' as ui;
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
+import 'package:priceme/UserRating/UserRatingPage.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:priceme/screens/map_view.dart';
 import 'package:toast/toast.dart';
@@ -33,7 +35,7 @@ String bookingdate="اى موعد";
   String fromPlaceLat , fromPlaceLng;
 
   final format = DateFormat("yyyy-MM-dd HH:mm");
-
+int arrange=0;
   String _cNameowner = "";
   String _cMobileowner;
   String cTypeowner = "";
@@ -49,6 +51,19 @@ String bookingdate="اى موعد";
 bool _isCheckedtrader=false;
 bool _isCheckedowner=false;
 String _userId;
+FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+
+Future onSelectNotification(String payload) async {
+   if (payload != null) {
+
+
+  Navigator.push(
+      context,
+      new MaterialPageRoute(
+          builder: (context) =>
+          new UserRatingPage(payload)));
+   }
+}
   @override
   void initState() {
     super.initState();
@@ -61,8 +76,42 @@ String _userId;
     getadvdata();
     getcommentdata();
 
-
   }
+showNotification(arrange,title,tradename,date ,tradeid) async {
+
+  ///////////////////local notification/////////////////////notification_1
+  flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  var android = AndroidInitializationSettings('@drawable/ic_logo');
+  var ios = IOSInitializationSettings();
+  var initSettings = InitializationSettings(android, ios);
+  flutterLocalNotificationsPlugin.initialize(
+    initSettings,
+    onSelectNotification: onSelectNotification,
+  );
+  // DateTime scheduledNotificationDateTime =
+  // DateTime.now().add(new Duration(seconds: 3));
+  DateTime scheduledNotificationDateTime = DateTime.parse(date).add(new Duration(days: 1));
+  print("aaa${scheduledNotificationDateTime.toString()}");
+  //  DateTime notificationbooking = DateTime.parse('$enddate 23:59:00.000');
+  var androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      'channelId', 'channelName', 'channelDescription',
+      importance: Importance.Max,
+      priority: Priority.High /*, ticker: 'ticker'*/);
+  var iOSPlatformChannelSpecifics = IOSNotificationDetails();
+  NotificationDetails platformChannelSpecifics = new NotificationDetails(
+      androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+  // print("uuuuuu${widget.events[widget.index].title}");
+  await flutterLocalNotificationsPlugin.schedule(
+      arrange,
+      'تقيم $tradename',
+      'ساعدنا فى تقديم خدمة افضل. برجاء الضغط هنا لتقيم $tradename',
+      scheduledNotificationDateTime,
+      platformChannelSpecifics,
+      payload:tradeid
+
+  );
+
+}
 
   @override
   Widget build(BuildContext context) {
@@ -301,7 +350,8 @@ String _userId;
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text("$commentdetails:التفاصيل"),                            Container(width: 20,),
+                            Text("التفاصيل:$commentdetails"),
+                            Container(width: 20,),
 
                             Icon(Icons.article_outlined),
                           ],
@@ -559,6 +609,8 @@ String _userId;
           advdetails = data.documents[0].data['cdiscribtion'];
           advprobtype = data.documents[0].data['cproblemtype'];
           advdate= data.documents[0].data['cdate'];
+          arrange= data.documents[0].data['carrange'];
+
           if(advtitle==null){advtitle="عنوان غير معلوم";}
           if(advdetails==null){advdetails="لا يوجد تفاصيل";}
           if(advprobtype==null){advprobtype="لا يوجد تفاصيل";}
@@ -588,6 +640,9 @@ String _userId;
 
           if(_isCheckedowner==null){_isCheckedowner=false;}
           if(_isCheckedtrader==null){_isCheckedtrader=false;}
+
+          showNotification(arrange,advtitle,_cNametrade,bookingdate,widget.traderid
+          );
 
         });
       }

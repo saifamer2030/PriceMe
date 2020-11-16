@@ -1,9 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:priceme/Videos/addVideo.dart';
 import 'package:priceme/Videos/photosvideocomercial.dart';
 import 'package:priceme/Videos/photosvideoentertainment.dart';
+import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/screens/advertisements.dart';
 import 'package:priceme/screens/myadvertisement.dart';
 
@@ -16,12 +18,73 @@ class AdvertismentTabs extends StatefulWidget {
 class _AdvertismentTabsState extends State<AdvertismentTabs> with SingleTickerProviderStateMixin {
   TabController _tabController;
   PageController _pageController;
+  List<String> mainfaultsList = [];
+  List<String> mainsparsList = [];
 
+  void getDataf() {
+    setState(() {
+      //  print("ooooooo${widget.sparepartsList[0]}");
+      final SparePartsReference = Firestore.instance;
 
+      mainfaultsList.clear;
+      mainfaultsList.add("الكل");
+
+      SparePartsReference.collection("faults")
+          .getDocuments()
+          .then((QuerySnapshot snapshot) {
+        snapshot.documents.forEach((sparepart) {
+          SparePartsClass spc = SparePartsClass(
+            sparepart.data['sid'],
+            sparepart.data['sName'],
+            sparepart.data['surl'],
+         const Color(0xff8C8C96),
+            false,
+          );
+          // const Color(0xff171732);
+          setState(() {
+            mainfaultsList.add(sparepart.data['sName']);
+          });
+        });
+      });
+    });
+
+  }
+  void getDatas() {
+    setState(() {
+      //  print("ooooooo${widget.sparepartsList[0]}");
+      final SparePartsReference = Firestore.instance;
+      final SparePartsReference1 = Firestore.instance;
+
+      mainsparsList.clear;
+      mainsparsList.add("الكل");
+
+      SparePartsReference.collection("spareparts")
+          .getDocuments()
+          .then((QuerySnapshot snapshot) {
+        snapshot.documents.forEach((sparepart) {
+          SparePartsClass spc = SparePartsClass(
+            sparepart.data['sid'],
+            sparepart.data['sName'],
+            sparepart.data['surl'],
+            const Color(0xff8C8C96),
+         false,
+          );
+          setState(() {
+            mainsparsList.add(sparepart.data['sName'],);
+            // print(sparepartsList.length.toString() + "llll");
+          });
+
+        });
+      });
+    });
+
+  }
   @override
   void initState() {
-    _tabController = new TabController(length: 2, vsync: this);
     super.initState();
+
+    getDatas(); getDataf();
+    _tabController = new TabController(length: 2, vsync: this);
     _pageController = PageController(
       initialPage: 0,
     );
@@ -37,41 +100,12 @@ class _AdvertismentTabsState extends State<AdvertismentTabs> with SingleTickerPr
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton:  FloatingActionButton(
-        heroTag: "uniqu03",
-        child: Container(
-          width: 60,
-          height: 60,
-          child: Icon(
-            Icons.add,
-//                size: 40,
-          ),
-          decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: [
-                  const Color(0xffff2121),
-                  const Color(0xffff5423),
-                  const Color(0xffff7024),
-                  const Color(0xffff904a)
-                ],
-              )),
-        ),
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AddVideo()));
-
-        },
-      ),
-
       backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: false,
       body: TabBarView(
         physics: NeverScrollableScrollPhysics(),
         children: [
-          Advertisements(),
+          Advertisements(mainsparsList,mainfaultsList),
           MyAdvertisement(),
 
         ],

@@ -10,6 +10,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:priceme/UserRating/RatingClass.dart';
 import 'package:priceme/UserRating/UserRatingPage.dart';
 import 'package:priceme/classes/CommentClass.dart';
+import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/screens/advertisements.dart';
 import 'package:priceme/screens/traderuserprofile.dart';
 
@@ -87,12 +88,72 @@ class _AdvDetailState extends State<AdvDetail> {
 
   List<String> _imageUrls;
 
+  List<String> mainfaultsList = [];
+  List<String> mainsparsList = [];
 
+  void getDataf() {
+    setState(() {
+      //  print("ooooooo${widget.sparepartsList[0]}");
+      final SparePartsReference = Firestore.instance;
 
+      mainfaultsList.clear;
+      mainfaultsList.add("الكل");
+
+      SparePartsReference.collection("faults")
+          .getDocuments()
+          .then((QuerySnapshot snapshot) {
+        snapshot.documents.forEach((sparepart) {
+          SparePartsClass spc = SparePartsClass(
+            sparepart.data['sid'],
+            sparepart.data['sName'],
+            sparepart.data['surl'],
+            const Color(0xff8C8C96),
+            false,
+          );
+          // const Color(0xff171732);
+          setState(() {
+            mainfaultsList.add(sparepart.data['sName']);
+          });
+        });
+      });
+    });
+
+  }
+  void getDatas() {
+    setState(() {
+      //  print("ooooooo${widget.sparepartsList[0]}");
+      final SparePartsReference = Firestore.instance;
+      final SparePartsReference1 = Firestore.instance;
+
+      mainsparsList.clear;
+      mainsparsList.add("الكل");
+
+      SparePartsReference.collection("spareparts")
+          .getDocuments()
+          .then((QuerySnapshot snapshot) {
+        snapshot.documents.forEach((sparepart) {
+          SparePartsClass spc = SparePartsClass(
+            sparepart.data['sid'],
+            sparepart.data['sName'],
+            sparepart.data['surl'],
+            const Color(0xff8C8C96),
+            false,
+          );
+          setState(() {
+            mainsparsList.add(sparepart.data['sName'],);
+            // print(sparepartsList.length.toString() + "llll");
+          });
+
+        });
+      });
+    });
+
+  }
   @override
   void initState() {
     super.initState();
 
+    getDatas(); getDataf();
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? _userId=null
         : setState(() {_userId = user.uid;
@@ -521,7 +582,7 @@ class _AdvDetailState extends State<AdvDetail> {
                                                           Navigator.pushReplacement(
                                                               context,
                                                               MaterialPageRoute(
-                                                                  builder: (context) => Advertisements()));
+                                                                  builder: (context) => Advertisements(mainsparsList,mainfaultsList)));
                                                         }));
                                                   });
                                                 }
@@ -719,59 +780,6 @@ class _AdvDetailState extends State<AdvDetail> {
 
                   ],
                 ),
-
-
-
-                _userId == widget.userId
-                    ? Container()
-
-                    : Padding(
-                        padding: const EdgeInsets.all(5.0),
-                        child: Container(
-                          width:
-                              300 /*MediaQuery.of(context).size.width*/,
-                          height: 40,
-                          child: new RaisedButton(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                new Text("الطلب"),
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.only(left: 10.0),
-                                  child: Icon(
-                                    Icons.check,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            textColor: Colors.white,
-                            color: const Color(0xff171732),
-                            onPressed: () {
-                              if (_userId == null) {
-                                Toast.show(
-                                    "ابشر .. سجل دخول الاول طال عمرك",
-                                    context,
-                                    duration: Toast.LENGTH_LONG,
-                                    gravity: Toast.BOTTOM);
-                              } else {
-                                 Navigator.push(
-                                   context,
-                                   new MaterialPageRoute(
-                                       builder: (BuildContext context) =>
-                                           new UserRatingPage(Rating(widget.userId,"",""))),
-                                 );
-                              }
-                            },
-//
-                            shape: new RoundedRectangleBorder(
-                                borderRadius:
-                                    new BorderRadius.circular(10.0)),
-                          ),
-                        ),
-                      ),
                 SizedBox(
                   height: 2 * _minimumPadding,
                   width: _minimumPadding,

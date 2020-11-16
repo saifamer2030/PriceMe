@@ -16,7 +16,9 @@ import 'package:toast/toast.dart';
 import 'advdetail.dart';
 
 class Advertisements extends StatefulWidget {
-  Advertisements();
+  List<String> mainfaultsList = [];
+  List<String> mainsparsList = [];
+  Advertisements(this.mainsparsList,this.mainfaultsList);
   @override
   _AdvertisementsState createState() => _AdvertisementsState();
 }
@@ -26,16 +28,25 @@ class _AdvertisementsState extends State<Advertisements> {
   bool _load = false;
   String _userId="";
   List<String> _imageUrls;
-
-
+  bool chechsearch=false;
+  List<String> typelist =  ["الكل","اعطال","قطع غيار"];
+  var _typecurrentItemSelected = '';
+  String searchtype;
+  var _sparecurrentItemSelected = '';
+  String searchspare;
+   var _faultcurrentItemSelected = '';
+  String filtter;
+  TextEditingController searchcontroller = TextEditingController();
   @override
   void initState() {
     super.initState();
+    _typecurrentItemSelected=typelist[0];
+    _sparecurrentItemSelected=widget.mainsparsList[0];
+    _faultcurrentItemSelected=widget.mainfaultsList[0];
+
 
     FirebaseAuth.instance.currentUser().then((user) => user == null
-        ? Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
-        builder: (context) => Splash(), maintainState: false))
-
+        ? setState(() {})
         : setState(() {_userId = user.uid;}));
   }
 
@@ -53,61 +64,285 @@ class _AdvertisementsState extends State<Advertisements> {
     TextStyle textStyle = Theme.of(context).textTheme.subtitle;
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
-      floatingActionButton: Container(
-        height: 30.0,
-        width: 30.0,
-        child: FittedBox(
-          child: FloatingActionButton(
-            heroTag: "unique9",
-            onPressed: () {
-              _controller.animateTo(0.0,
-                  curve: Curves.easeInOut, duration: Duration(seconds: 1));
-            },
-            backgroundColor: Colors.white,
-            elevation: 20.0,
-            child: Icon(
-              Icons.arrow_drop_up,
-              size: 50,
-              color: const Color(0xff171732),
-            ),
+      floatingActionButton:  FloatingActionButton(
+        heroTag: "uniqu03",
+        child: Container(
+          width: 50,
+          height: 50,
+          child: Icon(
+            Icons.search,
+//                size: 40,
           ),
+          decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: LinearGradient(
+                colors: [
+                  const Color(0xffff2121),
+                  const Color(0xffff5423),
+                  const Color(0xffff7024),
+                  const Color(0xffff904a)
+                ],
+              )),
         ),
+        onPressed: () {
+          setState(() {
+            chechsearch=!chechsearch;
+          });
+        },
       ),
       body:
-      StreamBuilder(
-        stream: Firestore.instance.collection('advertisments').orderBy('carrange', descending: true)//.where("cproblemtype", isEqualTo:"قطع غيار")
-            .snapshots(),
-        //print an integer every 2secs, 10 times
-        builder: (context, snapshot) {
-          if (snapshot.data?.documents == null || !snapshot.hasData)
-            return Center(child: Text("لا يوجد بيانات...",));
-          return Container(
-            child: ListView(
-              shrinkWrap: true,
-              children: <Widget>[
-                Container(
-                    padding: EdgeInsets.all(10),
-                    child: SingleChildScrollView(
-                      child: GridView.builder(
-                        physics: ScrollPhysics(),
-                        shrinkWrap: true,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 6,
-                          childAspectRatio: MediaQuery.of(context).size.width /
-                              (MediaQuery.of(context).size.height*1),
+      ListView(
+        children: [
+          chechsearch?   Column(
+            children: [
+              Container(
+                height: 50,
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Container(
+                    height: 35,
+                    margin: EdgeInsets.only(right: 15, left: 15),
+                    child: Row(
+                      children: <Widget>[
+                        Container(
+                          height: 40,
+                          child: IconButton(
+                            icon: Icon(Icons.refresh),
+                            tooltip: 'إعاده تهيأة البحث',
+                            onPressed: () {
+                               searchtype=null;
+                               searchspare=null;
+                               filtter=null;
+                               List<String> typelist =  ["الكل","اعطال","قطع غيار"];
+                                _typecurrentItemSelected = typelist[0];
+                                _sparecurrentItemSelected = widget.mainsparsList[0];
+                                _faultcurrentItemSelected = widget.mainfaultsList[0];
+                              },
+                          ),
                         ),
-                        itemCount:snapshot.data.documents.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return  firebasedata(context,index, snapshot.data.documents[index]);
-                        },
-                      ),
-                    ))
-              ],
-            ),
-          );
+                        Flexible(
+                          child: Container(
+                            // width: 210,
+                            height: 30,
+                            margin: EdgeInsets.only(left: 2),
+                            decoration: BoxDecoration(
+                              color: Color.fromARGB(97, 248, 248, 248),
+                              border: Border.all(
+                                width: 1,
+                                color: Color.fromARGB(97, 216, 216, 216),
+                              ),
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                            ),
 
-        },
+                            child: Container(
+                                height: 13,
+                                child: Directionality(
+                                  textDirection: TextDirection.rtl,
+                                  child: TextField(
+                                    style: TextStyle(color: Colors.black),
+                                    onChanged: (value) {
+                                      setState(() {
+                                        filtter = value;
+
+                                      });
+                                    },
+                                    controller: searchcontroller,
+                                    // focusNode: focus,
+                                    decoration: InputDecoration(
+                                      labelText: searchcontroller.text.isEmpty
+                                          ? "بحث بالعنوان"
+                                          : '',
+                                      labelStyle: TextStyle(
+                                          color: Colors.black, fontSize: 18.0),
+                                      prefixIcon: Icon(
+                                        Icons.search,
+                                        color: Colors.black,
+                                      ),
+                                      suffixIcon: searchcontroller.text.isNotEmpty
+                                          ? IconButton(
+                                        icon: Icon(Icons.cancel,
+                                            color: Colors.black),
+                                        onPressed: () {
+                                          setState(() {
+                                            searchcontroller.clear();
+
+                                            setState(() {
+                                              filtter = null;
+
+                                            });
+                                          });
+                                        },
+                                      )
+                                          : null,
+                                      errorStyle: TextStyle(color: Colors.blue),
+                                      enabled: true,
+                                      alignLabelWithHint: true,
+                                    ),
+                                  ),
+                                )),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                    height: 50,width: 150,
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Card(
+                        elevation: 0.0,
+                        color: const Color(0xff171732),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                            child: ButtonTheme(
+                              alignedDropdown: true,
+                              child: DropdownButton<String>(
+                                items: typelist
+                                    .map((String value) {
+                                  return new DropdownMenuItem<String>(
+                                    value: value,
+                                    child: new Text(value),
+                                  );
+                                }).toList(),
+                                value: _typecurrentItemSelected,
+                                onChanged: (String newValueSelected) {
+                                  // Your code to execute, when a menu item is selected from dropdown
+                                  _onDropDownItemSelectetype(
+                                      newValueSelected);
+                                },
+                                style: new TextStyle(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            )),
+                      ),
+                    ),
+                  ),
+                   _typecurrentItemSelected==typelist[1]?
+                  Container(
+                    height: 50,width: 150,
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Card(
+                        elevation: 0.0,
+                        color: const Color(0xff171732),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                            child: ButtonTheme(
+                              alignedDropdown: true,
+                              child: DropdownButton<String>(
+                                items: widget.mainfaultsList
+                                    .map((String value) {
+                                  return new DropdownMenuItem<String>(
+                                    value: value,
+                                    child: new Text(value),
+                                  );
+                                }).toList(),
+                                value:_sparecurrentItemSelected,
+                                onChanged: (String newValueSelected) {
+                                  // Your code to execute, when a menu item is selected from dropdown
+                                  _onDropDownItemSelectefault(
+                                      newValueSelected);
+                                },
+                                style: new TextStyle(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            )),
+                      ),
+                    ),
+                  ):Container(),
+
+                  _typecurrentItemSelected==typelist[2]?
+                  Container(
+                    height: 50,width: 150,
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Card(
+                        elevation: 0.0,
+                        color: const Color(0xff171732),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                            child: ButtonTheme(
+                              alignedDropdown: true,
+                              child: DropdownButton<String>(
+                                items: widget.mainsparsList
+                                    .map((String value) {
+                                  return new DropdownMenuItem<String>(
+                                    value: value,
+                                    child: new Text(value),
+                                  );
+                                }).toList(),
+                                value:_sparecurrentItemSelected,
+                                onChanged: (String newValueSelected) {
+                                  // Your code to execute, when a menu item is selected from dropdown
+                                  _onDropDownItemSelectespare(
+                                      newValueSelected);
+                                },
+                                style: new TextStyle(
+                                  color: Colors.grey,
+                                ),
+                              ),
+                            )),
+                      ),
+                    ),
+                  ) :Container(),
+
+                ],
+              ),
+            ],
+          ):Container(),
+
+          StreamBuilder(
+            stream: Firestore.instance.collection('advertisments').orderBy('carrange', descending: true)
+                .where("cproblemtype", isEqualTo:searchtype)
+                .where("mfaultarray", arrayContains: searchspare)
+                .where("ctitle", isEqualTo:filtter)
+
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.data?.documents == null || !snapshot.hasData)
+                return Center(child: Text("لا يوجد بيانات...",));
+              return Container(
+                child: ListView(
+                  shrinkWrap: true,
+                  children: <Widget>[
+                    Container(
+                        padding: EdgeInsets.all(10),
+                        child: SingleChildScrollView(
+                          child: GridView.builder(
+                            physics: ScrollPhysics(),
+                            shrinkWrap: true,
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 6,
+                              childAspectRatio: MediaQuery.of(context).size.width /
+                                  (MediaQuery.of(context).size.height*1),
+                            ),
+                            itemCount:snapshot.data.documents.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return  firebasedata(context,index, snapshot.data.documents[index]);
+                            },
+                          ),
+                        ))
+                  ],
+                ),
+              );
+
+            },
+          ),
+        ],
       ),
 
     );
@@ -244,5 +479,40 @@ class _AdvertisementsState extends State<Advertisements> {
       ),
     );
   }
+  void _onDropDownItemSelectetype(String newValueSelected) {
+    setState(() {
+      this._typecurrentItemSelected = newValueSelected;
+      if(newValueSelected=="الكل"){
+        searchtype=null;
+      }else{
+        searchtype=newValueSelected;
 
+      }
+
+    });
+  }
+  void _onDropDownItemSelectespare(String newValueSelected) {
+    setState(() {
+      this._sparecurrentItemSelected = newValueSelected;
+      if(newValueSelected=="الكل"){
+        searchspare=null;
+      }else{
+        searchspare=newValueSelected;
+
+      }
+
+    });
+  }
+  void _onDropDownItemSelectefault(String newValueSelected) {
+    setState(() {
+      this._faultcurrentItemSelected = newValueSelected;
+      if(newValueSelected=="الكل"){
+        searchspare=null;
+      }else{
+        searchspare=newValueSelected;
+
+      }
+
+    });
+  }
 }
