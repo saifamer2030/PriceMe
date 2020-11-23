@@ -382,35 +382,32 @@ class _AdvDetailState extends State<AdvDetail> {
                               ),
                             ),
                           ),
-                          Positioned(
-                            top: 8,
-                            left: 5,
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Row(
-                                children: <Widget>[
-                                 Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 8.0),
-                                    child:  Text("$subfault"
-                                      ,
-                                      textDirection:
-                                      TextDirection.rtl,
-                                      textAlign:
-                                      TextAlign.right,
-                                      style: TextStyle(
-                                          color: const Color(
-                                              0xff171732),
-                                          fontSize: 15.0,
-//                                                      fontFamily: 'Gamja Flower',
-                                          fontStyle: FontStyle
-                                              .normal),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
+//                           Positioned(
+//                             top: 55,
+//                             right: 5,
+//                             child: Row(
+//                               children: [
+//                                 Text("الاعطال:$subfault",
+//                                   textDirection:
+//                                   TextDirection.rtl,
+//                                   textAlign:
+//                                   TextAlign.right,
+//                                   style: TextStyle(
+//                                       color: const Color(
+//                                           0xff171732),
+//                                       fontSize: 15.0,
+// //                                                      fontFamily: 'Gamja Flower',
+//                                       fontStyle: FontStyle
+//                                           .normal),
+//                                 ),
+//                                 Icon(
+//                                   Icons.person,
+//                                   color: const Color(0xff171732),
+//                                 ),
+//
+//                               ],
+//                             ),
+//                           ),
                           Positioned(
                             top: 20,
                             right: 5,
@@ -449,6 +446,67 @@ class _AdvDetailState extends State<AdvDetail> {
                               ),
                             ),
                           ),
+                          Positioned(
+                            top: 55,
+                            right: 5,
+                            child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Row(
+                                children: <Widget>[
+                                  Text("الاعطال:$subfault",
+
+                                textDirection:
+                                      TextDirection.rtl,
+                                      textAlign:
+                                      TextAlign.right,
+                                      style: TextStyle(
+                                          fontSize: 15.0,
+                                          color: const Color(
+                                              0xff171732),
+//                                                      fontFamily:
+//                                                          'Gamja Flower',
+                                          fontStyle: FontStyle
+                                              .normal),
+                                    ),
+
+                                  Icon(
+                                    Icons.car_repair,
+                                    color: const Color(0xff171732),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+//                           Positioned(
+//                             top: 55,
+//                             right: 5,
+//                             child: Padding(
+//                               padding: const EdgeInsets.all(5.0),
+//                               child: Row(
+//                                 children: <Widget>[
+//                                   Text("الاعطال:$subfault",
+//                                     textDirection:
+//                                     TextDirection.rtl,
+//                                     textAlign:
+//                                     TextAlign.right,
+//                                     style: TextStyle(
+//                                         color: const Color(
+//                                             0xff171732),
+//                                         fontSize: 15.0,
+// //                                                      fontFamily: 'Gamja Flower',
+//                                         fontStyle: FontStyle
+//                                             .normal),
+//                                   ),
+//
+//                                   Icon(
+//                                     Icons.person,
+//                                     color: const Color(0xff171732),
+//                                   ),
+//                                 ],
+//                               ),
+//                             ),
+//                           ),
 //                           Positioned(
 //                             top: 45,
 //                             right: 5,
