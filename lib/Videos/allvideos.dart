@@ -16,6 +16,7 @@ import 'package:priceme/Videos/videotabs1.dart';
 import 'package:priceme/classes/AdvClass.dart';
 import 'package:toast/toast.dart';
 import 'package:video_player/video_player.dart';
+import 'package:lazy_load_scrollview/lazy_load_scrollview.dart';
 
 
 class AllVideos extends StatefulWidget {
@@ -112,43 +113,51 @@ class _AllVideosState extends State<AllVideos> {
               return Center(child: Text("Loading.."));
             }
 
-            return new PageView.builder(
-              scrollDirection: Axis.vertical,
-              pageSnapping:false,
-              onPageChanged:(num){
-                print("currentpage$num" );
+            return LazyLoadScrollView(
+              scrollOffset: 1,
+              onEndOfPage: () {
+                Future.delayed(const Duration(milliseconds: 500), () {
+
+                });
               },
-              key: PageStorageKey(""),
-              // addAutomaticKeepAlives: true,
-                //controller: _controller,
-                itemCount: snapshot.data.documents.length,
-                itemBuilder: (context, index) {
-                  return Container(
-                    width: double.infinity,
-//                      height: 300.0,
-                    alignment: Alignment.center,
-
-                    child: Container(
-                        key: new PageStorageKey(
-                          "keydata$index",
-                        ),
-
-                        child: VideoWidget(
-                            play: false,
-                            document:snapshot.data.documents[index],
-                          itr: index,
-                            len:snapshot.data.documents.length,
-                          cType: cType,
-                            username:username
-                        )
-                    ),
-                  );
-                  //firebasedata(context, index, snapshot.data.documents[index]);
+              child: new PageView.builder(
+                scrollDirection: Axis.vertical,
+                pageSnapping:false,
+                onPageChanged:(num){
+                  print("currentpage$num" );
                 },
-              // separatorBuilder: (context, index) {
-              //   return Divider();
-              // },
-    );
+                key: PageStorageKey(""),
+                // addAutomaticKeepAlives: true,
+                  //controller: _controller,
+                  itemCount: snapshot.data.documents.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      width: double.infinity,
+//                      height: 300.0,
+                      alignment: Alignment.center,
+
+                      child: Container(
+                          key: new PageStorageKey(
+                            "keydata$index",
+                          ),
+
+                          child: VideoWidget(
+                              play: false,
+                              document:snapshot.data.documents[index],
+                            itr: index,
+                              len:snapshot.data.documents.length,
+                            cType: cType,
+                              username:username
+                          )
+                      ),
+                    );
+                    //firebasedata(context, index, snapshot.data.documents[index]);
+                  },
+                // separatorBuilder: (context, index) {
+                //   return Divider();
+                // },
+    ),
+            );
           },
         ),
       ),

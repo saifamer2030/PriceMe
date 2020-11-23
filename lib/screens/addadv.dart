@@ -683,11 +683,30 @@ class _AddAdvState extends State<AddAdv> {
                       ):Container():Container(),
                       Container(
                         height: 50,
-                        child:Center(child: Text(faultoutputsub.toString())),),
+                        child:Row(
+                          children: [
+                            Text(faultoutputsub.toString()),
+                            Text("المشكلات المختارة"),
+                          ],
+                        ),),
                       SizedBox(
                         height: _minimumPadding,
                         width: _minimumPadding,
                       ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                            top: _minimumPadding * 5, bottom: _minimumPadding),
+                        child: Center(
+                          child: Text(
+                            "معلومات السيارة",
+                            style: TextStyle(
+                                color: const Color(0xffF1AB37),
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      ),
+
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -821,19 +840,6 @@ class _AddAdvState extends State<AddAdv> {
 
 
 
-                      Padding(
-                        padding: EdgeInsets.only(
-                            top: _minimumPadding * 5, bottom: _minimumPadding),
-                        child: Center(
-                          child: Text(
-                            "معلومات إضافية",
-                            style: TextStyle(
-                                color: const Color(0xffF1AB37),
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
                       SizedBox(
                         height: _minimumPadding,
                         width: _minimumPadding,

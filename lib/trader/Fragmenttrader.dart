@@ -2,8 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:priceme/ChatRoom/widget/home.dart';
 import 'package:priceme/Videos/allvideos.dart';
 import 'package:priceme/Videos/videotabs1.dart';
 import 'package:priceme/classes/ModelClass.dart';
@@ -26,16 +28,19 @@ class FragmentTrader extends StatefulWidget {
 
 class _FragmentTraderState extends State<FragmentTrader> {
   // Properties & Variables needed
-  List<String> subfaultsList = [];
-  List<ModelClass> faultsList = [];
-  List<String> sparepartsList = [];
+  // List<String> subfaultsList = [];
+  // List<ModelClass> faultsList = [];
+  // List<String> sparepartsList = [];
+  String _userId;
+  int _currentIndex=4;
 
   int currentTab = 3; // to keep track of active tab index
 //  List<Widget> _children() => [
 
-  List<Widget> screens() => [
+  final List<Widget> _screens = [
     MorePriceMe(),
     MyAlarms(),
+    HomeScreen(),
     CollapsingTab(),
     AllAdvertisement(),
       ]; // to store nested tabs
@@ -46,10 +51,15 @@ class _FragmentTraderState extends State<FragmentTrader> {
   @override
   void initState() {
     super.initState();
-    getData();
-    setState(() {
-      currentScreen = AllAdvertisement();
-    });
+    // FirebaseAuth.instance.currentUser().then((user) => user == null
+    //     ? null
+    //     : setState(() {
+    //   _userId = user.uid;
+    // }));
+    // getData();
+    // setState(() {
+    //   currentScreen = AllAdvertisement();
+    // });
 
 //    _currentIndex = widget.selectPage != null ? widget.selectPage : 4;
   }
@@ -59,178 +69,252 @@ class _FragmentTraderState extends State<FragmentTrader> {
     // final List<Widget> children = screens( );
 
     return Scaffold(
-      body: PageStorage(
-        child: currentScreen,
-        bucket: bucket,
-      ),
-      key: navigatorKey,
-      floatingActionButton: MyFloatingButton(sparepartsList),
+      body: _screens[_currentIndex],
 
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomAppBar(
-        shape: CircularNotchedRectangle(),
-        notchMargin: 10,
-        child: Container(
-          height: 60,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      print("kkkkkkkkk");
-                      setState(() {
-                        currentScreen = MorePriceMe(); // if user taps on this dashboard tab will be active
-                        currentTab = 0;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.account_circle,
-                          color: currentTab == 0
-                              ? const Color(0xff15494A)
-                              : Colors.grey,
-                        ),
-                        Text(
-                          'حسابي',
-                          style: TextStyle(
-                            color: currentTab == 0
-                                ? const Color(0xff15494A)
-                                : Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        currentScreen = MyAlarms(); // if user taps on this dashboard tab will be active
-                        currentTab = 2;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.notifications_active,
-                          color: currentTab == 2
-                              ? const Color(0xff15494A)
-                              : Colors.grey,
-                        ),
-                        Text(
-                          'التنبيهات',
-                          style: TextStyle(
-                            color: currentTab == 2
-                                ?  const Color(0xff15494A)
-                                : Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+      // PageStorage(
+      //   child: currentScreen,
+      //   bucket: bucket,
+      // ),
+      // key: navigatorKey,
+      // floatingActionButton: MyFloatingButton(sparepartsList),
+      //
+      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomNavigationBar(
+        showUnselectedLabels: true,
+        items: [
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.account_circle,
               ),
-
-              // Right Tab bar icons
-
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        currentScreen = CollapsingTab(); // if user taps on this dashboard tab will be active
-                        currentTab = 1;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.video_library,
-                          color: currentTab == 1
-                              ?  const Color(0xff15494A)
-                              : Colors.grey,
-                        ),
-                        Text(
-                          'الفيديوهات',
-                          style: TextStyle(
-                            color: currentTab == 1
-                                ?  const Color(0xff15494A)
-                                : Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  MaterialButton(
-                    minWidth: 40,
-                    onPressed: () {
-                      setState(() {
-                        currentScreen = AllAdvertisement(); // if user taps on this dashboard tab will be active
-                        currentTab = 3;
-                      });
-                    },
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Icon(
-                          Icons.home,
-                          color: currentTab == 3
-                              ?  const Color(0xff15494A)
-                              : Colors.grey,
-                        ),
-                        Text(
-                          'الرئيسية',
-                          style: TextStyle(
-                            color: currentTab == 3
-                                ?  const Color(0xff15494A)
-                                : Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),
-                  )
-                ],
-              )
-            ],
-          ),
-        ),
+              title: Text(
+                "حسابي",
+                style: TextStyle(
+                    fontSize: 12,
+                    //fontFamily: MyFonts.fontFamily,
+                    fontWeight: FontWeight.bold),
+              )),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.notifications_active,
+              ),
+              title: Text(
+                "التنبيهات",
+                style: TextStyle(
+                    fontSize: 12,
+                    //fontFamily: MyFonts.fontFamily,
+                    fontWeight: FontWeight.bold),
+              )),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.chat,
+              ),
+              title: Text(
+                "المحادثات",
+                style: TextStyle(
+                    fontSize: 12,
+                    //fontFamily: MyFonts.fontFamily,
+                    fontWeight: FontWeight.bold),
+              )),
+          BottomNavigationBarItem(
+              icon: Icon(
+        Icons.video_library,
+              ),
+              title: Text(
+                "الفيديوهات",
+                style: TextStyle(
+                    fontSize: 12,
+                    //fontFamily: MyFonts.fontFamily,
+                    fontWeight: FontWeight.bold),
+              )),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.home,
+              ),
+              title: Text(
+                "الرئيسية",
+                style: TextStyle(
+                    fontSize: 12,
+                    //fontFamily: MyFonts.fontFamily,
+                    fontWeight: FontWeight.bold),
+              )),
+        ],
+        currentIndex: _currentIndex,
+        onTap: (int index) => _onItemTapped(index),
+        type: BottomNavigationBarType.fixed,
+        fixedColor:  const Color(0xff15494A),
+        unselectedItemColor: Colors.grey,
       ),
+
+
+
+      // BottomAppBar(
+      //   shape: CircularNotchedRectangle(),
+      //   notchMargin: 10,
+      //   child: Container(
+      //     height: 60,
+      //     child: Row(
+      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //       children: <Widget>[
+      //         Row(
+      //           crossAxisAlignment: CrossAxisAlignment.start,
+      //           children: <Widget>[
+      //             MaterialButton(
+      //               minWidth: 40,
+      //               onPressed: () {
+      //                 print("kkkkkkkkk");
+      //                 setState(() {
+      //                   currentScreen = MorePriceMe(); // if user taps on this dashboard tab will be active
+      //                   currentTab = 0;
+      //                 });
+      //               },
+      //               child: Column(
+      //                 mainAxisAlignment: MainAxisAlignment.center,
+      //                 children: <Widget>[
+      //                   Icon(
+      //                     Icons.account_circle,
+      //                     color: currentTab == 0
+      //                         ? const Color(0xff15494A)
+      //                         : Colors.grey,
+      //                   ),
+      //                   Text(
+      //                     'حسابي',
+      //                     style: TextStyle(
+      //                       color: currentTab == 0
+      //                           ? const Color(0xff15494A)
+      //                           : Colors.grey,
+      //                     ),
+      //                   ),
+      //                 ],
+      //               ),
+      //             ),
+      //             MaterialButton(
+      //               minWidth: 40,
+      //               onPressed: () {
+      //                 setState(() {
+      //                   currentScreen = MyAlarms(); // if user taps on this dashboard tab will be active
+      //                   currentTab = 2;
+      //                 });
+      //               },
+      //               child: Column(
+      //                 mainAxisAlignment: MainAxisAlignment.center,
+      //                 children: <Widget>[
+      //                   Icon(
+      //                     Icons.notifications_active,
+      //                     color: currentTab == 2
+      //                         ? const Color(0xff15494A)
+      //                         : Colors.grey,
+      //                   ),
+      //                   Text(
+      //                     'التنبيهات',
+      //                     style: TextStyle(
+      //                       color: currentTab == 2
+      //                           ?  const Color(0xff15494A)
+      //                           : Colors.grey,
+      //                     ),
+      //                   ),
+      //                 ],
+      //               ),
+      //             ),
+      //           ],
+      //         ),
+      //
+      //         // Right Tab bar icons
+      //
+      //         Row(
+      //           crossAxisAlignment: CrossAxisAlignment.start,
+      //           children: <Widget>[
+      //             MaterialButton(
+      //               minWidth: 40,
+      //               onPressed: () {
+      //                 setState(() {
+      //                   currentScreen = CollapsingTab(); // if user taps on this dashboard tab will be active
+      //                   currentTab = 1;
+      //                 });
+      //               },
+      //               child: Column(
+      //                 mainAxisAlignment: MainAxisAlignment.center,
+      //                 children: <Widget>[
+      //                   Icon(
+      //                     Icons.video_library,
+      //                     color: currentTab == 1
+      //                         ?  const Color(0xff15494A)
+      //                         : Colors.grey,
+      //                   ),
+      //                   Text(
+      //                     'الفيديوهات',
+      //                     style: TextStyle(
+      //                       color: currentTab == 1
+      //                           ?  const Color(0xff15494A)
+      //                           : Colors.grey,
+      //                     ),
+      //                   ),
+      //                 ],
+      //               ),
+      //             ),
+      //             MaterialButton(
+      //               minWidth: 40,
+      //               onPressed: () {
+      //                 setState(() {
+      //                   currentScreen = AllAdvertisement(); // if user taps on this dashboard tab will be active
+      //                   currentTab = 3;
+      //                 });
+      //               },
+      //               child: Column(
+      //                 mainAxisAlignment: MainAxisAlignment.center,
+      //                 children: <Widget>[
+      //                   Icon(
+      //                     Icons.home,
+      //                     color: currentTab == 3
+      //                         ?  const Color(0xff15494A)
+      //                         : Colors.grey,
+      //                   ),
+      //                   Text(
+      //                     'الرئيسية',
+      //                     style: TextStyle(
+      //                       color: currentTab == 3
+      //                           ?  const Color(0xff15494A)
+      //                           : Colors.grey,
+      //                     ),
+      //                   ),
+      //                 ],
+      //               ),
+      //             )
+      //           ],
+      //         )
+      //       ],
+      //     ),
+      //   ),
+      // ),
     );
   }
-  void getData() {
+  // void getData() {
+  //   setState(() {
+  //     final SparePartsReference = Firestore.instance;
+  //     SparePartsReference.collection("spareparts")
+  //         .getDocuments()
+  //         .then((QuerySnapshot snapshot) {
+  //       snapshot.documents.forEach((sparepart) {
+  //         SparePartsClass spc = SparePartsClass(
+  //           sparepart.data['sid'],
+  //           sparepart.data['sName'],
+  //           sparepart.data['surl'],
+  //           const Color(0xff8C8C96),
+  //           false,
+  //         );
+  //         setState(() {
+  //           sparepartsList.add(sparepart.data['sName']);
+  //           // print(sparepartsList.length.toString() + "llll");
+  //         });
+  //       });
+  //     });
+  //   });
+  //
+  // }
+  void _onItemTapped(int index) {
     setState(() {
-      final SparePartsReference = Firestore.instance;
-      SparePartsReference.collection("spareparts")
-          .getDocuments()
-          .then((QuerySnapshot snapshot) {
-        snapshot.documents.forEach((sparepart) {
-          SparePartsClass spc = SparePartsClass(
-            sparepart.data['sid'],
-            sparepart.data['sName'],
-            sparepart.data['surl'],
-            const Color(0xff8C8C96),
-            false,
-          );
-          setState(() {
-            sparepartsList.add(sparepart.data['sName']);
-            // print(sparepartsList.length.toString() + "llll");
-          });
-        });
-      });
+      _currentIndex = index;
     });
-
   }
-
 }
 
 class MyFloatingButton extends StatefulWidget {

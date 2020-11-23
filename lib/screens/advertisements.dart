@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+import 'package:persian_number_utility/persian_number_utility.dart';
 import 'package:priceme/Splash.dart';
 import 'package:priceme/classes/AdvClass.dart';
 import 'package:priceme/screens/editadv.dart';
@@ -35,6 +36,12 @@ class _AdvertisementsState extends State<Advertisements> {
   var _sparecurrentItemSelected = '';
   String searchspare;
    var _faultcurrentItemSelected = '';
+  var _monthcurrentItemSelected="";
+  List<String> monthlist = [];
+  List<String>  monthNames = ["يناير", "فبراير", "مارس", "ابريل", "مايو", "يونيو",
+    "يوليو", "اغسطس", "سبتمبر", "اكتوبر", "نوفمبر", "ديسمبر"
+  ];
+  int searchmonth=300000000000;
   String filtter;
   TextEditingController searchcontroller = TextEditingController();
   @override
@@ -43,7 +50,16 @@ class _AdvertisementsState extends State<Advertisements> {
     _typecurrentItemSelected=typelist[0];
     _sparecurrentItemSelected=widget.mainsparsList[0];
     _faultcurrentItemSelected=widget.mainfaultsList[0];
+    DateTime now = DateTime.now();
+    monthlist=new List<String>.generate(11, (i) =>monthNames[now.month-1 -i]);
+    // monthlist=new List<String>.generate(13, (i) {
+    //   int newDate = new DateTime(now.year, now.month - i, now.day).month;
+    //
+    //   DateTime.now().subtract(new Duration(seconds: 10));
+    // });
 
+  //  monthlist[0]=("الكل");
+    _monthcurrentItemSelected=monthlist[0];
 
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? setState(() {})
@@ -56,6 +72,8 @@ class _AdvertisementsState extends State<Advertisements> {
 
   @override
   Widget build(BuildContext context) {
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
     Widget loadingIndicator = _load
         ? new Container(
       child: SpinKitCircle(color: Colors.black),
@@ -113,6 +131,7 @@ class _AdvertisementsState extends State<Advertisements> {
                                searchtype=null;
                                searchspare=null;
                                filtter=null;
+                                searchmonth=300000000000;
                                List<String> typelist =  ["الكل","اعطال","قطع غيار"];
                                 _typecurrentItemSelected = typelist[0];
                                 _sparecurrentItemSelected = widget.mainsparsList[0];
@@ -301,46 +320,85 @@ class _AdvertisementsState extends State<Advertisements> {
 
                 ],
               ),
+              Padding(
+                padding: EdgeInsets.only(
+                    top: _minimumPadding, bottom: _minimumPadding),
+                child: Container(
+                  height: 40.0,
+                  child: Material(
+                      borderRadius: BorderRadius.circular(5.0),
+                      shadowColor: const Color(0xffdddddd),
+                      color: const Color(0xffe7e7e7),
+                      elevation: 2.0,
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: DropdownButton<String>(
+                          items: monthlist.map((String value) {
+                            return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(
+                                  value,
+                                  style: TextStyle(
+                                      color: const Color(0xffF1AB37),
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                ));
+                          }).toList(),
+                          value: _monthcurrentItemSelected,
+                          onChanged: (String newValueSelected) {
+                            // Your code to execute, when a menu item is selected from dropdown
+                            _onDropDownItemSelectedmonth(
+                                newValueSelected);
+                          },
+                        ),
+                      )),
+                ),
+              ),
+
             ],
           ):Container(),
 
-          StreamBuilder(
-            stream: Firestore.instance.collection('advertisments').orderBy('carrange', descending: true)
-                .where("cproblemtype", isEqualTo:searchtype)
-                .where("mfaultarray", arrayContains: searchspare)
-                .where("ctitle", isEqualTo:filtter)
-
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.data?.documents == null || !snapshot.hasData)
-                return Center(child: Text("لا يوجد بيانات...",));
-              return Container(
-                child: ListView(
-                  shrinkWrap: true,
-                  children: <Widget>[
-                    Container(
-                        padding: EdgeInsets.all(10),
-                        child: SingleChildScrollView(
-                          child: GridView.builder(
-                            physics: ScrollPhysics(),
-                            shrinkWrap: true,
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 6,
-                              childAspectRatio: MediaQuery.of(context).size.width /
-                                  (MediaQuery.of(context).size.height*1),
+          Container(
+            width: width,
+            height: height,
+            child: StreamBuilder(
+              stream: Firestore.instance.collection('advertisments').orderBy('carrange', descending: true)
+                  .where("cproblemtype", isEqualTo:searchtype)
+                  .where("mfaultarray", arrayContains: searchspare)
+                  .where("ctitle", isEqualTo:filtter)
+                  .where("carrange", isLessThanOrEqualTo:searchmonth)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.data?.documents == null || !snapshot.hasData)
+                  return Center(child: Text("لا يوجد بيانات...",));
+                return Container(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: <Widget>[
+                      Container(
+                          padding: EdgeInsets.all(10),
+                          child: SingleChildScrollView(
+                            child: GridView.builder(
+                              physics: ScrollPhysics(),
+                              shrinkWrap: true,
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 6,
+                                childAspectRatio: MediaQuery.of(context).size.width /
+                                    (MediaQuery.of(context).size.height*1),
+                              ),
+                              itemCount:snapshot.data.documents.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return  firebasedata(context,index, snapshot.data.documents[index]);
+                              },
                             ),
-                            itemCount:snapshot.data.documents.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return  firebasedata(context,index, snapshot.data.documents[index]);
-                            },
-                          ),
-                        ))
-                  ],
-                ),
-              );
+                          ))
+                    ],
+                  ),
+                );
 
-            },
+              },
+            ),
           ),
         ],
       ),
@@ -387,30 +445,6 @@ class _AdvertisementsState extends State<Advertisements> {
                       ),
                       Positioned(
                         top: 0,
-                        left: 0,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(2.0),
-                            color:const Color(0xff444460),
-                          ),
-                          child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child:  Text(
-                                document['cproblemtype'].toString(),
-                                textDirection: TextDirection.rtl,
-                                textAlign: TextAlign.right,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-//                                          fontFamily: 'Estedad-Black',
-                                    fontStyle: FontStyle.normal),
-                              )
-                          ),
-
-                        ),
-                      ),
-                      Positioned(
-                        top: 0,
                         right: 0,
                         child: Container(
                             width: 100,
@@ -431,6 +465,30 @@ class _AdvertisementsState extends State<Advertisements> {
                                     fontStyle: FontStyle.normal),
                               ),
                             )
+
+                        ),
+                      ),
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(2.0),
+                            color:const Color(0xff444460),
+                          ),
+                          child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child:  Text(
+                                document['cproblemtype'].toString(),
+                                textDirection: TextDirection.rtl,
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+//                                          fontFamily: 'Estedad-Black',
+                                    fontStyle: FontStyle.normal),
+                              )
+                          ),
 
                         ),
                       ),
@@ -513,6 +571,20 @@ class _AdvertisementsState extends State<Advertisements> {
 
       }
 
+    });
+  }
+  void _onDropDownItemSelectedmonth(String newValueSelected) {
+    setState(() {
+      this._monthcurrentItemSelected = newValueSelected;
+      if(newValueSelected=="الكل"){
+        searchmonth=300000000000;
+      }else{
+        //'${now.year}${b}${c}${d}${e}'
+
+        searchmonth= ((DateTime.now().year*100)+(monthNames.indexOf(newValueSelected)+2))*1000000;
+       // searchmonth=monthNames.indexOf(newValueSelected)+1;
+      }
+      print("vvv$searchmonth");
     });
   }
 }

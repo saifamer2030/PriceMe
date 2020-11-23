@@ -146,7 +146,7 @@ class _AdvertismentTabsState extends State<AdvertismentTabs> with SingleTickerPr
               ),
               new Tab(
                 child: Text(
-                  "تسعيراتى",
+                  "طلباتى",
                   style: TextStyle(
                       fontSize: 14,
                       //fontFamily: MyFonts.fontFamily,

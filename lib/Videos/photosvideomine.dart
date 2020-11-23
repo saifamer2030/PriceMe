@@ -56,29 +56,23 @@ class _VidiosPhotoMineState extends State<VidiosPhotoMine> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      floatingActionButton: Container(
-        height: 30.0,
-        width: 30.0,
-        child: FittedBox(
-          child: FloatingActionButton(
-            heroTag: "unique129",
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) =>
-                          AddVideo()));
-            },
-            //backgroundColor: Colors.white,
-            // elevation: 20.0,
-            child: Container(
-              height: 100,
-              child: Icon(
-                Icons.add,
-                //size: 50,
-                color: const Color(0xff171732),
-              ),
-            ),
+      floatingActionButton: FloatingActionButton(
+        heroTag: "unique129",
+        onPressed: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      AddVideo()));
+        },
+        //backgroundColor: Colors.white,
+        // elevation: 20.0,
+        child: Container(
+          height: 100,
+          child: Icon(
+            Icons.add,
+            //size: 50,
+            color: const Color(0xff171732),
           ),
         ),
       ),

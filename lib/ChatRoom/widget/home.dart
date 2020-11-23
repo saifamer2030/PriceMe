@@ -18,19 +18,19 @@ import 'package:priceme/ChatRoom/widget/settings.dart';
 import 'package:priceme/main.dart';
 
 class HomeScreen extends StatefulWidget {
-  final String currentUserId;
 
-  HomeScreen({Key key, @required this.currentUserId}) : super(key: key);
+  HomeScreen({Key key}) : super(key: key);
 
   @override
-  State createState() => HomeScreenState(currentUserId: currentUserId);
+  State createState() => HomeScreenState();
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  HomeScreenState({Key key, @required this.currentUserId});
+  // HomeScreenState({Key key, @required this.currentUserId});
+  // final String currentUserId;
 
   DateTime backbuttonpressedTime;
-  final String currentUserId;
+   String currentUserId;
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -45,6 +45,12 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
+    FirebaseAuth.instance.currentUser().then((user) => user == null
+        ? null
+        : setState(() {
+      currentUserId = user.uid;
+
+    }));
     registerNotification();
     configLocalNotification();
   }

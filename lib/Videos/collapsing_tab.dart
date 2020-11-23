@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:priceme/Videos/addVideo.dart';
 import 'package:priceme/Videos/allvideos.dart';
 import 'package:priceme/Videos/photosvideocomercial.dart';
 import 'package:priceme/Videos/photosvideoentertainment.dart';
@@ -187,6 +188,33 @@ bool exbandedsliver=false;
     );
 
     return Scaffold(
+      floatingActionButton: Align(
+        alignment: Alignment.bottomLeft,
+        child: Padding(
+          padding: const EdgeInsets.only(left:25),
+          child: FloatingActionButton(
+            heroTag: "unique29",
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (cont18ext) =>
+                          AddVideo()));
+            },
+            //backgroundColor: Colors.white,
+            // elevation: 20.0,
+            child: Container(
+              height: 100,
+              child: Icon(
+                Icons.add,
+                //size: 50,
+                color: const Color(0xff171732),
+              ),
+            ),
+          ),
+        ),
+      ),
+
       body: new DefaultTabController(
         length: 2,
         child: NestedScrollView(

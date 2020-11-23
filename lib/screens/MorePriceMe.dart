@@ -715,7 +715,6 @@ class _MorePriceMeState extends State<MorePriceMe> {
                             context,
                             new MaterialPageRoute(
                                 builder: (context) => HomeScreen(
-                                      currentUserId: _userId,
                                     )));
 
                       },

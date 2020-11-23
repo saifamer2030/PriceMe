@@ -279,6 +279,7 @@ class _SignInPhoneState extends State<SignInPhone> {
                       textColor: Colors.white,
                       color: Colors.black,
                       onPressed: () async {
+                        print("kkkjjj");
                         final code = _codeController.text.trim();
                         AuthCredential credential =
                             PhoneAuthProvider.getCredential(

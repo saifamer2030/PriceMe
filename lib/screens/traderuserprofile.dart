@@ -83,7 +83,7 @@ class _TraderUserProlileState extends State<TraderUserProlile> {
                 ),
                 width: 200,
               ),
-              background: Image.network(_imageUrls[0],fit: BoxFit.cover,),
+              background: Image.network(_imageUrls[0]==null?"":_imageUrls[0],fit: BoxFit.cover,),
 
 
             ),

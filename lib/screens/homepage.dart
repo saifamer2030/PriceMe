@@ -52,8 +52,8 @@ double sparesize=100;
   String filePath;
 
 
-   int currentPage_spare = 1;
-   int currentPage_fault = 1;
+   int currentPage_spare = 3;
+   int currentPage_fault = 3;
   PageController _pageController_spare ;
   PageController _pageController_fault;
   @override
