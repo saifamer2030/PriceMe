@@ -38,9 +38,13 @@ class _AdvertisementsState extends State<Advertisements> {
    var _faultcurrentItemSelected = '';
   var _monthcurrentItemSelected="";
   List<String> monthlist = [];
+  List<int> yearlist = [];
+
   List<String>  monthNames = ["يناير", "فبراير", "مارس", "ابريل", "مايو", "يونيو",
     "يوليو", "اغسطس", "سبتمبر", "اكتوبر", "نوفمبر", "ديسمبر"
   ];
+  List<String> monthNameswithyear = [];
+
   int searchmonth=300000000000;
   String filtter;
   TextEditingController searchcontroller = TextEditingController();
@@ -51,15 +55,27 @@ class _AdvertisementsState extends State<Advertisements> {
     _sparecurrentItemSelected=widget.mainsparsList[0];
     _faultcurrentItemSelected=widget.mainfaultsList[0];
     DateTime now = DateTime.now();
-    monthlist=new List<String>.generate(11, (i) =>monthNames[now.month-1 -i]);
-    // monthlist=new List<String>.generate(13, (i) {
-    //   int newDate = new DateTime(now.year, now.month - i, now.day).month;
-    //
-    //   DateTime.now().subtract(new Duration(seconds: 10));
-    // });
+    int a=now.month;
+    List<String>.generate(12, (i){
+      if(a-i-1<0){
+        monthlist.add(monthNames[(a-i-1)+12 ]);
+        yearlist.add(now.year-1);
+        monthNameswithyear.add("${monthNames[(a-i-1)+12 ]}-${now.year-1}");
+      }else{
+        monthlist.add(monthNames[a-i -1]);
+        yearlist.add(now.year);
+        monthNameswithyear.add("${monthNames[(a-i-1) ]}-${now.year}");
+      }
+    }
+    );
+   //  monthlist=new List<String>.generate(12, (i) {
+   //    int newDate = new DateTime(now.year, now.month - i, now.day).month;
+   //
+   //    DateTime.now().subtract(new Duration(days: 31));
+   //  });
 
   //  monthlist[0]=("الكل");
-    _monthcurrentItemSelected=monthlist[0];
+    _monthcurrentItemSelected=monthNameswithyear[0];
 
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? setState(() {})
@@ -333,7 +349,7 @@ class _AdvertisementsState extends State<Advertisements> {
                       child: Align(
                         alignment: Alignment.centerRight,
                         child: DropdownButton<String>(
-                          items: monthlist.map((String value) {
+                          items: monthNameswithyear.map((String value) {
                             return DropdownMenuItem<String>(
                                 value: value,
                                 child: Text(
@@ -348,7 +364,7 @@ class _AdvertisementsState extends State<Advertisements> {
                           onChanged: (String newValueSelected) {
                             // Your code to execute, when a menu item is selected from dropdown
                             _onDropDownItemSelectedmonth(
-                                newValueSelected);
+                                newValueSelected,monthNameswithyear.indexOf(newValueSelected));
                           },
                         ),
                       )),
@@ -573,18 +589,24 @@ class _AdvertisementsState extends State<Advertisements> {
 
     });
   }
-  void _onDropDownItemSelectedmonth(String newValueSelected) {
+  void _onDropDownItemSelectedmonth(String newValueSelected,index) {
     setState(() {
       this._monthcurrentItemSelected = newValueSelected;
       if(newValueSelected=="الكل"){
         searchmonth=300000000000;
       }else{
+        int j=0;
+        for(var i=0;i<monthNames.length;i++){
+         if( newValueSelected.contains(monthNames[i])) {j=i;}
+        }
         //'${now.year}${b}${c}${d}${e}'
-
-        searchmonth= ((DateTime.now().year*100)+(monthNames.indexOf(newValueSelected)+2))*1000000;
+        //searchmonth= ((DateTime.now().year*100)+(monthNames.indexOf(newValueSelected)+2))*1000000;
+//print((yearlist[monthNames.indexOf(newValueSelected)]).toString()+"vvv");
+      //  print("rrr"+(((yearlist[index]*100)+(j+2))*1000000).toString());
+        searchmonth= ((yearlist[index]*100)+(j+2))*1000000;
        // searchmonth=monthNames.indexOf(newValueSelected)+1;
       }
-      print("vvv$searchmonth");
+     // print("vvv$searchmonth");
     });
   }
 }
