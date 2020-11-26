@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:priceme/UserRating/UserRatingPage.dart';
 import 'package:priceme/Videos/addVideo.dart';
 import 'package:priceme/screens/addadv.dart';
 import 'package:priceme/screens/homepage.dart';
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Splash(),
+      home: Splash(),//UserRatingPage("6XQuwAo5xPY40LqdnAqL5zqcc1v1"),//Splash(),
     );
   }
 }

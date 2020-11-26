@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:priceme/FragmentNavigation.dart';
 import 'package:priceme/Splash.dart';
 import 'package:toast/toast.dart';
 
@@ -35,7 +36,6 @@ class _UserRatingPageState extends State<UserRatingPage> {
   FirebaseAuth _firebaseAuth;
   String _userId;
   SingingCharacter _character = SingingCharacter.done;
-  Rating rating;
 
   // تعريف الايتم المراد ادخال قيم فيها
   TextEditingController _rateController;
@@ -48,8 +48,8 @@ class _UserRatingPageState extends State<UserRatingPage> {
     _firebaseAuth = FirebaseAuth.instance;
     getRatingAvrage();
     // ربط الايتم بالقيم
-    _rateController = new TextEditingController(text: rating.rate);
-    _commentController = new TextEditingController(text: rating.comment);
+    _rateController = new TextEditingController();
+    _commentController = new TextEditingController();
   }
 
   dynamic data;
@@ -57,23 +57,23 @@ class _UserRatingPageState extends State<UserRatingPage> {
   Future<dynamic> getRatingAvrage() async {
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
-            builder: (context) => Splash(), maintainState: false))
+        builder: (context) => Splash(), maintainState: false))
         : setState(() {
-            _userId = user.uid;
-            var userQuery = Firestore.instance
-                .collection('users')
-                .where('uid', isEqualTo: rating.id)
-                .limit(1);
-            userQuery.getDocuments().then((data) {
-              if (data.documents.length > 0) {
-                setState(() {
-                  _totalRate = data.documents[0].data['rating'];
-                  _totalCust = data.documents[0].data['custRate'];
-                  print("###############$_totalRate ------ $_totalCust");
-                });
-              }
-            });
-          }));
+      _userId = user.uid;
+      var userQuery = Firestore.instance
+          .collection('users')
+          .where('uid', isEqualTo: widget.tradeid)
+          .limit(1);
+      userQuery.getDocuments().then((data) {
+        if (data.documents.length > 0) {
+          setState(() {
+            _totalRate = data.documents[0].data['rating']??"0";
+            _totalCust = data.documents[0].data['custRate']??0;
+            print("###############$_totalRate ------ $_totalCust");
+          });
+        }
+      });
+    }));
   }
 
   /// هذا الفانكشن لغلق الداتا بيز ///
@@ -130,9 +130,9 @@ class _UserRatingPageState extends State<UserRatingPage> {
                 padding: const EdgeInsets.only(top: 20),
                 child: Center(
                     child: Text(
-                  "الاتفاق علي السعر*",
-                  style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
-                )),
+                      "الاتفاق علي السعر*",
+                      style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.bold),
+                    )),
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -172,14 +172,14 @@ class _UserRatingPageState extends State<UserRatingPage> {
                           Rate == 5.0
                               ? ' أكمل وجه'
                               : ((Rate < 5.0) & (Rate > 3.0))
-                                  ? 'ممتازة'
-                                  : ((Rate < 4.0) & (Rate > 2.0))
-                                      ? 'جيدة جداً'
-                                      : ((Rate < 3.0) & (Rate > 1.0))
-                                          ? 'جيدة'
-                                          : ((Rate < 2.0) & (Rate > 0.0))
-                                              ? 'سيئة'
-                                              : 'لا يوجد تقييم',
+                              ? 'ممتازة'
+                              : ((Rate < 4.0) & (Rate > 2.0))
+                              ? 'جيدة جداً'
+                              : ((Rate < 3.0) & (Rate > 1.0))
+                              ? 'جيدة'
+                              : ((Rate < 2.0) & (Rate > 0.0))
+                              ? 'سيئة'
+                              : 'لا يوجد تقييم',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
@@ -216,10 +216,10 @@ class _UserRatingPageState extends State<UserRatingPage> {
                       padding: const EdgeInsets.all(0.0),
                       child: Center(
                           child: Text(
-                        "نوعية الخدمة*",
-                        style: TextStyle(
-                            fontSize: 12.0, fontWeight: FontWeight.bold),
-                      )),
+                            "نوعية الخدمة*",
+                            style: TextStyle(
+                                fontSize: 12.0, fontWeight: FontWeight.bold),
+                          )),
                     ),
                   ],
                 ),
@@ -236,14 +236,14 @@ class _UserRatingPageState extends State<UserRatingPage> {
                           Rate2 == 5.0
                               ? ' أكمل وجه'
                               : ((Rate2 < 5.0) & (Rate2 > 3.0))
-                                  ? 'ممتازة'
-                                  : ((Rate2 < 4.0) & (Rate2 > 2.0))
-                                      ? 'جيدة جداً'
-                                      : ((Rate2 < 3.0) & (Rate2 > 1.0))
-                                          ? 'جيدة'
-                                          : ((Rate2 < 2.0) & (Rate2 > 0.0))
-                                              ? 'سيئة'
-                                              : 'لا يوجد تقييم',
+                              ? 'ممتازة'
+                              : ((Rate2 < 4.0) & (Rate2 > 2.0))
+                              ? 'جيدة جداً'
+                              : ((Rate2 < 3.0) & (Rate2 > 1.0))
+                              ? 'جيدة'
+                              : ((Rate2 < 2.0) & (Rate2 > 0.0))
+                              ? 'سيئة'
+                              : 'لا يوجد تقييم',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
@@ -280,10 +280,10 @@ class _UserRatingPageState extends State<UserRatingPage> {
                       padding: const EdgeInsets.all(0.0),
                       child: Center(
                           child: Text(
-                        "الالتزام بالمواعيد*",
-                        style: TextStyle(
-                            fontSize: 12.0, fontWeight: FontWeight.bold),
-                      )),
+                            "الالتزام بالمواعيد*",
+                            style: TextStyle(
+                                fontSize: 12.0, fontWeight: FontWeight.bold),
+                          )),
                     ),
                   ],
                 ),
@@ -300,14 +300,14 @@ class _UserRatingPageState extends State<UserRatingPage> {
                           Rate3 == 5.0
                               ? ' أكمل وجه'
                               : ((Rate3 < 5.0) & (Rate3 > 3.0))
-                                  ? 'ممتازة'
-                                  : ((Rate3 < 4.0) & (Rate3 > 2.0))
-                                      ? 'جيدة جداً'
-                                      : ((Rate3 < 3.0) & (Rate3 > 1.0))
-                                          ? 'جيدة'
-                                          : ((Rate3 < 2.0) & (Rate3 > 0.0))
-                                              ? 'سيئة'
-                                              : 'لا يوجد تقييم',
+                              ? 'ممتازة'
+                              : ((Rate3 < 4.0) & (Rate3 > 2.0))
+                              ? 'جيدة جداً'
+                              : ((Rate3 < 3.0) & (Rate3 > 1.0))
+                              ? 'جيدة'
+                              : ((Rate3 < 2.0) & (Rate3 > 0.0))
+                              ? 'سيئة'
+                              : 'لا يوجد تقييم',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.black,
@@ -344,10 +344,10 @@ class _UserRatingPageState extends State<UserRatingPage> {
                       padding: const EdgeInsets.all(0.0),
                       child: Center(
                           child: Text(
-                        "المعاملة مع الزبون*",
-                        style: TextStyle(
-                            fontSize: 12.0, fontWeight: FontWeight.bold),
-                      )),
+                            "المعاملة مع الزبون*",
+                            style: TextStyle(
+                                fontSize: 12.0, fontWeight: FontWeight.bold),
+                          )),
                     ),
                   ],
                 ),
@@ -367,7 +367,7 @@ class _UserRatingPageState extends State<UserRatingPage> {
                         prefixIcon: Icon(Icons.comment),
                         border: OutlineInputBorder(
                             borderRadius:
-                                BorderRadius.all(Radius.circular(10.0)))),
+                            BorderRadius.all(Radius.circular(10.0)))),
                   ),
                 ),
               ),
@@ -378,7 +378,7 @@ class _UserRatingPageState extends State<UserRatingPage> {
                   },
                   child: Padding(
                     padding:
-                        const EdgeInsets.only(top: 50, left: 20, right: 20),
+                    const EdgeInsets.only(top: 50, left: 20, right: 20),
                     child: Container(
                       width: 292.0,
                       height: 47.0,
@@ -424,47 +424,51 @@ class _UserRatingPageState extends State<UserRatingPage> {
   void getUser({String com}) {
     var allRating = (Rate + Rate2 + Rate3) / 3;
     FirebaseAuth.instance.currentUser().then((user) => user == null
-        ? null
+        ? Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
+        builder: (context) => Splash(), maintainState: false))
         : setState(() {
-            _userId = user.uid;
-            if (user != null && com != "" && Rate != 0.0 && Rate2 != 0.0 && Rate3 != 0.0) {
-              DocumentReference documentReference = Firestore.instance
-                  .collection('Rating')
-                  .document(rating.id)
-                  .collection(_userId)
-                  .document();
-              String ratingid = documentReference.documentID;
-              documentReference.setData({
-                'Comment': _commentController.text,
-                'Rate': allRating.round(),
-                'AgreementPrice': (_character.toString().contains("done")
-                    ? "تم الاتفاق علي السعر"
-                    : "لم يتم الاتفاق علي السعر"),
-              }).whenComplete(() {
-                setState(() {
-                  Firestore.instance
-                      .collection('users')
-                      .document(rating.id)
-                      .updateData({
-                    'rating': (double.parse(_totalRate) + allRating.round()).toString(),
-                    'custRate': _totalCust + 1,
-                  });
-                  print('############## $allRating ###################');
-                  Toast.show(
-                      "تم إرسال تقييمك بنجاح",
-                      context,
-                      duration: Toast.LENGTH_LONG,
-                      gravity: Toast.BOTTOM);
-                  Navigator.pop(context);
-                });
-              });
-            }else{
-              Toast.show(
-                  "برجاء إكمال التقييم",
-                  context,
-                  duration: Toast.LENGTH_LONG,
-                  gravity: Toast.BOTTOM);
-            }
-          }));
+      _userId = user.uid;
+      if (user != null && com != "" && Rate != 0.0 && Rate2 != 0.0 && Rate3 != 0.0) {
+        DocumentReference documentReference = Firestore.instance
+            .collection('Rating')
+            .document(widget.tradeid)
+            .collection("tradeid")
+            .document();
+        String ratingid = documentReference.documentID;
+        documentReference.setData({
+          'Comment': _commentController.text,
+          'Rate': allRating.round(),
+          'AgreementPrice': (_character.toString().contains("done")
+              ? "تم الاتفاق علي السعر"
+              : "لم يتم الاتفاق علي السعر"),
+        }).whenComplete(() {
+          setState(() {
+            Firestore.instance
+                .collection('users')
+                .document(widget.tradeid)
+                .updateData({
+              'rating': (double.parse(_totalRate) + allRating.round()).toString(),
+              'custRate': _totalCust + 1,
+            });
+            print('############## $allRating ###################');
+            Toast.show(
+                "تم إرسال تقييمك بنجاح",
+                context,
+                duration: Toast.LENGTH_LONG,
+                gravity: Toast.BOTTOM);
+            Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => FragmentPriceMe()));
+          });
+        });
+      }else{
+        Toast.show(
+            "برجاء إكمال التقييم",
+            context,
+            duration: Toast.LENGTH_LONG,
+            gravity: Toast.BOTTOM);
+      }
+    }));
   }
 }

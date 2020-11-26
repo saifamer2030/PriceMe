@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:priceme/UserRating/RatingClass.dart';
@@ -248,11 +249,12 @@ class _AdvDetailState extends State<AdvDetail> {
           comment.data['ownername'],
           comment.data['cdate'],
           comment.data['details'],
-          comment.data['price'],
+        comment.data['price'],
           comment.data['rate'],
 
         );
         setState(() {
+          print("ggg${  comment.data['rate']}");
           commentlist.add(cc);
           commentlist.sort((c1, c2) =>c1.price.compareTo(c2.price));});
         if( bestprice>comment.data['price']){
@@ -1229,20 +1231,21 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
           now.toString(),
           _commentdetailController.text,
           double.parse(price),
-          5.0-double.parse(price),
+          traderating,
         );
         setState(() {
           commentlist.insert(0,commentclass);
 // aaa(commentlist);
+          _commentdetailController.text = "";
         _commentController.text = "";
           if( bestprice>double.parse(price)){
             setState(() {
               bestprice=double.parse(price);
             });
           }
-          if( bestrate<5.0-double.parse(price)){
+          if( bestrate<traderating){
             setState(() {
-              bestrate=5.0-double.parse(price);
+              bestrate=traderating;
             });
           }
           //      var cursor = (5/commentlist.length)* _controller.position.maxScrollExtent;//specific item
@@ -1433,13 +1436,32 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
                                 ),
                               ):Container(),
 
-                              Text(
-                                tradname,
-                                style: TextStyle(
-                                  color: Colors.blue,
-                                  fontSize: 15,
-                                ),
-                                textDirection: TextDirection.rtl,
+                              Column(
+                                children: [
+                                  Text(
+                                    tradname,
+                                    style: TextStyle(
+                                      color: Colors.blue,
+                                      fontSize: 15,
+                                    ),
+                                    textDirection: TextDirection.rtl,
+                                  ),
+                                  RatingBar(
+                                    initialRating: rate,
+                                    unratedColor: Colors.grey[500],
+                                    direction: Axis.horizontal,
+                                    allowHalfRating: true,
+                                    itemCount: 5,
+                                    itemPadding: EdgeInsets.symmetric(horizontal: 0.0),
+                                    itemBuilder: (context, _) => Icon(
+                                      Icons.star,
+                                      color: Colors.amber,
+//                            size: 15,
+                                    ),
+                                    onRatingUpdate: null,
+                                  ),
+
+                                ],
                               ),
                               Icon(
                                 Icons.person,
