@@ -1805,9 +1805,49 @@ class _MyForm3State extends State<MyForm3> {
     super.initState();
     _currentValue = widget.model;
     modelList = [
-      new ModelClass("تويوتا",["كورولا","ياريس"]),
-      new ModelClass("هونداى",["اكسينت","اكسيل","ماتريكس"]),
+      new ModelClass("اودي",["50","60","72","80","90","100","200","920","4000","5000","A1","A2","A3","A4","A5","A6","A7","A8","allroad quattro","Cabriolet","Coupé","e-tron","F103","Fox","Front","Lunar" "quattro","Pikes Peak quattro","Q","Q2","Q3","Q5","Q7","Q8","Quattro","Quattro S1","RS","S","S1","S2","S3","S4","S5","S6","S7","S8","SQ5","V8"]),
+      new ModelClass("كاديلاك",["Model Thirty","Type 51","Type 53","Series 60","Sixty Special","Series 61","Series 62","Type V-63","Series 65","Series 70","Series 355","Allanté","ATS","ATS-V","BLS","Brougham","CT4","Lyriq","Calais","Catera","Cimarron","Commercial Chassis","Coupe de Ville","CT5","CT6","CT6-V","CTS","CTS-V","Model D","DTS","Eldorado","ELR","Escalade","Fleetwood","Fleetwood" "Brougham","Northstar LMP","Runabout and Tonneau","Sedan de Ville","Seville","SLS","SRX","STS","STS-V","V-12","V-16","XLR","XT4","XT5","XT6","XTS","timeline 1930-1979","timeline 1980 to date"]),
+      new ModelClass("شفروليه",["تاهو","150","آفيو","أبلاندر","أوبترا","إبيكا","إكسبرس","إمبالا","ديلراي","ديلوكس","سايل","سبارك","سوبربان","سي/كا","شفيل","فليت لاين","فليت ماستر","كابريس","كروز","كمارو","كوبالت","كورسيكا","كورفيت","كورفير","لومينا","مونت كارلو","مونتانا"]),
       new ModelClass("فيات",["128","132"]),
+      new ModelClass("دودج",["128","132"]),
+      new ModelClass("جي أم سي",["128","132"]),
+      new ModelClass("فورد",["128","132"]),
+      new ModelClass("تيسلا",["128","132"]),
+      new ModelClass("لينكولن",["128","132"]),
+      new ModelClass("بي أم دبليو",["128","132"]),
+      new ModelClass("فولكس فاجن",["128","132"]),
+      new ModelClass("بورش",["128","132"]),
+
+      new ModelClass("سكودا",["A1","A2","A3","A4","A5","A6","A7","A8"]),
+      new ModelClass("مرسيدس",["اكسينت","اكسيل","ماتريكس"]),
+      new ModelClass("جاكوار",["128","132"]),
+      new ModelClass("لاند روفر",["128","132"]),
+      new ModelClass("هوندا",["128","132"]),
+      new ModelClass("مازدا",["128","132"]),
+      new ModelClass("أنفيتيتي",["128","132"]),
+      new ModelClass("نيسان",["128","132"]),
+      new ModelClass("ميتشيبيشي",["128","132"]),
+
+      new ModelClass("تويوتا",["A1","A2","A3","A4","A5","A6","A7","A8"]),
+      new ModelClass("كيا",["اكسينت","اكسيل","ماتريكس"]),
+      new ModelClass("فيراري",["128","132"]),
+      new ModelClass("فولفو",["128","132"]),
+      new ModelClass("لامبورغيني",["128","132"]),
+      new ModelClass("رولزرويس",["128","132"]),
+      new ModelClass("سوبارو",["128","132"]),
+      new ModelClass("رينو",["128","132"]),
+      new ModelClass("سوزوكي",["128","132"]),
+
+      new ModelClass("بيجو",["A1","A2","A3","A4","A5","A6","A7","A8"]),
+      new ModelClass("دايو",["اكسينت","اكسيل","ماتريكس"]),
+      new ModelClass("سيتروين",["128","132"]),
+      new ModelClass("سيات",["128","132"]),
+      new ModelClass("أوبل",["128","132"]),
+      new ModelClass("ميني كوبر",["128","132"]),
+      new ModelClass("بوغاتي",["128","132"]),
+      new ModelClass("ايسوزو",["128","132"]),
+      new ModelClass("شيري",["128","132"]),
+
 
     ];
   }

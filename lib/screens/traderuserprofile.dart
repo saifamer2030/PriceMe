@@ -21,7 +21,7 @@ class _TraderUserProlileState extends State<TraderUserProlile> {
   String email,name,phone,photourl,curilist,fromPLat,fromPLng,fPlaceName,worktype,
       workshopname,cType,traderType;
  int _currentIndex=0;
-  List<String> _imageUrls;
+  List<String> _imageUrls=[];
   @override
   void initState() {
     super.initState();
@@ -83,7 +83,7 @@ class _TraderUserProlileState extends State<TraderUserProlile> {
                 ),
                 width: 200,
               ),
-              background: Image.network(_imageUrls[0]==null?"":_imageUrls[0],fit: BoxFit.cover,),
+              background: Image.network(_imageUrls.length==0?"":_imageUrls[0]??""/**_imageUrls==null?"":_imageUrls[0]==null?"":_imageUrls[0]**/,fit: BoxFit.cover,),
 
 
             ),

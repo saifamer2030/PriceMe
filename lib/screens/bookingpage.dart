@@ -74,11 +74,10 @@ Future onSelectNotification(String payload) async {
    gettraderdata();
     getuserdata();
     getadvdata();
-    getcommentdata();
 
   }
 showNotification(arrange,title,tradename,date ,tradeid) async {
-
+  print("sss$arrange");
   ///////////////////local notification/////////////////////notification_1
   flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   var android = AndroidInitializationSettings('@drawable/ic_logo');
@@ -88,8 +87,7 @@ showNotification(arrange,title,tradename,date ,tradeid) async {
     initSettings,
     onSelectNotification: onSelectNotification,
   );
-  // DateTime scheduledNotificationDateTime =
-  // DateTime.now().add(new Duration(seconds: 3));
+   //DateTime scheduledNotificationDateTime = DateTime.now().add(new Duration(seconds: 3));
   DateTime scheduledNotificationDateTime = DateTime.parse(date).add(new Duration(days: 1));
   print("aaa${scheduledNotificationDateTime.toString()}");
   //  DateTime notificationbooking = DateTime.parse('$enddate 23:59:00.000');
@@ -102,7 +100,7 @@ showNotification(arrange,title,tradename,date ,tradeid) async {
       androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
   // print("uuuuuu${widget.events[widget.index].title}");
   await flutterLocalNotificationsPlugin.schedule(
-      arrange,
+      arrange-202000000000,
       'تقيم $tradename',
       'ساعدنا فى تقديم خدمة افضل. برجاء الضغط هنا لتقيم $tradename',
       scheduledNotificationDateTime,
@@ -518,6 +516,9 @@ showNotification(arrange,title,tradename,date ,tradeid) async {
                           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
                     }).whenComplete((){
                       if( _userId==widget.ownerId){
+                        if(bookingdate=="اى موعد"){}else{
+                          showNotification(arrange,advtitle,_cNametrade,bookingdate,widget.traderid);
+                        }
                         if(_isCheckedowner){
                           Firestore.instance
                               .collection('advertisments')
@@ -615,13 +616,15 @@ showNotification(arrange,title,tradename,date ,tradeid) async {
           if(advdetails==null){advdetails="لا يوجد تفاصيل";}
           if(advprobtype==null){advprobtype="لا يوجد تفاصيل";}
           if(advdate==null){advdate="لا يوجد تفاصيل";}
+          getcommentdata();
+
         });
       }
     });
   }
 
   void getcommentdata() {
-    print("aaa${widget.traderid}///${widget.ownerId}///${widget.advID}///${ widget.commentid}");
+ //   print("aaa${widget.traderid}///${widget.ownerId}///${widget.advID}///${ widget.commentid}");
     var userQuery = Firestore.instance.collection('commentsdata').document(widget.ownerId).collection(widget.advID).where('commentid', isEqualTo: widget.commentid).limit(1);
     userQuery.getDocuments().then((data){
       if (data.documents.length > 0){
@@ -640,9 +643,11 @@ showNotification(arrange,title,tradename,date ,tradeid) async {
 
           if(_isCheckedowner==null){_isCheckedowner=false;}
           if(_isCheckedtrader==null){_isCheckedtrader=false;}
+if(DateTime.parse(bookingdate).isAfter(DateTime.now())){
+          if(_userId==widget.ownerId){
 
-          showNotification(arrange,advtitle,_cNametrade,bookingdate,widget.traderid
-          );
+            showNotification(arrange,advtitle,_cNametrade,bookingdate,widget.traderid);
+}}
 
         });
       }
