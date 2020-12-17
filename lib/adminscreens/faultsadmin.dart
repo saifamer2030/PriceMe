@@ -433,7 +433,7 @@ if(images.length==0){updatedata(url);}else {
     final StorageUploadTask uploadTask =
     storageRef.child('$now.jpg').putFile(file);
     var Imageurl = await (await uploadTask.onComplete).ref.getDownloadURL();
-    Toast.show("تم تحميل صورة طال عمرك", context,
+    Toast.show("تم تحميل الصورة", context,
         duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
     setState(() {
       url = Imageurl.toString();

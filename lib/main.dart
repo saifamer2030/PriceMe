@@ -5,9 +5,11 @@ import 'package:priceme/screens/addadv.dart';
 import 'package:priceme/screens/homepage.dart';
 import 'package:priceme/screens/myadvertisement.dart';
 import 'package:priceme/screens/personalpage.dart';
+import 'package:priceme/trader/Logintrader.dart';
 import 'package:priceme/trader/signuptrader.dart';
 
 import 'Splash.dart';
+import 'adminscreens/FragmentNavigationadmin.dart';
 import 'adminscreens/faultsadmin.dart';
 import 'adminscreens/sparepartsadmin.dart';
 
@@ -26,7 +28,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.teal,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Splash(),//SparePartsAdmin(),//UserRatingPage("6XQuwAo5xPY40LqdnAqL5zqcc1v1"),Splash(),
+      home: Logintrader(),//Splash(),//FragmentNavigationAdmin(),//SparePartsAdmin(),//UserRatingPage("6XQuwAo5xPY40LqdnAqL5zqcc1v1"),Splash(),
     );
   }
 }

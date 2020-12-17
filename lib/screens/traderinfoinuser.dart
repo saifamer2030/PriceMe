@@ -160,7 +160,7 @@ class _TraderInfoInUserState extends State<TraderInfoInUser> {
                                 _makePhoneCall(
                                     'tel:${phone}');
                               } else {
-                                Toast.show("حاول تاني طال عمرك", context,
+                                Toast.show("حاول تانيا", context,
                                     duration: Toast.LENGTH_LONG,
                                     gravity: Toast.BOTTOM);
                               }

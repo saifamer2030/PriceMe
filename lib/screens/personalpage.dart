@@ -51,7 +51,8 @@ class __PersonalPageState extends State<PersonalPage> {
   List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
   bool _load2 = false;
-
+  String selectedcars="";
+  List<String> selectedcarslist;
   @override
   void initState() {
     super.initState();
@@ -75,7 +76,14 @@ class __PersonalPageState extends State<PersonalPage> {
           worktype = data.documents[0].data['worktype'].toString();
           workshopname = data.documents[0].data['workshopname'].toString();
           traderType = data.documents[0].data['traderType'].toString();
+          selectedcars = data.documents[0].data['selectedcarstring'];
 
+          selectedcars==null?selectedcars="":selectedcars=selectedcars;
+          selectedcarslist = selectedcars
+           .replaceAll(" ", "")
+              .replaceAll("[", "")
+              .replaceAll("]", "")
+              .split(",");
           workshopname==null? workshopname="اسم محل غير معلوم" : workshopname=workshopname;
           fPlaceName==null? fPlaceName="عنوان غير معلوم" : fPlaceName=fPlaceName;
           traderType==null? traderType="نوع التاجر غير معلوم" : traderType=traderType;
@@ -113,6 +121,23 @@ class __PersonalPageState extends State<PersonalPage> {
     //getUser();
   }
 
+  void onSubmit9(List<String> result) {
+    setState(() {
+      selectedcarslist.clear();
+      selectedcarslist.addAll(result);
+    });
+    //createRecord(Imageurl.toString());
+    Firestore.instance
+        .collection('users')
+        .document(_userId)
+        .updateData({
+      'selectedcarstring': result.toString(),
+      'selectedcarslist': result,
+    }).then((_) {
+      result.clear();
+
+    });
+  }
 
   Future<void> loadAssets() async {
     List<Asset> resultList = List<Asset>();
@@ -521,7 +546,53 @@ class __PersonalPageState extends State<PersonalPage> {
                       height: .2,
                       color: Colors.grey,
                     ):Container(),
+                    (cType=="trader"&&traderType=="تاجر قطع")?  Padding(
+                      padding: const EdgeInsets.only(top: 10),
+                      child: Card(
+                        elevation: 2,
+                        shadowColor: Colors.blueAccent,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: <Widget>[
+                            Directionality(
+                              textDirection: TextDirection.rtl,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  selectedcars != null
+                                      ? selectedcarslist.toString()
+                                      : "نوع السيارات",
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 8),
+                              child: Icon(Icons.car_repair),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8),
+                              child: InkWell(
+                                  onTap: () {
+                                    setState(() {
 
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => MyForm9(selectedcarslist,
+                                                  onSubmit9: onSubmit9)));
+                                    });
+                                  },
+                                  child: Icon(Icons.mode_edit)),
+                            )
+                          ],
+                        ),
+                      ),
+                    ):Container(),
+                    (cType=="trader")?Container(
+                      width: MediaQuery.of(context).size.width,
+                      height: .2,
+                      color: Colors.grey,
+                    ):Container(),
 
                     (cType=="trader")? InkWell(
                         onTap: (){
@@ -1243,3 +1314,122 @@ class _MyForm4State extends State<MyForm4> {
   }
 }
 
+//////////////////////////////////
+typedef void MyFormCallback9(List<String> result);
+class MyForm9 extends StatefulWidget {
+  final MyFormCallback9 onSubmit9;
+  List<String> selectedcars = [];
+  MyForm9(this.selectedcars,{this.onSubmit9});
+  @override
+  _MyForm9State createState() => _MyForm9State();
+}
+class _MyForm9State extends State<MyForm9> {
+
+  List<String> outputList = [];
+  List<String> cartype = ["اودي", "كاديلاك","شفروليه","فيات","دودج","جي-أم-سي", "فورد","تيسلا","لينكولن","بي-أم-دبليو","فولكس-فاجن","بورش","سكودا","مرسيدس","جاكوار","لاند-روفر",
+    "هوندا","مازدا","أنفيتيتي","نيسان","ميتشيبيشي","تويوتا","كيا","فيراري","فولفو","لامبورغيني","رولزرويس","سوبارو","رينو","سوزوكي","بيجو","دايو","سيتروين",
+    "سيات","أوبل","ميني-كوبر","بوغاتي","ايسوزو","شيري"];
+  List<bool> checlist = [];
+  @override
+  void initState() {
+    super.initState();
+    outputList.clear();
+    print("kkk${widget.selectedcars}");
+    checlist= List<bool>.generate(cartype.length,(k) => widget.selectedcars.contains(cartype[k]));
+    for(int i = 0; i < widget.selectedcars.length; i++){
+      outputList.add( widget.selectedcars[i]);
+    }
+  }
+  @override
+  Widget build(BuildContext context) {
+
+    return  Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xff171732),
+        centerTitle:true ,
+        title: Text(
+          "اختر انواع السيارات",
+          style: TextStyle(fontWeight: FontWeight.bold),
+          textDirection: TextDirection.rtl,
+        ),
+
+      ),
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top:18.0),
+            child: ListView.builder(
+              itemCount:cartype.length,
+              itemBuilder: (context, i) {
+
+                return CheckboxListTile(
+                  //  groupValue: _currentValue,
+                  title: Text(
+                    cartype[i],
+                    textDirection: TextDirection.rtl,
+                  ),
+                  //  value: value,
+                  value: checlist[i],
+
+                  onChanged: (val) {
+                    setState(() {
+                      checlist[i]=val;
+                    });
+                    if(val){
+                      setState(() {
+                        outputList.add( cartype[i]);
+                        // print("hhh${outputList.length}//"+aList[i].title+aList[i].subtitle[j]);
+                        // _currentValuesub=aList[i].subtitle[j];
+                        //   _currentValuem =aList[i].title;
+                      });
+                    }else{
+                      outputList.removeWhere((item) => item ==cartype[i]);
+                      // print("hhh${outputList.length}//"+aList[i].title+aList[i].subtitle[j]);
+
+                    }
+                  },
+                );
+              },
+            ),
+          ),
+          Positioned(
+            bottom: 5,
+
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment:MainAxisAlignment.spaceBetween ,
+              children: <Widget>[
+                RaisedButton(
+                  onPressed: () {
+                    widget.onSubmit9(outputList/**_currentValuem.toString() + "," + _currentValuesub.toString()**/);
+                    Navigator.pop(context);
+
+                  },
+                  child: const Text('حفظ', style: TextStyle(fontSize: 20)),
+                ),
+                SizedBox(width: 10,),
+                RaisedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+
+                  },
+                  child: const Text("الغاء", style: TextStyle(fontSize: 20)),
+                ),
+              ],
+            ),
+          )
+
+//          Row(
+//            mainAxisAlignment: MainAxisAlignment.spaceAround,
+//            children: <Widget>[
+//              cancelButton,
+//              continueButton,
+//            ],
+//          )
+
+        ],
+      ),
+    );
+  }
+}
+////////////////////////////////

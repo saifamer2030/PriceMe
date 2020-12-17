@@ -470,7 +470,7 @@ class _SubSparesAdminState extends State<SubSparesAdmin> {
         final StorageUploadTask uploadTask =
         storageRef.child('$now.jpg').putFile(file);
         var Imageurl = await (await uploadTask.onComplete).ref.getDownloadURL();
-        Toast.show("تم تحميل صورة طال عمرك", context,
+        Toast.show("تم تحميل صورة", context,
             duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
         setState(() {
           url = Imageurl.toString();

@@ -471,7 +471,7 @@ class _EditVideoState extends State<EditVideo> {
                                       }
                                     } on SocketException catch (_) {
                                       Toast.show(
-                                          "انت غير متصل بشبكة إنترنت طال عمرك",
+                                          "انت غير متصل بشبكة إنترنت",
                                           context,
                                           duration: Toast.LENGTH_LONG,
                                           gravity: Toast.BOTTOM);

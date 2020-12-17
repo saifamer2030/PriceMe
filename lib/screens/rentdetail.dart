@@ -726,7 +726,7 @@ class _RentDetailState extends State<RentDetail> {
                                 _makePhoneCall(
                                     'tel:${ownerPhone}');
                               } else {
-                                Toast.show("حاول تاني طال عمرك", context,
+                                Toast.show("حاول تانيا", context,
                                     duration: Toast.LENGTH_LONG,
                                     gravity: Toast.BOTTOM);
                               }
@@ -912,7 +912,7 @@ class _RentDetailState extends State<RentDetail> {
                                       } on SocketException catch (_) {
                                         //  print('not connected');
                                         Toast.show(
-                                            "انت غير متصل بشبكة إنترنت طال عمرك",
+                                            "انت غير متصل بشبكة إنترنت ",
                                             context,
                                             duration: Toast.LENGTH_LONG,
                                             gravity: Toast.BOTTOM);
@@ -982,7 +982,7 @@ class _RentDetailState extends State<RentDetail> {
         'rate':0.0,
       }).whenComplete(() {
 
-        Toast.show("ارسالنا تعليقك طال عمرك", context,
+        Toast.show("ارسالنا تعليقك ", context,
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         CommentClassString commentclass = new CommentClassString(
           widget.userId,
@@ -1097,7 +1097,7 @@ class _RentDetailState extends State<RentDetail> {
                                                           .removeAt(index);
                                                     });
                                                     Toast.show(
-                                                        "حذفنا تعليقك طال عمرك",
+                                                        "حذفنا تعليقك ",
                                                         context,
                                                         duration:
                                                             Toast.LENGTH_SHORT,
@@ -1107,7 +1107,7 @@ class _RentDetailState extends State<RentDetail> {
                                                               context));
                                                 } else {
                                                   Toast.show(
-                                                      "هذا مو تعليقك طال عمرك",
+                                                      "هذا ليس تعليقك ",
                                                       context,
                                                       duration:
                                                           Toast.LENGTH_SHORT,

@@ -1114,7 +1114,7 @@ class _AdvDetailState extends State<AdvDetail> {
                                       } on SocketException catch (_) {
                                         //  print('not connected');
                                         Toast.show(
-                                            "انت غير متصل بشبكة إنترنت طال عمرك",
+                                            "انت غير متصل بشبكة إنترنت",
                                             context,
                                             duration: Toast.LENGTH_LONG,
                                             gravity: Toast.BOTTOM);
@@ -1219,7 +1219,7 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
       'rate':traderating,
       }).whenComplete(() {
 
-        Toast.show("ارسالنا تعليقك طال عمرك", context,
+        Toast.show("ارسالنا تعليقك ", context,
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         CommentClass commentclass = new CommentClass(
           widget.userId,
@@ -1345,7 +1345,7 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
                                                           .removeAt(index);
                                                     });
                                                     Toast.show(
-                                                        "حذفنا تعليقك طال عمرك",
+                                                        "حذفنا تعليقك",
                                                         context,
                                                         duration:
                                                             Toast.LENGTH_SHORT,
@@ -1355,7 +1355,7 @@ if( _commentController.text.contains('.')){price=_commentController.text;}else{p
                                                               context));
                                                 } else {
                                                   Toast.show(
-                                                      "هذا مو تعليقك طال عمرك",
+                                                      "هذا ليس تعليقك",
                                                       context,
                                                       duration:
                                                           Toast.LENGTH_SHORT,

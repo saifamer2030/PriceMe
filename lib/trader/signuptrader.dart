@@ -32,6 +32,7 @@ class _SignUptraderState extends State<SignUptrader> {
   String url1;
   String imagepathes = '';
   List<String> urlList = [];
+  List<String> selectedcars=[];
   List<String> _typearray=["تاجر صيانة","تاجر قطع"];
   List<Asset> images = List<Asset>();
   String _error = 'No Error Dectected';
@@ -498,7 +499,45 @@ workshoptype=_faultcurrentItemSelected;
                         height: _minimumPadding,
                         width: _minimumPadding,
                       ),
+                      _typecurrentItemSelected==_typearray[1]?Container(
+                        height: 40,
+                        color: Colors.grey,
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MyForm4(selectedcars,
+                                        onSubmit4: onSubmit4)));
 
+                          },
+                          child: Card(
+                            elevation: 0.0,
+                            color: const Color(0xffe7e7e7),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Center(
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  "نوع السيارة",
+                                  textDirection: TextDirection.rtl,
+                                  style:TextStyle(
+                                      color:  const Color(0xffff2121),
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ):Container(),
+                      _typecurrentItemSelected==_typearray[1]? Center(child: Text(selectedcars.toString())):Container(),
+                      SizedBox(
+                        height: _minimumPadding,
+                        width: _minimumPadding,
+                      ),
                       Padding(
                         padding: EdgeInsets.only(
                             top: _minimumPadding * 5, bottom: _minimumPadding),
@@ -676,6 +715,9 @@ workshoptype=_faultcurrentItemSelected;
       'workshopname': workshopnameController.text,
       'cType': "trader",
       'traderType': _typecurrentItemSelected,
+      'selectedcarstring': selectedcars.toString(),
+      'selectedcarslist': selectedcars,
+
 
     }).whenComplete(() {
       SessionManager prefs =  SessionManager();
@@ -688,7 +730,135 @@ workshoptype=_faultcurrentItemSelected;
   }
 
 
+  void onSubmit4(List<String> result) {
+    setState(() {
+      selectedcars.clear();
+      selectedcars.addAll(result);
+    });
+      Toast.show(
+          "${selectedcars.toString()}//////", context,
+          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+    result.clear();
+  }
 
 }
 
+//////////////////////////////////
+typedef void MyFormCallback4(List<String> result);
+class MyForm4 extends StatefulWidget {
+  final MyFormCallback4 onSubmit4;
+  List<String> selectedcars = [];
+  MyForm4(this.selectedcars,{this.onSubmit4});
+  @override
+  _MyForm4State createState() => _MyForm4State();
+}
+class _MyForm4State extends State<MyForm4> {
+
+  List<String> outputList = [];
+  List<String> cartype = ["اودي", "كاديلاك","شفروليه","فيات","دودج","جي-أم-سي", "فورد","تيسلا","لينكولن","بي-أم-دبليو","فولكس-فاجن","بورش","سكودا","مرسيدس","جاكوار","لاند-روفر",
+    "هوندا","مازدا","أنفيتيتي","نيسان","ميتشيبيشي","تويوتا","كيا","فيراري","فولفو","لامبورغيني","رولزرويس","سوبارو","رينو","سوزوكي","بيجو","دايو","سيتروين",
+    "سيات","أوبل","ميني-كوبر","بوغاتي","ايسوزو","شيري"];
+  List<bool> checlist = [];
+  @override
+  void initState() {
+    super.initState();
+    outputList.clear();
+    checlist= List<bool>.generate(cartype.length,(k) => widget.selectedcars.contains(cartype[k]));
+    for(int i = 0; i < widget.selectedcars.length; i++){
+        outputList.add( widget.selectedcars[i]);
+    }
+    }
+  @override
+  Widget build(BuildContext context) {
+
+    return  Scaffold(
+      appBar: AppBar(
+        backgroundColor: const Color(0xff171732),
+        centerTitle:true ,
+        title: Text(
+          "اختر انواع السيارات",
+          style: TextStyle(fontWeight: FontWeight.bold),
+          textDirection: TextDirection.rtl,
+        ),
+
+      ),
+      body: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top:18.0),
+            child: ListView.builder(
+              itemCount:cartype.length,
+              itemBuilder: (context, i) {
+
+                return CheckboxListTile(
+                  //  groupValue: _currentValue,
+                  title: Text(
+                    cartype[i],
+                    textDirection: TextDirection.rtl,
+                  ),
+                  //  value: value,
+                  value: checlist[i],
+
+                  onChanged: (val) {
+                    setState(() {
+                      checlist[i]=val;
+                    });
+                    if(val){
+                      setState(() {
+                        outputList.add( cartype[i]);
+                       // print("hhh${outputList.length}//"+aList[i].title+aList[i].subtitle[j]);
+                        // _currentValuesub=aList[i].subtitle[j];
+                        //   _currentValuem =aList[i].title;
+                      });
+                    }else{
+                      outputList.removeWhere((item) => item ==cartype[i]);
+                     // print("hhh${outputList.length}//"+aList[i].title+aList[i].subtitle[j]);
+
+                    }
+                  },
+                );
+              },
+            ),
+          ),
+          Positioned(
+            bottom: 5,
+
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment:MainAxisAlignment.spaceBetween ,
+              children: <Widget>[
+                RaisedButton(
+                  onPressed: () {
+                    widget.onSubmit4(outputList/**_currentValuem.toString() + "," + _currentValuesub.toString()**/);
+                    Navigator.pop(context);
+
+                  },
+                  child: const Text('حفظ', style: TextStyle(fontSize: 20)),
+                ),
+                SizedBox(width: 10,),
+                RaisedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+
+                  },
+                  child: const Text("الغاء", style: TextStyle(fontSize: 20)),
+                ),
+              ],
+            ),
+          )
+
+//          Row(
+//            mainAxisAlignment: MainAxisAlignment.spaceAround,
+//            children: <Widget>[
+//              cancelButton,
+//              continueButton,
+//            ],
+//          )
+
+        ],
+      ),
+    );
+  }
+}
+////////////////////////////////
 

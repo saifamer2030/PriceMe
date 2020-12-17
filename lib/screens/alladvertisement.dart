@@ -26,7 +26,9 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
   String _userId="";
   String  worktype="";
   String tradertype="";
-
+  String selectedcars="";
+  List<String> selectedcarslist;
+  var _stream;
   @override
   void initState() {
     super.initState();
@@ -44,11 +46,39 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
               if (data.documents.length > 0) {
                 setState(() {
                   // firstName = data.documents[0].data['firstName'];
-                  // lastName = data.documents[0].data['lastName'];
+                  selectedcars = data.documents[0].data['selectedcarstring'];
                   tradertype = data.documents[0].data['traderType'];
                   worktype = data.documents[0].data['worktype'];
                   tradertype=="تاجر صيانة"?tradertype="اعطال":tradertype="قطع غيار";
+                  selectedcars==null?selectedcars="":selectedcars=selectedcars;
+                  selectedcarslist = selectedcars
+                     // .replaceAll(" ", "")
+                      .replaceAll("[", "")
+                      .replaceAll("]", "")
+                      .split(",");
                   print("mmm" + worktype);
+                  if(tradertype=="قطع غيار"){
+                    setState(() {
+                    _stream=  Firestore.instance
+                          .collection('advertisments')
+                          .orderBy('carrange',descending:true)
+                          .where("mfaultarray", arrayContains: worktype)
+                          .where("cproblemtype", isEqualTo: tradertype)
+                          .where("ccar", whereIn:selectedcarslist)
+                          .snapshots();
+                    });
+
+                  }else{
+                    setState(() {
+                      _stream=    Firestore.instance
+                          .collection('advertisments')
+                          .orderBy('carrange',descending:true)
+                          .where("mfaultarray", arrayContains: worktype)
+                          .where("cproblemtype", isEqualTo: tradertype)
+                          .snapshots();
+                    });
+
+                  }
                 });
               }
             });
@@ -90,15 +120,7 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
       ),
       body: Container(
         child: StreamBuilder(
-          stream: Firestore.instance
-              .collection('advertisments')
-              .orderBy('carrange',
-                  descending:
-                      true) //.where("cproblemtype", isEqualTo:"قطع غيار")
-              .where("mfaultarray", arrayContains: worktype)
-              .where("cproblemtype", isEqualTo: tradertype)
-
-              .snapshots(),
+          stream: _stream,
           builder: (context, snapshot) {
             if (snapshot.data?.documents == null || !snapshot.hasData)
               return Center(child: Text("لا يوجد بيانات...",));

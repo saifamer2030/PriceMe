@@ -502,14 +502,14 @@ class _AddVideoState extends State<AddVideo> {
                                       }
                                     } on SocketException catch (_) {
                                       Toast.show(
-                                          "انت غير متصل بشبكة إنترنت طال عمرك",
+                                          "انت غير متصل بشبكة إنترنت ",
                                           context,
                                           duration: Toast.LENGTH_LONG,
                                           gravity: Toast.BOTTOM);
                                     }
                                   } else {
                                     Toast.show(
-                                        "ضيف صورة علي الاقل حق إعلانك طال عمرك",
+                                        "ضيف صورة علي الاقل ",
                                         context,
                                         duration: Toast.LENGTH_SHORT,
                                         gravity: Toast.BOTTOM);

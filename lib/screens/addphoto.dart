@@ -282,14 +282,14 @@ class _AddPhotoState extends State<AddPhoto> {
                                       }
                                     } on SocketException catch (_) {
                                       Toast.show(
-                                          "انت غير متصل بشبكة إنترنت طال عمرك",
+                                          "انت غير متصل بشبكة إنترنت",
                                           context,
                                           duration: Toast.LENGTH_LONG,
                                           gravity: Toast.BOTTOM);
                                     }
                                   } else {
                                     Toast.show(
-                                        "ضيف صورة علي الاقل حق إعلانك طال عمرك",
+                                        "ضيف صورة علي الاقل",
                                         context,
                                         duration: Toast.LENGTH_SHORT,
                                         gravity: Toast.BOTTOM);
@@ -338,7 +338,7 @@ class _AddPhotoState extends State<AddPhoto> {
 
     }
 
-    Toast.show("تم تحميل الصور طال عمرك", context,
+    Toast.show("تم تحميل الصور", context,
         duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
     setState(() {
       _load2 = true;

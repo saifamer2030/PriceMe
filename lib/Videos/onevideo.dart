@@ -539,7 +539,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                           if (_userId == null) {
                             //if(favchecklist[position] ){
                             Toast.show(
-                                "ابشر .. سجل دخول الاول طال عمرك",
+                                " سجل دخولك اولا",
                                 context,
                                 duration: Toast.LENGTH_LONG,
                                 gravity: Toast.BOTTOM);
