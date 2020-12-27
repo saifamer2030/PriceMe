@@ -8,6 +8,8 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+
+//import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:priceme/Videos/addVideo.dart';
 import 'package:priceme/Videos/allvideos.dart';
@@ -15,6 +17,8 @@ import 'package:priceme/Videos/allvideos.dart';
 import 'package:priceme/classes/FaultsClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/SparePartsSizesClass.dart';
+import 'package:priceme/ui_utile/myFonts.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:toast/toast.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'addadv.dart';
@@ -31,6 +35,12 @@ class HomePage extends StatefulWidget {
 final fcmReference = FirebaseDatabase.instance.reference().child('Fcm-Token');
 
 class _HomePageState extends State<HomePage> {
+  var _videosListController = ScrollController();
+  var _faultListController = ScrollController();
+  var _sparePartsController = ScrollController();
+  String tapedButton = "spareParts";
+
+  //bool faultButtonTapped = true;
   List<SparePartsSizesClass> sparepartsList = [];
   List<SparePartsSizesClass> faultsList = [];
   List<FaultsClass> subfaultsList = [];
@@ -41,34 +51,38 @@ class _HomePageState extends State<HomePage> {
   bool faultcheck = false;
   bool sparescheck = false;
   String mfault = "";
-double sparesize=100;
-  double faultsize=100;
-  double s_f_size=20;
-  double f_f_size=20;
+  double sparesize = 100;
+  double faultsize = 100;
+  double s_f_size = 20;
+  double f_f_size = 20;
   int _index = 0;
 
   bool select_r_c = false;
   String _tempDir;
   String filePath;
 
-
-   int currentPage_spare = 3;
-   int currentPage_fault = 3;
-  PageController _pageController_spare ;
+  int currentPage_spare = 3;
+  int currentPage_fault = 3;
+  PageController _pageController_spare;
   PageController _pageController_fault;
+
   @override
   void initState() {
-     _pageController_spare = PageController(viewportFraction: 0.3,initialPage:currentPage_spare);
-     _pageController_fault = PageController(viewportFraction: 0.3,initialPage:currentPage_fault);
-    _pageController_spare.addListener((){
+    _pageController_spare =
+        PageController(viewportFraction: 0.3, initialPage: currentPage_spare);
+    _pageController_fault =
+        PageController(viewportFraction: 0.3, initialPage: currentPage_fault);
+    _pageController_spare.addListener(() {
       setState(() {
-        currentPage_spare =int.parse(_pageController_spare.page.toStringAsFixed(0));//int.parse( _pageController_spare.page.toStringAsFixed(0));
-      //  print("gggg${_pageController_spare.page}");
+        currentPage_spare = int.parse(_pageController_spare.page.toStringAsFixed(
+            0)); //int.parse( _pageController_spare.page.toStringAsFixed(0));
+        //  print("gggg${_pageController_spare.page}");
       });
     });
-    _pageController_fault.addListener((){
+    _pageController_fault.addListener(() {
       setState(() {
-        currentPage_fault =int.parse( _pageController_fault.page.toStringAsFixed(0));
+        currentPage_fault =
+            int.parse(_pageController_fault.page.toStringAsFixed(0));
       });
     });
     super.initState();
@@ -89,11 +103,11 @@ double sparesize=100;
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => AllVideos(document['carrange'],null,null)));
+                builder: (context) =>
+                    AllVideos(document['carrange'], null, null)));
         // _onInstagramStorySwipeClicked();
       },
-      child:
-      Padding(
+      child: Padding(
         padding: const EdgeInsets.all(2.0),
         child: Container(
           width: 150,
@@ -121,7 +135,9 @@ double sparesize=100;
                     width: 1.0,
                   ),
                   image: DecorationImage(
-                    image:document['imgurl']==null?AssetImage("assets/images/ic_background.png"):NetworkImage(document['imgurl']),
+                    image: document['imgurl'] == null
+                        ? AssetImage("assets/images/ic_background.png")
+                        : NetworkImage(document['imgurl']),
                     fit: BoxFit.fill,
                   ),
                   shape: BoxShape.circle,
@@ -129,9 +145,10 @@ double sparesize=100;
               ),
               Expanded(
                 child: Text(
-                  document['ctitle']==null?"بدون عنوان":document['ctitle'],
-                  style: TextStyle(
-                      color: Colors.red, fontSize: 15),
+                  document['ctitle'] == null
+                      ? "بدون عنوان"
+                      : document['ctitle'],
+                  style: TextStyle(color: Colors.red, fontSize: 15),
                   textAlign: TextAlign.center,
                 ),
               ),
@@ -221,10 +238,13 @@ double sparesize=100;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      // appBar: AppBar(
-      // title: const Text('AppBar Demo'),),
-      backgroundColor: const Color(0xffffffff),
-      body: Container(
+        // appBar: AppBar(
+        // title: const Text('AppBar Demo'),),
+        backgroundColor: const Color(0xffffffff),
+        body: homeScreen()
+
+        /*
+      Container(
         width: width,
         height: height,
         child: ListView(
@@ -1169,6 +1189,8 @@ double sparesize=100;
                           //   }).whenComplete(() {
                           //     setState(() {});
                           //   });
+
+
                           // });
                         },
                         child: Padding(
@@ -1667,6 +1689,385 @@ double sparesize=100;
 //                 : Container():Container(),
           ],
         ),
+      ),
+
+
+
+
+*/
+
+        );
+  }
+
+  Widget homeScreen() {
+    return Container(
+      decoration: BoxDecoration(
+          gradient: LinearGradient(
+        begin: Alignment.topRight,
+        end: Alignment.bottomLeft,
+        colors: [
+          const Color(0xfffe7210),
+          const Color(0xffff8b14),
+          const Color(0xffffbc16),
+        ],
+        // stops: [0.1, 0.8,0.6],
+      )),
+      child: ListView(
+        shrinkWrap: true,
+        children: [
+          SizedBox(
+            height: 20,
+          ),
+          Container(
+            margin: EdgeInsets.only(right: 10),
+            height: 215,
+            child: StreamBuilder(
+              stream: Firestore.instance
+                  .collection('videos')
+                  .orderBy('seens', descending: true)
+                  .limit(8) //.where("cproblemtype", isEqualTo:"قطع غيار")
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                      child: Text(
+                    "Loading..",
+                  ));
+                }
+
+                return Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: ListView.builder(
+                        //reverse: true,
+
+                        physics: BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        // controller: _controller,
+                        itemCount: snapshot.data.documents.length,
+                        itemBuilder: (context, index) {
+                          return videoItemWidget(
+                              context, index, snapshot.data.documents[index]);
+                        }));
+              },
+            ),
+
+            /*
+            ListView.builder(
+                physics: BouncingScrollPhysics(),
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                controller: _videosListController,
+                itemCount: 6,
+                itemBuilder: (context, index) {
+                  return videoItemWidget(index);
+                }),
+
+            */
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(32),
+                      topRight: Radius.circular(32))),
+              child: Column(
+                children: [
+                  SizedBox(height: 20),
+                  Container(
+                    height: 50,
+                    child: Row(
+                      textDirection: TextDirection.rtl,
+                      children: [
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Expanded(
+                            child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              //   faultButtonTapped = false;
+                              tapedButton = "spareParts";
+                            });
+                          },
+                          child: Card(
+                              elevation: 8,
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(18)),
+                              ),
+                              child: Container(
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(18),
+                                    gradient: tapedButton == "spareParts"
+                                        ? LinearGradient(
+                                            begin: Alignment.topRight,
+                                            end: Alignment.bottomLeft,
+                                            colors: [
+                                              const Color(0xfffe7210),
+                                              const Color(0xffff8b14),
+                                              const Color(0xffffbc16),
+                                            ],
+                                            // stops: [0.1, 0.8,0.6],
+                                          )
+                                        : null,
+                                    color: tapedButton == "spareParts"
+                                        ? null
+                                        : const Color(0xffbfc3c3)),
+                                child: Center(
+                                    child: Text("قطع الغيار",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: MyFonts.primaryFont))),
+                              )),
+                        )),
+                        SizedBox(
+                          width: 20,
+                        ),
+                        Expanded(
+                            child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              //faultButtonTapped = true;
+                              tapedButton = "faults";
+                            });
+                          },
+                          child: Card(
+                              elevation: 8,
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(18)),
+                              ),
+                              child: Container(
+                                height: 54,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(18),
+                                    gradient: tapedButton == "faults"
+                                        ? LinearGradient(
+                                            begin: Alignment.topRight,
+                                            end: Alignment.bottomLeft,
+                                            colors: [
+                                              const Color(0xfffe7210),
+                                              const Color(0xffff8b14),
+                                              const Color(0xffffbc16),
+                                            ],
+                                            // stops: [0.1, 0.8,0.6],
+                                          )
+                                        : null,
+                                    color: tapedButton == "faults"
+                                        ? null
+                                        : const Color(0xffbfc3c3)),
+                                child: Center(
+                                    child: Text("الأعطال",
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            fontFamily: MyFonts.primaryFont))),
+                              )),
+                        )),
+                        SizedBox(
+                          width: 20,
+                        ),
+                      ],
+                    ),
+                  ),
+                  SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                    height: 150,
+                    margin: EdgeInsets.only(right: 10),
+                    child: sparepartsList.length == 0
+                        ? categoriesLoadingWidget()
+                        : //// display loading screen while loading data
+                        Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: ListView.builder(
+                              physics: BouncingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemCount: tapedButton == "spareParts"
+                                  ? sparepartsList.length
+                                  : faultsList.length,
+                              controller: tapedButton == "spareParts"
+                                  ? _sparePartsController
+                                  : _faultListController,
+                              itemBuilder: (context, index) {
+                                return categoryItem(index);
+                              }),
+                        )
+
+                  )
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget videoItemWidget(
+      BuildContext context, int index, DocumentSnapshot document) {
+    return InkWell(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      AllVideos(document['carrange'], null, null)));
+        },
+        child: Container(
+            height: 190,
+            width: 110,
+            child: Column(
+              children: [
+                Card(
+                  elevation: 8,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: const BorderRadius.all(Radius.circular(18)),
+                      side: BorderSide(color: Colors.black, width: 1)),
+                  child: Container(
+                      height: 170,
+                      width: 110,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(18),
+                        color: Colors.grey[400]
+
+                      ),
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(18),
+                          child:
+                          document['imgurl'] == null
+                              ? AssetImage(
+                                  "assets/images/ic_background.png",
+                                )
+                              :
+                          Image.network(
+                                  document['imgurl'],
+                                  fit: BoxFit.cover,
+                                ))),
+                ),
+                Center(
+                  child: Text(
+                      document['ctitle'] == null
+                          ? "بدون عنوان"
+                          : document['ctitle'],
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: MyFonts.primaryFont)),
+                )
+              ],
+            )));
+  }
+
+  Widget categoryItem(int index) {
+    return InkWell(
+        onTap: () {
+          setState(() {
+            mfault = faultsList[index].sName;
+          });
+
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => tapedButton == "spareParts"
+                      ? AddAdv("قطع غيار", sparepartsList[index].sName,
+                          sparepartsList[index].sid)
+                      : AddAdv("اعطال", faultsList[index].sName,
+                          faultsList[index].sid)));
+        },
+        child: Card(
+          elevation: 8,
+          shape: RoundedRectangleBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(18)),
+              side: BorderSide(color: Colors.black, width: 1)),
+          child: Container(
+            height: 150,
+            width: 150,
+            child: Stack(
+              children: [
+                Container(
+                    height: 100,
+                    width: 100,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.only(
+                          topRight: Radius.circular(10),
+                          topLeft: Radius.circular(10)),
+                      child: new Image.network(
+                        tapedButton == "spareParts"
+                            ? sparepartsList[index].surl
+                            : faultsList[index].surl,
+                        fit: BoxFit.cover,
+                      ),
+                    )),
+                Positioned(
+                  bottom: 0,
+                  child: Container(
+                    height: 30,
+                    width: 150,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(18),
+                          bottomRight: Radius.circular(18)),
+                      color: Colors.black.withOpacity(0.5),
+                    ),
+                    child: Center(
+                      child: Text(
+                          tapedButton == "spareParts"
+                              ? sparepartsList[index].sName
+                              : faultsList[index].sName,
+                          style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: MyFonts.primaryFont)),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ));
+  }
+
+  Widget categoriesLoadingWidget() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey[200],
+      highlightColor: Colors.white,
+      child: Row(
+        children: [
+          Container(
+            height: 150,
+            width: 150,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey[200],
+            ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Expanded(
+              child: Container(
+            height: 150,
+            width: 150,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              color: Colors.grey[200],
+            ),
+          )),
+        ],
       ),
     );
   }

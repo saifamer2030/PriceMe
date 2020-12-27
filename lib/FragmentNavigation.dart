@@ -19,7 +19,8 @@ import 'package:priceme/screens/myadvertisement.dart';
 import 'package:priceme/screens/myalarms.dart';
 import 'package:priceme/screens/myoffers.dart';
 import 'package:priceme/screens/myrents.dart';
-import 'file:///F:/android%20train/applications/1%20a%20flutter%20projects/priceme/priceMe20201010/PriceMe/lib/Videos/collapsing_tab.dart';
+import 'package:priceme/Videos/collapsing_tab.dart';
+//import 'file:///F:/android%20train/applications/1%20a%20flutter%20projects/priceme/priceMe20201010/PriceMe/lib/Videos/collapsing_tab.dart';
 
 import 'Videos/allvideos.dart';
 import 'classes/ModelClass.dart';
@@ -134,7 +135,8 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
         currentIndex: _currentIndex,
         onTap: (int index) => _onItemTapped(index),
         type: BottomNavigationBarType.fixed,
-        fixedColor:  const Color(0xff15494A),
+        fixedColor: Colors.deepOrange,
+        //const Color(0xff15494A),
         unselectedItemColor: Colors.grey,
       ),
 

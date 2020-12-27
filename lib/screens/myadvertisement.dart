@@ -39,6 +39,9 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
         : setState(() {_userId = user.uid;}));
   }
 
+
+
+
   final double _minimumPadding = 5.0;
   var _controller = ScrollController();
 
@@ -204,7 +207,7 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
                                       },
                                     )),
                               ],
-                              child: firebasedata(context,index, snapshot.data.documents[index]));
+                              child: myAdvItemWidget(context, snapshot.data.documents[index]));
                         },
                       ),
                     ))
@@ -461,6 +464,130 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
     );
   }
 
+
+
+  Widget myAdvItemWidget(
+      BuildContext context, DocumentSnapshot document) {
+    return Card(
+      shape: new RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: BorderSide(color: Colors.grey)),
+
+      //borderOnForeground: true,
+      elevation: 10.0,
+      margin: EdgeInsets.only(right: 1, left: 1, bottom: 2),
+      child: InkWell(
+        onTap: () {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) =>
+                      AdvDetail(document['userId'], document['advid'])));
+        },
+        child: Container(
+          // height: 1000,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+            child:
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              textDirection: TextDirection.rtl,
+              children: [
+                Expanded(child:
+                Container(
+                  width: double.infinity,
+                  child: Stack(
+                    children: [
+                      Container(
+                          height: double.infinity,
+                          width: double.infinity,
+
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.only(topRight: Radius.circular(10), topLeft: Radius.circular(10)),
+                            child: document['curi'] == null
+                                ? new Image.asset(
+                              "assets/images/ic_logo2.png",
+                            )
+                                : new Image.network(
+                              document['curi']
+
+                              ,
+                              fit: BoxFit.cover,
+                            ),
+                          )),
+                      Positioned(
+                        right: 0,
+                        child: Container(
+                          width: 72,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            borderRadius:
+                            BorderRadius.only(topRight: Radius.circular(10)),
+                            color: Colors.black.withOpacity(0.6),
+                          ),
+                          child: Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Text(
+                                document['cproblemtype'].toString(),
+                                textDirection: TextDirection.rtl,
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+//                                          fontFamily: 'Estedad-Black',
+                                    fontStyle: FontStyle.normal),
+                              )),
+                        ),
+                      ),
+
+
+
+                    ],
+                  ),
+                )),
+
+                Container(
+                  padding: EdgeInsets.only(right: 10, left: 10),
+                  child: Text(
+                    document['ctitle'].toString(),
+                    textDirection: TextDirection.rtl,
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12.0,
+                        fontStyle: FontStyle.normal),
+                  ),
+                ),
+
+                Container(
+                  padding: EdgeInsets.only(right: 10, left: 10),
+                  child: Text(
+                    "اسم المالك",
+                    textDirection: TextDirection.rtl,
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                        color: Colors.grey,
+//                                  fontFamily: 'Estedad-Black',
+                        fontWeight: FontWeight.normal,
+                        fontSize: 10,
+                        fontStyle: FontStyle.normal),
+                  ),
+                ),
+                SizedBox(height: 10,)
+
+
+              ],
+            )
+
+
+        ),
+      ),
+    );
+  }
+
+
+  ///////////////////////////////////////// Previous widgets ///////////////////////////////
+
   Widget firebasedata(BuildContext context,int index, DocumentSnapshot document) {
     return Padding(
       padding: const EdgeInsets.all(2.0),
@@ -570,7 +697,7 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
                     children: <Widget>[
 
 
-                     Text(
+                      Text(
                         "${document['subfault']}",
                         textDirection: TextDirection.rtl,
                         textAlign: TextAlign.right,

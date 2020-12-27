@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:adobe_xd/gradient_xd_transform.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -7,8 +8,10 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+//import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:priceme/Videos/addVideo.dart';
 
@@ -36,6 +39,7 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
   var _carcurrentItemSelected = '';
   String filt;
   bool chechsearch=false;
+  bool enableFilter = false;
 
   @override
   void initState() {
@@ -58,7 +62,9 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      floatingActionButton: Container(
+
+        /*
+        floatingActionButton: Container(
 
         child: FloatingActionButton(
           heroTag: "unique55",
@@ -76,7 +82,7 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
           ),
         ),
       ),
-
+      */
       backgroundColor: const Color(0xffffffff),
       body: ListView(
         children: [
@@ -156,6 +162,108 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
 
             ],
           ):Container(),
+
+          Container(
+            height: 48,
+            child: Row(
+              textDirection: TextDirection.rtl,
+              children: [
+
+
+                Container(
+                    margin: EdgeInsets.only(right: 10),
+                    height: 40,
+                   // width: 100,
+                    child: Card(
+                      elevation: 0.0,
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          side: BorderSide(color: Colors.grey[400])
+                      ),
+                      child:
+                      Directionality(
+                        textDirection: TextDirection.rtl,
+                      child: DropdownButtonHideUnderline(
+                          child: ButtonTheme(
+                            alignedDropdown: true,
+                            child: DropdownButton<String>(
+                              items: sortlist
+                                  .map((String value) {
+                                return new DropdownMenuItem<String>(
+                                  value: value,
+                                  child: new Text(value),
+                                );
+                              }).toList(),
+                              value: _sortcurrentItemSelected,
+                              onChanged: (String newValueSelected) {
+                                // Your code to execute, when a menu item is selected from dropdown
+                                _onDropDownItemSelectedsort(
+                                    newValueSelected);
+                              },
+                              style: new TextStyle(
+                                color: Colors.grey,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w300,
+                                fontFamily: 'Cairo'
+                              ),
+                            ),
+                          )),
+                      )
+
+                    )
+                ),
+                Container(
+                    margin: EdgeInsets.only(right: 10),
+                    height: 40,
+                    //width: 100,
+                    child: Card(
+                      elevation: 0.0,
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                        side: BorderSide(color: Colors.grey[400])
+                      ),
+                      child:
+
+                      Directionality(
+                        textDirection: TextDirection.rtl,
+                       child: DropdownButtonHideUnderline(
+                           child: ButtonTheme(
+                             alignedDropdown: true,
+                             child: DropdownButton<String>(
+                               items: carlist
+                                   .map((String value) {
+                                 return new DropdownMenuItem<String>(
+                                   value: value,
+                                   child: new Text(value),
+                                 );
+                               }).toList(),
+                               value: _carcurrentItemSelected,
+                               onChanged: (String newValueSelected) {
+                                 // Your code to execute, when a menu item is selected from dropdown
+                                 _onDropDownItemSelectedcar(
+                                     newValueSelected);
+                               },
+                               style: new TextStyle(
+                                 color: Colors.grey,
+                                   fontSize: 12,
+                                   fontWeight: FontWeight.w300,
+                                   fontFamily: 'Cairo'
+                               ),
+                             ),
+                           )),
+    )
+
+                    )
+                  ),
+
+
+
+              ],
+            )
+          ),
+          SizedBox(height: 10,),
 
           Container(
             width: width,

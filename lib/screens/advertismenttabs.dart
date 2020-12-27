@@ -20,6 +20,7 @@ class _AdvertismentTabsState extends State<AdvertismentTabs> with SingleTickerPr
   PageController _pageController;
   List<String> mainfaultsList = [];
   List<String> mainsparsList = [];
+  String typePressed = "all";
 
   void getDataf() {
     setState(() {
@@ -102,7 +103,10 @@ class _AdvertismentTabsState extends State<AdvertismentTabs> with SingleTickerPr
     return Scaffold(
       backgroundColor: Colors.white,
       resizeToAvoidBottomPadding: false,
-      body: TabBarView(
+      body:
+           advertisementsScreen()
+/*
+      TabBarView(
         physics: NeverScrollableScrollPhysics(),
         children: [
           Advertisements(mainsparsList,mainfaultsList),
@@ -111,6 +115,9 @@ class _AdvertismentTabsState extends State<AdvertismentTabs> with SingleTickerPr
         ],
         controller: _tabController,
       ),
+
+*/
+/*
       appBar: AppBar(
         leading: new Container(),
         elevation: 8,
@@ -127,7 +134,9 @@ class _AdvertismentTabsState extends State<AdvertismentTabs> with SingleTickerPr
                   ])
           ),
         ),
-        title: Directionality(
+        title:
+
+        Directionality(
           textDirection: TextDirection.rtl,
           child: TabBar(
             unselectedLabelColor: Colors.black,
@@ -141,7 +150,7 @@ class _AdvertismentTabsState extends State<AdvertismentTabs> with SingleTickerPr
                       fontSize: 14,
                      // fontFamily: MyFonts.fontFamily,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black),
+                      color: Colors.white),
                 ),
               ),
               new Tab(
@@ -151,18 +160,98 @@ class _AdvertismentTabsState extends State<AdvertismentTabs> with SingleTickerPr
                       fontSize: 14,
                       //fontFamily: MyFonts.fontFamily,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black),
+                      color: Colors.white),
                 ),
               ),
             ],
             controller: _tabController,
-            indicatorColor: Colors.black,
+            indicatorColor: Colors.white,
             indicatorSize: TabBarIndicatorSize.tab,
           ),
         ),
       ),
+*/
     );
   }
+
+  Widget advertisementsScreen(){
+    return Column(
+      children: [
+        SizedBox(
+          height: 26,
+        ),
+
+        Container(
+          height: 40,
+          child: Stack(
+            children: [
+
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                  height: 40,
+                  width: 160,
+
+
+
+                  child: Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: TabBar(
+                      unselectedLabelColor: Colors.grey,
+                      labelColor: Colors.deepOrange,
+                      tabs: [
+
+                        new Tab(
+                          child: Text(
+                            " الطلبات ",
+                            style: TextStyle(
+                              fontSize: 12,
+                              // fontFamily: MyFonts.fontFamily,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        new Tab(
+                          child: Text(
+                            "طلباتى",
+                            style: TextStyle(
+                              fontSize: 12,
+                              //fontFamily: MyFonts.fontFamily,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                      controller: _tabController,
+                      indicatorColor: Colors.black,
+                      indicatorSize: TabBarIndicatorSize.label,
+                    ),
+                  ),
+                ),
+              )
+
+            ],
+          ),
+        ),
+
+     Expanded(child:
+        TabBarView(
+          physics: NeverScrollableScrollPhysics(),
+          children: [
+            Advertisements(mainsparsList,mainfaultsList),
+            MyAdvertisement(),
+
+          ],
+          controller: _tabController,
+        ) )
+        ,
+
+      ],
+    );
+  }
+
+
+
 
 
 

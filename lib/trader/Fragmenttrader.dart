@@ -16,7 +16,8 @@ import 'package:priceme/screens/alladvertisement.dart';
 import 'package:priceme/screens/homepage.dart';
 import 'package:priceme/screens/myadvertisement.dart';
 import 'package:priceme/screens/myalarms.dart';
-import 'file:///F:/android%20train/applications/1%20a%20flutter%20projects/priceme/priceMe20201010/PriceMe/lib/Videos/collapsing_tab.dart';
+import 'package:priceme/Videos/collapsing_tab.dart';
+//import 'file:///F:/android%20train/applications/1%20a%20flutter%20projects/priceme/priceMe20201010/PriceMe/lib/Videos/collapsing_tab.dart';
 
 class FragmentTrader extends StatefulWidget {
 
@@ -34,7 +35,7 @@ class _FragmentTraderState extends State<FragmentTrader> {
   String _userId;
   int _currentIndex=4;
 
-  int currentTab = 3; // to keep track of active tab index
+  int currentTab = 4; // to keep track of active tab index
 //  List<Widget> _children() => [
 
   final List<Widget> _screens = [

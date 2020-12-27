@@ -77,6 +77,8 @@ dependencies:
   scroll_snap_list: ^0.5.1
   flutter_datetime_picker: ^1.4.0
   lazy_load_scrollview: ^1.1.0
+  shimmer: ^1.1.2
+  
 
 
 dev_dependencies:
@@ -124,11 +126,12 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
+  fonts:
+    - family: Cairo
+      fonts:
+        - asset: assets/fonts/cairo_regular.ttf
+        - asset: assets/fonts/cairo_bold.ttf
+        - asset: assets/fonts/cairo_semi_bold.ttf
   #         style: italic
   #   - family: Trajan Pro
   #     fonts:

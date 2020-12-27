@@ -37,7 +37,7 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
         ? Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
             builder: (context) => Splash(), maintainState: false))
         : setState(() {
-            _userId = user.uid;
+           _userId = user.uid;
             var userQuery = Firestore.instance
                 .collection('users')
                 .where('uid', isEqualTo: _userId)
@@ -142,7 +142,7 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
                           ),
                           itemCount:snapshot.data.documents.length,
                           itemBuilder: (BuildContext context, int index) {
-                            return  firebasedata(context,index, snapshot.data.documents[index]);
+                            return  advertisementItemWidget(context, snapshot.data.documents[index]);
                           },
                         ),
                       ))
@@ -154,6 +154,120 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
       ),
     );
   }
+
+
+  Widget advertisementItemWidget(
+      BuildContext context, DocumentSnapshot document) {
+    return
+      InkWell(
+        onTap: () {
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  AdvDetail(document['userId'], document['advid'])));
+    },
+    child:
+      Card(
+      shape: new RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+          side: BorderSide(color: Colors.grey)),
+      elevation: 10.0,
+      margin: EdgeInsets.only(right: 1, left: 1, bottom: 2),
+      child:  Container(
+          // height: 1000,
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              textDirection: TextDirection.rtl,
+              children: [
+                Expanded(
+                    child: Container(
+                      width: double.infinity,
+                      child: Stack(
+                        children: [
+                          Container(
+                              height: double.infinity,
+                              width: double.infinity,
+                              color: Colors.grey[400],
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(10),
+                                    topLeft: Radius.circular(10)),
+                                child: document['curi'] == null
+                                    ? new Image.asset(
+                                  "assets/images/ic_logo2.png",
+                                )
+                                    : new Image.network(
+                                  document['curi'],
+                                  fit: BoxFit.cover,
+                                ),
+                              )),
+                          Positioned(
+                            right: 0,
+                            child: Container(
+                              width: 72,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.only(
+                                    topRight: Radius.circular(10)),
+                                color: Colors.black.withOpacity(0.6),
+                              ),
+                              child: Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: Text(
+                                    document['cproblemtype'].toString(),
+                                    textDirection: TextDirection.rtl,
+                                    textAlign: TextAlign.right,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12,
+                                        fontStyle: FontStyle.normal),
+                                  )),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )),
+                Container(
+                  padding: EdgeInsets.only(right: 10, left: 10),
+                  child: Text(
+                    document['ctitle'].toString(),
+                    textDirection: TextDirection.rtl,
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12.0,
+                        fontStyle: FontStyle.normal),
+                  ),
+                ),
+                Container(
+                  padding: EdgeInsets.only(right: 10, left: 10),
+                  child: Text(
+                    "اسم المالك",
+                    textDirection: TextDirection.rtl,
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                        color: Colors.grey,
+//                                  fontFamily: 'Estedad-Black',
+                        fontWeight: FontWeight.normal,
+                        fontSize: 10,
+                        fontStyle: FontStyle.normal),
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                )
+              ],
+            )),
+
+    ));
+  }
+
+
+/////////////////////////////////////////// Previous widgets /////////////////////////////////
+
   Widget firebasedata(BuildContext context,int index, DocumentSnapshot document) {
     return Padding(
       padding: const EdgeInsets.all(2.0),
@@ -233,7 +347,7 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 10,
-//                                  fontFamily: 'Estedad-Black',
+//
                                     fontStyle: FontStyle.normal),
                               ),
                             )
@@ -285,5 +399,4 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
       ),
     );
   }
-
 }

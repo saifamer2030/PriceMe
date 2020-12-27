@@ -53,6 +53,8 @@ class _VidiosPhotoEntertainmentState extends State<VidiosPhotoEntertainment> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
+
+      /*
       floatingActionButton: Container(
 
         child: FloatingActionButton(
@@ -71,6 +73,8 @@ class _VidiosPhotoEntertainmentState extends State<VidiosPhotoEntertainment> {
           ),
         ),
       ),
+
+      */
 
       backgroundColor: const Color(0xffffffff),
       body: ListView(
@@ -113,6 +117,62 @@ class _VidiosPhotoEntertainmentState extends State<VidiosPhotoEntertainment> {
               ),
             ),
           ):Container(),
+
+
+          Align(
+            alignment: Alignment.centerRight,
+            child: Container(
+                margin: EdgeInsets.only(right: 10),
+                height: 40,
+                //width: 100,
+                child: Card(
+                  elevation: 0.0,
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      side: BorderSide(color: Colors.grey[400],width: 0.5)
+                  ),
+                  child:
+
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: DropdownButtonHideUnderline(
+                        child: ButtonTheme(
+                          alignedDropdown: true,
+                          child: DropdownButton<String>(
+                            items: sortlist
+                                .map((String value) {
+                              return new DropdownMenuItem<String>(
+                                value: value,
+                                child: new Text(value,
+                                  textDirection: TextDirection.rtl,
+                                ),
+                              );
+                            }).toList(),
+                            value: _sortcurrentItemSelected,
+                            onChanged: (String newValueSelected) {
+                              // Your code to execute, when a menu item is selected from dropdown
+                              _onDropDownItemSelectedsort(
+                                  newValueSelected);
+                            },
+                            style: new TextStyle(
+                              color: Colors.grey,
+                              fontWeight: FontWeight.w300,
+                              fontSize: 12,
+                              fontFamily: "Cairo"
+
+                            ),
+                          ),
+                        )),
+                  )
+
+                )
+            ),
+          ),
+
+          SizedBox(
+            height: 8,
+          ),
           Container(
             width: width,
             height: height,

@@ -11,14 +11,19 @@ class CollapsingTab extends StatefulWidget {
   _CollapsingTabState createState() => new _CollapsingTabState();
 }
 
-class _CollapsingTabState extends State<CollapsingTab> {
+class _CollapsingTabState extends State<CollapsingTab> with SingleTickerProviderStateMixin {
+
+  TabController _tabController;
   ScrollController scrollController;
-bool exbandedsliver=false;
+  bool exbandedsliver=false;
 
   @override
   void dispose() {
-    scrollController.dispose();
     super.dispose();
+
+    scrollController.dispose();
+    _tabController.dispose();
+
   }
   Widget firebasedata(
       BuildContext context, int index, DocumentSnapshot document) {
@@ -110,11 +115,13 @@ bool exbandedsliver=false;
     super.initState();
     scrollController = new ScrollController();
     scrollController.addListener(() => setState(() {}));
+    _tabController = new TabController(length: 2, vsync: this);
   }
 
   @override
   Widget build(BuildContext context) {
 
+    /*
     var flexibleSpaceWidget = new SliverAppBar(
       leading: new Container(),
 
@@ -186,13 +193,16 @@ bool exbandedsliver=false;
       ),
 
     );
+   */
 
     return Scaffold(
+      backgroundColor: Colors.white,
       floatingActionButton: Align(
         alignment: Alignment.bottomLeft,
         child: Padding(
           padding: const EdgeInsets.only(left:25),
           child: FloatingActionButton(
+            backgroundColor: const Color(0xff43AAAF),
             heroTag: "unique29",
             onPressed: () {
               Navigator.push(
@@ -208,14 +218,17 @@ bool exbandedsliver=false;
               child: Icon(
                 Icons.add,
                 //size: 50,
-                color: const Color(0xff171732),
+                color: Colors.white,
               ),
             ),
           ),
         ),
       ),
 
-      body: new DefaultTabController(
+      body:
+      videosTabsScreen()
+          /*
+      new DefaultTabController(
         length: 2,
         child: NestedScrollView(
           controller: scrollController,
@@ -249,9 +262,71 @@ bool exbandedsliver=false;
           ),
         ),
       ),
+      */
+
+
     );
   }
 
+  Widget videosTabsScreen(){
+    return Column(
+       textDirection: TextDirection.rtl,
+      children: [
+        SizedBox(height: 24,),
+        Center(
+          child: Container(
+            height: 48,
+            width: 180,
+
+          child: Directionality(
+            textDirection: TextDirection.rtl,
+            child: TabBar(
+              unselectedLabelColor: Colors.grey,
+              labelColor: Colors.deepOrange,
+              tabs: [
+
+                new Tab(
+                  child: Text(
+                    "تجاري",
+                    style: TextStyle(
+                      fontSize: 12,
+                      // fontFamily: MyFonts.fontFamily,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                new Tab(
+                  child: Text(
+                    "ترفيهي",
+                    style: TextStyle(
+                      fontSize: 12,
+                      //fontFamily: MyFonts.fontFamily,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+              controller: _tabController,
+              indicatorColor: Colors.black,
+              indicatorSize: TabBarIndicatorSize.label,
+            ),
+          ),
+          )
+        ),
+
+        Expanded(child:TabBarView(
+          physics: NeverScrollableScrollPhysics(),
+          children: [
+            VidiosPhotoComercial(),
+            VidiosPhotoEntertainment(),
+
+          ],
+          controller: _tabController,
+        ) )
+
+      ],
+    );
+  }
 
 }
 

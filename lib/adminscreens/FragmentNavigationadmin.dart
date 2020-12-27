@@ -21,7 +21,7 @@ import 'package:priceme/screens/myadvertisement.dart';
 import 'package:priceme/screens/myalarms.dart';
 import 'package:priceme/screens/myoffers.dart';
 import 'package:priceme/screens/myrents.dart';
-import 'file:///F:/android%20train/applications/1%20a%20flutter%20projects/priceme/priceMe20201010/PriceMe/lib/Videos/collapsing_tab.dart';
+//import 'file:///F:/android%20train/applications/1%20a%20flutter%20projects/priceme/priceMe20201010/PriceMe/lib/Videos/collapsing_tab.dart';
 
 class FragmentNavigationAdmin extends StatefulWidget {
   FragmentNavigationAdmin();
@@ -43,7 +43,7 @@ class _FragmentNavigationAdminState extends State<FragmentNavigationAdmin> {
     MorePriceMe(),
     SparePartsAdmin(),
     FaultsAdmin(),
-    CollapsingTab(),
+   // CollapsingTab(),
     AdvertismentTabs(),
       ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();

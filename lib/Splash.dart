@@ -11,6 +11,7 @@ import 'package:priceme/screens/alladvertisement.dart';
 import 'package:priceme/screens/network_connection.dart';
 import 'package:priceme/screens/signinphone.dart';
 import 'package:priceme/trader/Fragmenttrader.dart';
+import 'package:priceme/ui_utile/myFonts.dart';
 
 import 'trader/Logintrader.dart';
 import 'classes/sharedpreftype.dart';
@@ -182,10 +183,12 @@ String _userId,cType;
                             Text(
                               'تسجيل الدخول بالهاتف',
                               style: TextStyle(
-                                fontFamily: 'Helvetica',
+                               // fontFamily: 'Helvetica',
+                                fontFamily: MyFonts.primaryFont,
                                 fontSize: 15,
                                 color: const Color(0xffffffff),
                                 height: 1,
+                                fontWeight: FontWeight.normal
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -231,7 +234,9 @@ String _userId,cType;
                           Text(
                             'تسجيل الدخول جوجل',
                             style: TextStyle(
-                              fontFamily: 'Helvetica',
+                             // fontFamily: 'Helvetica',
+                              fontWeight: FontWeight.normal,
+                              fontFamily: MyFonts.primaryFont,
                               fontSize: 15,
                               color: const Color(0xffffffff),
                               height: 1,
@@ -269,7 +274,9 @@ String _userId,cType;
                           Text(
                             'تسجيل الدخول فيس بوك',
                             style: TextStyle(
-                              fontFamily: 'Helvetica',
+                              //fontFamily: 'Helvetica',
+                              fontFamily: MyFonts.primaryFont,
+                              fontWeight: FontWeight.normal,
                               fontSize: 15,
                               color: const Color(0xffffffff),
                               height: 1,
@@ -311,7 +318,9 @@ String _userId,cType;
                           Text(
                             'الدخول كزائر',
                             style: TextStyle(
-                              fontFamily: 'Helvetica',
+                              //fontFamily: 'Helvetica',
+                              fontFamily: MyFonts.primaryFont,
+                              fontWeight: FontWeight.normal,
                               fontSize: 15,
                               color: const Color(0xffffffff),
                               height: 1,
@@ -334,7 +343,9 @@ String _userId,cType;
                     child: Text(
                       "هل انت تاجر...؟",
                       style: TextStyle(
-                        fontFamily: 'Helvetica',
+                       // fontFamily: 'Helvetica',
+                        fontFamily: MyFonts.primaryFont,
+                        fontWeight: FontWeight.normal,
                         fontSize: 15,
                         color: const Color(0xffffffff),
                         height: 1,
