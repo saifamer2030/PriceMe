@@ -117,7 +117,7 @@ class _AdvertisementsState extends State<Advertisements> {
         : new Container();
     TextStyle textStyle = Theme.of(context).textTheme.subtitle;
     return Scaffold(
-      backgroundColor: const Color(0xffffffff),
+      backgroundColor: Colors.white,
 
       /*
       floatingActionButton: FloatingActionButton(
@@ -429,7 +429,7 @@ class _AdvertisementsState extends State<Advertisements> {
     return Column(
       children: [
         SizedBox(
-          height: 20,
+          height: 10,
         ),
         Container(
             height: 46,
@@ -656,7 +656,7 @@ class _AdvertisementsState extends State<Advertisements> {
                                         value,
                                         style: TextStyle(
                                             color: Colors.grey,
-                                            fontSize: 14,
+                                            fontSize: 12,
                                             fontWeight: FontWeight.w300),
                                       ));
                                 }).toList(),
@@ -675,8 +675,8 @@ class _AdvertisementsState extends State<Advertisements> {
               ),
               typePressed != "all"
                   ? Container(
-                height: 50,
-                child: Padding(
+                height: 48,
+                   child: Padding(
                   padding: const EdgeInsets.all(4.0),
                   child: Card(
                       elevation: 2.0,
@@ -702,7 +702,7 @@ class _AdvertisementsState extends State<Advertisements> {
                                         child: Text(
                                           value,
                                           style: TextStyle(
-                                              fontSize: 14,
+                                              fontSize: 12,
                                               color:
                                               Colors.grey,
                                               fontWeight:
@@ -734,7 +734,7 @@ class _AdvertisementsState extends State<Advertisements> {
                                         child: Text(
                                           value,
                                           style: TextStyle(
-                                              fontSize: 14,
+                                              fontSize: 12,
                                               color:
                                               Colors.grey,
                                               fontWeight:
@@ -764,6 +764,7 @@ class _AdvertisementsState extends State<Advertisements> {
         ),
         Expanded(
           child: Container(
+
             width: MediaQuery.of(context).size.width,
             //height: height,
             child: StreamBuilder(
@@ -789,6 +790,7 @@ class _AdvertisementsState extends State<Advertisements> {
                         child: SingleChildScrollView(
                           child: GridView.builder(
                             physics: ScrollPhysics(),
+                            padding: EdgeInsets.zero,
                             shrinkWrap: true,
                             gridDelegate:
                             SliverGridDelegateWithFixedCrossAxisCount(
@@ -798,7 +800,7 @@ class _AdvertisementsState extends State<Advertisements> {
                               childAspectRatio: (MediaQuery.of(context)
                                   .size
                                   .width) /
-                                  (MediaQuery.of(context).size.height * 1),
+                                  (MediaQuery.of(context).size.height * 0.6),
                             ),
                             itemCount: snapshot.data.documents.length,
                             itemBuilder: (BuildContext context, int index) {
@@ -822,7 +824,7 @@ class _AdvertisementsState extends State<Advertisements> {
       BuildContext context, DocumentSnapshot document) {
     return Card(
       shape: new RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(8),
           side: BorderSide(color: Colors.grey)),
       elevation: 10.0,
       margin: EdgeInsets.only(right: 1, left: 1, bottom: 2),
@@ -836,7 +838,7 @@ class _AdvertisementsState extends State<Advertisements> {
         },
         child: Container(
             // height: 1000,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(8)),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               textDirection: TextDirection.rtl,
@@ -849,11 +851,12 @@ class _AdvertisementsState extends State<Advertisements> {
                       Container(
                           height: double.infinity,
                           width: double.infinity,
-                          color: Colors.grey[400],
+
+
                           child: ClipRRect(
                             borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(10),
-                                topLeft: Radius.circular(10)),
+                                topRight: Radius.circular(8),
+                                topLeft: Radius.circular(8)),
                             child: document['curi'] == null
                                 ? new Image.asset(
                                     "assets/images/ic_logo2.png",
@@ -866,22 +869,22 @@ class _AdvertisementsState extends State<Advertisements> {
                       Positioned(
                         right: 0,
                         child: Container(
-                          width: 72,
+                          width: 66,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.only(
-                                topRight: Radius.circular(10)),
+                                topRight: Radius.circular(8)),
                             color: Colors.black.withOpacity(0.6),
                           ),
                           child: Padding(
-                              padding: const EdgeInsets.all(5.0),
+                              padding: const EdgeInsets.all(2.0),
                               child: Text(
                                 document['cproblemtype'].toString(),
                                 textDirection: TextDirection.rtl,
                                 textAlign: TextAlign.right,
                                 style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 12,
+                                    fontSize: 10,
 //                                          fontFamily: 'Estedad-Black',
                                     fontStyle: FontStyle.normal),
                               )),
@@ -891,15 +894,16 @@ class _AdvertisementsState extends State<Advertisements> {
                   ),
                 )),
                 Container(
-                  padding: EdgeInsets.only(right: 10, left: 10),
+                  margin: EdgeInsets.only(top: 2,right: 10, left: 10),
                   child: Text(
                     document['ctitle'].toString(),
                     textDirection: TextDirection.rtl,
                     textAlign: TextAlign.right,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
-                        fontSize: 12.0,
+                        fontSize: 10.0,
                         fontStyle: FontStyle.normal),
                   ),
                 ),
@@ -913,7 +917,7 @@ class _AdvertisementsState extends State<Advertisements> {
                         color: Colors.grey,
 //                                  fontFamily: 'Estedad-Black',
                         fontWeight: FontWeight.normal,
-                        fontSize: 10,
+                        fontSize: 8,
                         fontStyle: FontStyle.normal),
                   ),
                 ),

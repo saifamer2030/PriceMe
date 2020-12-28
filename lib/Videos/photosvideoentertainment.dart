@@ -21,7 +21,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'allvideos.dart';
 
 class VidiosPhotoEntertainment extends StatefulWidget {
-  VidiosPhotoEntertainment();
+
+  bool enableFilter;
+  VidiosPhotoEntertainment(this.enableFilter);
 
   @override
   _VidiosPhotoEntertainmentState createState() => _VidiosPhotoEntertainmentState();
@@ -77,7 +79,10 @@ class _VidiosPhotoEntertainmentState extends State<VidiosPhotoEntertainment> {
       */
 
       backgroundColor: const Color(0xffffffff),
-      body: ListView(
+      body:
+        videosEntScreen(),
+      /*
+      ListView(
         children: [
           chechsearch?  Center(
             child: Container(
@@ -249,10 +254,152 @@ class _VidiosPhotoEntertainmentState extends State<VidiosPhotoEntertainment> {
           ),
         ],
       ),
+      */
     );
   }
 
+ Widget videosEntScreen(){
+    return Column(
+      textDirection: TextDirection.rtl,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
 
+      widget.enableFilter?
+        Container(
+              margin: EdgeInsets.only(right: 10),
+              height: 40,
+              //width: 100,
+              child: Card(
+                  elevation: 0.0,
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(5),
+                      side: BorderSide(color: Colors.grey[400],width: 0.5)
+                  ),
+                  child:
+
+                  Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: DropdownButtonHideUnderline(
+                        child: ButtonTheme(
+                          alignedDropdown: true,
+                          child: DropdownButton<String>(
+                            items: sortlist
+                                .map((String value) {
+                              return new DropdownMenuItem<String>(
+                                value: value,
+                                child: new Text(value,
+                                  textDirection: TextDirection.rtl,
+                                ),
+                              );
+                            }).toList(),
+                            value: _sortcurrentItemSelected,
+                            onChanged: (String newValueSelected) {
+                              // Your code to execute, when a menu item is selected from dropdown
+                              _onDropDownItemSelectedsort(
+                                  newValueSelected);
+                            },
+                            style: new TextStyle(
+                                color: Colors.grey,
+                                fontWeight: FontWeight.w300,
+                                fontSize: 12,
+                                fontFamily: "Cairo"
+
+                            ),
+                          ),
+                        )),
+                  )
+
+              )
+          )
+         :
+      SizedBox(),
+
+        SizedBox(
+          height: 8,
+        ),
+        Expanded(
+          child:
+           Container(
+         // width: MediaQuery.of(context).size.width,
+         // height: MediaQuery.of(context).size.height,
+          child:
+          StreamBuilder(
+            stream: _sortcurrentItemSelected==sortlist[0]? Firestore.instance
+                .collection('videos').where("cdepart", isEqualTo:"ترفيهى")
+                .orderBy('carrange',
+                descending:
+                true)
+                .snapshots():Firestore.instance
+                .collection('videos').where("cdepart", isEqualTo:"ترفيهى")
+                .orderBy('seens',
+                descending:
+                true)
+                .snapshots(), //imgColRef.snapshots(includeMetadataChanges: true),
+            builder: (context, snapshot) {
+              if (snapshot.data?.documents == null || !snapshot.hasData)
+                return Center(child: Text("لا يوجد بيانات...",));
+              return Hero(
+                tag: 'imageHero',
+                child: Container(
+                  child: StaggeredGridView.countBuilder(
+                    padding: EdgeInsets.zero,
+                      itemCount: snapshot.data.documents.length,
+                      crossAxisCount: 2,
+                      itemBuilder: (context, index) {
+                        return firebasedata(
+                            context, index, snapshot.data.documents[index]);
+                      },
+                      staggeredTileBuilder: (index) =>
+                          StaggeredTile.count(1, index.isEven ? 1.2 : 1.8)),
+                ),
+              );
+            },
+          ),
+
+          // StreamBuilder(
+          //   stream: _sortcurrentItemSelected==sortlist[0]? Firestore.instance
+          //       .collection('videos').where("cdepart", isEqualTo:"ترفيهى")
+          //       .orderBy('carrange',
+          //       descending:
+          //       true)
+          //       .snapshots():Firestore.instance
+          //       .collection('videos').where("cdepart", isEqualTo:"ترفيهى")
+          //       .orderBy('seens',
+          //       descending:
+          //       true)
+          //       .snapshots(),
+          //   builder: (context, snapshot) {
+          //     if (!snapshot.hasData) {
+          //       return Center(child: Text("Loading..",));
+          //     }
+          //
+          //     return new GridView.builder(
+          //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          //             crossAxisCount:2,
+          //             //crossAxisCount: (orientation == Orientation.portrait) ? 2 : 3
+          //         ),
+          //         //add item count depending on your list
+          //         //itemCount: list.length,
+          //
+          //         //added scrolldirection
+          //         //reverse: true,
+          //         physics: BouncingScrollPhysics(),
+          //         shrinkWrap: true,
+          //        // controller: _controller,
+          //         itemCount: snapshot.data.documents.length,
+          //         itemBuilder: (context, index) {
+          //           return firebasedata(
+          //               context, index, snapshot.data.documents[index]);
+          //         });
+          //   },
+          // ),
+        ),
+        )
+
+      ],
+    );
+ }
 
   Widget firebasedata(
       BuildContext context, int index, DocumentSnapshot document) {
@@ -266,7 +413,7 @@ Navigator.push(
 
       },
       child: Padding(
-        padding: const EdgeInsets.all(0.0),
+        padding: const EdgeInsets.all(1.0),
         child: Stack(
           children: [
             Container(

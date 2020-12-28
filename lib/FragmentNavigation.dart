@@ -135,7 +135,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
         currentIndex: _currentIndex,
         onTap: (int index) => _onItemTapped(index),
         type: BottomNavigationBarType.fixed,
-        fixedColor: Colors.deepOrange,
+        fixedColor: Colors.orange,
         //const Color(0xff15494A),
         unselectedItemColor: Colors.grey,
       ),

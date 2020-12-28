@@ -182,14 +182,14 @@ class _AdvertismentTabsState extends State<AdvertismentTabs> with SingleTickerPr
         ),
 
         Container(
-          height: 40,
+          height: 30,
           child: Stack(
             children: [
 
               Align(
                 alignment: Alignment.center,
                 child: Container(
-                  height: 40,
+                  height: 30,
                   width: 160,
 
 

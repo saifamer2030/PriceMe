@@ -122,8 +122,8 @@ class _VideoTabs1State extends State<VideoTabs1>  with SingleTickerProviderState
   Widget build(BuildContext context) {
    // TextStyle textStyle = Theme.of(context).textTheme.subtitle;
     final List<Widget> _children = [
-      VidiosPhotoComercial(),
-      VidiosPhotoEntertainment(),
+      VidiosPhotoComercial(false),
+      VidiosPhotoEntertainment(false),
 
     ];
 
@@ -236,8 +236,8 @@ class _VideoTabs1State extends State<VideoTabs1>  with SingleTickerProviderState
           body:  TabBarView(
           physics: NeverScrollableScrollPhysics(),
           children: [
-            VidiosPhotoEntertainment(),
-            VidiosPhotoComercial(),
+            VidiosPhotoEntertainment(false),
+            VidiosPhotoComercial(false),
 
           ],
           controller: _tabController,

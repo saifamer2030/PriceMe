@@ -16,6 +16,9 @@ class _CollapsingTabState extends State<CollapsingTab> with SingleTickerProvider
   TabController _tabController;
   ScrollController scrollController;
   bool exbandedsliver=false;
+  bool enableFilter = false;
+  int tapIndex = 0;
+
 
   @override
   void dispose() {
@@ -273,52 +276,88 @@ class _CollapsingTabState extends State<CollapsingTab> with SingleTickerProvider
        textDirection: TextDirection.rtl,
       children: [
         SizedBox(height: 24,),
-        Center(
-          child: Container(
-            height: 48,
-            width: 180,
+        Container(
+          height: 40,
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.center,
+                child: Container(
+                    height: 40,
+                    width: 180,
 
-          child: Directionality(
-            textDirection: TextDirection.rtl,
-            child: TabBar(
-              unselectedLabelColor: Colors.grey,
-              labelColor: Colors.deepOrange,
-              tabs: [
+                    child: Directionality(
+                      textDirection: TextDirection.rtl,
+                      child: TabBar(
+                        unselectedLabelColor: Colors.grey,
+                        labelColor: Colors.deepOrange,
+                        tabs: [
 
-                new Tab(
-                  child: Text(
-                    "تجاري",
-                    style: TextStyle(
-                      fontSize: 12,
-                      // fontFamily: MyFonts.fontFamily,
-                      fontWeight: FontWeight.bold,
+                          new Tab(
+                            child: Text(
+                              "تجاري",
+                              style: TextStyle(
+                                fontSize: 12,
+                                // fontFamily: MyFonts.fontFamily,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          new Tab(
+                            child: Text(
+                              "ترفيهي",
+                              style: TextStyle(
+                                fontSize: 12,
+                                //fontFamily: MyFonts.fontFamily,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                        controller: _tabController,
+                        indicatorColor: Colors.black,
+                        indicatorSize: TabBarIndicatorSize.label,
+                        onTap: (index){
+                          tapIndex = index;
+                        },
+                      ),
                     ),
                   ),
-                ),
-                new Tab(
-                  child: Text(
-                    "ترفيهي",
-                    style: TextStyle(
-                      fontSize: 12,
-                      //fontFamily: MyFonts.fontFamily,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-              controller: _tabController,
-              indicatorColor: Colors.black,
-              indicatorSize: TabBarIndicatorSize.label,
-            ),
+
+              ),
+              Align(
+                  alignment: Alignment.centerRight,
+                  child: InkWell(
+                      onTap: () {
+                        setState(() {
+                          enableFilter = !enableFilter;
+                        });
+                      },
+                      child: Container(
+                        height: 40,
+                        width: 40,
+                        padding: EdgeInsets.only(top:4),
+                        margin: EdgeInsets.only(right: 8),
+                        alignment: Alignment.center,
+                        child: Icon(
+                          Icons.filter_list,
+                          size: 24,
+                          color: enableFilter == true
+                              ? Colors.deepOrange
+                              : Colors.grey,
+                        ),
+                      )))
+            ],
           ),
-          )
-        ),
+        )
+        ,
+        SizedBox(height: 8,),
 
         Expanded(child:TabBarView(
           physics: NeverScrollableScrollPhysics(),
           children: [
-            VidiosPhotoComercial(),
-            VidiosPhotoEntertainment(),
+            VidiosPhotoComercial(enableFilter),
+            VidiosPhotoEntertainment(enableFilter),
 
           ],
           controller: _tabController,

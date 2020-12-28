@@ -8,6 +8,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+//import 'package:intl/intl.dart';
 
 //import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -1720,7 +1721,7 @@ class _HomePageState extends State<HomePage> {
           ),
           Container(
             margin: EdgeInsets.only(right: 10),
-            height: 215,
+            height: 222,
             child: StreamBuilder(
               stream: Firestore.instance
                   .collection('videos')
@@ -1926,7 +1927,7 @@ class _HomePageState extends State<HomePage> {
                       AllVideos(document['carrange'], null, null)));
         },
         child: Container(
-            height: 190,
+            height: 210,
             width: 110,
             child: Column(
               children: [
@@ -1934,7 +1935,7 @@ class _HomePageState extends State<HomePage> {
                   elevation: 8,
                   shape: RoundedRectangleBorder(
                       borderRadius: const BorderRadius.all(Radius.circular(18)),
-                      side: BorderSide(color: Colors.black, width: 1)),
+                      side: BorderSide(color: Colors.grey[400], width: 1)),
                   child: Container(
                       height: 170,
                       width: 110,
@@ -1956,17 +1957,29 @@ class _HomePageState extends State<HomePage> {
                                   fit: BoxFit.cover,
                                 ))),
                 ),
-                Center(
-                  child: Text(
-                      document['ctitle'] == null
-                          ? "بدون عنوان"
-                          : document['ctitle'],
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: MyFonts.primaryFont)),
+
+                Container(
+                  width: 96,
+                  margin: EdgeInsets.only(right: 4, left: 4),
+                  child: Center(
+                    child: Text(
+                        document['ctitle'] == null
+                            ? "بدون عنوان"
+                            :
+                        document['ctitle'],
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                        textDirection: TextDirection.rtl,
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: MyFonts.primaryFont)),
+                  )
                 )
+
+
               ],
             )));
   }
@@ -1988,22 +2001,25 @@ class _HomePageState extends State<HomePage> {
                           faultsList[index].sid)));
         },
         child: Card(
-          elevation: 8,
+          elevation: 6,
           shape: RoundedRectangleBorder(
               borderRadius: const BorderRadius.all(Radius.circular(18)),
-              side: BorderSide(color: Colors.black, width: 1)),
+              side: BorderSide(color: Colors.grey[400], width: 1)),
           child: Container(
+
             height: 150,
             width: 150,
             child: Stack(
               children: [
                 Container(
-                    height: 100,
-                    width: 100,
+                  height: double.infinity,
+                   width: double.infinity,
+                   decoration: BoxDecoration(
+                     borderRadius: BorderRadius.circular(18)
+                   ),
+                     
                     child: ClipRRect(
-                      borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(10),
-                          topLeft: Radius.circular(10)),
+                      borderRadius: BorderRadius.circular(18),
                       child: new Image.network(
                         tapedButton == "spareParts"
                             ? sparepartsList[index].surl
@@ -2020,7 +2036,7 @@ class _HomePageState extends State<HomePage> {
                       borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(18),
                           bottomRight: Radius.circular(18)),
-                      color: Colors.black.withOpacity(0.5),
+                      color: Colors.black.withOpacity(0.7),
                     ),
                     child: Center(
                       child: Text(

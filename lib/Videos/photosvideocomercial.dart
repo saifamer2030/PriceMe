@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
+
 //import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:priceme/Videos/addVideo.dart';
@@ -18,35 +19,36 @@ import 'package:priceme/Videos/addVideo.dart';
 import 'package:priceme/classes/FaultsClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/SparePartsSizesClass.dart';
+import 'package:priceme/ui_utile/myColors.dart';
 import 'package:toast/toast.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 import 'allvideos.dart';
 
 class VidiosPhotoComercial extends StatefulWidget {
-  VidiosPhotoComercial();
+
+  bool enableFilter;
+  VidiosPhotoComercial(this.enableFilter);
 
   @override
   _VidiosPhotoComercialState createState() => _VidiosPhotoComercialState();
 }
 
 class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
-
   String filePath;
-  List<String> sortlist = ["الاحدث","الاكثر شهرة"];
-  List<String> carlist = ["السيارة","هونداى","فيات","تويوتا"];
+  List<String> sortlist = ["الاحدث", "الاكثر شهرة"];
+  List<String> carlist = ["السيارة", "هونداى", "فيات", "تويوتا"];
   var _sortcurrentItemSelected = '';
   var _carcurrentItemSelected = '';
   String filt;
-  bool chechsearch=false;
+  bool chechsearch = false;
   bool enableFilter = false;
 
   @override
   void initState() {
     super.initState();
-    _sortcurrentItemSelected=sortlist[0];
-    _carcurrentItemSelected=carlist[0];
-
+    _sortcurrentItemSelected = sortlist[0];
+    _carcurrentItemSelected = carlist[0];
   }
 
   @override
@@ -83,9 +85,14 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
         ),
       ),
       */
-      backgroundColor: const Color(0xffffffff),
-      body: ListView(
+        backgroundColor: Colors.white,
+        body: commercialVideosScreen()
+
+        /*
+      ListView(
         children: [
+
+          /*
           chechsearch?   Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -163,6 +170,7 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
             ],
           ):Container(),
 
+          */
           Container(
             height: 48,
             child: Row(
@@ -350,61 +358,240 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
           ),
         ],
       ),
+
+    */
+        );
+  }
+
+  Widget commercialVideosScreen() {
+    return Column(
+      children: [
+
+        widget.enableFilter?
+        Container(
+            height: 48,
+            child: Row(
+              textDirection: TextDirection.rtl,
+              children: [
+                Container(
+                    margin: EdgeInsets.only(right: 10),
+                    height: 40,
+                    // width: 100,
+                    child: Card(
+                        elevation: 0.0,
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            side: BorderSide(color: Colors.grey[400])),
+                        child: Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: DropdownButtonHideUnderline(
+                              child: ButtonTheme(
+                            alignedDropdown: true,
+                            child: DropdownButton<String>(
+                              items: sortlist.map((String value) {
+                                return new DropdownMenuItem<String>(
+                                  value: value,
+                                  child: new Text(value),
+                                );
+                              }).toList(),
+                              value: _sortcurrentItemSelected,
+                              onChanged: (String newValueSelected) {
+                                // Your code to execute, when a menu item is selected from dropdown
+                                _onDropDownItemSelectedsort(newValueSelected);
+                              },
+                              style: new TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w300,
+                                  fontFamily: 'Cairo'),
+                            ),
+                          )),
+                        ))),
+                Container(
+                    margin: EdgeInsets.only(right: 10),
+                    height: 40,
+                    //width: 100,
+                    child: Card(
+                        elevation: 0.0,
+                        color: Colors.white,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(5),
+                            side: BorderSide(color: Colors.grey[400])),
+                        child: Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: DropdownButtonHideUnderline(
+                              child: ButtonTheme(
+                            alignedDropdown: true,
+                            child: DropdownButton<String>(
+                              items: carlist.map((String value) {
+                                return new DropdownMenuItem<String>(
+                                  value: value,
+                                  child: new Text(value),
+                                );
+                              }).toList(),
+                              value: _carcurrentItemSelected,
+                              onChanged: (String newValueSelected) {
+                                // Your code to execute, when a menu item is selected from dropdown
+                                _onDropDownItemSelectedcar(newValueSelected);
+                              },
+                              style: new TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w300,
+                                  fontFamily: 'Cairo'),
+                            ),
+                          )),
+                        ))),
+              ],
+            )):
+        SizedBox(),
+
+
+        SizedBox(
+          height: 8,
+        ),
+        Expanded(
+          child: Container(
+            //   width: MediaQuery.of(context).size.width,
+            //  height: MediaQuery.of(context).size.height,
+            child: StreamBuilder(
+              stream: _sortcurrentItemSelected == sortlist[0]
+                  ? Firestore.instance
+                      .collection('videos')
+                      .where("cdepart", isEqualTo: "تجارى")
+                      .where("ccar", isEqualTo: filt)
+                      .orderBy('carrange', descending: true)
+                      .snapshots()
+                  : Firestore.instance
+                      .collection('videos')
+                      .where("cdepart", isEqualTo: "تجارى")
+                      .where("ccar", isEqualTo: filt)
+                      .orderBy('seens', descending: true)
+                      .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.data?.documents == null || !snapshot.hasData)
+                  return Center(
+                      child: Text(
+                    "لا يوجد بيانات...",
+                  ));
+                return Hero(
+                  tag: 'imageHero',
+                  child: Container(
+                    child: StaggeredGridView.countBuilder(
+                      padding: EdgeInsets.zero,
+                        itemCount: snapshot.data.documents.length,
+                        crossAxisCount: 2,
+                        itemBuilder: (context, index) {
+                          return firebasedata(
+                              context, index, snapshot.data.documents[index]);
+                        },
+                        staggeredTileBuilder: (index) =>
+                            StaggeredTile.count(1, index.isEven ? 1.2 : 1.8)),
+                  ),
+                );
+              },
+            ),
+
+            // StreamBuilder(
+            //   stream: _sortcurrentItemSelected==sortlist[0]? Firestore.instance
+            //       .collection('videos')
+            //       .where("cdepart", isEqualTo:"تجارى")
+            //       .where("ccar", isEqualTo:filt)
+            //       .orderBy('carrange',
+            //       descending:
+            //       true)
+            //       .snapshots():Firestore.instance
+            //       .collection('videos')
+            //       .where("cdepart", isEqualTo:"تجارى")
+            //       .where("ccar", isEqualTo:filt)
+            //       .orderBy('seens',
+            //       descending:
+            //       true)
+            //       .snapshots(),
+            //   builder: (context, snapshot) {
+            //     if (!snapshot.hasData) {
+            //       return Center(child: Text("لا يوجد بيانات...",));
+            //     }
+            //     print("kkk1$filt");
+            //
+            //     return new GridView.builder(
+            //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+            //             crossAxisCount:2,
+            //             //crossAxisCount: (orientation == Orientation.portrait) ? 2 : 3
+            //         ),
+            //         //add item count depending on your list
+            //         //itemCount: list.length,
+            //
+            //         //added scrolldirection
+            //         //reverse: true,
+            //         physics: BouncingScrollPhysics(),
+            //         shrinkWrap: true,
+            //        // controller: _controller,
+            //         itemCount: snapshot.data.documents.length,
+            //         itemBuilder: (context, index) {
+            //           return firebasedata(
+            //               context, index, snapshot.data.documents[index]);
+            //         });
+            //   },
+            // ),
+          ),
+        )
+      ],
     );
   }
 
   void _onDropDownItemSelectedcar(String newValueSelected) {
     print("kkk$newValueSelected");
-      if(newValueSelected=="السيارة"){
-        setState(() {
-          this._carcurrentItemSelected = newValueSelected;
-          filt=null;
-        });
-      }else{
-        setState(() {
-          this._carcurrentItemSelected = newValueSelected;
-          filt=_carcurrentItemSelected;
-        });
-      }
+    if (newValueSelected == "السيارة") {
+      setState(() {
+        this._carcurrentItemSelected = newValueSelected;
+        filt = null;
+      });
+    } else {
+      setState(() {
+        this._carcurrentItemSelected = newValueSelected;
+        filt = _carcurrentItemSelected;
+      });
+    }
   }
 
   void _onDropDownItemSelectedsort(String newValueSelected) {
     setState(() {
       this._sortcurrentItemSelected = newValueSelected;
-
     });
   }
+
   Widget firebasedata(
       BuildContext context, int index, DocumentSnapshot document) {
-
-    return   InkWell(
+    return InkWell(
       onTap: () {
-Navigator.push(
+        Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => AllVideos(document['carrange'],document['cdepart'],null)));
-
+                builder: (context) => AllVideos(
+                    document['carrange'], document['cdepart'], null)));
       },
       child: Padding(
         padding: const EdgeInsets.all(0.0),
         child: Stack(
           children: [
             Container(
-           //   height: 200,
+              //   height: 200,
               decoration: BoxDecoration(
                 border: new Border.all(
                   color: Colors.white,
                   width: 0,
                 ),
-                image: document['imgurl'] == null?DecorationImage(
-                  image: AssetImage("assets/images/ic_background.png" ),
-                  fit: BoxFit.fill,
-                ):DecorationImage(
-                  image:  NetworkImage(
-                      document['imgurl']              ),
-
-                  fit: BoxFit.fill,
-                ),
+                image: document['imgurl'] == null
+                    ? DecorationImage(
+                        image: AssetImage("assets/images/ic_background.png"),
+                        fit: BoxFit.fill,
+                      )
+                    : DecorationImage(
+                        image: NetworkImage(document['imgurl']),
+                        fit: BoxFit.fill,
+                      ),
                 borderRadius: BorderRadius.circular(0.0),
               ),
             ),
@@ -422,13 +609,16 @@ Navigator.push(
                 bottom: 10,
                 right: 5,
                 child: Container(
-                  child: Text( document['ctitle']==null||document['ctitle']==""?"عنوان غير معلوم":document['ctitle']
-                    ,style: TextStyle(
+                  child: Text(
+                    document['ctitle'] == null || document['ctitle'] == ""
+                        ? "عنوان غير معلوم"
+                        : document['ctitle'],
+                    style: TextStyle(
                         color: Colors.white,
                         fontSize: 15,
-                        fontWeight: FontWeight.bold),),
+                        fontWeight: FontWeight.bold),
+                  ),
                 )),
-
             Positioned(
               top: 5,
               left: 5,
@@ -446,19 +636,19 @@ Navigator.push(
                     width: 1.0,
                   ),
                   image: DecorationImage(
-                    image: NetworkImage(document['cphotourl']==null||document['cphotourl']==""?
-                    "https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg"  :document['cphotourl']),
+                    image: NetworkImage(document['cphotourl'] == null ||
+                            document['cphotourl'] == ""
+                        ? "https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg"
+                        : document['cphotourl']),
                     fit: BoxFit.fill,
                   ),
                   shape: BoxShape.circle,
                 ),
               ),
-
             ),
           ],
         ),
       ),
     );
   }
-
 }

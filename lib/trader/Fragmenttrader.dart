@@ -113,7 +113,7 @@ class _FragmentTraderState extends State<FragmentTrader> {
                 "المحادثات",
                 style: TextStyle(
                     fontSize: 12,
-                    //fontFamily: MyFonts.fontFamily,
+
                     fontWeight: FontWeight.bold),
               )),
           BottomNavigationBarItem(
@@ -142,7 +142,8 @@ class _FragmentTraderState extends State<FragmentTrader> {
         currentIndex: _currentIndex,
         onTap: (int index) => _onItemTapped(index),
         type: BottomNavigationBarType.fixed,
-        fixedColor:  const Color(0xff15494A),
+     //   fixedColor:  const Color(0xff15494A),
+       fixedColor: Colors.orange,
         unselectedItemColor: Colors.grey,
       ),
 
