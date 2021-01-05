@@ -18,7 +18,6 @@ import 'package:priceme/ChatRoom/widget/settings.dart';
 import 'package:priceme/main.dart';
 
 class HomeScreen extends StatefulWidget {
-
   HomeScreen({Key key}) : super(key: key);
 
   @override
@@ -30,7 +29,7 @@ class HomeScreenState extends State<HomeScreen> {
   // final String currentUserId;
 
   DateTime backbuttonpressedTime;
-   String currentUserId;
+  String currentUserId;
   final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
   final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
@@ -48,9 +47,8 @@ class HomeScreenState extends State<HomeScreen> {
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? null
         : setState(() {
-      currentUserId = user.uid;
-
-    }));
+            currentUserId = user.uid;
+          }));
     registerNotification();
     configLocalNotification();
   }
@@ -253,12 +251,11 @@ class HomeScreenState extends State<HomeScreen> {
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                   colors: <Color>[
-                    const Color(0xffff2121),
-                    const Color(0xffff5423),
-                    const Color(0xffff7024),
-                    const Color(0xffff904a),
-                  ])
-          ),
+                const Color(0xffff2121),
+                const Color(0xffff5423),
+                const Color(0xffff7024),
+                const Color(0xffff904a),
+              ])),
         ),
         title: Text(
           'المحادثة',
@@ -293,38 +290,37 @@ class HomeScreenState extends State<HomeScreen> {
         ],
       ),
       body: Stack(
-          children: <Widget>[
-            // List
-            Container(
-              child: StreamBuilder(
-                stream: Firestore.instance.collection('users').snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: CircularProgressIndicator(
-                        valueColor: AlwaysStoppedAnimation<Color>(themeColor),
-                      ),
-                    );
-                  } else {
-                    return ListView.builder(
-                      padding: EdgeInsets.all(10.0),
-                      itemBuilder: (context, index) =>
-                          buildItem(context, snapshot.data.documents[index]),
-                      itemCount: snapshot.data.documents.length,
-                    );
-                  }
-                },
-              ),
+        children: <Widget>[
+          // List
+          Container(
+            child: StreamBuilder(
+              stream: Firestore.instance.collection('users').snapshots(),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: CircularProgressIndicator(
+                      valueColor: AlwaysStoppedAnimation<Color>(themeColor),
+                    ),
+                  );
+                } else {
+                  return ListView.builder(
+                    padding: EdgeInsets.all(10.0),
+                    itemBuilder: (context, index) =>
+                        buildItem(context, snapshot.data.documents[index]),
+                    itemCount: snapshot.data.documents.length,
+                  );
+                }
+              },
             ),
+          ),
 
-            // Loading
-            Positioned(
-              child: isLoading ? const Loading() : Container(),
-            )
-          ],
-        ),
+          // Loading
+          Positioned(
+            child: isLoading ? const Loading() : Container(),
+          )
+        ],
+      ),
 //        onWillPop: onBackPress,
-
     );
   }
 
@@ -394,8 +390,9 @@ class HomeScreenState extends State<HomeScreen> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => Chat(
-                          peerId: currentUserId,
+                          peerId: document['uid'],
                           peerAvatar: document['photourl'],
+
                         )));
           },
           color: greyColor2,
