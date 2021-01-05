@@ -16,6 +16,7 @@ import 'package:priceme/screens/myoffers.dart';
 import 'package:priceme/screens/myrents.dart';
 import 'package:priceme/screens/personalpage.dart';
 import 'package:priceme/trader/myphotos.dart';
+import 'package:priceme/ui_utile/myCustomShape2.dart';
 import '../Splash.dart';
 import 'homepage.dart';
 import 'myadvertisement.dart';
@@ -140,31 +141,30 @@ class _MorePriceMeState extends State<MorePriceMe> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Text(
-                          'إعدادات عامة',
-                          style: TextStyle(
-//                                fontFamily: 'Estedad-Black',
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            color: const Color(0xff171732),
-                            height: 1.0800000190734864,
-                          ),
-                          textAlign: TextAlign.right,
-                        ),
-                        Container(
-                          width: 40.0,
-                          height: 40.0,
-                          child: new Icon(
-                            Icons.settings,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      ],
+
+
+                    Container(
+
+                      child:
+                         Center(
+              child: Text(
+                'إعدادات عامة',
+                style: TextStyle(
+
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.orange,
+                  height: 1.0800000190734864,
+                ),
+                textAlign: TextAlign.right,
+              ),
+          )
+
+
+
                     ),
 
+                   SizedBox(height: 16,),
 
                     InkWell(
                       onTap: () {
@@ -201,7 +201,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
                                 padding: const EdgeInsets.all(8.0),
 
                                 child: new Icon(
-                                  Icons.email,
+                                  Icons.receipt,
                                   color: Colors.grey,
                                 ),
 
@@ -231,34 +231,34 @@ class _MorePriceMeState extends State<MorePriceMe> {
                                   builder: (context) => Splash()));
                         } else {
                           if (_userId != null && _cType != null) {
-    if ( _cType == "user") {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MyAdvertisement()));
-    }else if(_cType == "trader"){
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-              builder: (context) => MyAdvertisement()));
-    }
+                            if ( _cType == "user") {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MyAdvertisement()));
+                            }else if(_cType == "trader"){
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MyAdvertisement()));
+                            }
 
                           } else {
                             showDialog(
                               context: context,
                               builder: (BuildContext context) =>
-                                  new CupertinoAlertDialog(
+                              new CupertinoAlertDialog(
                                 title: new Text(
                                   "تنبية",
                                   style: TextStyle(
 //                                      fontFamily: 'Estedad-Black',
-                                      ),
+                                  ),
                                 ),
                                 content: new Text(
                                   "برجاء تسجيل الدخول اولا",
                                   style: TextStyle(
 //                                      fontFamily: 'Estedad-Black',
-                                      ),
+                                  ),
                                 ),
                                 actions: [
                                   CupertinoDialogAction(
@@ -276,7 +276,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
                                           "موافق",
                                           style: TextStyle(
 //                                              fontFamily: 'Estedad-Black',
-                                              ),
+                                          ),
                                         ),
                                       )),
                                 ],
@@ -298,7 +298,6 @@ class _MorePriceMeState extends State<MorePriceMe> {
                               Text(
                                 'تسعيراتى',
                                 style: TextStyle(
-//                                      fontFamily: 'Estedad-Black',
                                   fontSize: 13,
                                   fontWeight: FontWeight.bold,
                                   color: const Color(0xff171732),
@@ -309,12 +308,12 @@ class _MorePriceMeState extends State<MorePriceMe> {
 
                               // Adobe XD layer: 'world-wide-web-icon…' (shape)
                               Padding(
-                                padding: const EdgeInsets.all(8.0),
+                                  padding: const EdgeInsets.all(8.0),
 
-                                child: new Icon(
-                                  Icons.email,
-                                  color: Colors.grey,
-                                    )),
+                                  child: new Icon(
+                                    Icons.monetization_on,
+                                    color: Colors.grey,
+                                  )),
                             ],
                           ),
                         ],
@@ -408,7 +407,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
                                   padding: const EdgeInsets.all(8.0),
 
                                   child: new Icon(
-                                    Icons.email,
+                                    Icons.image,
                                     color: Colors.grey,
                                   )),
                             ],
@@ -424,228 +423,228 @@ class _MorePriceMeState extends State<MorePriceMe> {
                     ):Container(),
 
 
-/**
-                    InkWell(
-                      onTap: () {
+                    /**
+                        InkWell(
+                        onTap: () {
                         Navigator.push(
-                            context,
-                            new MaterialPageRoute(
-                                builder: (context) => AllOffers()));
+                        context,
+                        new MaterialPageRoute(
+                        builder: (context) => AllOffers()));
 
-                      },
-                      child: Row(
+                        },
+                        child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Icon(
-                            Icons.keyboard_arrow_left,
-                            color: const Color(0xff171732),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              Text(
-                                'العروض',
-                                style: TextStyle(
-//                                      fontFamily: 'Estedad-Black',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xff171732),
-                                  height: 1.2307692307692308,
-                                ),
-                                textAlign: TextAlign.right,
-                              ),
+                        Icon(
+                        Icons.keyboard_arrow_left,
+                        color: const Color(0xff171732),
+                        ),
+                        Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                        Text(
+                        'العروض',
+                        style: TextStyle(
+                        //                                      fontFamily: 'Estedad-Black',
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xff171732),
+                        height: 1.2307692307692308,
+                        ),
+                        textAlign: TextAlign.right,
+                        ),
 
-                              // Adobe XD layer: 'world-wide-web-icon…' (shape)
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
+                        // Adobe XD layer: 'world-wide-web-icon…' (shape)
+                        Padding(
+                        padding: const EdgeInsets.all(8.0),
 
-                                child: new Icon(
-                                  Icons.email,
-                                  color: Colors.grey,
-                                ),
+                        child: new Icon(
+                        Icons.email,
+                        color: Colors.grey,
+                        ),
 
-//                                    child:  new Icon(
-//                                      Icons.chat,
-//                                      color: Colors.grey,
-//
-//                                    ),
-                              ),
-                            ],
-                          ),
+                        //                                    child:  new Icon(
+                        //                                      Icons.chat,
+                        //                                      color: Colors.grey,
+                        //
+                        //                                    ),
+                        ),
                         ],
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: .2,
-                      color: Colors.grey,
-                    ),
-                    InkWell(
-                      onTap: () {
+                        ),
+                        ],
+                        ),
+                        ),
+                        Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: .2,
+                        color: Colors.grey,
+                        ),
+                        InkWell(
+                        onTap: () {
                         Navigator.push(
-                            context,
-                            new MaterialPageRoute(
-                                builder: (context) => MyOffers()));
+                        context,
+                        new MaterialPageRoute(
+                        builder: (context) => MyOffers()));
 
-                      },
-                      child: Row(
+                        },
+                        child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Icon(
-                            Icons.keyboard_arrow_left,
-                            color: const Color(0xff171732),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              Text(
-                                'عروضي',
-                                style: TextStyle(
-//                                      fontFamily: 'Estedad-Black',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xff171732),
-                                  height: 1.2307692307692308,
-                                ),
-                                textAlign: TextAlign.right,
-                              ),
+                        Icon(
+                        Icons.keyboard_arrow_left,
+                        color: const Color(0xff171732),
+                        ),
+                        Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                        Text(
+                        'عروضي',
+                        style: TextStyle(
+                        //                                      fontFamily: 'Estedad-Black',
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xff171732),
+                        height: 1.2307692307692308,
+                        ),
+                        textAlign: TextAlign.right,
+                        ),
 
-                              // Adobe XD layer: 'world-wide-web-icon…' (shape)
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
+                        // Adobe XD layer: 'world-wide-web-icon…' (shape)
+                        Padding(
+                        padding: const EdgeInsets.all(8.0),
 
-                                child: new Icon(
-                                  Icons.email,
-                                  color: Colors.grey,
-                                ),
+                        child: new Icon(
+                        Icons.email,
+                        color: Colors.grey,
+                        ),
 
-//                                    child:  new Icon(
-//                                      Icons.chat,
-//                                      color: Colors.grey,
-//
-//                                    ),
-                              ),
-                            ],
-                          ),
+                        //                                    child:  new Icon(
+                        //                                      Icons.chat,
+                        //                                      color: Colors.grey,
+                        //
+                        //                                    ),
+                        ),
                         ],
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: .2,
-                      color: Colors.grey,
-                    ),
-                    InkWell(
-                      onTap: () {
+                        ),
+                        ],
+                        ),
+                        ),
+                        Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: .2,
+                        color: Colors.grey,
+                        ),
+                        InkWell(
+                        onTap: () {
                         Navigator.push(
-                            context,
-                            new MaterialPageRoute(
-                                builder: (context) => AllRents()));
+                        context,
+                        new MaterialPageRoute(
+                        builder: (context) => AllRents()));
 
-                      },
-                      child: Row(
+                        },
+                        child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Icon(
-                            Icons.keyboard_arrow_left,
-                            color: const Color(0xff171732),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              Text(
-                                'الايجار',
-                                style: TextStyle(
-//                                      fontFamily: 'Estedad-Black',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xff171732),
-                                  height: 1.2307692307692308,
-                                ),
-                                textAlign: TextAlign.right,
-                              ),
+                        Icon(
+                        Icons.keyboard_arrow_left,
+                        color: const Color(0xff171732),
+                        ),
+                        Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                        Text(
+                        'الايجار',
+                        style: TextStyle(
+                        //                                      fontFamily: 'Estedad-Black',
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xff171732),
+                        height: 1.2307692307692308,
+                        ),
+                        textAlign: TextAlign.right,
+                        ),
 
-                              // Adobe XD layer: 'world-wide-web-icon…' (shape)
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
+                        // Adobe XD layer: 'world-wide-web-icon…' (shape)
+                        Padding(
+                        padding: const EdgeInsets.all(8.0),
 
-                                child: new Icon(
-                                  Icons.email,
-                                  color: Colors.grey,
-                                ),
+                        child: new Icon(
+                        Icons.email,
+                        color: Colors.grey,
+                        ),
 
-//                                    child:  new Icon(
-//                                      Icons.chat,
-//                                      color: Colors.grey,
-//
-//                                    ),
-                              ),
-                            ],
-                          ),
+                        //                                    child:  new Icon(
+                        //                                      Icons.chat,
+                        //                                      color: Colors.grey,
+                        //
+                        //                                    ),
+                        ),
                         ],
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: .2,
-                      color: Colors.grey,
-                    ),
-                    InkWell(
-                      onTap: () {
+                        ),
+                        ],
+                        ),
+                        ),
+                        Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: .2,
+                        color: Colors.grey,
+                        ),
+                        InkWell(
+                        onTap: () {
                         Navigator.push(
-                            context,
-                            new MaterialPageRoute(
-                                builder: (context) => MyRents()));
+                        context,
+                        new MaterialPageRoute(
+                        builder: (context) => MyRents()));
 
-                      },
-                      child: Row(
+                        },
+                        child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
-                          Icon(
-                            Icons.keyboard_arrow_left,
-                            color: const Color(0xff171732),
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: <Widget>[
-                              Text(
-                                'إيجاراتي',
-                                style: TextStyle(
-//                                      fontFamily: 'Estedad-Black',
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.bold,
-                                  color: const Color(0xff171732),
-                                  height: 1.2307692307692308,
-                                ),
-                                textAlign: TextAlign.right,
-                              ),
+                        Icon(
+                        Icons.keyboard_arrow_left,
+                        color: const Color(0xff171732),
+                        ),
+                        Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                        Text(
+                        'إيجاراتي',
+                        style: TextStyle(
+                        //                                      fontFamily: 'Estedad-Black',
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                        color: const Color(0xff171732),
+                        height: 1.2307692307692308,
+                        ),
+                        textAlign: TextAlign.right,
+                        ),
 
-                              // Adobe XD layer: 'world-wide-web-icon…' (shape)
-                              Padding(
-                                padding: const EdgeInsets.all(8.0),
+                        // Adobe XD layer: 'world-wide-web-icon…' (shape)
+                        Padding(
+                        padding: const EdgeInsets.all(8.0),
 
-                                child: new Icon(
-                                  Icons.email,
-                                  color: Colors.grey,
-                                ),
+                        child: new Icon(
+                        Icons.email,
+                        color: Colors.grey,
+                        ),
 
-//                                    child:  new Icon(
-//                                      Icons.chat,
-//                                      color: Colors.grey,
-//
-//                                    ),
-                              ),
-                            ],
-                          ),
+                        //                                    child:  new Icon(
+                        //                                      Icons.chat,
+                        //                                      color: Colors.grey,
+                        //
+                        //                                    ),
+                        ),
                         ],
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width,
-                      height: .2,
-                      color: Colors.grey,
-                    ),
-**/
+                        ),
+                        ],
+                        ),
+                        ),
+                        Container(
+                        width: MediaQuery.of(context).size.width,
+                        height: .2,
+                        color: Colors.grey,
+                        ),
+                     **/
 
                     InkWell(
                       onTap: () {
@@ -682,7 +681,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
                                 padding: const EdgeInsets.all(8.0),
 
                                 child: new Icon(
-                                  Icons.email,
+                                  Icons.video_library,
                                   color: Colors.grey,
                                 ),
 
@@ -715,7 +714,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
                             context,
                             new MaterialPageRoute(
                                 builder: (context) => HomeScreen(
-                                    )));
+                                )));
 
                       },
                       child: Row(
@@ -745,7 +744,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
                                 padding: const EdgeInsets.all(8.0),
 
                                 child: new Icon(
-                                  Icons.email,
+                                  Icons.chat,
                                   color: Colors.grey,
                                 ),
 
@@ -855,7 +854,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
                                     Icons.lock,
                                     color: Colors.grey,
                                   ) // Adobe XD layer: 'terms' (shape)
-                                  ),
+                              ),
                             ],
                           ),
                         ],
@@ -996,36 +995,42 @@ class _MorePriceMeState extends State<MorePriceMe> {
 ////                            ),
                           _userId == null
                               ? Text(
-                                  'تسجيل الدخول',
-                                  style: TextStyle(
+                            'تسجيل الدخول',
+                            style: TextStyle(
 //                                        fontFamily: 'Estedad-Black',
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    color: const Color(0xff171732),
-                                    height: 1.2307692307692308,
-                                  ),
-                                  textAlign: TextAlign.right,
-                                )
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                              height: 1.2307692307692308,
+                            ),
+                            textAlign: TextAlign.right,
+                          )
                               : Text(
-                                  'تسجيل خروج',
-                                  style: TextStyle(
+                            'تسجيل خروج',
+                            style: TextStyle(
 //                                        fontFamily: 'Estedad-Black',
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                    color: const Color(0xff171732),
-                                    height: 1.2307692307692308,
-                                  ),
-                                  textAlign: TextAlign.right,
-                                ),
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                              height: 1.2307692307692308,
+                            ),
+                            textAlign: TextAlign.right,
+                          ),
 
                           // Adobe XD layer: 'world-wide-web-icon…' (shape)
                           Padding(
                               padding: const EdgeInsets.all(8.0),
-                              child: new Icon(
-                                Icons.power_settings_new,
-                                color: Colors.grey,
-                              ) // Adobe XD layer: 'terms' (shape)
-                              ),
+                              child:
+                              _userId == null?
+                              Icon(
+                                Icons.login,
+                                color: Colors.green,
+                              ) :
+                              Icon(
+                                Icons.logout,
+                                color: Colors.red,
+                              )// Adobe XD layer: 'terms' (shape)
+                          ),
                         ],
                       ),
                     ),
@@ -1040,7 +1045,11 @@ class _MorePriceMeState extends State<MorePriceMe> {
             ],
           ),
         ),
-      ),
+      )
     );
   }
+
+
+
+
 }

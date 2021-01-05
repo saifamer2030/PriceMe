@@ -18,6 +18,7 @@ import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/SparePartsSizesClass.dart';
 import 'package:priceme/screens/addphoto.dart';
 import 'package:priceme/screens/displayphoto.dart';
+import 'package:priceme/ui_utile/myColors.dart';
 import 'package:toast/toast.dart';
 import 'package:firebase_core/firebase_core.dart';
 
@@ -64,12 +65,12 @@ class _MyPhotosState extends State<MyPhotos> {
               MaterialPageRoute(
                   builder: (context) => AddPhoto()));
         },
-        backgroundColor: Colors.orange,
+        backgroundColor: MyColors.secondaryColor,
         elevation: 20.0,
         child: Icon(
-          Icons.add,
-          size: 50,
-          color: const Color(0xff171732),
+          Icons.add_photo_alternate,
+          size: 30,
+          color: Colors.white,
         ),
       ),
 

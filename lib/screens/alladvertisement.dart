@@ -137,8 +137,10 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
                             crossAxisSpacing: 6,
-                            childAspectRatio: MediaQuery.of(context).size.width /
-                                (MediaQuery.of(context).size.height*1),
+                            childAspectRatio: (MediaQuery.of(context)
+                                .size
+                                .width) /
+                                (MediaQuery.of(context).size.height * 0.6),
                           ),
                           itemCount:snapshot.data.documents.length,
                           itemBuilder: (BuildContext context, int index) {
@@ -250,7 +252,7 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
                     textAlign: TextAlign.right,
                     style: TextStyle(
                         color: Colors.grey,
-//                                  fontFamily: 'Estedad-Black',
+
                         fontWeight: FontWeight.normal,
                         fontSize: 10,
                         fontStyle: FontStyle.normal),

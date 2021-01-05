@@ -369,8 +369,8 @@ class _VideoWidgetState extends State<VideoWidget> {
                     child:    Text(widget.document['cname']==null?"اسم غير معلوم":widget.document['cname'],
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 12.0,
+
                         )),
                   ),
 
@@ -381,14 +381,14 @@ class _VideoWidgetState extends State<VideoWidget> {
                     child:    Text(widget.document['cdate'],
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 12.0,
+
                         )),
                   ),
 
                   Positioned(
-                    top: 15,
-                    left: 5,
+                    top: 24,
+                    left: 10,
                     child: Container(
                       height: 50,
                       width: 50,
@@ -419,13 +419,13 @@ class _VideoWidgetState extends State<VideoWidget> {
                     child:    Text(widget.document['cdetail'],textDirection: TextDirection.rtl,
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 12.0,
+
                         )),
                   ),
                   Positioned(
-                    bottom: 55,
-                    left: 8,
+                    bottom: 120,
+                    right: 8,
                     child:    InkWell(
                       onTap: () {
                         setState(() {
@@ -565,7 +565,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                               ? Icon(
                             Icons.favorite,
                             size: 40.0,
-                            color: Colors.red,
+                            color: Colors.white70,
                           )
 ////
                               : Column(
@@ -573,7 +573,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                               Icon(
                                 Icons.favorite_border,
                                 size: 40.0,
-                                color: Colors.red,
+                                color: Colors.white70,
                               ),
                             ],
                           ),
@@ -582,24 +582,45 @@ class _VideoWidgetState extends State<VideoWidget> {
                     ),
                   ),
                   Positioned(
-                    bottom: 55,
-                    left: 50,
+                    bottom: 98,
+                    right: 22,
                     child: Text("${likes[widget.itr]}",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.white70,
                           fontSize: 14.0,
                           fontWeight: FontWeight.bold,
                         )),
                   ),
+
+                  /*
                   Positioned(
                     bottom: 55,
-                    right: 8,
+                    right: 14,
                     child: Text("مشاهدات:${seens[widget.itr]}",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 14.0,
                           fontWeight: FontWeight.bold,
                         )),
+                  ),
+
+                  */
+
+                  Positioned(
+                    right: 17,
+                    bottom: 78,
+                    child: Icon(Icons.visibility, color: Colors.white70,),
+                  ),
+
+                  Positioned(
+                    right: 21,
+                    bottom: 58,
+                    child: Text(
+                       "${seens[widget.itr]}",
+                       style: TextStyle(
+                         color: Colors.white70
+                       ),
+                    ),
                   ),
                   Positioned(
                     top: 70,
@@ -608,8 +629,8 @@ class _VideoWidgetState extends State<VideoWidget> {
                     child:    Text(widget.document['ctitle'],
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 14.0,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 12.0,
+
                         )),
                   ),
                 ],

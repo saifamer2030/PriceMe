@@ -18,6 +18,7 @@ import 'package:priceme/Videos/allvideos.dart';
 import 'package:priceme/classes/FaultsClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/SparePartsSizesClass.dart';
+import 'package:priceme/ui_utile/myColors.dart';
 import 'package:priceme/ui_utile/myFonts.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:toast/toast.dart';
@@ -244,1458 +245,7 @@ class _HomePageState extends State<HomePage> {
         backgroundColor: const Color(0xffffffff),
         body: homeScreen()
 
-        /*
-      Container(
-        width: width,
-        height: height,
-        child: ListView(
-          physics: BouncingScrollPhysics(),
-          //mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            // FlutterLinkPreview(
-            //   url: "https://firebasestorage.googleapis.com/v0/b/priceme-49386.appspot.com/o/video%2F2020-09-16%2011%3A10%3A44.350865.mp4?alt=media&token=836d436f-db07-424f-ab10-a872138330d9",
-            //   bodyStyle: TextStyle(
-            //     fontSize: 18.0,
-            //   ),
-            //   titleStyle: TextStyle(
-            //     fontSize: 20.0,
-            //     fontWeight: FontWeight.bold,
-            //   ),
-            //   showMultimedia: true,
-            //   builder: (info) {
-            //     if (info is WebInfo) {
-            //       return SizedBox(
-            //         height: 350,
-            //         child: Card(
-            //           shape: RoundedRectangleBorder(
-            //               borderRadius: BorderRadius.circular(20.0)),
-            //           clipBehavior: Clip.antiAlias,
-            //           child: Column(
-            //             crossAxisAlignment: CrossAxisAlignment.start,
-            //             children: [
-            //               if (info.image != null)
-            //                 Expanded(
-            //                     child: Image.network(
-            //                       info.image,
-            //                       width: double.maxFinite,
-            //                       fit: BoxFit.cover,
-            //                     )),
-            //               Padding(
-            //                 padding:
-            //                 const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
-            //                 child: Text(
-            //                   info.title,
-            //                   style: TextStyle(
-            //                     fontSize: 20.0,
-            //                     fontWeight: FontWeight.bold,
-            //                   ),
-            //                 ),
-            //               ),
-            //               if (info.description != null)
-            //                 Padding(
-            //                   padding: const EdgeInsets.all(16.0),
-            //                   child: Text(info.description),
-            //                 ),
-            //             ],
-            //           ),
-            //         ),
-            //       );
-            //     }
-            //     if (info is WebImageInfo) {
-            //       return SizedBox(
-            //         height: 350,
-            //         child: Card(
-            //           shape: RoundedRectangleBorder(
-            //               borderRadius: BorderRadius.circular(20.0)),
-            //           clipBehavior: Clip.antiAlias,
-            //           child: Image.network(
-            //             info.image,
-            //             fit: BoxFit.cover,
-            //             width: double.maxFinite,
-            //           ),
-            //         ),
-            //       );
-            //     } else if (info is WebVideoInfo) {
-            //       return SizedBox(
-            //         height: 350,
-            //         child: Card(
-            //           shape: RoundedRectangleBorder(
-            //               borderRadius: BorderRadius.circular(20.0)),
-            //           clipBehavior: Clip.antiAlias,
-            //           child: Image.network(
-            //             info.image,
-            //             fit: BoxFit.cover,
-            //             width: double.maxFinite,
-            //           ),
-            //         ),
-            //       );
-            //     }
-            //     return Container();
-            //   },
-            // ),
-            Container(
-              height: 190,
-              child: StreamBuilder(
-                stream: Firestore.instance
-                    .collection('videos')
-                    .orderBy('seens', descending: true)
-                    .limit(5) //.where("cproblemtype", isEqualTo:"قطع غيار")
-                    .snapshots(),
-                builder: (context, snapshot) {
-                  if (!snapshot.hasData) {
-                    return Center(
-                        child: Text(
-                      "Loading..",
-                    ));
-                  }
 
-                  return new ListView.builder(
-                      reverse: true,
-                      physics: BouncingScrollPhysics(),
-                      scrollDirection: Axis.horizontal,
-                      shrinkWrap: true,
-                      // controller: _controller,
-                      itemCount: snapshot.data.documents.length,
-                      itemBuilder: (context, index) {
-                        return firebasedata(
-                            context, index, snapshot.data.documents[index]);
-                      });
-                },
-              ),
-            ),
-            Container(
-              width: MediaQuery.of(context).size.width,
-              height: 5,
-              color: Colors.grey[200],
-            ),
-            Container(height: 4,),
-            select_r_c?Container() : Container(
-              height: 220,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  InkWell(
-                  onTap: () {
-                    setState(() {
-                      select_r_c=true;
-                      if(!sparescheck){
-                      sparescheck=!sparescheck;
-
-                      if(sparescheck){
-                        faultcheck=false;
-                        subfaultcheck=false;
-                      faultsize=50;sparesize=100;
-                      f_f_size=10;s_f_size=20;
-                      }}
-                    });
-                  },
-                    child: Container(
-                      height:sparesize,
-                      width: sparesize,
-                      child: Center(
-                        child: Text(
-                          "قطع غيار",
-                          style: TextStyle(
-                              color:sparescheck? Colors.red:Colors.white,
-                              fontSize: s_f_size
-                        ),textAlign: TextAlign.center,
-
-                        ),
-                      ),
-                      decoration: BoxDecoration(
-                        gradient: RadialGradient(
-                          center: Alignment(-0.93, 0.0),
-                          radius: 1.092,
-                          colors: [
-                            const Color(0xffff2121).withOpacity(.6),
-                            const Color(0xffff5423).withOpacity(.6),
-                            const Color(0xffff7024).withOpacity(.6),
-                            const Color(0xffff904a).withOpacity(.6),
-                          ],
-                          stops: [0.0, 0.562, 0.867, 1.0],
-                          transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837, 0.0,
-                              -0.419, Alignment(-0.93, 0.0)),
-                        ),
-
-                        border: new Border.all(
-                          color:sparescheck? Colors.red:Colors.black,
-                          width: 1.0,
-                        ),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
-                  InkWell(
-                    onTap: () {
-                      setState(() {
-                        select_r_c=true;
-
-                        if(!faultcheck){
-                        faultcheck=!faultcheck;
-                        if(faultcheck){sparescheck=false;subsparescheck=false;
-                        faultsize=100;sparesize=50;
-                        f_f_size=20;s_f_size=10;
-                        }}
-                      });
-                    },
-                    child: Container(
-                      height:faultsize,
-                      width: faultsize,
-                      child: Center(
-                        child: Text(
-                          "اعطال", style: TextStyle(color:faultcheck? Colors.red:Colors.white,fontSize: f_f_size
-                        ),textAlign: TextAlign.center,
-
-                        ),
-                      ),
-                      decoration: BoxDecoration(
-                        gradient:  RadialGradient(
-                          center: Alignment(-0.93, 0.0),
-                          radius: 1.092,
-                          colors: [
-                            const Color(0xffff2121).withOpacity(.6),
-                            const Color(0xffff5423).withOpacity(.6),
-                            const Color(0xffff7024).withOpacity(.6),
-                            const Color(0xffff904a).withOpacity(.6),
-                          ],
-                          stops: [0.0, 0.562, 0.867, 1.0],
-                          transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837, 0.0,
-                              -0.419, Alignment(-0.93, 0.0)),
-                        ),
-
-
-                        border: new Border.all(
-                          color: faultcheck? Colors.red:Colors.black,
-                          width: 1.0,
-                        ),
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
-
-                ],
-              ),
-            ),
-            select_r_c? Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      if(!sparescheck){
-                        sparescheck=!sparescheck;
-                        if(sparescheck){faultcheck=false;subfaultcheck=false;
-                        faultsize=50;sparesize=100;
-                        f_f_size=10;s_f_size=20;
-                        }}
-                    });
-                  },
-      //   double sparesize=100;
-      // double faultsize=100;
-                  child: Container(
-                    height:sparesize,
-                    width: sparesize,
-                    child: Center(
-                      child: Text(
-                        "قطع غيار",
-                        style: TextStyle(
-                            color:sparescheck? Colors.red:Colors.white,
-                            fontSize: s_f_size,
-                        ),textAlign: TextAlign.center,
-
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      gradient:sparescheck? RadialGradient(
-                        center: Alignment(-0.93, 0.0),
-                        radius: 1.092,
-                        colors: [
-                          const Color(0xffff2121).withOpacity(.6),
-                          const Color(0xffff5423).withOpacity(.6),
-                          const Color(0xffff7024).withOpacity(.6),
-                          const Color(0xffff904a).withOpacity(.6),
-                        ],
-                        stops: [0.0, 0.562, 0.867, 1.0],
-                        transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837, 0.0,
-                            -0.419, Alignment(-0.93, 0.0)),
-                      ): RadialGradient(
-                        center: Alignment(-0.93, 0.0),
-                        radius: 1.092,
-                        colors: [
-                          const Color(0x42000000).withOpacity(.6),
-                          const Color(0x42000000).withOpacity(.6),
-                          const Color(0x42000000).withOpacity(.6),
-                          const Color(0x42000000).withOpacity(.6),
-
-                        ],
-                        stops: [0.0, 0.562, 0.867, 1.0],
-                        transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837, 0.0,
-                            -0.419, Alignment(-0.93, 0.0)),
-                      ),
-
-                      border: new Border.all(
-                        color:sparescheck? Colors.red:Colors.black,
-                        width: 1.0,
-                      ),
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-                InkWell(
-                  onTap: () {
-                    setState(() {
-                      if(!faultcheck){
-                        faultcheck=!faultcheck;
-                        if(faultcheck){sparescheck=false;subsparescheck=false;
-                        faultsize=100;sparesize=50;
-                        f_f_size=20;s_f_size=10;
-                        }}
-
-                    });
-                  },
-                  child: Container(
-                    height:faultsize,
-                    width: faultsize,
-                    child: Center(
-                      child: Text(
-                        "اعطال", style: TextStyle(color:faultcheck? Colors.red:Colors.white,fontSize: f_f_size
-                      ),textAlign: TextAlign.center,
-
-                      ),
-                    ),
-                    decoration: BoxDecoration(
-                      gradient: faultcheck? RadialGradient(
-                        center: Alignment(-0.93, 0.0),
-                        radius: 1.092,
-                        colors: [
-                          const Color(0xffff2121).withOpacity(.6),
-                          const Color(0xffff5423).withOpacity(.6),
-                          const Color(0xffff7024).withOpacity(.6),
-                          const Color(0xffff904a).withOpacity(.6),
-                        ],
-                        stops: [0.0, 0.562, 0.867, 1.0],
-                        transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837, 0.0,
-                            -0.419, Alignment(-0.93, 0.0)),
-                      ): RadialGradient(
-                        center: Alignment(-0.93, 0.0),
-                        radius: 1.092,
-                        colors: [
-                          const Color(0x42000000).withOpacity(.6),
-                          const Color(0x42000000).withOpacity(.6),
-                          const Color(0x42000000).withOpacity(.6),
-                          const Color(0x42000000).withOpacity(.6),
-                        ],
-                        stops: [0.0, 0.562, 0.867, 1.0],
-                        transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837, 0.0,
-                            -0.419, Alignment(-0.93, 0.0)),
-                      ),
-                      border: new Border.all(
-                        color: faultcheck? Colors.red:Colors.black,
-                        width: 1.0,
-                      ),
-                      shape: BoxShape.circle,
-                    ),
-                  ),
-                ),
-
-              ],
-            ):Container() ,
-
-            sparescheck? Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Container(
-                width: MediaQuery.of(context).size.width,
-                height: 40.0,
-                decoration: BoxDecoration(
-                  gradient: RadialGradient(
-                    center: Alignment(-0.93, 0.0),
-                    radius: 1.092,
-                    colors: [
-                      const Color(0xffff2121).withOpacity(.6),
-                      const Color(0xffff5423).withOpacity(.6),
-                      const Color(0xffff7024).withOpacity(.6),
-                      const Color(0xffff904a).withOpacity(.6),
-                    ],
-                    stops: [0.0, 0.562, 0.867, 1.0],
-                    transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837, 0.0,
-                        -0.419, Alignment(-0.93, 0.0)),
-                  ),
-//                color: Colors.orange,
-                ),
-                child: Text(
-                  "قطع غيار",
-                  style: TextStyle(color: Colors.black, fontSize: 20),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-            ):Container(),
-            // sparescheck? SizedBox(
-            //   height: 10,
-            // ):Container(),
-            sparescheck? Container(
-              height: 250,
-              child: sparepartsList.length == 0
-              ? new Text("برجاء الإنتظار")
-              :Stack(
-                children: [
-                  PageView.builder(
-                  itemCount: sparepartsList.length ,
-                    controller: _pageController_spare,
-                  onPageChanged: (int i) => setState(() => _index = i),
-                  itemBuilder: (BuildContext ctxt,int index) {
-                  return Transform.scale(
-                    scale: index == _index ?1.2 : 0.7,
-                    child: InkWell(
-                      onTap: () {
-                        setState(() {
-                          mfault = sparepartsList[index].sName;
-                          sparepartsList[index].ssizecheck =
-                          !sparepartsList[index].ssizecheck;
-                          if (sparepartsList[index].ssizecheck) {
-                            setState(() {
-                           //   sparepartsList[index].ssize = 120;
-                              subsparescheck = true;
-                            });
-                          } else {
-                            setState(() {
-                           //   sparepartsList[index].ssize = 100;
-                              subsparescheck = false;
-                            });
-                          }
-                        });
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AddAdv("قطع غيار", sparepartsList[index].sName, sparepartsList[index].sid)));
-
-                        // for (var i = 0; i < sparepartsList.length; i++) {
-                        //   if (i != index)
-                        //     setState(() {
-                        //       setState(() {
-                        //         sparepartsList[i].ssize = 100;
-                        //       });
-                        //     });
-                        // }
-                        //
-                        // setState(() {
-                        //   final SparePartsReference = Firestore.instance;
-                        //   subsparesList.clear();
-                        //
-                        //   SparePartsReference.collection("subspares")
-                        //       .document(sparepartsList[index].sid)
-                        //       .collection("subsparesid")
-                        //       .getDocuments()
-                        //       .then((QuerySnapshot snapshot) {
-                        //     snapshot.documents.forEach((fault) {
-                        //       FaultsClass fp = FaultsClass(
-                        //         fault.data['fid'],
-                        //         fault.data['fName'],
-                        //         fault.data['fsubId'],
-                        //         fault.data['fsubName'],
-                        //         fault.data['fsubDesc'],
-                        //         fault.data['fsubUrl'],
-                        //       );
-                        //       setState(() {
-                        //         subsparesList.add(fp);
-                        //         // print(sparepartsList.length.toString() + "llll");
-                        //       });
-                        //     });
-                        //   }).whenComplete(() {
-                        //     setState(() {});
-                        //   });
-                        // });
-                               },
-                      child: Padding(
-                        padding: const EdgeInsets.only(top:25.0),
-                        child: Container(
-                          // width: 110,
-                          // height: 110,
-//                              decoration: BoxDecoration(
-//                                border: new Border.all(
-//                                  color: Colors.black,
-//                                  width: 1.0,
-//                                ),
-//                                shape: BoxShape.circle,
-//                              ),
-                          child: Column(
-                            children: [
-                              Container(
-                                height: sparepartsList[index].ssize,
-                                width: sparepartsList[index].ssize,
-                                // child: Text(
-                                //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
-                                // ),textAlign: TextAlign.center,
-                                //
-                                // ),
-                                decoration: BoxDecoration(
-                                  border: new Border.all(
-                                    color: Colors.black,
-                                    width: 1.0,
-                                  ),
-                                  image: DecorationImage(
-                                    image: NetworkImage(
-                                        sparepartsList[index].surl),
-                                    fit: BoxFit.fill,
-                                  ),
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              Expanded(
-                                child: Text(
-                                  sparepartsList[index].sName,
-                                  style: TextStyle(
-                                      color: Colors.red, fontSize: 15),
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                  },
-
-//                 new ListView.builder(
-//                         //  controller: _depcontroller,
-//                         physics: BouncingScrollPhysics(),
-//                         scrollDirection: Axis.horizontal,
-//                         reverse: true,
-//                         itemCount: sparepartsList.length,
-//                         itemBuilder: (BuildContext ctxt, int index) {
-//                           return InkWell(
-//                             onTap: () {
-//                               setState(() {
-//                                 mfault = sparepartsList[index].sName;
-//                                 sparepartsList[index].ssizecheck =
-//                                     !sparepartsList[index].ssizecheck;
-//                                 if (sparepartsList[index].ssizecheck) {
-//                                   setState(() {
-//                                     sparepartsList[index].ssize = 100;
-//                                     subsparescheck = true;
-//                                   });
-//                                 } else {
-//                                   setState(() {
-//                                     sparepartsList[index].ssize = 75;
-//                                     subsparescheck = false;
-//                                   });
-//                                 }
-//                               });
-//                               for (var i = 0; i < sparepartsList.length; i++) {
-//                                 if (i != index)
-//                                   setState(() {
-//                                     setState(() {
-//                                       sparepartsList[i].ssize = 75;
-//                                     });
-//                                   });
-//                               }
-//
-//                               setState(() {
-//                                 final SparePartsReference = Firestore.instance;
-//                                 subsparesList.clear();
-//
-//                                 SparePartsReference.collection("subspares")
-//                                     .document(sparepartsList[index].sid)
-//                                     .collection("subsparesid")
-//                                     .getDocuments()
-//                                     .then((QuerySnapshot snapshot) {
-//                                   snapshot.documents.forEach((fault) {
-//                                     FaultsClass fp = FaultsClass(
-//                                       fault.data['fid'],
-//                                       fault.data['fName'],
-//                                       fault.data['fsubId'],
-//                                       fault.data['fsubName'],
-//                                       fault.data['fsubDesc'],
-//                                       fault.data['fsubUrl'],
-//                                     );
-//                                     setState(() {
-//                                       subsparesList.add(fp);
-//                                       // print(sparepartsList.length.toString() + "llll");
-//                                     });
-//                                   });
-//                                 }).whenComplete(() {
-//                                   setState(() {});
-//                                 });
-//                               });
-//                               // Navigator.push(
-//                               //     context,
-//                               //     MaterialPageRoute(
-//                               //         builder: (context) => AddAdv(widget.sparepartsList,"قطع غيار",mfault, sparepartsList[index].sName)));
-//                             },
-//                             child: Container(
-//                               width: 110,
-//                               height: 110,
-// //                              decoration: BoxDecoration(
-// //                                border: new Border.all(
-// //                                  color: Colors.black,
-// //                                  width: 1.0,
-// //                                ),
-// //                                shape: BoxShape.circle,
-// //                              ),
-//                               child: Column(
-//                                 children: [
-//                                   Container(
-//                                     height: sparepartsList[index].ssize,
-//                                     width: sparepartsList[index].ssize,
-//                                     // child: Text(
-//                                     //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
-//                                     // ),textAlign: TextAlign.center,
-//                                     //
-//                                     // ),
-//                                     decoration: BoxDecoration(
-//                                       border: new Border.all(
-//                                         color: Colors.black,
-//                                         width: 1.0,
-//                                       ),
-//                                       image: DecorationImage(
-//                                         image: NetworkImage(
-//                                             sparepartsList[index].surl),
-//                                         fit: BoxFit.fill,
-//                                       ),
-//                                       shape: BoxShape.circle,
-//                                     ),
-//                                   ),
-//                                   Expanded(
-//                                     child: Text(
-//                                       sparepartsList[index].sName,
-//                                       style: TextStyle(
-//                                           color: Colors.red, fontSize: 15),
-//                                       textAlign: TextAlign.center,
-//                                     ),
-//                                   ),
-//                                 ],
-//                               ),
-//                             ),
-//                           );
-//                         }),
-                  ),
-                  Center(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: Icon(Icons.arrow_back_ios_outlined),
-                          onPressed: () {
-                            setState(() {
-                              if(currentPage_spare>0){
-                                currentPage_spare--;
-                                print("ggg$currentPage_spare");
-                                _pageController_spare.animateToPage(currentPage_spare, duration: const Duration(milliseconds: 500), curve: Curves.easeInSine,);
-
-                              }
-                            });
-                          },
-                        ),
-                        IconButton(
-                          icon: Icon(Icons.arrow_forward_ios),
-                          onPressed: () {
-                            setState(() {
-                            if(currentPage_spare<sparepartsList.length-1) {
-                              currentPage_spare++;
-                              print("ggg$currentPage_spare");
-
-                              _pageController_spare.animateToPage(
-                                currentPage_spare,
-                                duration: const Duration(milliseconds: 500),
-                                curve: Curves.easeInSine,);
-                            }  });
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              )):Container(),
-//             sparescheck?   subsparescheck
-//                 ? Stack(
-//                     children: [
-//                       Container(
-//                         height: 250,
-//                       ),
-//                       Padding(
-//                         padding: const EdgeInsets.only(top: 40),
-//                         child: Container(
-//                           height: 200,
-//                           child: subsparesList.length == 0
-//                               ? Center(child: new Text("برجاء الإنتظار"))
-//                               : Card(
-//                                   color: Colors.white,
-//                                   elevation: 2,
-//                                   shape: new RoundedRectangleBorder(
-// //                                      side: new BorderSide(
-// ////                                          color: Colors.black,
-// //                                          //color: subfaultsList[index].ccolor,
-// //                                          width: 1.0),
-//                                       borderRadius:
-//                                           BorderRadius.circular(10.0)),
-//                                   child: new ListView.builder(
-//                                       physics: BouncingScrollPhysics(),
-//                                       //scrollDirection: Axis.horizontal,
-//                                       // reverse: true,
-//                                       itemCount: subsparesList.length,
-//                                       itemBuilder:
-//                                           (BuildContext ctxt, int index) {
-//                                         return InkWell(
-//                                           child: Container(
-// //                                        color: departlist1[index].ccolor,
-// //                                      color: Colors.white,
-// //                                      shape: new RoundedRectangleBorder(
-// //                                          side: new BorderSide(
-// //                                            color: Colors.white,
-// //                                              //color: subfaultsList[index].ccolor,
-// //                                              width: 2.0),
-// //                                          borderRadius:
-// //                                              BorderRadius.circular(10.0)),
-//                                             //borderOnForeground: true,
-//
-//                                             child: InkWell(
-//                                               onTap: () {
-//                                                 Navigator.push(
-//                                                     context,
-//                                                     MaterialPageRoute(
-//                                                         builder: (context) =>
-//                                                             AddAdv(
-//                                                                 "قطع غيار",
-//                                                                 subsparesList[
-//                                                                         index]
-//                                                                     .fsubName)));
-//                                               },
-//                                               child: Padding(
-//                                                 padding:
-//                                                     const EdgeInsets.all(3.0),
-//                                                 child: ListTile(
-//                                                   title: Text(
-//                                                     subsparesList[index]
-//                                                         .fsubName,
-//                                                     textDirection:
-//                                                         TextDirection.rtl,
-//                                                     style: TextStyle(
-//                                                         fontSize: 18.0,
-//                                                         fontWeight:
-//                                                             FontWeight.bold),
-//                                                   ),
-//                                                   subtitle: Text(
-//                                                     subsparesList[index]
-//                                                         .fsubDesc,
-//                                                     textDirection:
-//                                                         TextDirection.rtl,
-//                                                     style: TextStyle(
-//                                                         fontSize: 15.0),
-//                                                   ),
-//                                                   leading: Icon(
-//                                                     Icons.arrow_back_ios,
-//                                                     color: Colors.black,
-//                                                   ),
-//                                                   trailing: Container(
-//                                                     height: 120.0,
-//                                                     width: 60.0,
-//                                                     decoration: BoxDecoration(
-//                                                       image: DecorationImage(
-//                                                         image: NetworkImage(
-//                                                             subsparesList[index]
-//                                                                 .fsubUrl),
-//                                                         fit: BoxFit.fill,
-//                                                       ),
-//                                                     ),
-//                                                   ),
-//                                                 ),
-// //                             Container(
-// //                               child: Row(
-// //                                 mainAxisAlignment:
-// //                                 MainAxisAlignment.center,
-// //                                 children: [
-// //                                   Container(
-// //                                     width: 50,
-// //                                     height: 50,
-// //                                     child: new Image.network(
-// //                                       subfaultsList[index].fsubUrl,
-// //                                       fit: BoxFit.contain,
-// //                                     ),
-// //                                   ),
-// //                                   SizedBox(
-// //                                     height: 2,
-// //                                   ),
-// //                                   Padding(
-// //                                     padding:
-// //                                     const EdgeInsets.all(8.0),
-// //                                     child: Container(
-// //                                       margin:
-// //                                       EdgeInsets.only(right: 2),
-// //                                       child: Center(
-// //                                         child: Padding(
-// //                                           padding:
-// //                                           const EdgeInsets.only(
-// //                                               top: 5),
-// //                                           child: Text(
-// //                                             subfaultsList[index]
-// //                                                 .fsubName,
-// //                                             textAlign:
-// //                                             TextAlign.center,
-// //                                             style: TextStyle(
-// //                                               color: const Color(
-// //                                                   0xff171732),
-// // //                                                              fontFamily: "Estedad-Black",
-// //                                               fontWeight:
-// //                                               FontWeight.bold,
-// //                                               fontSize: 12,
-// //                                               height: 0,
-// //                                             ),
-// //                                           ),
-// //                                         ),
-// //                                       ),
-// //                                     ),
-// //                                   ),
-// //                                 ],
-// //                               ),
-// //                             ),
-//                                               ),
-//                                             ),
-//                                           ),
-//                                           /**  _firebasedatdepart1(
-//                                   index,
-//                                   departlist1.length,
-//                                   departlist1[index].id,
-//                                   departlist1[index].title,
-//                                   departlist1[index].subtitle,
-//                                   departlist1[index].uri,
-//                                   ),**/
-//                                         );
-//                                       }),
-//                                 ),
-//                         ),
-//                       ),
-//                       Positioned(
-//                         right: 150,
-//                         bottom: 150,
-//                         child: Container(
-//                           height: 100,
-//                           width: 100,
-//                           // child: Text(
-//                           //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
-//                           // ),textAlign: TextAlign.center,
-//                           //
-//                           // ),
-//                           decoration: BoxDecoration(
-//                             border: new Border.all(
-//                               color: Colors.black,
-//                               width: 1.0,
-//                             ),
-//                             image: DecorationImage(
-//                               image: NetworkImage(
-//                                   "https://firebasestorage.googleapis.com/v0/b/priceme-49386.appspot.com/o/myimage%2F2020-08-26%2016%3A40%3A13.416549.jpg?alt=media&token=7c2275ea-f887-4a5d-99f4-abf2b561fe70"),
-//                               fit: BoxFit.fill,
-//                             ),
-//                             shape: BoxShape.circle,
-//                           ),
-//                         ),
-//                       ),
-//                     ],
-//                   )
-//                 : Container():Container(),
-            faultcheck?SizedBox(
-              height: 10,
-            ):Container(),
-            faultcheck? Container(
-              width: MediaQuery.of(context).size.width,
-              height: 40.0,
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  center: Alignment(-0.93, 0.0),
-                  radius: 1.092,
-                  colors: [
-                    const Color(0xffff2121).withOpacity(.6),
-                    const Color(0xffff5423).withOpacity(.6),
-                    const Color(0xffff7024).withOpacity(.6),
-                    const Color(0xffff904a).withOpacity(.6),
-                  ],
-                  stops: [0.0, 0.562, 0.867, 1.0],
-                  transform: GradientXDTransform(
-                      1.0, 0.0, 0.0, 1.837, 0.0, -0.419, Alignment(-0.93, 0.0)),
-                ),
-              ),
-              child: Text(
-                "الاعطال",
-                style: TextStyle(color: Colors.black, fontSize: 20),
-                textAlign: TextAlign.center,
-              ),
-            ):Container(),
-            faultcheck?SizedBox(
-              height: 10,
-            ):Container(),
-            faultcheck? Container(
-              height: 250,
-              child: Expanded(
-                  child: Center(
-                child: faultsList.length == 0
-                    ? new Text("برجاء الإنتظار")
-                    :Stack(
-                      children: [
-                        PageView.builder(
-                 // controller: _pageController_fault,
-                  itemCount: faultsList.length ,
-                  controller: _pageController_fault,
-                  onPageChanged: (int i) => setState(() => _index = i),
-                  itemBuilder: (BuildContext ctxt,int index) {
-                        return Transform.scale(
-                          scale: index == _index ?1.2 : 0.7,
-                          child: InkWell(
-                            onTap: () {
-                          setState(() {
-                            mfault = faultsList[index].sName;
-
-                            faultsList[index].ssizecheck =
-                            !faultsList[index].ssizecheck;
-                            if (faultsList[index].ssizecheck) {
-                             // faultsList[index].ssize = 100;
-                              subfaultcheck = true;
-                            } else {
-                             // faultsList[index].ssize = 75;
-                              subfaultcheck = false;
-                            }
-                          });
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => AddAdv("اعطال", faultsList[index].sName, faultsList[index].sid)));
-                          //
-                          // for (var i = 0; i < faultsList.length; i++) {
-                          //   if (i != index)
-                          //     setState(() {
-                          //       faultsList[i].ssize = 75;
-                          //     });
-                          // }
-                          // setState(() {
-                          //   final SparePartsReference = Firestore.instance;
-                          //   subfaultsList.clear();
-                          //
-                          //   SparePartsReference.collection("subfaults")
-                          //       .document(faultsList[index].sid)
-                          //       .collection("subfaultid")
-                          //       .getDocuments()
-                          //       .then((QuerySnapshot snapshot) {
-                          //     snapshot.documents.forEach((fault) {
-                          //       FaultsClass fp = FaultsClass(
-                          //         fault.data['fid'],
-                          //         fault.data['fName'],
-                          //         fault.data['fsubId'],
-                          //         fault.data['fsubName'],
-                          //         fault.data['fsubDesc'],
-                          //         fault.data['fsubUrl'],
-                          //       );
-                          //       setState(() {
-                          //         subfaultsList.add(fp);
-                          //         // print(sparepartsList.length.toString() + "llll");
-                          //       });
-                          //     });
-                          //   }).whenComplete(() {
-                          //     setState(() {});
-                          //   });
-
-
-                          // });
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.only(top:25.0),
-                          child: Container(
-                          // width: 110,
-                          // height: 110,
-//                              decoration: BoxDecoration(
-//                                border: new Border.all(
-//                                  color: Colors.black,
-//                                  width: 1.0,
-//                                ),
-//                                shape: BoxShape.rectangle,
-//                              ),
-                                                  child: Column(
-                                                    children: [
-                                                      Container(
-                                                        height:
-                                                            faultsList[index].ssize,
-                                                        width:
-                                                            faultsList[index].ssize,
-                                                        // child: Text(
-                                                        //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
-                                                        // ),textAlign: TextAlign.center,
-                                                        //
-                                                        // ),
-                                                        decoration: BoxDecoration(
-                                                          border: new Border.all(
-                                                            color: Colors.black,
-                                                            width: 1.0,
-                                                          ),
-                                                          image: DecorationImage(
-                                                            image: NetworkImage(
-                                                                faultsList[index]
-                                                                    .surl),
-                                                            fit: BoxFit.fill,
-                                                          ),
-                                                          shape: BoxShape.circle,
-                                                        ),
-                                                      ),
-                                                      Expanded(
-                                                        child: Text(
-                                                          faultsList[index].sName,
-                                                          style: TextStyle(
-                                                              color: Colors.red,
-                                                              fontSize: 15),
-                                                          textAlign: TextAlign.center,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ),
-                        ),
-                                            ),
-                                          );
-                                        },
-
-//                 new ListView.builder(
-//                         //  controller: _depcontroller,
-//                         physics: BouncingScrollPhysics(),
-//                         scrollDirection: Axis.horizontal,
-//                         reverse: true,
-//                         itemCount: sparepartsList.length,
-//                         itemBuilder: (BuildContext ctxt, int index) {
-//                           return InkWell(
-//                             onTap: () {
-//                               setState(() {
-//                                 mfault = sparepartsList[index].sName;
-//                                 sparepartsList[index].ssizecheck =
-//                                     !sparepartsList[index].ssizecheck;
-//                                 if (sparepartsList[index].ssizecheck) {
-//                                   setState(() {
-//                                     sparepartsList[index].ssize = 100;
-//                                     subsparescheck = true;
-//                                   });
-//                                 } else {
-//                                   setState(() {
-//                                     sparepartsList[index].ssize = 75;
-//                                     subsparescheck = false;
-//                                   });
-//                                 }
-//                               });
-//                               for (var i = 0; i < sparepartsList.length; i++) {
-//                                 if (i != index)
-//                                   setState(() {
-//                                     setState(() {
-//                                       sparepartsList[i].ssize = 75;
-//                                     });
-//                                   });
-//                               }
-//
-//                               setState(() {
-//                                 final SparePartsReference = Firestore.instance;
-//                                 subsparesList.clear();
-//
-//                                 SparePartsReference.collection("subspares")
-//                                     .document(sparepartsList[index].sid)
-//                                     .collection("subsparesid")
-//                                     .getDocuments()
-//                                     .then((QuerySnapshot snapshot) {
-//                                   snapshot.documents.forEach((fault) {
-//                                     FaultsClass fp = FaultsClass(
-//                                       fault.data['fid'],
-//                                       fault.data['fName'],
-//                                       fault.data['fsubId'],
-//                                       fault.data['fsubName'],
-//                                       fault.data['fsubDesc'],
-//                                       fault.data['fsubUrl'],
-//                                     );
-//                                     setState(() {
-//                                       subsparesList.add(fp);
-//                                       // print(sparepartsList.length.toString() + "llll");
-//                                     });
-//                                   });
-//                                 }).whenComplete(() {
-//                                   setState(() {});
-//                                 });
-//                               });
-//                               // Navigator.push(
-//                               //     context,
-//                               //     MaterialPageRoute(
-//                               //         builder: (context) => AddAdv(widget.sparepartsList,"قطع غيار",mfault, sparepartsList[index].sName)));
-//                             },
-//                             child: Container(
-//                               width: 110,
-//                               height: 110,
-// //                              decoration: BoxDecoration(
-// //                                border: new Border.all(
-// //                                  color: Colors.black,
-// //                                  width: 1.0,
-// //                                ),
-// //                                shape: BoxShape.circle,
-// //                              ),
-//                               child: Column(
-//                                 children: [
-//                                   Container(
-//                                     height: sparepartsList[index].ssize,
-//                                     width: sparepartsList[index].ssize,
-//                                     // child: Text(
-//                                     //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
-//                                     // ),textAlign: TextAlign.center,
-//                                     //
-//                                     // ),
-//                                     decoration: BoxDecoration(
-//                                       border: new Border.all(
-//                                         color: Colors.black,
-//                                         width: 1.0,
-//                                       ),
-//                                       image: DecorationImage(
-//                                         image: NetworkImage(
-//                                             sparepartsList[index].surl),
-//                                         fit: BoxFit.fill,
-//                                       ),
-//                                       shape: BoxShape.circle,
-//                                     ),
-//                                   ),
-//                                   Expanded(
-//                                     child: Text(
-//                                       sparepartsList[index].sName,
-//                                       style: TextStyle(
-//                                           color: Colors.red, fontSize: 15),
-//                                       textAlign: TextAlign.center,
-//                                     ),
-//                                   ),
-//                                 ],
-//                               ),
-//                             ),
-//                           );
-//                         }),
-                ),
-                        Center(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              IconButton(
-                                icon: Icon(Icons.arrow_back_ios_outlined),
-                                onPressed: () {
-                                  setState(() {
-                                    if(currentPage_fault>0){
-                                      currentPage_fault--;
-                                     // print("ggg$currentPage_spare");
-                                      _pageController_fault.animateToPage(currentPage_fault, duration: const Duration(milliseconds: 500), curve: Curves.easeInSine,);
-
-                                    }
-                                  });
-                                },
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.arrow_forward_ios),
-                                onPressed: () {
-                                  setState(() {
-                                    if(currentPage_fault<faultsList.length-1) {
-                                      currentPage_fault++;
-                                      //print("ggg$currentPage_spare");
-
-                                      _pageController_fault.animateToPage(
-                                        currentPage_fault,
-                                        duration: const Duration(milliseconds: 500),
-                                        curve: Curves.easeInSine,);
-                                    }  });
-                                },
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
-//                 new ListView.builder(
-//                         //  controller: _depcontroller,
-//                         physics: BouncingScrollPhysics(),
-//                         scrollDirection: Axis.horizontal,
-//                         reverse: true,
-//                         itemCount: faultsList.length,
-//                         itemBuilder: (BuildContext ctxt, int index) {
-//                           return InkWell(
-//                             onTap: () {
-//                               setState(() {
-//                                 mfault = faultsList[index].sName;
-//
-//                                 faultsList[index].ssizecheck =
-//                                     !faultsList[index].ssizecheck;
-//                                 if (faultsList[index].ssizecheck) {
-//                                   faultsList[index].ssize = 100;
-//                                   subfaultcheck = true;
-//                                 } else {
-//                                   faultsList[index].ssize = 75;
-//                                   subfaultcheck = false;
-//                                 }
-//                               });
-//
-//                               for (var i = 0; i < faultsList.length; i++) {
-//                                 if (i != index)
-//                                   setState(() {
-//                                     faultsList[i].ssize = 75;
-//                                   });
-//                               }
-//                               setState(() {
-//                                 final SparePartsReference = Firestore.instance;
-//                                 subfaultsList.clear();
-//
-//                                 SparePartsReference.collection("subfaults")
-//                                     .document(faultsList[index].sid)
-//                                     .collection("subfaultid")
-//                                     .getDocuments()
-//                                     .then((QuerySnapshot snapshot) {
-//                                   snapshot.documents.forEach((fault) {
-//                                     FaultsClass fp = FaultsClass(
-//                                       fault.data['fid'],
-//                                       fault.data['fName'],
-//                                       fault.data['fsubId'],
-//                                       fault.data['fsubName'],
-//                                       fault.data['fsubDesc'],
-//                                       fault.data['fsubUrl'],
-//                                     );
-//                                     setState(() {
-//                                       subfaultsList.add(fp);
-//                                       // print(sparepartsList.length.toString() + "llll");
-//                                     });
-//                                   });
-//                                 }).whenComplete(() {
-//                                   setState(() {});
-//                                 });
-//                               });
-//                             },
-//                             child: Container(
-//                               width: 110,
-//                               height: 110,
-// //                              decoration: BoxDecoration(
-// //                                border: new Border.all(
-// //                                  color: Colors.black,
-// //                                  width: 1.0,
-// //                                ),
-// //                                shape: BoxShape.rectangle,
-// //                              ),
-//                               child: Column(
-//                                 children: [
-//                                   Container(
-//                                     height: faultsList[index].ssize,
-//                                     width: faultsList[index].ssize,
-//                                     // child: Text(
-//                                     //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
-//                                     // ),textAlign: TextAlign.center,
-//                                     //
-//                                     // ),
-//                                     decoration: BoxDecoration(
-//                                       border: new Border.all(
-//                                         color: Colors.black,
-//                                         width: 1.0,
-//                                       ),
-//                                       image: DecorationImage(
-//                                         image: NetworkImage(
-//                                             faultsList[index].surl),
-//                                         fit: BoxFit.fill,
-//                                       ),
-//                                       shape: BoxShape.circle,
-//                                     ),
-//                                   ),
-//                                   Expanded(
-//                                     child: Text(
-//                                       faultsList[index].sName,
-//                                       style: TextStyle(
-//                                           color: Colors.red, fontSize: 15),
-//                                       textAlign: TextAlign.center,
-//                                     ),
-//                                   ),
-//                                 ],
-//                               ),
-//                             ),
-//                           );
-//                         }),
-              )),
-            ):Container(),
-//             faultcheck? subfaultcheck
-//                 ? Stack(
-//                     children: [
-//                       Container(
-//                         height: 250,
-//                       ),
-//                       Padding(
-//                         padding: const EdgeInsets.only(top: 50),
-//                         child: Container(
-//                           height: 200,
-//                           child: subfaultsList.length == 0
-//                               ? Center(child: new Text("برجاء الإنتظار"))
-//                               : Card(
-//                                   color: Colors.white,
-//                                   elevation: 2,
-//                                   shape: new RoundedRectangleBorder(
-// //                                      side: new BorderSide(
-// //                                          color: Colors.black,
-// //                                          //color: subfaultsList[index].ccolor,
-// //                                          width: 1.0),
-//                                       borderRadius:
-//                                           BorderRadius.circular(10.0)),
-//                                   child: new ListView.builder(
-//                                       physics: BouncingScrollPhysics(),
-//                                       //scrollDirection: Axis.horizontal,
-//                                       // reverse: true,
-//                                       itemCount: subfaultsList.length,
-//                                       itemBuilder:
-//                                           (BuildContext ctxt, int index) {
-//                                         return InkWell(
-//                                           child: Padding(
-//                                             padding: const EdgeInsets.only(
-//                                                 top: 5.0,
-//                                                 right: 5.0,
-//                                                 left: 5.0),
-//                                             child: Container(
-//                                               margin: EdgeInsets.all(1),
-//                                               child: InkWell(
-//                                                 onTap: () {
-//                                                   Navigator.push(
-//                                                       context,
-//                                                       MaterialPageRoute(
-//                                                           builder: (context) =>
-//                                                               AddAdv(
-//                                                                   "اعطال",
-//                                                                   subfaultsList[
-//                                                                           index]
-//                                                                       .fsubName)));
-//                                                 },
-//                                                 child: Padding(
-//                                                   padding:
-//                                                       const EdgeInsets.all(3.0),
-//                                                   child: ListTile(
-//                                                     title: Text(
-//                                                       subfaultsList[index]
-//                                                           .fsubName,
-//                                                       textDirection:
-//                                                           TextDirection.rtl,
-//                                                       style: TextStyle(
-//                                                           fontSize: 18.0,
-//                                                           fontWeight:
-//                                                               FontWeight.bold),
-//                                                     ),
-//                                                     subtitle: Text(
-//                                                       subfaultsList[index]
-//                                                           .fsubDesc,
-//                                                       textDirection:
-//                                                           TextDirection.rtl,
-//                                                       style: TextStyle(
-//                                                           fontSize: 15.0),
-//                                                     ),
-//                                                     leading: Icon(
-//                                                       Icons.arrow_back_ios,
-//                                                       color: Colors.black,
-//                                                     ),
-//                                                     trailing: Container(
-//                                                       height: 120.0,
-//                                                       width: 60.0,
-//                                                       decoration: BoxDecoration(
-//                                                         image: DecorationImage(
-//                                                           image: NetworkImage(
-//                                                               subfaultsList[
-//                                                                       index]
-//                                                                   .fsubUrl),
-//                                                           fit: BoxFit.fill,
-//                                                         ),
-//                                                         shape: BoxShape.circle,
-//                                                       ),
-//                                                     ),
-//                                                   ),
-// //                             Container(
-// //                               child: Row(
-// //                                 mainAxisAlignment:
-// //                                 MainAxisAlignment.center,
-// //                                 children: [
-// //                                   Container(
-// //                                     width: 50,
-// //                                     height: 50,
-// //                                     child: new Image.network(
-// //                                       subfaultsList[index].fsubUrl,
-// //                                       fit: BoxFit.contain,
-// //                                     ),
-// //                                   ),
-// //                                   SizedBox(
-// //                                     height: 2,
-// //                                   ),
-// //                                   Padding(
-// //                                     padding:
-// //                                     const EdgeInsets.all(8.0),
-// //                                     child: Container(
-// //                                       margin:
-// //                                       EdgeInsets.only(right: 2),
-// //                                       child: Center(
-// //                                         child: Padding(
-// //                                           padding:
-// //                                           const EdgeInsets.only(
-// //                                               top: 5),
-// //                                           child: Text(
-// //                                             subfaultsList[index]
-// //                                                 .fsubName,
-// //                                             textAlign:
-// //                                             TextAlign.center,
-// //                                             style: TextStyle(
-// //                                               color: const Color(
-// //                                                   0xff171732),
-// // //                                                              fontFamily: "Estedad-Black",
-// //                                               fontWeight:
-// //                                               FontWeight.bold,
-// //                                               fontSize: 12,
-// //                                               height: 0,
-// //                                             ),
-// //                                           ),
-// //                                         ),
-// //                                       ),
-// //                                     ),
-// //                                   ),
-// //                                 ],
-// //                               ),
-// //                             ),
-//                                                 ),
-//                                               ),
-//                                             ),
-//                                           ),
-//                                           /**  _firebasedatdepart1(
-//                                   index,
-//                                   departlist1.length,
-//                                   departlist1[index].id,
-//                                   departlist1[index].title,
-//                                   departlist1[index].subtitle,
-//                                   departlist1[index].uri,
-//                                   ),**/
-//                                         );
-//                                       }),
-//                                 ),
-//                         ),
-//                       ),
-//                       Positioned(
-//                         right: 150,
-//                         bottom: 150,
-//                         child: Container(
-//                           height: 100,
-//                           width: 100,
-//                           // child: Text(
-//                           //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
-//                           // ),textAlign: TextAlign.center,
-//                           //
-//                           // ),
-//                           decoration: BoxDecoration(
-//                             border: new Border.all(
-//                               color: Colors.black,
-//                               width: 1.0,
-//                             ),
-//                             image: DecorationImage(
-//                               image: NetworkImage(
-//                                   "https://firebasestorage.googleapis.com/v0/b/priceme-49386.appspot.com/o/myimage%2F2020-09-13%2011%3A01%3A50.545909.jpg?alt=media&token=24741622-2ed9-44f4-9c67-04a47796925b"),
-//                               fit: BoxFit.fill,
-//                             ),
-//                             shape: BoxShape.circle,
-//                           ),
-//                         ),
-//                       ),
-//                     ],
-//                   )
-//                 : Container():Container(),
-          ],
-        ),
-      ),
-
-
-
-
-*/
 
         );
   }
@@ -1707,9 +257,9 @@ class _HomePageState extends State<HomePage> {
         begin: Alignment.topRight,
         end: Alignment.bottomLeft,
         colors: [
-          const Color(0xfffe7210),
-          const Color(0xffff8b14),
-          const Color(0xffffbc16),
+          MyColors.darkPrimaryColor,
+          MyColors.primaryColor,
+          MyColors.lightPrimaryColor,
         ],
         // stops: [0.1, 0.8,0.6],
       )),
@@ -1732,8 +282,8 @@ class _HomePageState extends State<HomePage> {
                 if (!snapshot.hasData) {
                   return Center(
                       child: Text(
-                    "Loading..",
-                  ));
+                        "لا يوجد بيانات...",
+                      ));
                 }
 
                 return Directionality(
@@ -1799,20 +349,20 @@ class _HomePageState extends State<HomePage> {
                               elevation: 8,
                               shape: RoundedRectangleBorder(
                                 borderRadius:
-                                    const BorderRadius.all(Radius.circular(18)),
+                                    const BorderRadius.all(Radius.circular(8)),
                               ),
                               child: Container(
-                                height: 50,
+                                height: 40,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(18),
+                                    borderRadius: BorderRadius.circular(8),
                                     gradient: tapedButton == "spareParts"
                                         ? LinearGradient(
                                             begin: Alignment.topRight,
                                             end: Alignment.bottomLeft,
                                             colors: [
-                                              const Color(0xfffe7210),
-                                              const Color(0xffff8b14),
-                                              const Color(0xffffbc16),
+                                              MyColors.darkPrimaryColor,
+                                              MyColors.primaryColor,
+                                              MyColors.lightPrimaryColor,
                                             ],
                                             // stops: [0.1, 0.8,0.6],
                                           )
@@ -1830,7 +380,7 @@ class _HomePageState extends State<HomePage> {
                               )),
                         )),
                         SizedBox(
-                          width: 20,
+                          width: 8,
                         ),
                         Expanded(
                             child: InkWell(
@@ -1844,20 +394,20 @@ class _HomePageState extends State<HomePage> {
                               elevation: 8,
                               shape: RoundedRectangleBorder(
                                 borderRadius:
-                                    const BorderRadius.all(Radius.circular(18)),
+                                    const BorderRadius.all(Radius.circular(8)),
                               ),
                               child: Container(
-                                height: 54,
+                                height: 40,
                                 decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(18),
+                                    borderRadius: BorderRadius.circular(8),
                                     gradient: tapedButton == "faults"
                                         ? LinearGradient(
                                             begin: Alignment.topRight,
                                             end: Alignment.bottomLeft,
                                             colors: [
-                                              const Color(0xfffe7210),
-                                              const Color(0xffff8b14),
-                                              const Color(0xffffbc16),
+                                              MyColors.darkPrimaryColor,
+                                              MyColors.primaryColor,
+                                              MyColors.lightPrimaryColor,
                                             ],
                                             // stops: [0.1, 0.8,0.6],
                                           )
@@ -2184,4 +734,1463 @@ class _HomePageState extends State<HomePage> {
       });
     });
   }
+
+
+
+
+  /* this function contains the code of the previous design before change
+  ** currently it's not used
+  */
+ Widget previousWidget(){
+    return
+      Container(
+        width: MediaQuery.of(context).size.width,
+        height: MediaQuery.of(context).size.height,
+        child: ListView(
+          physics: BouncingScrollPhysics(),
+          //mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            // FlutterLinkPreview(
+            //   url: "https://firebasestorage.googleapis.com/v0/b/priceme-49386.appspot.com/o/video%2F2020-09-16%2011%3A10%3A44.350865.mp4?alt=media&token=836d436f-db07-424f-ab10-a872138330d9",
+            //   bodyStyle: TextStyle(
+            //     fontSize: 18.0,
+            //   ),
+            //   titleStyle: TextStyle(
+            //     fontSize: 20.0,
+            //     fontWeight: FontWeight.bold,
+            //   ),
+            //   showMultimedia: true,
+            //   builder: (info) {
+            //     if (info is WebInfo) {
+            //       return SizedBox(
+            //         height: 350,
+            //         child: Card(
+            //           shape: RoundedRectangleBorder(
+            //               borderRadius: BorderRadius.circular(20.0)),
+            //           clipBehavior: Clip.antiAlias,
+            //           child: Column(
+            //             crossAxisAlignment: CrossAxisAlignment.start,
+            //             children: [
+            //               if (info.image != null)
+            //                 Expanded(
+            //                     child: Image.network(
+            //                       info.image,
+            //                       width: double.maxFinite,
+            //                       fit: BoxFit.cover,
+            //                     )),
+            //               Padding(
+            //                 padding:
+            //                 const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
+            //                 child: Text(
+            //                   info.title,
+            //                   style: TextStyle(
+            //                     fontSize: 20.0,
+            //                     fontWeight: FontWeight.bold,
+            //                   ),
+            //                 ),
+            //               ),
+            //               if (info.description != null)
+            //                 Padding(
+            //                   padding: const EdgeInsets.all(16.0),
+            //                   child: Text(info.description),
+            //                 ),
+            //             ],
+            //           ),
+            //         ),
+            //       );
+            //     }
+            //     if (info is WebImageInfo) {
+            //       return SizedBox(
+            //         height: 350,
+            //         child: Card(
+            //           shape: RoundedRectangleBorder(
+            //               borderRadius: BorderRadius.circular(20.0)),
+            //           clipBehavior: Clip.antiAlias,
+            //           child: Image.network(
+            //             info.image,
+            //             fit: BoxFit.cover,
+            //             width: double.maxFinite,
+            //           ),
+            //         ),
+            //       );
+            //     } else if (info is WebVideoInfo) {
+            //       return SizedBox(
+            //         height: 350,
+            //         child: Card(
+            //           shape: RoundedRectangleBorder(
+            //               borderRadius: BorderRadius.circular(20.0)),
+            //           clipBehavior: Clip.antiAlias,
+            //           child: Image.network(
+            //             info.image,
+            //             fit: BoxFit.cover,
+            //             width: double.maxFinite,
+            //           ),
+            //         ),
+            //       );
+            //     }
+            //     return Container();
+            //   },
+            // ),
+            Container(
+              height: 190,
+              child: StreamBuilder(
+                stream: Firestore.instance
+                    .collection('videos')
+                    .orderBy('seens', descending: true)
+                    .limit(5) //.where("cproblemtype", isEqualTo:"قطع غيار")
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(
+                        child: Text(
+                          "Loading..",
+                        ));
+                  }
+
+                  return new ListView.builder(
+                      reverse: true,
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      // controller: _controller,
+                      itemCount: snapshot.data.documents.length,
+                      itemBuilder: (context, index) {
+                        return firebasedata(
+                            context, index, snapshot.data.documents[index]);
+                      });
+                },
+              ),
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              height: 5,
+              color: Colors.grey[200],
+            ),
+            Container(height: 4,),
+            select_r_c?Container() : Container(
+              height: 220,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        select_r_c=true;
+                        if(!sparescheck){
+                          sparescheck=!sparescheck;
+
+                          if(sparescheck){
+                            faultcheck=false;
+                            subfaultcheck=false;
+                            faultsize=50;sparesize=100;
+                            f_f_size=10;s_f_size=20;
+                          }}
+                      });
+                    },
+                    child: Container(
+                      height:sparesize,
+                      width: sparesize,
+                      child: Center(
+                        child: Text(
+                          "قطع غيار",
+                          style: TextStyle(
+                              color:sparescheck? Colors.red:Colors.white,
+                              fontSize: s_f_size
+                          ),textAlign: TextAlign.center,
+
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                        gradient: RadialGradient(
+                          center: Alignment(-0.93, 0.0),
+                          radius: 1.092,
+                          colors: [
+                            const Color(0xffff2121).withOpacity(.6),
+                            const Color(0xffff5423).withOpacity(.6),
+                            const Color(0xffff7024).withOpacity(.6),
+                            const Color(0xffff904a).withOpacity(.6),
+                          ],
+                          stops: [0.0, 0.562, 0.867, 1.0],
+                          transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837, 0.0,
+                              -0.419, Alignment(-0.93, 0.0)),
+                        ),
+
+                        border: new Border.all(
+                          color:sparescheck? Colors.red:Colors.black,
+                          width: 1.0,
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        select_r_c=true;
+
+                        if(!faultcheck){
+                          faultcheck=!faultcheck;
+                          if(faultcheck){sparescheck=false;subsparescheck=false;
+                          faultsize=100;sparesize=50;
+                          f_f_size=20;s_f_size=10;
+                          }}
+                      });
+                    },
+                    child: Container(
+                      height:faultsize,
+                      width: faultsize,
+                      child: Center(
+                        child: Text(
+                          "اعطال", style: TextStyle(color:faultcheck? Colors.red:Colors.white,fontSize: f_f_size
+                        ),textAlign: TextAlign.center,
+
+                        ),
+                      ),
+                      decoration: BoxDecoration(
+                        gradient:  RadialGradient(
+                          center: Alignment(-0.93, 0.0),
+                          radius: 1.092,
+                          colors: [
+                            const Color(0xffff2121).withOpacity(.6),
+                            const Color(0xffff5423).withOpacity(.6),
+                            const Color(0xffff7024).withOpacity(.6),
+                            const Color(0xffff904a).withOpacity(.6),
+                          ],
+                          stops: [0.0, 0.562, 0.867, 1.0],
+                          transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837, 0.0,
+                              -0.419, Alignment(-0.93, 0.0)),
+                        ),
+
+
+                        border: new Border.all(
+                          color: faultcheck? Colors.red:Colors.black,
+                          width: 1.0,
+                        ),
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                  ),
+
+                ],
+              ),
+            ),
+            select_r_c? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      if(!sparescheck){
+                        sparescheck=!sparescheck;
+                        if(sparescheck){faultcheck=false;subfaultcheck=false;
+                        faultsize=50;sparesize=100;
+                        f_f_size=10;s_f_size=20;
+                        }}
+                    });
+                  },
+                  //   double sparesize=100;
+                  // double faultsize=100;
+                  child: Container(
+                    height:sparesize,
+                    width: sparesize,
+                    child: Center(
+                      child: Text(
+                        "قطع غيار",
+                        style: TextStyle(
+                          color:sparescheck? Colors.red:Colors.white,
+                          fontSize: s_f_size,
+                        ),textAlign: TextAlign.center,
+
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                      gradient:sparescheck? RadialGradient(
+                        center: Alignment(-0.93, 0.0),
+                        radius: 1.092,
+                        colors: [
+                          const Color(0xffff2121).withOpacity(.6),
+                          const Color(0xffff5423).withOpacity(.6),
+                          const Color(0xffff7024).withOpacity(.6),
+                          const Color(0xffff904a).withOpacity(.6),
+                        ],
+                        stops: [0.0, 0.562, 0.867, 1.0],
+                        transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837, 0.0,
+                            -0.419, Alignment(-0.93, 0.0)),
+                      ): RadialGradient(
+                        center: Alignment(-0.93, 0.0),
+                        radius: 1.092,
+                        colors: [
+                          const Color(0x42000000).withOpacity(.6),
+                          const Color(0x42000000).withOpacity(.6),
+                          const Color(0x42000000).withOpacity(.6),
+                          const Color(0x42000000).withOpacity(.6),
+
+                        ],
+                        stops: [0.0, 0.562, 0.867, 1.0],
+                        transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837, 0.0,
+                            -0.419, Alignment(-0.93, 0.0)),
+                      ),
+
+                      border: new Border.all(
+                        color:sparescheck? Colors.red:Colors.black,
+                        width: 1.0,
+                      ),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+                InkWell(
+                  onTap: () {
+                    setState(() {
+                      if(!faultcheck){
+                        faultcheck=!faultcheck;
+                        if(faultcheck){sparescheck=false;subsparescheck=false;
+                        faultsize=100;sparesize=50;
+                        f_f_size=20;s_f_size=10;
+                        }}
+
+                    });
+                  },
+                  child: Container(
+                    height:faultsize,
+                    width: faultsize,
+                    child: Center(
+                      child: Text(
+                        "اعطال", style: TextStyle(color:faultcheck? Colors.red:Colors.white,fontSize: f_f_size
+                      ),textAlign: TextAlign.center,
+
+                      ),
+                    ),
+                    decoration: BoxDecoration(
+                      gradient: faultcheck? RadialGradient(
+                        center: Alignment(-0.93, 0.0),
+                        radius: 1.092,
+                        colors: [
+                          const Color(0xffff2121).withOpacity(.6),
+                          const Color(0xffff5423).withOpacity(.6),
+                          const Color(0xffff7024).withOpacity(.6),
+                          const Color(0xffff904a).withOpacity(.6),
+                        ],
+                        stops: [0.0, 0.562, 0.867, 1.0],
+                        transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837, 0.0,
+                            -0.419, Alignment(-0.93, 0.0)),
+                      ): RadialGradient(
+                        center: Alignment(-0.93, 0.0),
+                        radius: 1.092,
+                        colors: [
+                          const Color(0x42000000).withOpacity(.6),
+                          const Color(0x42000000).withOpacity(.6),
+                          const Color(0x42000000).withOpacity(.6),
+                          const Color(0x42000000).withOpacity(.6),
+                        ],
+                        stops: [0.0, 0.562, 0.867, 1.0],
+                        transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837, 0.0,
+                            -0.419, Alignment(-0.93, 0.0)),
+                      ),
+                      border: new Border.all(
+                        color: faultcheck? Colors.red:Colors.black,
+                        width: 1.0,
+                      ),
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                ),
+
+              ],
+            ):Container() ,
+
+            sparescheck? Padding(
+              padding: const EdgeInsets.only(top: 10),
+              child: Container(
+                width: MediaQuery.of(context).size.width,
+                height: 40.0,
+                decoration: BoxDecoration(
+                  gradient: RadialGradient(
+                    center: Alignment(-0.93, 0.0),
+                    radius: 1.092,
+                    colors: [
+                      const Color(0xffff2121).withOpacity(.6),
+                      const Color(0xffff5423).withOpacity(.6),
+                      const Color(0xffff7024).withOpacity(.6),
+                      const Color(0xffff904a).withOpacity(.6),
+                    ],
+                    stops: [0.0, 0.562, 0.867, 1.0],
+                    transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837, 0.0,
+                        -0.419, Alignment(-0.93, 0.0)),
+                  ),
+//                color: Colors.orange,
+                ),
+                child: Text(
+                  "قطع غيار",
+                  style: TextStyle(color: Colors.black, fontSize: 20),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ):Container(),
+            // sparescheck? SizedBox(
+            //   height: 10,
+            // ):Container(),
+            sparescheck? Container(
+                height: 250,
+                child: sparepartsList.length == 0
+                    ? new Text("برجاء الإنتظار")
+                    :Stack(
+                  children: [
+                    PageView.builder(
+                      itemCount: sparepartsList.length ,
+                      controller: _pageController_spare,
+                      onPageChanged: (int i) => setState(() => _index = i),
+                      itemBuilder: (BuildContext ctxt,int index) {
+                        return Transform.scale(
+                          scale: index == _index ?1.2 : 0.7,
+                          child: InkWell(
+                            onTap: () {
+                              setState(() {
+                                mfault = sparepartsList[index].sName;
+                                sparepartsList[index].ssizecheck =
+                                !sparepartsList[index].ssizecheck;
+                                if (sparepartsList[index].ssizecheck) {
+                                  setState(() {
+                                    //   sparepartsList[index].ssize = 120;
+                                    subsparescheck = true;
+                                  });
+                                } else {
+                                  setState(() {
+                                    //   sparepartsList[index].ssize = 100;
+                                    subsparescheck = false;
+                                  });
+                                }
+                              });
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => AddAdv("قطع غيار", sparepartsList[index].sName, sparepartsList[index].sid)));
+
+                              // for (var i = 0; i < sparepartsList.length; i++) {
+                              //   if (i != index)
+                              //     setState(() {
+                              //       setState(() {
+                              //         sparepartsList[i].ssize = 100;
+                              //       });
+                              //     });
+                              // }
+                              //
+                              // setState(() {
+                              //   final SparePartsReference = Firestore.instance;
+                              //   subsparesList.clear();
+                              //
+                              //   SparePartsReference.collection("subspares")
+                              //       .document(sparepartsList[index].sid)
+                              //       .collection("subsparesid")
+                              //       .getDocuments()
+                              //       .then((QuerySnapshot snapshot) {
+                              //     snapshot.documents.forEach((fault) {
+                              //       FaultsClass fp = FaultsClass(
+                              //         fault.data['fid'],
+                              //         fault.data['fName'],
+                              //         fault.data['fsubId'],
+                              //         fault.data['fsubName'],
+                              //         fault.data['fsubDesc'],
+                              //         fault.data['fsubUrl'],
+                              //       );
+                              //       setState(() {
+                              //         subsparesList.add(fp);
+                              //         // print(sparepartsList.length.toString() + "llll");
+                              //       });
+                              //     });
+                              //   }).whenComplete(() {
+                              //     setState(() {});
+                              //   });
+                              // });
+                            },
+                            child: Padding(
+                              padding: const EdgeInsets.only(top:25.0),
+                              child: Container(
+                                // width: 110,
+                                // height: 110,
+//                              decoration: BoxDecoration(
+//                                border: new Border.all(
+//                                  color: Colors.black,
+//                                  width: 1.0,
+//                                ),
+//                                shape: BoxShape.circle,
+//                              ),
+                                child: Column(
+                                  children: [
+                                    Container(
+                                      height: sparepartsList[index].ssize,
+                                      width: sparepartsList[index].ssize,
+                                      // child: Text(
+                                      //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
+                                      // ),textAlign: TextAlign.center,
+                                      //
+                                      // ),
+                                      decoration: BoxDecoration(
+                                        border: new Border.all(
+                                          color: Colors.black,
+                                          width: 1.0,
+                                        ),
+                                        image: DecorationImage(
+                                          image: NetworkImage(
+                                              sparepartsList[index].surl),
+                                          fit: BoxFit.fill,
+                                        ),
+                                        shape: BoxShape.circle,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        sparepartsList[index].sName,
+                                        style: TextStyle(
+                                            color: Colors.red, fontSize: 15),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+
+//                 new ListView.builder(
+//                         //  controller: _depcontroller,
+//                         physics: BouncingScrollPhysics(),
+//                         scrollDirection: Axis.horizontal,
+//                         reverse: true,
+//                         itemCount: sparepartsList.length,
+//                         itemBuilder: (BuildContext ctxt, int index) {
+//                           return InkWell(
+//                             onTap: () {
+//                               setState(() {
+//                                 mfault = sparepartsList[index].sName;
+//                                 sparepartsList[index].ssizecheck =
+//                                     !sparepartsList[index].ssizecheck;
+//                                 if (sparepartsList[index].ssizecheck) {
+//                                   setState(() {
+//                                     sparepartsList[index].ssize = 100;
+//                                     subsparescheck = true;
+//                                   });
+//                                 } else {
+//                                   setState(() {
+//                                     sparepartsList[index].ssize = 75;
+//                                     subsparescheck = false;
+//                                   });
+//                                 }
+//                               });
+//                               for (var i = 0; i < sparepartsList.length; i++) {
+//                                 if (i != index)
+//                                   setState(() {
+//                                     setState(() {
+//                                       sparepartsList[i].ssize = 75;
+//                                     });
+//                                   });
+//                               }
+//
+//                               setState(() {
+//                                 final SparePartsReference = Firestore.instance;
+//                                 subsparesList.clear();
+//
+//                                 SparePartsReference.collection("subspares")
+//                                     .document(sparepartsList[index].sid)
+//                                     .collection("subsparesid")
+//                                     .getDocuments()
+//                                     .then((QuerySnapshot snapshot) {
+//                                   snapshot.documents.forEach((fault) {
+//                                     FaultsClass fp = FaultsClass(
+//                                       fault.data['fid'],
+//                                       fault.data['fName'],
+//                                       fault.data['fsubId'],
+//                                       fault.data['fsubName'],
+//                                       fault.data['fsubDesc'],
+//                                       fault.data['fsubUrl'],
+//                                     );
+//                                     setState(() {
+//                                       subsparesList.add(fp);
+//                                       // print(sparepartsList.length.toString() + "llll");
+//                                     });
+//                                   });
+//                                 }).whenComplete(() {
+//                                   setState(() {});
+//                                 });
+//                               });
+//                               // Navigator.push(
+//                               //     context,
+//                               //     MaterialPageRoute(
+//                               //         builder: (context) => AddAdv(widget.sparepartsList,"قطع غيار",mfault, sparepartsList[index].sName)));
+//                             },
+//                             child: Container(
+//                               width: 110,
+//                               height: 110,
+// //                              decoration: BoxDecoration(
+// //                                border: new Border.all(
+// //                                  color: Colors.black,
+// //                                  width: 1.0,
+// //                                ),
+// //                                shape: BoxShape.circle,
+// //                              ),
+//                               child: Column(
+//                                 children: [
+//                                   Container(
+//                                     height: sparepartsList[index].ssize,
+//                                     width: sparepartsList[index].ssize,
+//                                     // child: Text(
+//                                     //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
+//                                     // ),textAlign: TextAlign.center,
+//                                     //
+//                                     // ),
+//                                     decoration: BoxDecoration(
+//                                       border: new Border.all(
+//                                         color: Colors.black,
+//                                         width: 1.0,
+//                                       ),
+//                                       image: DecorationImage(
+//                                         image: NetworkImage(
+//                                             sparepartsList[index].surl),
+//                                         fit: BoxFit.fill,
+//                                       ),
+//                                       shape: BoxShape.circle,
+//                                     ),
+//                                   ),
+//                                   Expanded(
+//                                     child: Text(
+//                                       sparepartsList[index].sName,
+//                                       style: TextStyle(
+//                                           color: Colors.red, fontSize: 15),
+//                                       textAlign: TextAlign.center,
+//                                     ),
+//                                   ),
+//                                 ],
+//                               ),
+//                             ),
+//                           );
+//                         }),
+                    ),
+                    Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.arrow_back_ios_outlined),
+                            onPressed: () {
+                              setState(() {
+                                if(currentPage_spare>0){
+                                  currentPage_spare--;
+                                  print("ggg$currentPage_spare");
+                                  _pageController_spare.animateToPage(currentPage_spare, duration: const Duration(milliseconds: 500), curve: Curves.easeInSine,);
+
+                                }
+                              });
+                            },
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.arrow_forward_ios),
+                            onPressed: () {
+                              setState(() {
+                                if(currentPage_spare<sparepartsList.length-1) {
+                                  currentPage_spare++;
+                                  print("ggg$currentPage_spare");
+
+                                  _pageController_spare.animateToPage(
+                                    currentPage_spare,
+                                    duration: const Duration(milliseconds: 500),
+                                    curve: Curves.easeInSine,);
+                                }  });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                )):Container(),
+//             sparescheck?   subsparescheck
+//                 ? Stack(
+//                     children: [
+//                       Container(
+//                         height: 250,
+//                       ),
+//                       Padding(
+//                         padding: const EdgeInsets.only(top: 40),
+//                         child: Container(
+//                           height: 200,
+//                           child: subsparesList.length == 0
+//                               ? Center(child: new Text("برجاء الإنتظار"))
+//                               : Card(
+//                                   color: Colors.white,
+//                                   elevation: 2,
+//                                   shape: new RoundedRectangleBorder(
+// //                                      side: new BorderSide(
+// ////                                          color: Colors.black,
+// //                                          //color: subfaultsList[index].ccolor,
+// //                                          width: 1.0),
+//                                       borderRadius:
+//                                           BorderRadius.circular(10.0)),
+//                                   child: new ListView.builder(
+//                                       physics: BouncingScrollPhysics(),
+//                                       //scrollDirection: Axis.horizontal,
+//                                       // reverse: true,
+//                                       itemCount: subsparesList.length,
+//                                       itemBuilder:
+//                                           (BuildContext ctxt, int index) {
+//                                         return InkWell(
+//                                           child: Container(
+// //                                        color: departlist1[index].ccolor,
+// //                                      color: Colors.white,
+// //                                      shape: new RoundedRectangleBorder(
+// //                                          side: new BorderSide(
+// //                                            color: Colors.white,
+// //                                              //color: subfaultsList[index].ccolor,
+// //                                              width: 2.0),
+// //                                          borderRadius:
+// //                                              BorderRadius.circular(10.0)),
+//                                             //borderOnForeground: true,
+//
+//                                             child: InkWell(
+//                                               onTap: () {
+//                                                 Navigator.push(
+//                                                     context,
+//                                                     MaterialPageRoute(
+//                                                         builder: (context) =>
+//                                                             AddAdv(
+//                                                                 "قطع غيار",
+//                                                                 subsparesList[
+//                                                                         index]
+//                                                                     .fsubName)));
+//                                               },
+//                                               child: Padding(
+//                                                 padding:
+//                                                     const EdgeInsets.all(3.0),
+//                                                 child: ListTile(
+//                                                   title: Text(
+//                                                     subsparesList[index]
+//                                                         .fsubName,
+//                                                     textDirection:
+//                                                         TextDirection.rtl,
+//                                                     style: TextStyle(
+//                                                         fontSize: 18.0,
+//                                                         fontWeight:
+//                                                             FontWeight.bold),
+//                                                   ),
+//                                                   subtitle: Text(
+//                                                     subsparesList[index]
+//                                                         .fsubDesc,
+//                                                     textDirection:
+//                                                         TextDirection.rtl,
+//                                                     style: TextStyle(
+//                                                         fontSize: 15.0),
+//                                                   ),
+//                                                   leading: Icon(
+//                                                     Icons.arrow_back_ios,
+//                                                     color: Colors.black,
+//                                                   ),
+//                                                   trailing: Container(
+//                                                     height: 120.0,
+//                                                     width: 60.0,
+//                                                     decoration: BoxDecoration(
+//                                                       image: DecorationImage(
+//                                                         image: NetworkImage(
+//                                                             subsparesList[index]
+//                                                                 .fsubUrl),
+//                                                         fit: BoxFit.fill,
+//                                                       ),
+//                                                     ),
+//                                                   ),
+//                                                 ),
+// //                             Container(
+// //                               child: Row(
+// //                                 mainAxisAlignment:
+// //                                 MainAxisAlignment.center,
+// //                                 children: [
+// //                                   Container(
+// //                                     width: 50,
+// //                                     height: 50,
+// //                                     child: new Image.network(
+// //                                       subfaultsList[index].fsubUrl,
+// //                                       fit: BoxFit.contain,
+// //                                     ),
+// //                                   ),
+// //                                   SizedBox(
+// //                                     height: 2,
+// //                                   ),
+// //                                   Padding(
+// //                                     padding:
+// //                                     const EdgeInsets.all(8.0),
+// //                                     child: Container(
+// //                                       margin:
+// //                                       EdgeInsets.only(right: 2),
+// //                                       child: Center(
+// //                                         child: Padding(
+// //                                           padding:
+// //                                           const EdgeInsets.only(
+// //                                               top: 5),
+// //                                           child: Text(
+// //                                             subfaultsList[index]
+// //                                                 .fsubName,
+// //                                             textAlign:
+// //                                             TextAlign.center,
+// //                                             style: TextStyle(
+// //                                               color: const Color(
+// //                                                   0xff171732),
+// // //                                                              fontFamily: "Estedad-Black",
+// //                                               fontWeight:
+// //                                               FontWeight.bold,
+// //                                               fontSize: 12,
+// //                                               height: 0,
+// //                                             ),
+// //                                           ),
+// //                                         ),
+// //                                       ),
+// //                                     ),
+// //                                   ),
+// //                                 ],
+// //                               ),
+// //                             ),
+//                                               ),
+//                                             ),
+//                                           ),
+//                                           /**  _firebasedatdepart1(
+//                                   index,
+//                                   departlist1.length,
+//                                   departlist1[index].id,
+//                                   departlist1[index].title,
+//                                   departlist1[index].subtitle,
+//                                   departlist1[index].uri,
+//                                   ),**/
+//                                         );
+//                                       }),
+//                                 ),
+//                         ),
+//                       ),
+//                       Positioned(
+//                         right: 150,
+//                         bottom: 150,
+//                         child: Container(
+//                           height: 100,
+//                           width: 100,
+//                           // child: Text(
+//                           //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
+//                           // ),textAlign: TextAlign.center,
+//                           //
+//                           // ),
+//                           decoration: BoxDecoration(
+//                             border: new Border.all(
+//                               color: Colors.black,
+//                               width: 1.0,
+//                             ),
+//                             image: DecorationImage(
+//                               image: NetworkImage(
+//                                   "https://firebasestorage.googleapis.com/v0/b/priceme-49386.appspot.com/o/myimage%2F2020-08-26%2016%3A40%3A13.416549.jpg?alt=media&token=7c2275ea-f887-4a5d-99f4-abf2b561fe70"),
+//                               fit: BoxFit.fill,
+//                             ),
+//                             shape: BoxShape.circle,
+//                           ),
+//                         ),
+//                       ),
+//                     ],
+//                   )
+//                 : Container():Container(),
+            faultcheck?SizedBox(
+              height: 10,
+            ):Container(),
+            faultcheck? Container(
+              width: MediaQuery.of(context).size.width,
+              height: 40.0,
+              decoration: BoxDecoration(
+                gradient: RadialGradient(
+                  center: Alignment(-0.93, 0.0),
+                  radius: 1.092,
+                  colors: [
+                    const Color(0xffff2121).withOpacity(.6),
+                    const Color(0xffff5423).withOpacity(.6),
+                    const Color(0xffff7024).withOpacity(.6),
+                    const Color(0xffff904a).withOpacity(.6),
+                  ],
+                  stops: [0.0, 0.562, 0.867, 1.0],
+                  transform: GradientXDTransform(
+                      1.0, 0.0, 0.0, 1.837, 0.0, -0.419, Alignment(-0.93, 0.0)),
+                ),
+              ),
+              child: Text(
+                "الاعطال",
+                style: TextStyle(color: Colors.black, fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+            ):Container(),
+            faultcheck?SizedBox(
+              height: 10,
+            ):Container(),
+            faultcheck? Container(
+              height: 250,
+              child: Expanded(
+                  child: Center(
+                      child: faultsList.length == 0
+                          ? new Text("برجاء الإنتظار")
+                          :Stack(
+                        children: [
+                          PageView.builder(
+                            // controller: _pageController_fault,
+                            itemCount: faultsList.length ,
+                            controller: _pageController_fault,
+                            onPageChanged: (int i) => setState(() => _index = i),
+                            itemBuilder: (BuildContext ctxt,int index) {
+                              return Transform.scale(
+                                scale: index == _index ?1.2 : 0.7,
+                                child: InkWell(
+                                  onTap: () {
+                                    setState(() {
+                                      mfault = faultsList[index].sName;
+
+                                      faultsList[index].ssizecheck =
+                                      !faultsList[index].ssizecheck;
+                                      if (faultsList[index].ssizecheck) {
+                                        // faultsList[index].ssize = 100;
+                                        subfaultcheck = true;
+                                      } else {
+                                        // faultsList[index].ssize = 75;
+                                        subfaultcheck = false;
+                                      }
+                                    });
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => AddAdv("اعطال", faultsList[index].sName, faultsList[index].sid)));
+                                    //
+                                    // for (var i = 0; i < faultsList.length; i++) {
+                                    //   if (i != index)
+                                    //     setState(() {
+                                    //       faultsList[i].ssize = 75;
+                                    //     });
+                                    // }
+                                    // setState(() {
+                                    //   final SparePartsReference = Firestore.instance;
+                                    //   subfaultsList.clear();
+                                    //
+                                    //   SparePartsReference.collection("subfaults")
+                                    //       .document(faultsList[index].sid)
+                                    //       .collection("subfaultid")
+                                    //       .getDocuments()
+                                    //       .then((QuerySnapshot snapshot) {
+                                    //     snapshot.documents.forEach((fault) {
+                                    //       FaultsClass fp = FaultsClass(
+                                    //         fault.data['fid'],
+                                    //         fault.data['fName'],
+                                    //         fault.data['fsubId'],
+                                    //         fault.data['fsubName'],
+                                    //         fault.data['fsubDesc'],
+                                    //         fault.data['fsubUrl'],
+                                    //       );
+                                    //       setState(() {
+                                    //         subfaultsList.add(fp);
+                                    //         // print(sparepartsList.length.toString() + "llll");
+                                    //       });
+                                    //     });
+                                    //   }).whenComplete(() {
+                                    //     setState(() {});
+                                    //   });
+
+
+                                    // });
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(top:25.0),
+                                    child: Container(
+                                      // width: 110,
+                                      // height: 110,
+//                              decoration: BoxDecoration(
+//                                border: new Border.all(
+//                                  color: Colors.black,
+//                                  width: 1.0,
+//                                ),
+//                                shape: BoxShape.rectangle,
+//                              ),
+                                      child: Column(
+                                        children: [
+                                          Container(
+                                            height:
+                                            faultsList[index].ssize,
+                                            width:
+                                            faultsList[index].ssize,
+                                            // child: Text(
+                                            //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
+                                            // ),textAlign: TextAlign.center,
+                                            //
+                                            // ),
+                                            decoration: BoxDecoration(
+                                              border: new Border.all(
+                                                color: Colors.black,
+                                                width: 1.0,
+                                              ),
+                                              image: DecorationImage(
+                                                image: NetworkImage(
+                                                    faultsList[index]
+                                                        .surl),
+                                                fit: BoxFit.fill,
+                                              ),
+                                              shape: BoxShape.circle,
+                                            ),
+                                          ),
+                                          Expanded(
+                                            child: Text(
+                                              faultsList[index].sName,
+                                              style: TextStyle(
+                                                  color: Colors.red,
+                                                  fontSize: 15),
+                                              textAlign: TextAlign.center,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+
+//                 new ListView.builder(
+//                         //  controller: _depcontroller,
+//                         physics: BouncingScrollPhysics(),
+//                         scrollDirection: Axis.horizontal,
+//                         reverse: true,
+//                         itemCount: sparepartsList.length,
+//                         itemBuilder: (BuildContext ctxt, int index) {
+//                           return InkWell(
+//                             onTap: () {
+//                               setState(() {
+//                                 mfault = sparepartsList[index].sName;
+//                                 sparepartsList[index].ssizecheck =
+//                                     !sparepartsList[index].ssizecheck;
+//                                 if (sparepartsList[index].ssizecheck) {
+//                                   setState(() {
+//                                     sparepartsList[index].ssize = 100;
+//                                     subsparescheck = true;
+//                                   });
+//                                 } else {
+//                                   setState(() {
+//                                     sparepartsList[index].ssize = 75;
+//                                     subsparescheck = false;
+//                                   });
+//                                 }
+//                               });
+//                               for (var i = 0; i < sparepartsList.length; i++) {
+//                                 if (i != index)
+//                                   setState(() {
+//                                     setState(() {
+//                                       sparepartsList[i].ssize = 75;
+//                                     });
+//                                   });
+//                               }
+//
+//                               setState(() {
+//                                 final SparePartsReference = Firestore.instance;
+//                                 subsparesList.clear();
+//
+//                                 SparePartsReference.collection("subspares")
+//                                     .document(sparepartsList[index].sid)
+//                                     .collection("subsparesid")
+//                                     .getDocuments()
+//                                     .then((QuerySnapshot snapshot) {
+//                                   snapshot.documents.forEach((fault) {
+//                                     FaultsClass fp = FaultsClass(
+//                                       fault.data['fid'],
+//                                       fault.data['fName'],
+//                                       fault.data['fsubId'],
+//                                       fault.data['fsubName'],
+//                                       fault.data['fsubDesc'],
+//                                       fault.data['fsubUrl'],
+//                                     );
+//                                     setState(() {
+//                                       subsparesList.add(fp);
+//                                       // print(sparepartsList.length.toString() + "llll");
+//                                     });
+//                                   });
+//                                 }).whenComplete(() {
+//                                   setState(() {});
+//                                 });
+//                               });
+//                               // Navigator.push(
+//                               //     context,
+//                               //     MaterialPageRoute(
+//                               //         builder: (context) => AddAdv(widget.sparepartsList,"قطع غيار",mfault, sparepartsList[index].sName)));
+//                             },
+//                             child: Container(
+//                               width: 110,
+//                               height: 110,
+// //                              decoration: BoxDecoration(
+// //                                border: new Border.all(
+// //                                  color: Colors.black,
+// //                                  width: 1.0,
+// //                                ),
+// //                                shape: BoxShape.circle,
+// //                              ),
+//                               child: Column(
+//                                 children: [
+//                                   Container(
+//                                     height: sparepartsList[index].ssize,
+//                                     width: sparepartsList[index].ssize,
+//                                     // child: Text(
+//                                     //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
+//                                     // ),textAlign: TextAlign.center,
+//                                     //
+//                                     // ),
+//                                     decoration: BoxDecoration(
+//                                       border: new Border.all(
+//                                         color: Colors.black,
+//                                         width: 1.0,
+//                                       ),
+//                                       image: DecorationImage(
+//                                         image: NetworkImage(
+//                                             sparepartsList[index].surl),
+//                                         fit: BoxFit.fill,
+//                                       ),
+//                                       shape: BoxShape.circle,
+//                                     ),
+//                                   ),
+//                                   Expanded(
+//                                     child: Text(
+//                                       sparepartsList[index].sName,
+//                                       style: TextStyle(
+//                                           color: Colors.red, fontSize: 15),
+//                                       textAlign: TextAlign.center,
+//                                     ),
+//                                   ),
+//                                 ],
+//                               ),
+//                             ),
+//                           );
+//                         }),
+                          ),
+                          Center(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.arrow_back_ios_outlined),
+                                  onPressed: () {
+                                    setState(() {
+                                      if(currentPage_fault>0){
+                                        currentPage_fault--;
+                                        // print("ggg$currentPage_spare");
+                                        _pageController_fault.animateToPage(currentPage_fault, duration: const Duration(milliseconds: 500), curve: Curves.easeInSine,);
+
+                                      }
+                                    });
+                                  },
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.arrow_forward_ios),
+                                  onPressed: () {
+                                    setState(() {
+                                      if(currentPage_fault<faultsList.length-1) {
+                                        currentPage_fault++;
+                                        //print("ggg$currentPage_spare");
+
+                                        _pageController_fault.animateToPage(
+                                          currentPage_fault,
+                                          duration: const Duration(milliseconds: 500),
+                                          curve: Curves.easeInSine,);
+                                      }  });
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      )
+//                 new ListView.builder(
+//                         //  controller: _depcontroller,
+//                         physics: BouncingScrollPhysics(),
+//                         scrollDirection: Axis.horizontal,
+//                         reverse: true,
+//                         itemCount: faultsList.length,
+//                         itemBuilder: (BuildContext ctxt, int index) {
+//                           return InkWell(
+//                             onTap: () {
+//                               setState(() {
+//                                 mfault = faultsList[index].sName;
+//
+//                                 faultsList[index].ssizecheck =
+//                                     !faultsList[index].ssizecheck;
+//                                 if (faultsList[index].ssizecheck) {
+//                                   faultsList[index].ssize = 100;
+//                                   subfaultcheck = true;
+//                                 } else {
+//                                   faultsList[index].ssize = 75;
+//                                   subfaultcheck = false;
+//                                 }
+//                               });
+//
+//                               for (var i = 0; i < faultsList.length; i++) {
+//                                 if (i != index)
+//                                   setState(() {
+//                                     faultsList[i].ssize = 75;
+//                                   });
+//                               }
+//                               setState(() {
+//                                 final SparePartsReference = Firestore.instance;
+//                                 subfaultsList.clear();
+//
+//                                 SparePartsReference.collection("subfaults")
+//                                     .document(faultsList[index].sid)
+//                                     .collection("subfaultid")
+//                                     .getDocuments()
+//                                     .then((QuerySnapshot snapshot) {
+//                                   snapshot.documents.forEach((fault) {
+//                                     FaultsClass fp = FaultsClass(
+//                                       fault.data['fid'],
+//                                       fault.data['fName'],
+//                                       fault.data['fsubId'],
+//                                       fault.data['fsubName'],
+//                                       fault.data['fsubDesc'],
+//                                       fault.data['fsubUrl'],
+//                                     );
+//                                     setState(() {
+//                                       subfaultsList.add(fp);
+//                                       // print(sparepartsList.length.toString() + "llll");
+//                                     });
+//                                   });
+//                                 }).whenComplete(() {
+//                                   setState(() {});
+//                                 });
+//                               });
+//                             },
+//                             child: Container(
+//                               width: 110,
+//                               height: 110,
+// //                              decoration: BoxDecoration(
+// //                                border: new Border.all(
+// //                                  color: Colors.black,
+// //                                  width: 1.0,
+// //                                ),
+// //                                shape: BoxShape.rectangle,
+// //                              ),
+//                               child: Column(
+//                                 children: [
+//                                   Container(
+//                                     height: faultsList[index].ssize,
+//                                     width: faultsList[index].ssize,
+//                                     // child: Text(
+//                                     //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
+//                                     // ),textAlign: TextAlign.center,
+//                                     //
+//                                     // ),
+//                                     decoration: BoxDecoration(
+//                                       border: new Border.all(
+//                                         color: Colors.black,
+//                                         width: 1.0,
+//                                       ),
+//                                       image: DecorationImage(
+//                                         image: NetworkImage(
+//                                             faultsList[index].surl),
+//                                         fit: BoxFit.fill,
+//                                       ),
+//                                       shape: BoxShape.circle,
+//                                     ),
+//                                   ),
+//                                   Expanded(
+//                                     child: Text(
+//                                       faultsList[index].sName,
+//                                       style: TextStyle(
+//                                           color: Colors.red, fontSize: 15),
+//                                       textAlign: TextAlign.center,
+//                                     ),
+//                                   ),
+//                                 ],
+//                               ),
+//                             ),
+//                           );
+//                         }),
+                  )),
+            ):Container(),
+//             faultcheck? subfaultcheck
+//                 ? Stack(
+//                     children: [
+//                       Container(
+//                         height: 250,
+//                       ),
+//                       Padding(
+//                         padding: const EdgeInsets.only(top: 50),
+//                         child: Container(
+//                           height: 200,
+//                           child: subfaultsList.length == 0
+//                               ? Center(child: new Text("برجاء الإنتظار"))
+//                               : Card(
+//                                   color: Colors.white,
+//                                   elevation: 2,
+//                                   shape: new RoundedRectangleBorder(
+// //                                      side: new BorderSide(
+// //                                          color: Colors.black,
+// //                                          //color: subfaultsList[index].ccolor,
+// //                                          width: 1.0),
+//                                       borderRadius:
+//                                           BorderRadius.circular(10.0)),
+//                                   child: new ListView.builder(
+//                                       physics: BouncingScrollPhysics(),
+//                                       //scrollDirection: Axis.horizontal,
+//                                       // reverse: true,
+//                                       itemCount: subfaultsList.length,
+//                                       itemBuilder:
+//                                           (BuildContext ctxt, int index) {
+//                                         return InkWell(
+//                                           child: Padding(
+//                                             padding: const EdgeInsets.only(
+//                                                 top: 5.0,
+//                                                 right: 5.0,
+//                                                 left: 5.0),
+//                                             child: Container(
+//                                               margin: EdgeInsets.all(1),
+//                                               child: InkWell(
+//                                                 onTap: () {
+//                                                   Navigator.push(
+//                                                       context,
+//                                                       MaterialPageRoute(
+//                                                           builder: (context) =>
+//                                                               AddAdv(
+//                                                                   "اعطال",
+//                                                                   subfaultsList[
+//                                                                           index]
+//                                                                       .fsubName)));
+//                                                 },
+//                                                 child: Padding(
+//                                                   padding:
+//                                                       const EdgeInsets.all(3.0),
+//                                                   child: ListTile(
+//                                                     title: Text(
+//                                                       subfaultsList[index]
+//                                                           .fsubName,
+//                                                       textDirection:
+//                                                           TextDirection.rtl,
+//                                                       style: TextStyle(
+//                                                           fontSize: 18.0,
+//                                                           fontWeight:
+//                                                               FontWeight.bold),
+//                                                     ),
+//                                                     subtitle: Text(
+//                                                       subfaultsList[index]
+//                                                           .fsubDesc,
+//                                                       textDirection:
+//                                                           TextDirection.rtl,
+//                                                       style: TextStyle(
+//                                                           fontSize: 15.0),
+//                                                     ),
+//                                                     leading: Icon(
+//                                                       Icons.arrow_back_ios,
+//                                                       color: Colors.black,
+//                                                     ),
+//                                                     trailing: Container(
+//                                                       height: 120.0,
+//                                                       width: 60.0,
+//                                                       decoration: BoxDecoration(
+//                                                         image: DecorationImage(
+//                                                           image: NetworkImage(
+//                                                               subfaultsList[
+//                                                                       index]
+//                                                                   .fsubUrl),
+//                                                           fit: BoxFit.fill,
+//                                                         ),
+//                                                         shape: BoxShape.circle,
+//                                                       ),
+//                                                     ),
+//                                                   ),
+// //                             Container(
+// //                               child: Row(
+// //                                 mainAxisAlignment:
+// //                                 MainAxisAlignment.center,
+// //                                 children: [
+// //                                   Container(
+// //                                     width: 50,
+// //                                     height: 50,
+// //                                     child: new Image.network(
+// //                                       subfaultsList[index].fsubUrl,
+// //                                       fit: BoxFit.contain,
+// //                                     ),
+// //                                   ),
+// //                                   SizedBox(
+// //                                     height: 2,
+// //                                   ),
+// //                                   Padding(
+// //                                     padding:
+// //                                     const EdgeInsets.all(8.0),
+// //                                     child: Container(
+// //                                       margin:
+// //                                       EdgeInsets.only(right: 2),
+// //                                       child: Center(
+// //                                         child: Padding(
+// //                                           padding:
+// //                                           const EdgeInsets.only(
+// //                                               top: 5),
+// //                                           child: Text(
+// //                                             subfaultsList[index]
+// //                                                 .fsubName,
+// //                                             textAlign:
+// //                                             TextAlign.center,
+// //                                             style: TextStyle(
+// //                                               color: const Color(
+// //                                                   0xff171732),
+// // //                                                              fontFamily: "Estedad-Black",
+// //                                               fontWeight:
+// //                                               FontWeight.bold,
+// //                                               fontSize: 12,
+// //                                               height: 0,
+// //                                             ),
+// //                                           ),
+// //                                         ),
+// //                                       ),
+// //                                     ),
+// //                                   ),
+// //                                 ],
+// //                               ),
+// //                             ),
+//                                                 ),
+//                                               ),
+//                                             ),
+//                                           ),
+//                                           /**  _firebasedatdepart1(
+//                                   index,
+//                                   departlist1.length,
+//                                   departlist1[index].id,
+//                                   departlist1[index].title,
+//                                   departlist1[index].subtitle,
+//                                   departlist1[index].uri,
+//                                   ),**/
+//                                         );
+//                                       }),
+//                                 ),
+//                         ),
+//                       ),
+//                       Positioned(
+//                         right: 150,
+//                         bottom: 150,
+//                         child: Container(
+//                           height: 100,
+//                           width: 100,
+//                           // child: Text(
+//                           //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
+//                           // ),textAlign: TextAlign.center,
+//                           //
+//                           // ),
+//                           decoration: BoxDecoration(
+//                             border: new Border.all(
+//                               color: Colors.black,
+//                               width: 1.0,
+//                             ),
+//                             image: DecorationImage(
+//                               image: NetworkImage(
+//                                   "https://firebasestorage.googleapis.com/v0/b/priceme-49386.appspot.com/o/myimage%2F2020-09-13%2011%3A01%3A50.545909.jpg?alt=media&token=24741622-2ed9-44f4-9c67-04a47796925b"),
+//                               fit: BoxFit.fill,
+//                             ),
+//                             shape: BoxShape.circle,
+//                           ),
+//                         ),
+//                       ),
+//                     ],
+//                   )
+//                 : Container():Container(),
+          ],
+        ),
+      );
+
+
+
+ }
 }

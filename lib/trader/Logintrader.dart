@@ -208,6 +208,8 @@ class _Logintrader extends State<Logintrader> {
                           ),
                         ),
                       ),
+
+                      /*
                       InkWell(
                         onTap: (){
                           if (_formKey1.currentState.validate()) {
@@ -237,12 +239,21 @@ class _Logintrader extends State<Logintrader> {
                                 transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837,
                                     0.0, -0.419, Alignment(-0.93, 0.0)),
                               ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 4,
+                                  blurRadius: 4,
+                                  offset: Offset(0, 2), // changes position of shadow
+                                ),
+                              ],
+
                             ),
                             child: Center(
                               child: Text(
                                 'تسجيل الدخول',
                                 style: TextStyle(
-                                  fontFamily: 'Helvetica',
+
                                   fontSize: 13,
                                   color: const Color(0xffffffff),
                                   height: 1,
@@ -253,6 +264,59 @@ class _Logintrader extends State<Logintrader> {
                           ),
                         ),
                       ),
+                      */
+
+                      Padding(
+                        padding: EdgeInsets.only(top: 18, bottom: 14, right: 16, left: 16),
+                        child: RaisedButton(
+
+                          padding: EdgeInsets.zero,
+                          shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                          onPressed: (){
+                            if (_formKey1.currentState.validate()) {
+                              _uploaddata();
+                              setState(() {
+                                _load = true;
+                              });
+                            }
+                          },
+                          child:  Container(
+
+                            height: 46.0,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              gradient: RadialGradient(
+                                center: Alignment(-0.93, 0.0),
+                                radius: 1.092,
+                                colors: [
+                                  const Color(0xffff2121),
+                                  const Color(0xffff5423),
+                                  const Color(0xffff7024),
+                                  const Color(0xffff904a)
+                                ],
+                                stops: [0.0, 0.562, 0.867, 1.0],
+                                transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837,
+                                    0.0, -0.419, Alignment(-0.93, 0.0)),
+                              ),
+
+
+                            ),
+                            child: Center(
+                              child: Text(
+                                'تسجيل الدخول',
+                                style: TextStyle(
+
+                                  fontSize: 13,
+                                  color: const Color(0xffffffff),
+                                  height: 1,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+
                       Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: InkWell(

@@ -97,7 +97,7 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
                           crossAxisCount: 2,
                           crossAxisSpacing: 6,
                           childAspectRatio: MediaQuery.of(context).size.width /
-                              (MediaQuery.of(context).size.height*1),
+                              (MediaQuery.of(context).size.height*0.6),
                         ),
                         itemCount:snapshot.data.documents.length,
                         itemBuilder: (BuildContext context, int index) {
@@ -517,7 +517,7 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
                       Positioned(
                         right: 0,
                         child: Container(
-                          width: 72,
+                          width: 66,
                           alignment: Alignment.center,
                           decoration: BoxDecoration(
                             borderRadius:
@@ -532,7 +532,7 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
                                 textAlign: TextAlign.right,
                                 style: TextStyle(
                                     color: Colors.white,
-                                    fontSize: 12,
+                                    fontSize: 10,
 //                                          fontFamily: 'Estedad-Black',
                                     fontStyle: FontStyle.normal),
                               )),
@@ -551,10 +551,11 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
                     document['ctitle'].toString(),
                     textDirection: TextDirection.rtl,
                     textAlign: TextAlign.right,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
-                        fontSize: 12.0,
+                        fontSize: 10.0,
                         fontStyle: FontStyle.normal),
                   ),
                 ),
@@ -569,7 +570,7 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
                         color: Colors.grey,
 //                                  fontFamily: 'Estedad-Black',
                         fontWeight: FontWeight.normal,
-                        fontSize: 10,
+                        fontSize: 8,
                         fontStyle: FontStyle.normal),
                   ),
                 ),

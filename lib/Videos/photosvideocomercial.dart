@@ -483,7 +483,7 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
                         itemCount: snapshot.data.documents.length,
                         crossAxisCount: 2,
                         itemBuilder: (context, index) {
-                          return firebasedata(
+                          return videoTile(
                               context, index, snapshot.data.documents[index]);
                         },
                         staggeredTileBuilder: (index) =>
@@ -560,6 +560,126 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
     setState(() {
       this._sortcurrentItemSelected = newValueSelected;
     });
+  }
+
+
+  Widget videoTile(
+      BuildContext context, int index, DocumentSnapshot document) {
+
+    return   InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => AllVideos(document['carrange'],document['cdepart'],null)));
+
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(1.0),
+        child: Stack(
+          children: [
+            Container(
+              //   height: 200,
+              decoration: BoxDecoration(
+                border: new Border.all(
+                  color: Colors.white,
+                  width: 0,
+                ),
+                image: document['imgurl'] == null
+                    ? DecorationImage(
+                  image: AssetImage("assets/images/ic_background.png"),
+                  fit: BoxFit.fill,
+                )
+                    : DecorationImage(
+                  image: NetworkImage(document['imgurl']),
+                  fit: BoxFit.fill,
+                ),
+                borderRadius: BorderRadius.circular(0.0),
+              ),
+            ),
+
+
+
+            Positioned(
+              bottom: 0,
+              child: Container(
+                height: 46,
+                width: MediaQuery.of(context).size.width/2 - 2,
+                color: Colors.black.withOpacity(0.2),
+              ),
+            ),
+            Positioned(
+              bottom: 8,
+              left: 8,
+              child: Container(
+                height: 26,
+                width: 26,
+                // child: Text(
+                //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
+                // ),textAlign: TextAlign.center,
+                //
+                // ),
+                decoration: BoxDecoration(
+                  border: new Border.all(
+                    color: Colors.black,
+                    width: 1.0,
+                  ),
+                  image: DecorationImage(
+                    image: NetworkImage(document['cphotourl']==null||document['cphotourl']==""?
+                    "https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg"  :document['cphotourl']),
+                    fit: BoxFit.fill,
+                  ),
+                  shape: BoxShape.circle,
+                ),
+              ),
+
+            ),
+
+            Positioned(
+              bottom: 23,
+              right: 10,
+              child: Icon(Icons.favorite_border,color: Colors.grey[300], size: 14,),
+            ),
+            Positioned(
+              bottom: 21,
+              right: 29,
+              child: Container(
+                child: Text(
+                  "125",
+                  style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.grey[300]
+
+                  ),
+
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 5,
+              right: 10,
+              child: Icon(Icons.visibility,color: Colors.grey[300], size: 14,),
+            ),
+            Positioned(
+              bottom: 3,
+              right: 29,
+              child: Container(
+                child: Text(
+                  "130",
+                  style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.grey[300]
+
+                  ),
+
+                ),
+              ),
+            )
+
+          ],
+        ),
+      ),
+    );
   }
 
   Widget firebasedata(

@@ -400,25 +400,29 @@ workshoptype=_faultcurrentItemSelected;
                               elevation: 2.0,
                               child: Align(
                                 alignment: Alignment.centerRight,
-                                child: DropdownButton<String>(
-                                  items: _typearray.map((String value) {
-                                    return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(
-                                          value,
-                                          style: TextStyle(
-                                              color:  const Color(0xffff2121),
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold),
-                                        ));
-                                  }).toList(),
-                                  value: _typecurrentItemSelected,
-                                  onChanged: (String newValueSelected) {
-                                    // Your code to execute, when a menu item is selected from dropdown
-                                    _onDropDownItemSelectedtype(
-                                        newValueSelected);
-                                  },
-                                ),
+                                child:
+                                DropdownButtonHideUnderline(
+                                  child:DropdownButton<String>(
+                                    items: _typearray.map((String value) {
+                                      return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(
+                                            value,
+                                            style: TextStyle(
+                                                color: Colors.black,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.bold),
+                                          ));
+                                    }).toList(),
+                                    value: _typecurrentItemSelected,
+                                    onChanged: (String newValueSelected) {
+                                      // Your code to execute, when a menu item is selected from dropdown
+                                      _onDropDownItemSelectedtype(
+                                          newValueSelected);
+                                    },
+                                  )
+                                )
+                                ,
                               )),
                         ),
                       ),
@@ -439,25 +443,30 @@ workshoptype=_faultcurrentItemSelected;
                                elevation: 2.0,
                                child: Align(
                                  alignment: Alignment.centerRight,
-                                 child: DropdownButton<String>(
-                                   items: widget.faultsList.map((String value) {
-                                     return DropdownMenuItem<String>(
-                                         value: value,
-                                         child: Text(
-                                           value,
-                                           style: TextStyle(
-                                               color:  const Color(0xffff2121),
-                                               fontSize: 15,
-                                               fontWeight: FontWeight.bold),
-                                         ));
-                                   }).toList(),
-                                   value: _faultcurrentItemSelected,
-                                   onChanged: (String newValueSelected) {
-                                     // Your code to execute, when a menu item is selected from dropdown
-                                     _onDropDownItemSelectedfault(
-                                         newValueSelected);
-                                   },
-                                 ),
+                                 child:
+                                 DropdownButtonHideUnderline(
+                                   child: DropdownButton<String>(
+                                     items: widget.faultsList.map((String value) {
+                                       return DropdownMenuItem<String>(
+                                           value: value,
+                                           child: Text(
+                                             value,
+                                             textAlign: TextAlign.center,
+                                             style: TextStyle(
+                                                 color:  Colors.black,
+                                                 fontSize: 14,
+                                                 fontWeight: FontWeight.bold),
+                                           ));
+                                     }).toList(),
+                                     value: _faultcurrentItemSelected,
+                                     onChanged: (String newValueSelected) {
+                                       // Your code to execute, when a menu item is selected from dropdown
+                                       _onDropDownItemSelectedfault(
+                                           newValueSelected);
+                                     },
+                                   )
+                                 )
+                                 ,
                                )),
                          ),
                        ):Padding(
@@ -466,33 +475,41 @@ workshoptype=_faultcurrentItemSelected;
                         child: Container(
                           height: 40.0,
                           // width: MediaQuery.of(context).size.width/2.3,
-                          child: Material(
-                              borderRadius: BorderRadius.circular(5.0),
-                              shadowColor: const Color(0xffdddddd),
-                              color: const Color(0xffe7e7e7),
-                              elevation: 2.0,
-                              child: Align(
+                          child:
+                          Material(
+                            borderRadius: BorderRadius.circular(5.0),
+                            shadowColor: const Color(0xffdddddd),
+                            color: const Color(0xffe7e7e7),
+                            elevation: 2.0,
+                            child:  Align(
                                 alignment: Alignment.centerRight,
-                                child: DropdownButton<String>(
-                                  items: widget.sparesList.map((String value) {
-                                    return DropdownMenuItem<String>(
-                                        value: value,
-                                        child: Text(
-                                          value,
-                                          style: TextStyle(
-                                              color:  const Color(0xffff2121),
-                                              fontSize: 15,
-                                              fontWeight: FontWeight.bold),
-                                        ));
-                                  }).toList(),
-                                  value: _sparecurrentItemSelected,
-                                  onChanged: (String newValueSelected) {
-                                    // Your code to execute, when a menu item is selected from dropdown
-                                    _onDropDownItemSelectedspare(
-                                        newValueSelected);
-                                  },
-                                ),
-                              )),
+                                child:
+                                DropdownButtonHideUnderline(
+                                  child: DropdownButton<String>(
+
+                                    items: widget.sparesList.map((String value) {
+                                      return DropdownMenuItem<String>(
+                                          value: value,
+                                          child: Text(
+                                            value,
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                color:  Colors.black,
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold),
+                                          ));
+                                    }).toList(),
+                                    value: _sparecurrentItemSelected,
+                                    onChanged: (String newValueSelected) {
+                                      // Your code to execute, when a menu item is selected from dropdown
+                                      _onDropDownItemSelectedspare(
+                                          newValueSelected);
+                                    },
+                                  )
+                                )
+                                ,
+                              ),
+                        )
                         ),
                       ),
                       SizedBox(
@@ -500,8 +517,8 @@ workshoptype=_faultcurrentItemSelected;
                         width: _minimumPadding,
                       ),
                       _typecurrentItemSelected==_typearray[1]?Container(
-                        height: 40,
-                        color: Colors.grey,
+                      //  height: 40,
+
                         child: InkWell(
                           onTap: () {
                             Navigator.push(
@@ -517,23 +534,39 @@ workshoptype=_faultcurrentItemSelected;
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5),
                             ),
-                            child: Center(
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Text(
-                                  "نوع السيارة",
-                                  textDirection: TextDirection.rtl,
-                                  style:TextStyle(
-                                      color:  const Color(0xffff2121),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                            child:
+                            Container(
+                              height: 46,
+                              child: Stack(
+                                children: [
+                                  Align(alignment: Alignment.center,
+                                  child:  Text(
+                                        "نوع السيارة",
+                                        textDirection: TextDirection.rtl,
+                                        style:TextStyle(
+                                            color:  Colors.black,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+
+
+                                  ),
+
+                                  Positioned(
+top: 13,
+                                    right: 8,
+                                    child: Icon(Icons.keyboard_arrow_down),
+                                  )
+                                ],
                               ),
-                            ),
+                            )
+
+                           ,
                           ),
                         ),
                       ):Container(),
-                      _typecurrentItemSelected==_typearray[1]? Center(child: Text(selectedcars.toString())):Container(),
+                      _typecurrentItemSelected==_typearray[1]? Center(child: Text(selectedcars.toString(),
+                        style: TextStyle(color: Colors.white) ,)):Container(),
                       SizedBox(
                         height: _minimumPadding,
                         width: _minimumPadding,
@@ -592,64 +625,73 @@ workshoptype=_faultcurrentItemSelected;
                           ],
                         ),
                       ),
+
+
+
                       Padding(
-                        padding: EdgeInsets.only(
-                            top: _minimumPadding, bottom: _minimumPadding),
-                        child: Container(
-                          height: 50.0,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(9.0),
-                            gradient: RadialGradient(
-                              center: Alignment(-0.93, 0.0),
-                              radius: 1.092,
-                              colors: [
-                                const Color(0xffff2121),
-                                const Color(0xffff5423),
-                                const Color(0xffff7024),
-                                const Color(0xffff904a)
-                              ],
-                              stops: [0.0, 0.562, 0.867, 1.0],
-                              transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837,
-                                  0.0, -0.419, Alignment(-0.93, 0.0)),
+                        padding: EdgeInsets.only(top: 18, bottom: 14, right: 10, left: 10),
+                        child: RaisedButton(
+
+                          padding: EdgeInsets.zero,
+                          shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                          onPressed: () async {
+                            if (_formKey.currentState.validate()) {
+
+                              if(fromPlaceLat == null || fromPlaceLng == null ||   fPlaceName == null  ){
+                                Toast.show("برجاء إدخال الموقع",context,duration: Toast.LENGTH_LONG,gravity:  Toast.BOTTOM);
+                              }else{
+                                try {
+                                  final result = await InternetAddress.lookup('google.com');
+                                  if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+                                    _uploaddata();
+
+                                    setState(() {
+                                      _load1 = true;
+                                    });
+                                  }
+                                } on SocketException catch (_) {
+                                  //  print('not connected');
+                                  Toast.show("برجاء مراجعة الاتصال بالشبكة",context,duration: Toast.LENGTH_LONG,gravity:  Toast.BOTTOM);
+
+                                }}
+
+                            } else
+                              print('correct');
+                          },
+                          child:  Container(
+
+                            height: 46.0,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8.0),
+                              gradient: RadialGradient(
+                                center: Alignment(-0.93, 0.0),
+                                radius: 1.092,
+                                colors: [
+                                  const Color(0xffff2121),
+                                  const Color(0xffff5423),
+                                  const Color(0xffff7024),
+                                  const Color(0xffff904a)
+                                ],
+                                stops: [0.0, 0.562, 0.867, 1.0],
+                                transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837,
+                                    0.0, -0.419, Alignment(-0.93, 0.0)),
+                              ),
+
+
                             ),
-                          ),
-                            child: GestureDetector(
-                              onTap: () async {
-                                if (_formKey.currentState.validate()) {
+                            child: Center(
+                              child: Text(
+                                'تسجيل',
+                                style: TextStyle(
 
-                                  if(fromPlaceLat == null || fromPlaceLng == null ||   fPlaceName == null  ){
-                                    Toast.show("برجاء إدخال الموقع",context,duration: Toast.LENGTH_LONG,gravity:  Toast.BOTTOM);
-                                  }else{
-                                    try {
-                                      final result = await InternetAddress.lookup('google.com');
-                                      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-                                        _uploaddata();
-
-                                        setState(() {
-                                          _load1 = true;
-                                        });
-                                      }
-                                    } on SocketException catch (_) {
-                                      //  print('not connected');
-                                       Toast.show("برجاء مراجعة الاتصال بالشبكة",context,duration: Toast.LENGTH_LONG,gravity:  Toast.BOTTOM);
-
-                                    }}
-
-                                } else
-                                  print('correct');
-                              },
-                              child: Center(
-                                child: Text(
-                                  'تسجيل',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Montserrat'),
+                                  fontSize: 14,
+                                  color: const Color(0xffffffff),
+                                  fontWeight: FontWeight.bold
                                 ),
+                                textAlign: TextAlign.center,
                               ),
                             ),
-
+                          ),
                         ),
                       ),
 

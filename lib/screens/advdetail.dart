@@ -185,8 +185,9 @@ class _AdvDetailState extends State<AdvDetail>
     user == null
         ? _userId = null
         : setState(() {
-      _userId = user.uid;
-      var userQuery = Firestore.instance
+           _userId = user.uid;
+
+    var userQuery = Firestore.instance
           .collection('users')
           .where('uid', isEqualTo: _userId)
           .limit(1);
@@ -541,6 +542,9 @@ class _AdvDetailState extends State<AdvDetail>
                           alignment: Alignment.centerRight,
                           child: Text(
                             ctitle,
+                            textDirection: TextDirection.rtl,
+                            textAlign: TextAlign.right,
+                            overflow: TextOverflow.ellipsis,
                             style: TextStyle(
                                 color: Colors.black,
                                 fontSize: 14,
@@ -552,7 +556,7 @@ class _AdvDetailState extends State<AdvDetail>
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          "12 - 12 - 2020",
+                          cdate,
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 12,
@@ -568,7 +572,8 @@ class _AdvDetailState extends State<AdvDetail>
                   child: Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        "محمد سالم",
+                        ownerName != null ? ownerName :
+                        "مجهول",
                         textDirection: TextDirection.rtl,
                         textAlign: TextAlign.right,
                         style: TextStyle(
@@ -583,7 +588,8 @@ class _AdvDetailState extends State<AdvDetail>
                   child: Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        "الرياض",
+                        fPlaceName != null ? fPlaceName:
+                        "عنوان غير محدد",
                         textDirection: TextDirection.rtl,
                         textAlign: TextAlign.right,
                         style: TextStyle(
@@ -635,7 +641,8 @@ class _AdvDetailState extends State<AdvDetail>
                   child: Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        "نبتيلتبليتبلستلبستلب تابلستبلستيلبتل تابلسبتيلسب يمكبنيتلنيتنم مبليبتليملت ملنيتبلمتين تل تابلستبستبلست تسبا",
+                        cdiscribtion != null ? cdiscribtion :
+                        "لا يوجد وصف",
                         textDirection: TextDirection.rtl,
                         textAlign: TextAlign.right,
                         style: TextStyle(
@@ -647,19 +654,38 @@ class _AdvDetailState extends State<AdvDetail>
                 ),
                 SizedBox(height: 16),
                 Container(
-                    height: 44,
+                    height: 40,
                     padding: EdgeInsets.only(right: 20),
                     alignment: Alignment.centerRight,
-                    color: Colors.grey[400],
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [
+                          MyColors.darkPrimaryColor,
+                          MyColors.primaryColor,
+                          MyColors.lightPrimaryColor,
+                        ],
+                        // stops: [0.1, 0.8,0.6],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 4,
+                          blurRadius: 4,
+                          offset: Offset(0, 2), // changes position of shadow
+                        ),
+                      ],
+                    ),
                     child: Text(
                       "معلومات اضافية",
                       style: TextStyle(
                           color: Colors.white,
-                          fontSize: 14,
+                          fontSize: 13,
                           fontWeight: FontWeight.bold,
                           fontFamily: MyFonts.primaryFont),
                     )),
-                SizedBox(height: 10),
+                SizedBox(height: 16),
                 Container(
                   margin: EdgeInsets.only(
                     right: 20,
@@ -682,7 +708,7 @@ class _AdvDetailState extends State<AdvDetail>
                       ),
                       Expanded(
                         child: Text(
-                          "مارسيدس كلاس 22",
+                          ccar,
                           textDirection: TextDirection.rtl,
                           textAlign: TextAlign.right,
                           style: TextStyle(
@@ -695,6 +721,8 @@ class _AdvDetailState extends State<AdvDetail>
                     ],
                   ),
                 ),
+
+                /*
                 Container(
                   margin: EdgeInsets.only(
                     right: 20,
@@ -730,6 +758,8 @@ class _AdvDetailState extends State<AdvDetail>
                     ],
                   ),
                 ),
+
+                */
                 Container(
                   margin: EdgeInsets.only(
                     right: 20,
@@ -753,7 +783,7 @@ class _AdvDetailState extends State<AdvDetail>
                       ),
                       Expanded(
                         child: Text(
-                          "2.5",
+                          ccarversion,
                           textDirection: TextDirection.rtl,
                           textAlign: TextAlign.right,
                           style: TextStyle(
@@ -788,7 +818,7 @@ class _AdvDetailState extends State<AdvDetail>
                       ),
                       Expanded(
                         child: Text(
-                          "سيارة سياحية",
+                          cmodel,
                           textDirection: TextDirection.rtl,
                           textAlign: TextAlign.right,
                           style: TextStyle(
@@ -823,7 +853,7 @@ class _AdvDetailState extends State<AdvDetail>
                       ),
                       Expanded(
                         child: Text(
-                          "0554545464654",
+                          "055556566464",
                           textDirection: TextDirection.rtl,
                           style: TextStyle(
                               color: Colors.black,
@@ -885,10 +915,9 @@ class _AdvDetailState extends State<AdvDetail>
                             begin: Alignment.topRight,
                             end: Alignment.bottomLeft,
                             colors: [
-                              const Color(0xfffe7210),
-
-                              const Color(0xffff8b14),
-                              const Color(0xffffbc16),
+                              MyColors.darkPrimaryColor,
+                              MyColors.primaryColor,
+                              MyColors.lightPrimaryColor,
                             ],
                           ),
                           borderRadius: BorderRadius.circular(24)),
@@ -1015,7 +1044,7 @@ class _AdvDetailState extends State<AdvDetail>
                     ),
                     bestPriceButtonPressed
                         ? Text(
-                      "250 ريال",
+                      "$bestprice",
                       textDirection: TextDirection.rtl,
                       style: TextStyle(
                           color: Colors.black,
@@ -1027,27 +1056,32 @@ class _AdvDetailState extends State<AdvDetail>
                       textDirection: TextDirection.rtl,
                       children: [
                         Icon(
-                          Icons.star,
+                          bestrate > 0 ?
+                          Icons.star : Icons.star_border,
                           size: 10,
                           color: Colors.orange[700],
                         ),
                         Icon(
-                          Icons.star,
+                          bestrate > 1 ?
+                          Icons.star : Icons.star_border,
                           size: 10,
                           color: Colors.orange[700],
                         ),
                         Icon(
-                          Icons.star,
+                          bestrate > 2 ?
+                          Icons.star : Icons.star_border,
                           size: 10,
                           color: Colors.orange[700],
                         ),
                         Icon(
-                          Icons.star,
+                          bestrate > 3 ?
+                          Icons.star : Icons.star_border,
                           size: 10,
                           color: Colors.orange[700],
                         ),
                         Icon(
-                          Icons.star,
+                          bestrate > 4 ?
+                          Icons.star : Icons.star_border,
                           size: 10,
                           color: Colors.orange[700],
                         )
@@ -1077,7 +1111,7 @@ class _AdvDetailState extends State<AdvDetail>
                         scrollDirection: Axis.vertical,
                         shrinkWrap: true,
                         controller: _bestPriceListController,
-                        itemCount: 6,
+                        itemCount: commentlist.length,
                         itemBuilder: (context, index) {
                           return offerItemWidget(index);
                         })
@@ -1127,129 +1161,232 @@ class _AdvDetailState extends State<AdvDetail>
 
   Widget offerItemWidget(int index) {
     return
-      InkWell(
-          onTap: () {
-            _firebasedata(
-              index,
-              commentlist.length,
-              commentlist[index].ownerId,
-              commentlist[index].traderid,
-              commentlist[index].advID,
-              commentlist[index].commentid,
-              commentlist[index].tradname,
-              commentlist[index].ownername,
-              commentlist[index].cdate,
-              commentlist[index].details,
-              commentlist[index].price,
-              commentlist[index].rate,
-            );
-          },
-          child: Card(
-            elevation: 8,
-            shape: RoundedRectangleBorder(
-                side: BorderSide(color: Colors.grey, width: 1),
-                borderRadius: BorderRadius.circular(10)),
-            child: Container(
-              padding: EdgeInsets.all(10),
-              height: 180,
-              width: MediaQuery
-                  .of(context)
-                  .size
-                  .width,
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10)),
-              child: Column(
-                textDirection: TextDirection.rtl,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    textDirection: TextDirection.rtl,
-                    children: [
-                      Expanded(
-                          child: Container(
-                              alignment: Alignment.centerRight,
-                              child: Text(
-                                "محمد علي",
-                                textDirection: TextDirection.rtl,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    fontFamily: MyFonts.primaryFont),
-                              ))),
-                      Container(
-                          alignment: Alignment.center,
-                          width: 92,
-                          child: Text(
-                            "2500 ريال",
-                            textDirection: TextDirection.rtl,
-                            style: TextStyle(
-                                color: Colors.orange,
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: MyFonts.primaryFont),
-                          ))
-                    ],
-                  ),
-                  SizedBox(height: 2),
-                  Row(
-                    textDirection: TextDirection.rtl,
-                    children: [
-                      Icon(
-                        Icons.star,
-                        size: 14,
-                        color: Colors.orange[700],
-                      ),
-                      Icon(
-                        Icons.star,
-                        size: 14,
-                        color: Colors.orange[700],
-                      ),
-                      Icon(
-                        Icons.star,
-                        size: 14,
-                        color: Colors.orange[700],
-                      ),
-                      Icon(
-                        Icons.star,
-                        size: 14,
-                        color: Colors.orange[700],
-                      ),
-                      Icon(
-                        Icons.star,
-                        size: 14,
-                        color: Colors.orange[700],
-                      )
-                    ],
-                  ),
-                  Text(
-                    "22-12-2020",
-                    textDirection: TextDirection.rtl,
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w300,
-                        fontFamily: MyFonts.primaryFont),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Text(
-                    "كمنتلنمكيتمنبلتيمنليملت منلميتبلمنيبتلميبتلن ملنيبكلمبيتمنيلمت ملنيبتكيبلنيم مينليبلتيبلت مينليبملتيت كمنلتمينلمنت كملنيتلسمينبلنست",
-                    textDirection: TextDirection.rtl,
-                    textAlign: TextAlign.right,
-                    style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w300,
-                        fontFamily: MyFonts.primaryFont),
-                  )
-                ],
-              ),
-            ),
-          )
-      )
+
+     InkWell(
+       onTap: (){
+
+
+
+
+       },
+       child: Card(
+         elevation: 4,
+         shape: RoundedRectangleBorder(
+             side: BorderSide(color: Colors.grey, width: 1),
+             borderRadius: BorderRadius.circular(10)),
+         child: Container(
+           padding: EdgeInsets.all(10),
+           //height: 180,
+           width: MediaQuery
+               .of(context)
+               .size
+               .width,
+           decoration: BoxDecoration(
+               borderRadius: BorderRadius.circular(10)),
+           child: Column(
+             textDirection: TextDirection.rtl,
+             crossAxisAlignment: CrossAxisAlignment.start,
+             children: [
+
+
+               Row(
+                 textDirection: TextDirection.rtl,
+                 children: [
+                   Expanded(
+                       child: Container(
+                           alignment: Alignment.centerRight,
+                           child: Text(
+                             commentlist[index].tradname,
+                             textDirection: TextDirection.rtl,
+                             style: TextStyle(
+                                 color: Colors.black,
+                                 fontSize: 12,
+                                 fontWeight: FontWeight.bold,
+                                 fontFamily: MyFonts.primaryFont),
+                           ))),
+
+                   (_userId == commentlist[index].traderid || cType == "admin")
+                       ?
+                   InkWell(
+                       onTap: (){
+                         displayDeleteOfferDialogue(index);
+                       },
+                       child: Container(
+                         height: 30,
+                         width: 30,
+                         child: Icon(Icons.delete, color: Colors.red,),
+                       )
+                   ):
+                   SizedBox()
+                   ,
+
+                 ],
+               ),
+               SizedBox(height: 2),
+               Row(
+                 textDirection: TextDirection.rtl,
+                 children: [
+                   Icon(
+                     commentlist[index].rate> 0 ?
+                     Icons.star: Icons.star_border,
+                     size: 14,
+                     color: Colors.orange[700],
+                   ),
+                   Icon(
+                     commentlist[index].rate> 1 ?
+                     Icons.star: Icons.star_border,
+                     size: 14,
+                     color: Colors.orange[700],
+                   ),
+                   Icon(
+                     commentlist[index].rate> 2 ?
+                     Icons.star: Icons.star_border,
+                     size: 14,
+                     color: Colors.orange[700],
+                   ),
+                   Icon(
+                     commentlist[index].rate> 3 ?
+                     Icons.star: Icons.star_border,
+                     size: 14,
+                     color: Colors.orange[700],
+                   ),
+                   Icon(
+                     commentlist[index].rate> 4 ?
+                     Icons.star: Icons.star_border,
+                     size: 14,
+                     color: Colors.orange[700],
+                   ),
+                   Expanded(
+                       child: Align(
+                           alignment: Alignment.centerLeft,
+                           child: Container(
+                             margin: EdgeInsets.only(left: 8),
+                             child: Text(
+                               "${commentlist[index].price} ",
+                               textDirection: TextDirection.rtl,
+                               style: TextStyle(
+                                   color: Colors.orange,
+                                   fontSize: 12,
+                                   fontWeight: FontWeight.bold,
+                                   fontFamily: MyFonts.primaryFont),
+                             ),
+                           )
+                       )
+                   )
+                 ],
+               ),
+               Text(
+                 commentlist[index].cdate,
+                 textDirection: TextDirection.rtl,
+                 textAlign: TextAlign.right,
+                 style: TextStyle(
+                     color: Colors.black,
+                     fontSize: 12,
+                     fontWeight: FontWeight.w300,
+                     fontFamily: MyFonts.primaryFont),
+               ),
+               SizedBox(
+                 height: 10,
+               ),
+               Text(
+                 commentlist[index].details,
+                 textDirection: TextDirection.rtl,
+                 textAlign: TextAlign.right,
+                 maxLines: 4,
+                 overflow: TextOverflow.ellipsis,
+                 style: TextStyle(
+                     color: Colors.grey,
+                     fontSize: 12,
+                     fontWeight: FontWeight.w300,
+                     fontFamily: MyFonts.primaryFont),
+               ),
+
+               Divider(),
+
+             (_userId == commentlist[index].ownerId || _userId == commentlist[index].traderid)?
+               Container(
+                 height: 40,
+                 child: Row(
+                   textDirection: TextDirection.rtl,
+                   children: [
+                     Expanded(
+                         child:
+
+                         InkWell(
+                             onTap: (){
+                               Navigator.push(
+                                   context,
+                                   MaterialPageRoute(
+                                       builder: (context) =>
+                                           BookingPage(
+                                               commentlist[index].ownerId,
+                                               commentlist[index].traderid,
+                                               commentlist[index].advID,
+                                               commentlist[index].commentid))
+                               );
+                             },
+                             child: Container(
+                               alignment: Alignment.center,
+                               height: 40,
+                               child:
+
+                               Text(
+                                 "تأكيد",
+                                 textDirection: TextDirection.rtl,
+                                 textAlign: TextAlign.center,
+                                 style: TextStyle(
+                                   color: Colors.green,
+
+                                 ),
+
+                               ),
+                             )
+                         )
+                     ),
+                     Container(
+                       width: 0.5,
+                       height: 40,
+                       color: Colors.grey[400].withOpacity(0.7),
+                     ) ,
+                     Expanded(
+                         child:
+                         InkWell(
+                             onTap: (){
+                               Navigator.push(
+                                   context,
+                                   MaterialPageRoute(
+                                       builder: (context) =>
+                                           TraderUserProlile(
+                                               commentlist[index].traderid)));
+                             },
+                             child: Container(
+                               height: 40,
+                               alignment: Alignment.center,
+                               child: Text(
+                                 "مراسلة",
+                                 textDirection: TextDirection.rtl,
+                                 textAlign: TextAlign.center,
+                                 style: TextStyle(
+                                   color: Colors.orange,
+
+
+                                 ),
+                               ),
+                             )
+                         )
+                     ),
+
+                   ],
+                 ),
+               ):
+               SizedBox()
+             ],
+           ),
+         ),
+       )
+     )
+
+
     ;
   }
 
@@ -1396,6 +1533,8 @@ class _AdvDetailState extends State<AdvDetail>
         });
   }
 
+
+
 /////// make a loading screen animation
   Widget loadingScreen() {
     return Container(
@@ -1503,6 +1642,69 @@ class _AdvDetailState extends State<AdvDetail>
     );
   }
 
+
+  void displayDeleteOfferDialogue(int index){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) =>
+      new CupertinoAlertDialog(
+        title: new Text("تنبية"),
+        content: new Text("تبغي تحذف تعليقك؟"),
+        actions: [
+          CupertinoDialogAction(
+              isDefaultAction: false,
+              child: new FlatButton(
+                onPressed: () {
+                  setState(() {
+                    print("kkkkkkkkkkkk");
+                    if (_userId ==
+                        commentlist[index]
+                            .traderid ||
+                        cType == "admin") {
+                      Firestore.instance
+                          .collection(
+                          "commentsdata")
+                          .document(widget.userId)
+                          .collection(commentlist[index].advID)
+                          .document(
+                          commentlist[index]
+                              .commentid)
+                          .delete()
+                          .whenComplete(() {
+                        setState(() {
+                          commentlist
+                              .removeAt(index);
+                        });
+                        Toast.show(
+                            "حذفنا تعليقك", context,
+                            duration:
+                            Toast.LENGTH_SHORT,
+                            gravity: Toast.BOTTOM);
+                      }).then((value) =>
+                          Navigator.pop(
+                              context));
+                    } else {
+                      Toast.show(
+                          "هذا ليس تعليقك", context,
+                          duration:
+                          Toast.LENGTH_SHORT,
+                          gravity: Toast.BOTTOM);
+                    }
+                  });
+                },
+                child: Text("موافق"),
+              )),
+          CupertinoDialogAction(
+              isDefaultAction: false,
+              child: new FlatButton(
+                onPressed: () =>
+                    Navigator.pop(context),
+                child: Text("إلغاء"),
+              )),
+        ],
+      ),
+    );
+  }
 
   void createRecord() {
     DateTime now = DateTime.now();

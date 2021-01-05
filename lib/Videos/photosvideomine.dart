@@ -20,6 +20,7 @@ import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/SparePartsSizesClass.dart';
 import 'package:toast/toast.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:priceme/ui_utile/myColors.dart';
 
 import 'allvideos.dart';
 
@@ -56,26 +57,39 @@ class _VidiosPhotoMineState extends State<VidiosPhotoMine> {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        heroTag: "unique129",
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) =>
-                      AddVideo()));
-        },
-        //backgroundColor: Colors.white,
-        // elevation: 20.0,
-        child: Container(
-          height: 100,
-          child: Icon(
-            Icons.add,
-            //size: 50,
-            color: const Color(0xff171732),
-          ),
-        ),
-      ),
+      floatingActionButton:
+
+      Align(
+        alignment: Alignment.bottomLeft,
+        child:
+
+        Padding(
+          padding: EdgeInsets.only(left: 28),
+          child: FloatingActionButton(
+            backgroundColor: MyColors.secondaryColor,
+            heroTag: "unique129",
+            onPressed: () {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          AddVideo()));
+            },
+            //backgroundColor: Colors.white,
+            // elevation: 20.0,
+            child: Container(
+              height: 100,
+              child: Icon(
+                Icons.video_call,
+                size: 32,
+                color: Colors.white,
+              ),
+            ),
+          )
+        )
+
+      )
+      ,
 
       backgroundColor: const Color(0xffffffff),
       body: Container(
@@ -99,7 +113,7 @@ class _VidiosPhotoMineState extends State<VidiosPhotoMine> {
                     itemCount: snapshot.data.documents.length,
                     crossAxisCount: 2,
                     itemBuilder: (context, index) {
-                      return firebasedata(
+                      return videoTile(
                           context, index, snapshot.data.documents[index]);
                     },
                     staggeredTileBuilder: (index) =>
@@ -113,7 +127,131 @@ class _VidiosPhotoMineState extends State<VidiosPhotoMine> {
     );
   }
 
+  Widget videoTile(
+      BuildContext context, int index, DocumentSnapshot document) {
 
+    return   InkWell(
+      onTap: () {
+        Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => AllVideos(document['carrange'],document['cdepart'],null)));
+
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(1.0),
+        child: Stack(
+          children: [
+            Container(
+              //   height:350,
+              decoration: BoxDecoration(
+                border: new Border.all(
+                  color: Colors.white,
+                  width: 0,
+                ),
+                image: document['imgurl'] == null?DecorationImage(
+                  image: AssetImage("assets/images/ic_background.png" ),
+                  fit: BoxFit.cover,
+                ):DecorationImage(
+                  image:  NetworkImage(
+                      document['imgurl']              ),
+
+                  fit: BoxFit.fill,
+                ),
+                borderRadius: BorderRadius.circular(0.0),
+              ),
+            ),
+
+
+
+            Positioned(
+              bottom: 0,
+              child: Container(
+                height: 46,
+                width: MediaQuery.of(context).size.width/2 - 2,
+                color: Colors.black.withOpacity(0.2),
+              ),
+            ),
+            Positioned(
+              bottom: 8,
+              left: 8,
+              child: Container(
+                height: 26,
+                width: 26,
+                // child: Text(
+                //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
+                // ),textAlign: TextAlign.center,
+                //
+                // ),
+                decoration: BoxDecoration(
+                  border: new Border.all(
+                    color: Colors.black,
+                    width: 1.0,
+                  ),
+                  image: DecorationImage(
+                    image: NetworkImage(document['cphotourl']==null||document['cphotourl']==""?
+                    "https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg"  :document['cphotourl']),
+                    fit: BoxFit.fill,
+                  ),
+                  shape: BoxShape.circle,
+                ),
+              ),
+
+            ),
+
+            Positioned(
+              bottom: 23,
+              right: 10,
+              child: Icon(Icons.favorite_border,color: Colors.grey[300], size: 14,),
+            ),
+            Positioned(
+              bottom: 21,
+              right: 29,
+              child: Container(
+                child: Text(
+                  "125",
+                  style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.grey[300]
+
+                  ),
+
+                ),
+              ),
+            ),
+            Positioned(
+              bottom: 5,
+              right: 10,
+              child: Icon(Icons.visibility,color: Colors.grey[300], size: 14,),
+            ),
+            Positioned(
+              bottom: 3,
+              right: 29,
+              child: Container(
+                child: Text(
+                  "130",
+                  style: TextStyle(
+                      fontSize: 10,
+                      color: Colors.grey[300]
+
+                  ),
+
+                ),
+              ),
+            )
+
+          ],
+        ),
+      ),
+    );
+  }
+
+
+
+
+
+
+ /////////////////// this function is not used
 
   Widget firebasedata(
       BuildContext context, int index, DocumentSnapshot document) {

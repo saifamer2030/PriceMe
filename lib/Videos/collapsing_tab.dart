@@ -4,6 +4,7 @@ import 'package:priceme/Videos/addVideo.dart';
 import 'package:priceme/Videos/allvideos.dart';
 import 'package:priceme/Videos/photosvideocomercial.dart';
 import 'package:priceme/Videos/photosvideoentertainment.dart';
+import 'package:priceme/ui_utile/myColors.dart';
 
 
 class CollapsingTab extends StatefulWidget {
@@ -205,7 +206,8 @@ class _CollapsingTabState extends State<CollapsingTab> with SingleTickerProvider
         child: Padding(
           padding: const EdgeInsets.only(left:25),
           child: FloatingActionButton(
-            backgroundColor: const Color(0xff43AAAF),
+            backgroundColor: MyColors.secondaryColor,
+            //const Color(0xff43AAAF),
             heroTag: "unique29",
             onPressed: () {
               Navigator.push(
@@ -219,8 +221,8 @@ class _CollapsingTabState extends State<CollapsingTab> with SingleTickerProvider
             child: Container(
               height: 100,
               child: Icon(
-                Icons.add,
-                //size: 50,
+                Icons.video_call,
+                size: 32,
                 color: Colors.white,
               ),
             ),

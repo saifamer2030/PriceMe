@@ -9,6 +9,7 @@ import 'package:priceme/screens/personalpage.dart';
 import 'package:priceme/trader/Fragmenttrader.dart';
 import 'package:priceme/trader/Logintrader.dart';
 import 'package:priceme/trader/signuptrader.dart';
+import 'package:priceme/ui_utile/myColors.dart';
 import 'package:priceme/ui_utile/myFonts.dart';
 
 import 'Splash.dart';
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'PriceMe',
       theme: ThemeData(
-        primarySwatch: Colors.teal,
+        primarySwatch: Colors.orange,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: MyFonts.primaryFont
       ),

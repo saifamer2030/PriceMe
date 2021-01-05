@@ -238,28 +238,53 @@ class _AddPhotoState extends State<AddPhoto> {
                           ),
                           Container(
                             /*MediaQuery.of(context).size.width*/
-                            height: 50,
+
+                            height: 46,
                             child: new RaisedButton(
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Padding(
-                                    padding: const EdgeInsets.only(right: 10),
-                                    child: Icon(
-                                      Icons.check,
-                                      color: Colors.white,
-                                    ),
+                              padding: EdgeInsets.zero,
+                              child:
+
+                              Container(
+                                  height: 46,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topRight,
+                                    end: Alignment.bottomLeft,
+                                    colors: [
+                                      const Color(0xfffe7210),
+                                      const Color(0xffff8b14),
+                                      const Color(0xffffbc16),
+                                    ],
+                                    // stops: [0.1, 0.8,0.6],
                                   ),
-                                  new Text(
-                                    "إضافة",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
+
+
+                                ),
+                                child:  Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+
+                                  children: <Widget>[
+                                    new Text(
+                                      "إضافة",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
 //                                      fontFamily: 'Estedad-Black',
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 10),
+                                      child: Icon(
+                                        Icons.check,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+
+                                  ],
+                                )
+                              )
+                             ,
                               textColor: Colors.white,
                               color: const Color(0xff171732),
                               onPressed: () async {
