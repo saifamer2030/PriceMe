@@ -563,7 +563,8 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
                 Container(
                   padding: EdgeInsets.only(right: 10, left: 10),
                   child: Text(
-                    "اسم المالك",
+                    document['pname'] != null && document['pname'].toString().length > 0? document['pname'].toString():
+                    "مجهول",
                     textDirection: TextDirection.rtl,
                     textAlign: TextAlign.right,
                     style: TextStyle(

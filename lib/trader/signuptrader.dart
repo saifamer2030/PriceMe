@@ -12,6 +12,7 @@ import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:priceme/screens/alladvertisement.dart';
 import 'package:priceme/screens/cur_loc.dart';
 import 'package:priceme/screens/network_connection.dart';
+import 'package:priceme/ui_utile/myColors.dart';
 import 'dart:io';
 import 'package:toast/toast.dart';
 import 'package:path_provider/path_provider.dart';
@@ -410,8 +411,8 @@ workshoptype=_faultcurrentItemSelected;
                                             value,
                                             style: TextStyle(
                                                 color: Colors.black,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.bold),
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w600),
                                           ));
                                     }).toList(),
                                     value: _typecurrentItemSelected,
@@ -455,7 +456,7 @@ workshoptype=_faultcurrentItemSelected;
                                              style: TextStyle(
                                                  color:  Colors.black,
                                                  fontSize: 14,
-                                                 fontWeight: FontWeight.bold),
+                                                 fontWeight: FontWeight.w600),
                                            ));
                                      }).toList(),
                                      value: _faultcurrentItemSelected,
@@ -496,7 +497,7 @@ workshoptype=_faultcurrentItemSelected;
                                             style: TextStyle(
                                                 color:  Colors.black,
                                                 fontSize: 14,
-                                                fontWeight: FontWeight.bold),
+                                                fontWeight: FontWeight.w600),
                                           ));
                                     }).toList(),
                                     value: _sparecurrentItemSelected,
@@ -546,7 +547,7 @@ workshoptype=_faultcurrentItemSelected;
                                         style:TextStyle(
                                             color:  Colors.black,
                                             fontSize: 14,
-                                            fontWeight: FontWeight.bold),
+                                            fontWeight: FontWeight.w600),
                                       ),
 
 
@@ -698,6 +699,26 @@ top: 13,
                     ],
                   )),
             ),
+
+
+            Positioned(
+                top: 36,
+                right: 22,
+                child:
+                InkWell(
+                  onTap: (){
+                    Navigator.pop(context);
+                  },
+                  child: Container(
+                      height: 40,
+                      width: 40,
+                      alignment: Alignment.center,
+                      child: Icon( Icons.arrow_forward, color: Colors.white,)
+
+                  ),
+                )
+            ),
+
             new Align(
               child: loadingIndicator, alignment: FractionalOffset.center,),
 
@@ -815,13 +836,23 @@ class _MyForm4State extends State<MyForm4> {
 
     return  Scaffold(
       appBar: AppBar(
-        backgroundColor: const Color(0xff171732),
+        backgroundColor: MyColors.primaryColor,
         centerTitle:true ,
+        automaticallyImplyLeading: false,
         title: Text(
           "اختر انواع السيارات",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
           textDirection: TextDirection.rtl,
         ),
+        actions: [
+          InkWell(
+            onTap: (){
+              Navigator.pop(context);
+            },
+            child: Icon(Icons.arrow_forward, color: Colors.white,)
+          ),
+          SizedBox(width: 24,)
+        ],
 
       ),
       body: Stack(
@@ -862,6 +893,21 @@ class _MyForm4State extends State<MyForm4> {
               },
             ),
           ),
+
+          Positioned(
+            left: 20,
+            bottom: 20,
+            child: FloatingActionButton(
+              heroTag: "submitCars",
+              onPressed: (){
+                widget.onSubmit4(outputList/**_currentValuem.toString() + "," + _currentValuesub.toString()**/);
+                Navigator.pop(context);
+              },
+              backgroundColor: MyColors.secondaryColor,
+              child: Icon(Icons.check, color: Colors.white,),
+            ),
+          )
+    /*
           Positioned(
             bottom: 5,
 
@@ -870,25 +916,22 @@ class _MyForm4State extends State<MyForm4> {
               mainAxisAlignment:MainAxisAlignment.spaceBetween ,
               children: <Widget>[
                 RaisedButton(
+
                   onPressed: () {
                     widget.onSubmit4(outputList/**_currentValuem.toString() + "," + _currentValuesub.toString()**/);
                     Navigator.pop(context);
 
                   },
-                  child: const Text('حفظ', style: TextStyle(fontSize: 20)),
+                  color: MyColors.primaryColor,
+                  child: const Text('حفظ', style: TextStyle(fontSize: 14)),
                 ),
-                SizedBox(width: 10,),
-                RaisedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
 
-                  },
-                  child: const Text("الغاء", style: TextStyle(fontSize: 20)),
-                ),
+
+
               ],
             ),
           )
-
+*/
 //          Row(
 //            mainAxisAlignment: MainAxisAlignment.spaceAround,
 //            children: <Widget>[

@@ -354,6 +354,7 @@ String _userId,cType;
                     ),
                   ),
                 ),
+                SizedBox(height: 20,),
               ],
             ),
           ),

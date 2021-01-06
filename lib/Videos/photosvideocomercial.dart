@@ -645,7 +645,7 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
               right: 29,
               child: Container(
                 child: Text(
-                  "125",
+                  "${document['likes']}",
                   style: TextStyle(
                       fontSize: 10,
                       color: Colors.grey[300]
@@ -665,7 +665,7 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
               right: 29,
               child: Container(
                 child: Text(
-                  "130",
+                  "${document['seens']}",
                   style: TextStyle(
                       fontSize: 10,
                       color: Colors.grey[300]

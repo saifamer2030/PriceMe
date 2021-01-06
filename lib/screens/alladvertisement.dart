@@ -247,7 +247,9 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
                 Container(
                   padding: EdgeInsets.only(right: 10, left: 10),
                   child: Text(
-                    "اسم المالك",
+                    document['pname'] != null && document['pname'].toString().length > 0
+                      ? document['pname'].toString():
+                    "مجهول",
                     textDirection: TextDirection.rtl,
                     textAlign: TextAlign.right,
                     style: TextStyle(
@@ -269,6 +271,7 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
 
 
 /////////////////////////////////////////// Previous widgets /////////////////////////////////
+  ///////////////// This function is not used
 
   Widget firebasedata(BuildContext context,int index, DocumentSnapshot document) {
     return Padding(

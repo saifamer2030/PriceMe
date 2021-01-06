@@ -309,7 +309,7 @@ class _VidiosPhotoEntertainmentState extends State<VidiosPhotoEntertainment> {
               right: 29,
               child: Container(
                 child: Text(
-                    "125",
+                    "${document['likes']}",
                   style: TextStyle(
                     fontSize: 10,
                     color: Colors.grey[300]
@@ -329,7 +329,7 @@ class _VidiosPhotoEntertainmentState extends State<VidiosPhotoEntertainment> {
               right: 29,
               child: Container(
                 child: Text(
-                  "130",
+                  "${document['seens']}",
                   style: TextStyle(
                       fontSize: 10,
                       color: Colors.grey[300]
@@ -347,6 +347,7 @@ class _VidiosPhotoEntertainmentState extends State<VidiosPhotoEntertainment> {
   }
 
 
+//////////////////////// this function is not used
 
   Widget firebasedata(
       BuildContext context, int index, DocumentSnapshot document) {
@@ -436,12 +437,20 @@ Navigator.push(
       ),
     );
   }
+
+
+
+
+
   void _onDropDownItemSelectedsort(String newValueSelected) {
     setState(() {
       this._sortcurrentItemSelected = newValueSelected;
 
     });
   }
+
+
+  /////////////////////////// this function is not used
 
   Widget previousWidget(){
     return

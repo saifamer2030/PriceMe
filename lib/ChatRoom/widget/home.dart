@@ -259,7 +259,7 @@ class HomeScreenState extends State<HomeScreen> {
         ),
         title: Text(
           'المحادثة',
-          style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
+          style: TextStyle(color: Colors.white,fontSize: 14, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         actions: <Widget>[

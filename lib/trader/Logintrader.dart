@@ -94,6 +94,8 @@ class _Logintrader extends State<Logintrader> {
       body:
       Stack(
         children: [
+
+
           Form(
             key: _formKey1,
             child: Container(
@@ -126,14 +128,15 @@ class _Logintrader extends State<Logintrader> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 50, left: 20, right: 20),
+                        padding: const EdgeInsets.only(top: 5, left: 20, right: 20),
                         child: Container(
-                          height: 50,
+
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(13.0),
-                            color: const Color(0xffffffff),
+                         //   color: const Color(0xffffffff),
                           ),
                           child: TextFormField(
+
                                  textAlign: TextAlign.right,
                                 obscureText: false,
                                 keyboardType: TextInputType.emailAddress,
@@ -159,11 +162,11 @@ class _Logintrader extends State<Logintrader> {
                                     ),
                                   ),
                                   hintText: 'البريد الالكتروني',
-                                  fillColor: Colors.white,
+                                 fillColor: Colors.white,
                                   filled: true,
                                   errorStyle: TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 15.0),
+                                      color: Colors.red,
+                                      fontSize: 12.0),
                                 ),
                               ),
 
@@ -171,10 +174,10 @@ class _Logintrader extends State<Logintrader> {
                       ),             Padding(
                         padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
                         child: Container(
-                          height: 50,
+
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(13.0),
-                            color: const Color(0xffffffff),
+                           // color: const Color(0xffffffff),
                           ),
                           child: TextFormField(
                              textAlign: TextAlign.right,
@@ -202,8 +205,8 @@ class _Logintrader extends State<Logintrader> {
                               fillColor: Colors.white,
                               filled: true,
                               errorStyle: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 15.0),
+                                  color: Colors.red,
+                                  fontSize: 12.0),
                             ),
                           ),
                         ),
@@ -327,8 +330,7 @@ class _Logintrader extends State<Logintrader> {
                           child: Text(
                             'نسيت كلمة السر ؟',
                             style: TextStyle(
-                              fontFamily: 'Ubuntu',
-                              fontSize: 14,
+                             fontSize: 14,
                               color: const Color(0xffffffff),
                               fontWeight: FontWeight.w300,
                             ),
@@ -376,6 +378,24 @@ class _Logintrader extends State<Logintrader> {
                   ),
                 ),
               ),
+          Positioned(
+              top: 36,
+              right: 22,
+              child:
+              InkWell(
+                onTap: (){
+                  Navigator.pop(context);
+                },
+                child: Container(
+                    height: 40,
+                    width: 40,
+                    alignment: Alignment.center,
+                    child: Icon( Icons.arrow_forward, color: Colors.white,)
+
+                ),
+              )
+          ),
+
       new Align(
         child: loadingIndicator,
         alignment: FractionalOffset.center,)
