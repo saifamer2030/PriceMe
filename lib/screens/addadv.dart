@@ -19,6 +19,7 @@ import 'package:priceme/classes/OutputClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:priceme/screens/cur_loc.dart';
+import 'package:priceme/screens/myadvertisement.dart';
 import 'package:priceme/screens/network_connection.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:priceme/ui_utile/myColors.dart';
@@ -310,7 +311,7 @@ class _AddAdvState extends State<AddAdv> {
     Widget loadingIndicator = _load1
         ? new Container(
             child: SpinKitCircle(
-              color: const Color(0xff171732),
+              color:    MyColors.primaryColor,
             ),
           )
         : new Container();
@@ -340,7 +341,14 @@ class _AddAdvState extends State<AddAdv> {
         ),
         */
 
-        body: addAdvScreen()
+        body: Stack(
+          children: [
+            addAdvScreen(),
+            new Align(
+              child: loadingIndicator, alignment: FractionalOffset.center,),
+
+          ],
+        )
         // previousScreenWidget(textStyle, loadingIndicator)
 
         );
@@ -1083,20 +1091,42 @@ class _AddAdvState extends State<AddAdv> {
 
                             ),
                             InkWell(
+                              onTap:_init,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  width: 60,
+                                  height: 60,
+                                  child: Icon(
+                                    Icons.cancel,
+                                    color: Colors.red,
+                                    size: 30,
+                                  ),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Color(0xFFe0f2f1)),
+                                ),
+                              ),
+                            ),
+
+                            InkWell(
                               onTap: _currentStatus != RecordingStatus.Unset
                                   ? _stop
                                   : null,
-                              child: Container(
-                                width: 60,
-                                height: 60,
-                                child: Icon(
-                                  Icons.backup,
-                                  color: Colors.green,
-                                  size: 30,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Container(
+                                  width: 60,
+                                  height: 60,
+                                  child: Icon(
+                                    Icons.backup,
+                                    color: Colors.green,
+                                    size: 30,
+                                  ),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Color(0xFFe0f2f1)),
                                 ),
-                                decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Color(0xFFe0f2f1)),
                               ),
                             ),
 
@@ -1141,7 +1171,7 @@ class _AddAdvState extends State<AddAdv> {
                                 alignment: Alignment.topCenter,
                                 child: Icon(
                                   Icons.star,
-                                  color: Colors.red,
+                                  color: images.length>0 ?Colors.green: Colors.red,
                                   size: 15,
                                 ),
                               ),
@@ -2589,6 +2619,21 @@ class _AddAdvState extends State<AddAdv> {
 //                            ),
                         ),
                         InkWell(
+                          onTap:_init,
+                          child: Container(
+                            width: 60,
+                            height: 60,
+                            child: Icon(
+                              Icons.cancel,
+                              color: Colors.red,
+                              size: 30,
+                            ),
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Color(0xFFe0f2f1)),
+                          ),
+                        ),
+                        InkWell(
                           onTap: _currentStatus != RecordingStatus.Unset
                               ? _stop
                               : null,
@@ -2955,6 +3000,10 @@ class _AddAdvState extends State<AddAdv> {
                 faultoutput.clear();
                 faultoutputsub.clear();
                 _init();
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => MyAdvertisement()));
               });
             });
           }));
@@ -3127,6 +3176,10 @@ class _AddAdvState extends State<AddAdv> {
 
   _pause() async {
     await _recorder.pause();
+    Toast.show(
+        "برجاء الضغط على زر التحميل بعد الانتهاء من التسجيل", context,
+        duration: Toast.LENGTH_LONG,
+        gravity: Toast.BOTTOM);
     setState(() {});
   }
 

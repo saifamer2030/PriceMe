@@ -195,7 +195,7 @@ class _AdvDetailState extends State<AdvDetail>
         if (data.documents.length > 0) {
           setState(() {
             cType = data.documents[0].data['cType'];
-
+print("ccc$cType");
             _username = data.documents[0].data['name'];
             _userphone = data.documents[0].data['phone'];
             String rating = (data.documents[0].data['rating']);
@@ -588,8 +588,7 @@ class _AdvDetailState extends State<AdvDetail>
                   child: Align(
                       alignment: Alignment.centerRight,
                       child: Text(
-                        fPlaceName != null ? fPlaceName:
-                        "عنوان غير محدد",
+                        cproblemtype,
                         textDirection: TextDirection.rtl,
                         textAlign: TextAlign.right,
                         style: TextStyle(
@@ -831,48 +830,48 @@ class _AdvDetailState extends State<AdvDetail>
                     ],
                   ),
                 ),
-                Container(
-                  margin: EdgeInsets.only(
-                    right: 20,
-                    left: 20,
-                  ),
-                  child: Row(
-                    textDirection: TextDirection.rtl,
-                    children: [
-                      Container(
-                        width: 116,
-                        child: Text(
-                          "رقم الهاتف",
-                          textDirection: TextDirection.rtl,
-                          style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: MyFonts.primaryFont),
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          "055556566464",
-                          textDirection: TextDirection.rtl,
-                          style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: MyFonts.primaryFont),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
+                // Container(
+                //   margin: EdgeInsets.only(
+                //     right: 20,
+                //     left: 20,
+                //   ),
+                //   child: Row(
+                //     textDirection: TextDirection.rtl,
+                //     children: [
+                //       Container(
+                //         width: 116,
+                //         child: Text(
+                //           "رقم الهاتف",
+                //           textDirection: TextDirection.rtl,
+                //           style: TextStyle(
+                //               color: Colors.grey,
+                //               fontSize: 12,
+                //               fontWeight: FontWeight.bold,
+                //               fontFamily: MyFonts.primaryFont),
+                //         ),
+                //       ),
+                //       Expanded(
+                //         child: Text(
+                //           "055556566464",
+                //           textDirection: TextDirection.rtl,
+                //           style: TextStyle(
+                //               color: Colors.black,
+                //               fontSize: 12,
+                //               fontWeight: FontWeight.bold,
+                //               fontFamily: MyFonts.primaryFont),
+                //         ),
+                //       )
+                //     ],
+                //   ),
+                // ),
                 SizedBox(height: 16),
 
-                cType == "trade" ?
+                cType == "trader" ?
 
 
                 Divider(thickness: 2) : SizedBox(),
 
-                cType == "trade" ?
+                cType == "trader" ?
                 Container(
                     width: 180,
                     height: 40,
@@ -1432,16 +1431,25 @@ class _AdvDetailState extends State<AdvDetail>
 
                       Directionality(
                         textDirection: TextDirection.rtl,
-                        child: TextField(
+                        child: TextFormField(
                           textAlignVertical: TextAlignVertical.top,
                           maxLines: 2,
-
+                          controller:
+                          _commentdetailController,
+                          validator: (String value) {
+                            if ((value.isEmpty)) {
+                              return 'برجاء كتابة وصف لحل المشكلة اولا';
+                            }
+                          },
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 14.0,
                               fontFamily: MyFonts.primaryFont),
                           textDirection: TextDirection.rtl,
                           decoration: InputDecoration(
+                            errorStyle: TextStyle(
+                                color: Colors.red,
+                                fontSize: 15.0),
                             contentPadding: EdgeInsets.all(10),
                             hintText: "حل المشكلة",
                             hintStyle: TextStyle(
@@ -1470,14 +1478,25 @@ class _AdvDetailState extends State<AdvDetail>
                           color: Colors.white),
                       child: Directionality(
                         textDirection: TextDirection.rtl,
-                        child: TextField(
+                        child: TextFormField(
                           keyboardType: TextInputType.number,
+                          controller:
+                          _commentController,
+                          validator: (String value) {
+                            if ((value.isEmpty)) {
+                              return 'برجاء كتابة السعر اولا';
+                            }
+                          },
                           style: TextStyle(
                               color: Colors.black,
                               fontSize: 14.0,
                               fontFamily: MyFonts.primaryFont),
                           textDirection: TextDirection.rtl,
+
                           decoration: InputDecoration(
+                            errorStyle: TextStyle(
+                                color: Colors.red,
+                                fontSize: 15.0),
                             contentPadding: EdgeInsets.all(10),
                             hintText: "السعر",
                             hintStyle: TextStyle(
@@ -1509,7 +1528,35 @@ class _AdvDetailState extends State<AdvDetail>
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(12),
                             ),
-                            onPressed: () {},
+                            onPressed: () async {
+                              createRecord();
+//                               if (_formKey1.currentState.validate()) {
+//                                 try {
+//                                   final result =
+//                                       await InternetAddress.lookup(
+//                                       'google.com');
+//                                   if (result.isNotEmpty &&
+//                                       result[0]
+//                                           .rawAddress
+//                                           .isNotEmpty) {
+//                                     print("iiii");
+//
+//                                   }
+//                                 } on SocketException catch (_) {
+//                                   //  print('not connected');
+//                                   Toast.show(
+//                                       "انت غير متصل بشبكة إنترنت",
+//                                       context,
+//                                       duration: Toast.LENGTH_LONG,
+//                                       gravity: Toast.BOTTOM);
+//                                 }
+//
+// //                                                setState(() {
+// //                                                  _load2 = true;
+// //                                                });
+//
+//                               }
+                            },
                             color: MyColors.secondaryColor,
                             child: Center(
                               child: Text(
@@ -1707,6 +1754,8 @@ class _AdvDetailState extends State<AdvDetail>
   }
 
   void createRecord() {
+    //print("iiii{_commentdetailController.text}//{_commentController.text}");
+
     DateTime now = DateTime.now();
     String b = now.month.toString();
     if (b.length < 2) {
@@ -1746,6 +1795,7 @@ class _AdvDetailState extends State<AdvDetail>
       } else {
         price = "${_commentController.text}.0";
       }
+      print("iiii${_commentdetailController.text}//$price");
       documentReference.setData({
         'ownerId': widget.userId,
         'traderid': _userId,
@@ -1758,8 +1808,8 @@ class _AdvDetailState extends State<AdvDetail>
         'price': double.parse(price),
         'rate': traderating,
       }).whenComplete(() {
-        Toast.show("ارسالنا تعليقك ", context,
-            duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+        // Toast.show("ارسالنا تعليقك ", context,
+        //     duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         CommentClass commentclass = new CommentClass(
           widget.userId,
           _userId,
@@ -1782,20 +1832,24 @@ class _AdvDetailState extends State<AdvDetail>
               bestprice = double.parse(price);
             });
           }
+          print("iiii0");
+
           if (bestrate < traderating) {
             setState(() {
               bestrate = traderating;
             });
           }
           //      var cursor = (5/commentlist.length)* _controller.position.maxScrollExtent;//specific item
-
-          _controller.animateTo(
-            // NEW
-            _controller.position.maxScrollExtent * 2, // NEW
-            duration: const Duration(milliseconds: 500), // NEW
-            curve: Curves.ease, // NEW
-          );
+// print("iiii1");
+          // _controller.animateTo(
+          //   // NEW
+          //   _controller.position.maxScrollExtent * 2, // NEW
+          //   duration: const Duration(milliseconds: 500), // NEW
+          //   curve: Curves.ease, // NEW
+          // );
         });
+      //  print("iiii2");
+
         DocumentReference documentReference = Firestore.instance
             .collection('Alarm')
             .document(widget.userId)
@@ -1814,14 +1868,19 @@ class _AdvDetailState extends State<AdvDetail>
           'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
           'cType': "advcomment",
         }).whenComplete(() {
+          print("iiii3");
+
           Toast.show("تم التعليق بنجاح", context,
               duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         });
+        Navigator.pop(context);
+
 
         //  _controller.animateTo(0.0,curve: Curves.easeInOut, duration: Duration(seconds: 1));
       }).catchError((e) {
         Toast.show(e, context,
             duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      //  print("iiii$e");
         setState(() {
           //  _load2 = false;
         });
@@ -2797,7 +2856,8 @@ class _AdvDetailState extends State<AdvDetail>
                                   }),
                             )),
                         (cType == "trader")
-                            ? Padding(
+                            ?
+                        Padding(
                           padding: const EdgeInsets.all(5.0),
                           child: Row(
                             children: <Widget>[

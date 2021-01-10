@@ -7,6 +7,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:priceme/Splash.dart';
 import 'package:priceme/classes/AdvClass.dart';
+import 'package:priceme/ui_utile/myCustomShape.dart';
 import 'package:toast/toast.dart';
 
 import 'advdetail.dart';
@@ -118,41 +119,84 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
           ),
         ),
       ),
-      body: Container(
-        child: StreamBuilder(
-          stream: _stream,
-          builder: (context, snapshot) {
-            if (snapshot.data?.documents == null || !snapshot.hasData)
-              return Center(child: Text("لا يوجد بيانات...",));
-            return Container(
-              child: ListView(
-                shrinkWrap: true,
-                children: <Widget>[
-                  Container(
-                      padding: EdgeInsets.all(10),
-                      child: SingleChildScrollView(
-                        child: GridView.builder(
-                          physics: ScrollPhysics(),
-                          shrinkWrap: true,
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 6,
-                            childAspectRatio: (MediaQuery.of(context)
-                                .size
-                                .width) /
-                                (MediaQuery.of(context).size.height * 0.6),
-                          ),
-                          itemCount:snapshot.data.documents.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return  advertisementItemWidget(context, snapshot.data.documents[index]);
-                          },
-                        ),
-                      ))
-                ],
+      body: Stack(
+        children: [
+          CustomPaint(
+            size: Size(MediaQuery.of(context).size.width,140), //You can Replace this with your desired WIDTH and HEIGHT
+            painter: MyCustomShape(),
+          ),
+
+          Positioned(
+              top: 48,
+              right: 20,
+              child:
+              InkWell(
+                onTap: (){
+                  Navigator.pop(context);
+                },
+                child: Container(
+                  height: 30,
+                  width: 30,
+                  child: Icon(Icons.arrow_forward, color: Colors.white),
+                ),
+              )
+
+          ),
+
+          Positioned(
+            top: 42,
+            child: Container(
+              alignment: Alignment.center,
+              height: 40,
+              width: MediaQuery.of(context).size.width,
+              child: Text(
+                "طلبات المحل",
+                style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold
+                ),
               ),
-            );
-          },
-        ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top:88.0),
+            child: StreamBuilder(
+              stream: _stream,
+              builder: (context, snapshot) {
+                if (snapshot.data?.documents == null || !snapshot.hasData)
+                  return Center(child: Text("لا يوجد بيانات...",));
+                return Container(
+                  child: ListView(
+                    shrinkWrap: true,
+                    children: <Widget>[
+                      Container(
+                          padding: EdgeInsets.all(10),
+                          child: SingleChildScrollView(
+                            child: GridView.builder(
+                              physics: ScrollPhysics(),
+                              shrinkWrap: true,
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 6,
+                                childAspectRatio: (MediaQuery.of(context)
+                                    .size
+                                    .width) /
+                                    (MediaQuery.of(context).size.height * 0.6),
+                              ),
+                              itemCount:snapshot.data.documents.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return  advertisementItemWidget(context, snapshot.data.documents[index]);
+                              },
+                            ),
+                          ))
+                    ],
+                  ),
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

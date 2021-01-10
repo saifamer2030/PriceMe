@@ -586,12 +586,15 @@ top: 13,
                                       builder: (context) =>
                                           CurrentLocation2()),
                                 );
-                                fromPlace = sendData["loc_latLng"];
-                                fromPlaceLat = fromPlace.latitude.toString();
-                                fromPlaceLng = fromPlace.longitude.toString();
-                                fPlaceName = sendData["loc_name"];
-                                print("\n\n\n\n\n\n\nfromPlaceLng>>>>"+
-                                    fromPlaceLng+fPlaceName+"\n\n\n\n\n\n");
+                                setState(() {
+                                  fromPlace = sendData["loc_latLng"];
+                                  fromPlaceLat = fromPlace.latitude.toString();
+                                  fromPlaceLng = fromPlace.longitude.toString();
+                                  fPlaceName = sendData["loc_name"];
+                                  print("\n\n\n\n\n\n\nfromPlaceLng>>>>"+
+                                      fromPlaceLng+fPlaceName+"\n\n\n\n\n\n");
+                                });
+
 
                               } ,
                               child: Icon(

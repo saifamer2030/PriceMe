@@ -41,7 +41,9 @@ class _VidiosPhotoMineState extends State<VidiosPhotoMine> {
         ? Navigator.of(context, rootNavigator: false).push(MaterialPageRoute(
         builder: (context) => Splash(), maintainState: false))
 
-        : setState(() {_userId = user.uid;}));
+        : setState(() {_userId = user.uid;
+
+        }));
    }
 
   @override
@@ -135,7 +137,7 @@ class _VidiosPhotoMineState extends State<VidiosPhotoMine> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: (context) => AllVideos(document['carrange'],document['cdepart'],null)));
+                builder: (context) => AllVideos(document['carrange'],document['cdepart'],_userId)));
 
       },
       child: Padding(

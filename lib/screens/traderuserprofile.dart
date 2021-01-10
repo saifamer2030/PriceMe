@@ -71,19 +71,12 @@ class _TraderUserProlileState extends State<TraderUserProlile> {
             floating: false,
             expandedHeight: 300.0,
             flexibleSpace: FlexibleSpaceBar(
-              title:  Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(2.0),
-                    color:  Colors.teal,
-                  ),
-                child:Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    name==null?"": name,textAlign: TextAlign.center,),
-                ),
-                width: 200,
+              title:  Padding(
+                padding: const EdgeInsets.only(top:28.0, left: 170),
+                child: Text(
+                  name==null?"": name,textAlign: TextAlign.center,),
               ),
-              background: Image.network(_imageUrls.length==0?"":_imageUrls[0]??""/**_imageUrls==null?"":_imageUrls[0]==null?"":_imageUrls[0]**/,fit: BoxFit.cover,),
+              background: Image.network(photourl==null?"":photourl/**_imageUrls==null?"":_imageUrls[0]==null?"":_imageUrls[0]**/,fit: BoxFit.cover,),
 
 
             ),

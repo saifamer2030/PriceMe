@@ -68,7 +68,6 @@ dependencies:
   chewie: ^0.9.10
   flutter_video_compress: ^0.3.0
   cached_network_image: ^2.2.0+1
-
   intl: ^0.16.1 #0.15.7
   firebase_messaging:
   flutter_local_notifications: 1.4.4+4 #1.4.0

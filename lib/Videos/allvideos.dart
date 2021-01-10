@@ -239,22 +239,34 @@ class _VideoWidgetState extends State<VideoWidget> {
         if( isplay[widget.itr])
         setState(() {
           isplay[widget.itr] =false;
-        });      }
-      if (videoPlayerController.value.position ==
-          videoPlayerController.value.duration) {
-        //print('video Ended');
-        if(seencheck[widget.itr]) {
-          setState(() {
-            seens[widget.itr] = seens[widget.itr] + 1;
-          });
-          Firestore.instance.collection('videos')
-              .document(widget.document['cId'])
-              .updateData({
-            'seens': seens[widget.itr],
-          });
-          seencheck[widget.itr]= false;
-        }
+        });
       }
+      if(seencheck[widget.itr]) {
+        setState(() {
+          seens[widget.itr] = seens[widget.itr] + 1;
+        });
+        Firestore.instance.collection('videos')
+            .document(widget.document['cId'])
+            .updateData({
+          'seens': seens[widget.itr],
+        });
+        seencheck[widget.itr]= false;
+      }
+      // if (videoPlayerController.value.position ==
+      //     videoPlayerController.value.duration) {
+      //   //print('video Ended');
+      //   if(seencheck[widget.itr]) {
+      //     setState(() {
+      //       seens[widget.itr] = seens[widget.itr] + 1;
+      //     });
+      //     Firestore.instance.collection('videos')
+      //         .document(widget.document['cId'])
+      //         .updateData({
+      //       'seens': seens[widget.itr],
+      //     });
+      //     seencheck[widget.itr]= false;
+      //   }
+      // }
     });
   }
     @override

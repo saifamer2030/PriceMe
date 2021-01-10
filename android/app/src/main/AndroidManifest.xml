@@ -19,7 +19,7 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="PriceMe"
-        android:icon="@drawable/ic_logo">
+        android:icon="@drawable/ic_launcher">
         <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver" />
         <receiver android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver">
             <intent-filter>

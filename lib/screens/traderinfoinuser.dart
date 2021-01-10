@@ -436,7 +436,7 @@ class _TraderInfoInUserState extends State<TraderInfoInUser> {
 //                      width: _minimumPadding,
 //                    ),
                   Container(
-                      height: 40,
+                      height: 100,
                       width: 350,
                       margin: EdgeInsets.all(10.0),
                       decoration: BoxDecoration(
@@ -459,12 +459,14 @@ class _TraderInfoInUserState extends State<TraderInfoInUser> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: <Widget>[
-                            Text(
-                              fPlaceName==null?"": fPlaceName,
-                              style: TextStyle(
-                                fontSize: 15,
+                            Expanded(
+                              child: Text(
+                                fPlaceName==null?"": fPlaceName,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                ),
+                                textDirection: TextDirection.rtl,
                               ),
-                              textDirection: TextDirection.rtl,
                             ),
                             Text(
                               "العنوان:",

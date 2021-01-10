@@ -87,6 +87,7 @@ class _AdvertisementsState extends State<Advertisements> {
         monthNameswithyear.add("${monthNames[(a - i - 1)]}-${now.year}");
       }
     });
+    monthNameswithyear.insert(0, "الكل");
     //  monthlist=new List<String>.generate(12, (i) {
     //    int newDate = new DateTime(now.year, now.month - i, now.day).month;
     //
@@ -149,7 +150,10 @@ class _AdvertisementsState extends State<Advertisements> {
 
       */
       body:
-         advertisementsScreen()
+         Padding(
+           padding: const EdgeInsets.only(top:18.0),
+           child: advertisementsScreen(),
+         )
       /*
       Column(
         children: [
@@ -461,6 +465,12 @@ class _AdvertisementsState extends State<Advertisements> {
                         textDirection: TextDirection.rtl,
                         child: TextField(
                           keyboardType: TextInputType.emailAddress,
+                          controller: searchcontroller,
+                          onChanged: (value) {
+                            setState(() {
+                              filtter = value;
+                            });
+                          },
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 12.0,
@@ -495,6 +505,8 @@ class _AdvertisementsState extends State<Advertisements> {
                             onTap: () {
                               setState(() {
                                 typePressed = "all";
+                                searchtype = null;
+
                               });
                             },
                             child: Container(
@@ -523,6 +535,8 @@ class _AdvertisementsState extends State<Advertisements> {
                             onTap: () {
                               setState(() {
                                 typePressed = "faults";
+                                searchtype ="اعطال" ;
+
                               });
                             },
                             child: Container(
@@ -551,6 +565,8 @@ class _AdvertisementsState extends State<Advertisements> {
                             onTap: () {
                               setState(() {
                                 typePressed = "spareParts";
+                                searchtype =  "قطع غيار";
+
                               });
                             },
                             child: Container(
@@ -584,6 +600,16 @@ class _AdvertisementsState extends State<Advertisements> {
                       onTap: () {
                         setState(() {
                           isSearching = !isSearching;
+if(isSearching){}else{
+  setState(() {
+    searchcontroller
+        .clear();
+
+    setState(() {
+      filtter = null;
+    });
+  });
+}
                         });
                       },
                       child: Container(
@@ -666,7 +692,7 @@ class _AdvertisementsState extends State<Advertisements> {
                                   _onDropDownItemSelectedmonth(
                                       newValueSelected,
                                       monthNameswithyear
-                                          .indexOf(newValueSelected));
+                                          .indexOf(newValueSelected)-1);
                                 },
                               ),
                             )),

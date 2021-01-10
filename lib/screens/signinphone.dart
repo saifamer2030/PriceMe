@@ -105,7 +105,7 @@ class _SignInPhoneState extends State<SignInPhone> {
                                 fillColor: Colors.white,
                                 labelText: "رقم الجوال",
                                 //Translations.of(context).translate('telephone_number'),
-                                //hintText: 'مثل:512345678',
+                                hintText: 'مثل:0512345678',
                                 prefixIcon: Padding(
                                   padding: const EdgeInsets.only(right: 10),
                                   child: Icon(Icons.phone_android),
@@ -198,8 +198,8 @@ class _SignInPhoneState extends State<SignInPhone> {
     FirebaseAuth _auth = FirebaseAuth.instance;
 
     _auth.verifyPhoneNumber(
-       // phoneNumber: "+966$phone",
         phoneNumber: "+966$phone",
+      //  phoneNumber: "+2$phone",
         timeout: Duration(seconds: 60),
         verificationCompleted: (AuthCredential credential) async {
           Navigator.of(context).pop();

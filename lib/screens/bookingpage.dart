@@ -98,9 +98,9 @@ class _BookingPageState extends State<BookingPage> {
       initSettings,
       onSelectNotification: onSelectNotification,
     );
-    //DateTime scheduledNotificationDateTime = DateTime.now().add(new Duration(seconds: 3));
-    DateTime scheduledNotificationDateTime =
-        DateTime.parse(date).add(new Duration(days: 1));
+    DateTime scheduledNotificationDateTime = DateTime.now().add(new Duration(seconds: 3));
+    // DateTime scheduledNotificationDateTime =
+    //     DateTime.parse(date).add(new Duration(days: 1));
     print("aaa${scheduledNotificationDateTime.toString()}");
     //  DateTime notificationbooking = DateTime.parse('$enddate 23:59:00.000');
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(

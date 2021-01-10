@@ -216,7 +216,7 @@ class _AddPhotoState extends State<AddPhoto> {
                                     controller: _titleController,
                                     validator: (String value) {
                                       if ((value.isEmpty)) {
-                                        return "اكتب عنوان الفيديو";
+                                        return "اكتب عنوان الصورة";
                                       }
                                     },
                                     decoration: InputDecoration(

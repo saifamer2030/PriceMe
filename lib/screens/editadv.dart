@@ -1203,14 +1203,36 @@ print("new:$cNew");
 //                            ),
                           ),
                           InkWell(
+                            onTap:_init,
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                width: 60,
+                                height: 60,
+                                child: Icon(
+                                  Icons.cancel,
+                                  color: Colors.red,
+                                  size: 30,
+                                ),
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Color(0xFFe0f2f1)),
+                              ),
+                            ),
+                          ),
+
+                          InkWell(
                             onTap: _currentStatus != RecordingStatus.Unset ? _stop : null,
-                            child: Container(
-                              width: 60,
-                              height: 60,
-                              child: Icon(Icons.backup,color: Colors.green, size: 30,),
-                              decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Color(0xFFe0f2f1)),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Container(
+                                width: 60,
+                                height: 60,
+                                child: Icon(Icons.backup,color: Colors.green, size: 30,),
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Color(0xFFe0f2f1)),
+                              ),
                             ),
                           ),
 
@@ -1253,7 +1275,7 @@ print("new:$cNew");
                               alignment: Alignment.topCenter,
                               child: Icon(
                                 Icons.star,
-                                color: Colors.red,
+                                color: images.length>0 ?Colors.green: Colors.red,
                                 size: 15,
                               ),
                             ),

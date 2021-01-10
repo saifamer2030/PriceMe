@@ -481,8 +481,8 @@ String _userId,cType;
             .collection('users')
             .document(userData['id'])
             .setData({
-          'uid': userData['id'],
-          'email': userData['email'],
+          // 'uid': userData['id'],
+          // 'email': userData['email'],
 //            'name': userData.displayName,
 //            'phone': userData.phoneNumber,
 //            'photourl': userData.photoUrl,
@@ -668,4 +668,9 @@ String _userId,cType;
       'cType': "user",
     });
   }
+
+
+
+
+
 }
