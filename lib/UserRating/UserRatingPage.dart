@@ -450,6 +450,46 @@ class _UserRatingPageState extends State<UserRatingPage> {
               'rating': (double.parse(_totalRate) + allRating.round()).toString(),
               'custRate': _totalCust + 1,
             });
+            DateTime now = DateTime.now();
+            String b = now.month.toString();
+            if (b.length < 2) {
+              b = "0" + b;
+            }
+            String c = now.day.toString();
+            if (c.length < 2) {
+              c = "0" + c;
+            }
+            String d = now.hour.toString();
+            if (d.length < 2) {
+              d = "0" + d;
+            }
+            String e = now.minute.toString();
+            if (e.length < 2) {
+              e = "0" + e;
+            }
+            String f = now.second.toString();
+            if (f.length < 2) {
+              f = "0" + f;
+            }
+
+            DocumentReference documentReference = Firestore.instance
+                .collection('Alarm')
+                .document(widget.tradeid)
+                .collection('Alarmid')
+                .document();
+            documentReference.setData({
+              'ownerId': _userId,
+              'traderid':widget.tradeid,
+              'advID': "",
+              'alarmid': documentReference.documentID,
+              'cdate': now.toString(),
+              'tradname': "_username",
+              'ownername': "ownerName",
+              'price': _commentController.text,
+              'rate':allRating,
+              'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
+              'cType': "rating",
+            });
             print('############## $allRating ###################');
             Toast.show(
                 "تم إرسال تقييمك بنجاح",

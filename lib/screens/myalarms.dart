@@ -177,6 +177,9 @@ class _MyAlarmsState extends State<MyAlarms> {
                         builder: (context) => BookingPage( document['ownerId'],document['traderid'],document['advID'],document['alarmid'])));
 
               }
+              else if( document['cType'] == "rating"){
+
+              }
             });
           },
           child: Container(
@@ -198,7 +201,13 @@ class _MyAlarmsState extends State<MyAlarms> {
                               Icons.favorite,
                               color: Colors.black,
                             )
-                          : new Icon(
+                          :
+                      document['cType'] == "rating"
+                          ? new Icon(
+                        Icons.star_rate,
+                        color: Colors.black,
+                      ):
+                      new Icon(
                               Icons.mail_outline,
                               color: Colors.black,
                             ),
@@ -233,7 +242,19 @@ class _MyAlarmsState extends State<MyAlarms> {
                                           //    fontWeight: FontWeight.bold
                                         ),
                                       )
-                                    : Text(
+                                    :
+                                document['cType'] == "rating"
+                                    ? Text(
+                                  " تم منحك تقيم مساوى ${document['rate'].round()}  نجوم",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 13,
+                                    //    fontWeight: FontWeight.bold
+                                  ),
+                                )
+                                    :
+                                Text(
                                         " رسالة جديدة من ${document['tradname']}",
                                         textAlign: TextAlign.center,
                                         style: TextStyle(

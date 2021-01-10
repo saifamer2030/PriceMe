@@ -1297,6 +1297,7 @@ class _BookingPageState extends State<BookingPage> {
             if (_userId == widget.ownerId) {
               showNotification(
                   arrange, advtitle, _cNametrade, bookingdate, widget.traderid);
+
             }
           }
         });
