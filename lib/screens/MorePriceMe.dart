@@ -171,7 +171,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
                         Navigator.push(
                             context,
                             new MaterialPageRoute(
-                                builder: (context) => Advertisements(mainsparsList,mainfaultsList)));
+                                builder: (context) => Advertisements(mainsparsList,mainfaultsList, true)));
 
                       },
                       child: Row(

@@ -11,6 +11,7 @@ import 'package:priceme/screens/advdetail.dart';
 import 'package:priceme/screens/bookingpage.dart';
 import 'package:priceme/screens/offerdetail.dart';
 import 'package:priceme/screens/rentdetail.dart';
+import 'package:priceme/ui_utile/myColors.dart';
 
 class MyAlarms extends StatefulWidget {
 
@@ -111,11 +112,11 @@ class _MyAlarmsState extends State<MyAlarms> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
-        color: Colors.grey[300],
+        color: Colors.orange[200],
         shape: new RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(4.0)),
         //borderOnForeground: true,
-        elevation: 10.0,
+        elevation: 8.0,
         margin: EdgeInsets.only(right: 1, left: 1, bottom: 2),
         child: InkWell(
           onTap: () {
@@ -183,7 +184,7 @@ class _MyAlarmsState extends State<MyAlarms> {
             });
           },
           child: Container(
-            height: 100,
+           // height: 100,
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Row(
@@ -193,7 +194,7 @@ class _MyAlarmsState extends State<MyAlarms> {
                       padding: const EdgeInsets.all(8.0),
                       child:document['cType'] == "book"?
                       new Icon(
-                        Icons.settings,
+                        Icons.receipt,
                         color: Colors.black,
                       ):
                       document['cType'] == "videofav"
@@ -217,20 +218,23 @@ class _MyAlarmsState extends State<MyAlarms> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: <Widget>[
-                          Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: document['cType'] == "book"?
-                                Text(
-                                  " بخصوص عملية حجز ${ document['ownername']},${ document['tradname']} ",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 13,
-                                    //    fontWeight: FontWeight.bold
-                                  ),
-                                ):
+                      Column(
+                      textDirection: TextDirection.rtl,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: document['cType'] == "book"?
+                            Text(
+                              " بخصوص عملية حجز ${ document['ownername']},${ document['tradname']} ",
+                              textAlign: TextAlign.right,
+                              textDirection: TextDirection.rtl,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 13,
+                                //    fontWeight: FontWeight.bold
+                              ),
+                            ):
 
                                 document['cType'] == "videofav"
                                     ? Text(
@@ -255,8 +259,12 @@ class _MyAlarmsState extends State<MyAlarms> {
                                 )
                                     :
                                 Text(
-                                        " رسالة جديدة من ${document['tradname']}",
-                                        textAlign: TextAlign.center,
+                                  document['tradname'] != null &&  !document['tradname'].toString().isEmpty ?
+                                  " رسالة جديدة من ${document['tradname']}" :
+                                  "رسالة جديدة من مجهول"
+                                  ,
+                                  textAlign: TextAlign.right,
+                                  textDirection: TextDirection.rtl,
                                         style: TextStyle(
                                           color: Colors.black,
                                           fontSize: 13,
@@ -264,6 +272,8 @@ class _MyAlarmsState extends State<MyAlarms> {
                                         ),
                                       ),
                               ),
+
+
                               Padding(
                                 padding: const EdgeInsets.all(5.0),
                                 child: Text(
@@ -277,12 +287,63 @@ class _MyAlarmsState extends State<MyAlarms> {
                                 )
                               ),
 
-                            ],
+                          /*
+                            document['cType'] == "videofav"
+                                ? Text(
+                              " ${document['tradname']} منحك اعجاب لفيديو ${document['cType']} ",
+                              textAlign: TextAlign.right,
+                              textDirection: TextDirection.rtl,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 13,
+                                //    fontWeight: FontWeight.bold
+                              ),
+                            )
+                                : Text(
+                              document['tradname'] != null &&  !document['tradname'].toString().isEmpty ?
+                              " رسالة جديدة من ${document['tradname']}" :
+                              "رسالة جديدة من مجهول"
+                              ,
+                              textAlign: TextAlign.right,
+                              textDirection: TextDirection.rtl,
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontSize: 13,
+                                //    fontWeight: FontWeight.bold
+                              ),
+                            ),
+
+                          Padding(
+                              padding: const EdgeInsets.all(5.0),
+                              child: Text(
+                                " ${document['cdate']}  ",
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 13,
+                                  //    fontWeight: FontWeight.bold
+                                ),
+                              )
                           ),
-                          new Icon(
-                            Icons.person,
-                            color: Colors.black,
-                          ),
+
+                          */
+
+                        ],
+                      ),
+                          Container(
+                            height: 40,
+                            width: 40,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[400],
+                              shape: BoxShape.circle,
+
+                              image: DecorationImage(
+                                image: NetworkImage("https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg"
+                                ),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          )
                         ],
                       ),
                     ),

@@ -1161,14 +1161,7 @@ print("ccc$cType");
   Widget offerItemWidget(int index) {
     return
 
-     InkWell(
-       onTap: (){
-
-
-
-
-       },
-       child: Card(
+     Card(
          elevation: 4,
          shape: RoundedRectangleBorder(
              side: BorderSide(color: Colors.grey, width: 1),
@@ -1190,7 +1183,23 @@ print("ccc$cType");
 
                Row(
                  textDirection: TextDirection.rtl,
+
                  children: [
+                   Container(
+                     height: 20,
+                     width: 20,
+                     decoration: BoxDecoration(
+                       color: Colors.grey[400],
+                       shape: BoxShape.circle,
+
+                       image: DecorationImage(
+                         image: NetworkImage("https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg"
+                             ),
+                         fit: BoxFit.contain,
+                       ),
+                     ),
+                   ),
+                   SizedBox(width: 4,),
                    Expanded(
                        child: Container(
                            alignment: Alignment.centerRight,
@@ -1300,7 +1309,8 @@ print("ccc$cType");
                      fontFamily: MyFonts.primaryFont),
                ),
 
-               Divider(),
+               (_userId == commentlist[index].ownerId || _userId == commentlist[index].traderid)?
+               Divider(): SizedBox(),
 
              (_userId == commentlist[index].ownerId || _userId == commentlist[index].traderid)?
                Container(
@@ -1383,7 +1393,7 @@ print("ccc$cType");
            ),
          ),
        )
-     )
+
 
 
     ;
@@ -2529,7 +2539,7 @@ print("ccc$cType");
                                                                         context) =>
                                                                         Advertisements(
                                                                             mainsparsList,
-                                                                            mainfaultsList)));
+                                                                            mainfaultsList, false)));
                                                           }));
                                                 });
                                               },
