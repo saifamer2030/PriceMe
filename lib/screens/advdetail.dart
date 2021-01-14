@@ -293,6 +293,9 @@ print("ccc$cType");
           comment.data['details'],
           comment.data['price'],
           comment.data['rate'],
+          comment.data['bookingdate'],
+          comment.data['ownercheck'],
+          comment.data['tradercheck'],
         );
         setState(() {
           print("ggg${comment.data['rate']}");
@@ -926,8 +929,13 @@ print("ccc$cType");
                           InkWell(
                             onTap: () {
                               setState(() {
+                                arrangecheck = true;
                                 bestPriceButtonPressed = true;
                               });
+                              sortprice();
+                              setState(() {
+                              });
+
                             },
                             child: Container(
                               alignment: Alignment.center,
@@ -973,7 +981,13 @@ print("ccc$cType");
                           InkWell(
                             onTap: () {
                               setState(() {
+                                arrangecheck = false;
                                 bestPriceButtonPressed = false;
+
+                              });
+                              sortrate();
+                              setState(() {
+
                               });
                             },
                             child: Container(
@@ -1169,6 +1183,8 @@ print("ccc$cType");
 
        },
        child: Card(
+         color: ( commentlist[index].ownercheck==null||  commentlist[index].tradercheck==null)?Colors.white:
+           ( commentlist[index].ownercheck && commentlist[index].tradercheck)? Colors.black38:Colors.white,
          elevation: 4,
          shape: RoundedRectangleBorder(
              side: BorderSide(color: Colors.grey, width: 1),
@@ -1203,7 +1219,16 @@ print("ccc$cType");
                                  fontWeight: FontWeight.bold,
                                  fontFamily: MyFonts.primaryFont),
                            ))),
-
+                   ( commentlist[index].ownercheck==null||  commentlist[index].tradercheck==null)?Container():
+                   ( commentlist[index].ownercheck && commentlist[index].tradercheck)?  Text(
+                    " تم الحجز",
+                     textDirection: TextDirection.rtl,
+                     style: TextStyle(
+                         color: Colors.green,
+                         fontSize: 12,
+                         fontWeight: FontWeight.bold,
+                         fontFamily: MyFonts.primaryFont),
+                   ):Container(),
                    (_userId == commentlist[index].traderid || cType == "admin")
                        ?
                    InkWell(
@@ -1821,6 +1846,7 @@ print("ccc$cType");
           _commentdetailController.text,
           double.parse(price),
           traderating,
+          "", false,false
         );
         setState(() {
           commentlist.insert(0, commentclass);
@@ -2149,7 +2175,7 @@ print("ccc$cType");
       for (var c in commentlist1) {
         setState(() {
           commentlist.add(c);
-          commentlist.sort((c1, c2) => c1.rate.compareTo(c2.rate));
+          commentlist.sort((c2, c1) => c1.rate.compareTo(c2.rate));
         });
       }
     });

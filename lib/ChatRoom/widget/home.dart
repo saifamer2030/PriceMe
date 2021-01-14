@@ -262,32 +262,32 @@ class HomeScreenState extends State<HomeScreen> {
           style: TextStyle(color: Colors.white,fontSize: 14, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
-        actions: <Widget>[
-          PopupMenuButton<Choice>(
-            onSelected: onItemMenuPress,
-            itemBuilder: (BuildContext context) {
-              return choices.map((Choice choice) {
-                return PopupMenuItem<Choice>(
-                    value: choice,
-                    child: Row(
-                      children: <Widget>[
-                        Icon(
-                          choice.icon,
-                          color: primaryColor,
-                        ),
-                        Container(
-                          width: 10.0,
-                        ),
-                        Text(
-                          choice.title,
-                          style: TextStyle(color: primaryColor),
-                        ),
-                      ],
-                    ));
-              }).toList();
-            },
-          ),
-        ],
+        // actions: <Widget>[
+        //   PopupMenuButton<Choice>(
+        //     onSelected: onItemMenuPress,
+        //     itemBuilder: (BuildContext context) {
+        //       return choices.map((Choice choice) {
+        //         return PopupMenuItem<Choice>(
+        //             value: choice,
+        //             child: Row(
+        //               children: <Widget>[
+        //                 Icon(
+        //                   choice.icon,
+        //                   color: primaryColor,
+        //                 ),
+        //                 Container(
+        //                   width: 10.0,
+        //                 ),
+        //                 Text(
+        //                   choice.title,
+        //                   style: TextStyle(color: primaryColor),
+        //                 ),
+        //               ],
+        //             ));
+        //       }).toList();
+        //     },
+        //   ),
+        // ],
       ),
       body: Stack(
         children: <Widget>[

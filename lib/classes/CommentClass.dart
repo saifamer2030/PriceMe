@@ -9,6 +9,9 @@ class CommentClass {
   String details;
   var price;
   var rate;
+String bookingdate;
+bool ownercheck;
+  bool tradercheck;
 
 
   CommentClass(
@@ -22,6 +25,10 @@ class CommentClass {
       this.details,
       this.price,
       this.rate,
+
+      this.bookingdate,
+      this.ownercheck,
+      this.tradercheck,
      );
 
 

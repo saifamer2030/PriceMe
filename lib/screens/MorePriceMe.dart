@@ -230,59 +230,63 @@ class _MorePriceMeState extends State<MorePriceMe> {
                               MaterialPageRoute(
                                   builder: (context) => Splash()));
                         } else {
-                          if (_userId != null && _cType != null) {
-                            if ( _cType == "user") {
-                              Navigator.push(
+                          Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => MyAdvertisement()));
-                            }else if(_cType == "trader"){
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => MyAdvertisement()));
-                            }
-
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (BuildContext context) =>
-                              new CupertinoAlertDialog(
-                                title: new Text(
-                                  "تنبية",
-                                  style: TextStyle(
-//                                      fontFamily: 'Estedad-Black',
-                                  ),
-                                ),
-                                content: new Text(
-                                  "برجاء تسجيل الدخول اولا",
-                                  style: TextStyle(
-//                                      fontFamily: 'Estedad-Black',
-                                  ),
-                                ),
-                                actions: [
-                                  CupertinoDialogAction(
-                                      isDefaultAction: false,
-                                      child: new FlatButton(
-                                        onPressed: () {
-                                          Navigator.pop(context, false);
-                                          Navigator.push(
-                                              context,
-                                              new MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      PersonalPage()));
-                                        },
-                                        child: Text(
-                                          "موافق",
-                                          style: TextStyle(
-//                                              fontFamily: 'Estedad-Black',
-                                          ),
-                                        ),
-                                      )),
-                                ],
-                              ),
-                            );
-                          }
+//                           if (_userId != null && _cType != null) {
+//                             if ( _cType == "user") {
+//                               Navigator.push(
+//                                   context,
+//                                   MaterialPageRoute(
+//                                       builder: (context) => MyAdvertisement()));
+//                             }else if(_cType == "trader"){
+//                               Navigator.push(
+//                                   context,
+//                                   MaterialPageRoute(
+//                                       builder: (context) => MyAdvertisement()));
+//                             }
+//
+//                           } else {
+//                             showDialog(
+//                               context: context,
+//                               builder: (BuildContext context) =>
+//                               new CupertinoAlertDialog(
+//                                 title: new Text(
+//                                   "تنبية",
+//                                   style: TextStyle(
+// //                                      fontFamily: 'Estedad-Black',
+//                                   ),
+//                                 ),
+//                                 content: new Text(
+//                                   "برجاء تسجيل الدخول اولا",
+//                                   style: TextStyle(
+// //                                      fontFamily: 'Estedad-Black',
+//                                   ),
+//                                 ),
+//                                 actions: [
+//                                   CupertinoDialogAction(
+//                                       isDefaultAction: false,
+//                                       child: new FlatButton(
+//                                         onPressed: () {
+//                                           Navigator.pop(context, false);
+//                                           Navigator.push(
+//                                               context,
+//                                               new MaterialPageRoute(
+//                                                   builder: (context) =>
+//                                                       PersonalPage()));
+//                                         },
+//                                         child: Text(
+//                                           "موافق",
+//                                           style: TextStyle(
+// //                                              fontFamily: 'Estedad-Black',
+//                                           ),
+//                                         ),
+//                                       )),
+//                                 ],
+//                               ),
+//                             );
+//                           }
                         }
                       },
                       child: Row(
