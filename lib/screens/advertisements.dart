@@ -19,8 +19,9 @@ import 'advdetail.dart';
 class Advertisements extends StatefulWidget {
   List<String> mainfaultsList = [];
   List<String> mainsparsList = [];
+  bool isFromMyAccount;  /////// check if user came from "more" page to increase top padding
 
-  Advertisements(this.mainsparsList, this.mainfaultsList);
+  Advertisements(this.mainsparsList, this.mainfaultsList, this.isFromMyAccount);
 
   @override
   _AdvertisementsState createState() => _AdvertisementsState();
@@ -433,7 +434,10 @@ class _AdvertisementsState extends State<Advertisements> {
     return Column(
       children: [
         SizedBox(
-          height: 10,
+          height:
+          widget.isFromMyAccount? 28
+          :
+           10,
         ),
         Container(
             height: 46,

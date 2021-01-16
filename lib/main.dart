@@ -33,10 +33,10 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: MyFonts.primaryFont
       ),
-      home: //Logintrader(),
+      home:
+      //Logintrader(),
       Splash(),
       //FragmentTrader()
-
       // FragmentNavigationAdmin(),//SparePartsAdmin(),//UserRatingPage("6XQuwAo5xPY40LqdnAqL5zqcc1v1"),Splash(),
     );
   }

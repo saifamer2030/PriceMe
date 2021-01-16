@@ -125,7 +125,7 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
             size: Size(MediaQuery.of(context).size.width,140), //You can Replace this with your desired WIDTH and HEIGHT
             painter: MyCustomShape(),
           ),
-
+/*
           Positioned(
               top: 48,
               right: 20,
@@ -142,6 +142,7 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
               )
 
           ),
+*/
 
           Positioned(
             top: 42,
@@ -159,6 +160,8 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
               ),
             ),
           ),
+
+
           Padding(
             padding: const EdgeInsets.only(top:88.0),
             child: StreamBuilder(
@@ -179,6 +182,7 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
                               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 6,
+                                mainAxisSpacing: 6,
                                 childAspectRatio: (MediaQuery.of(context)
                                     .size
                                     .width) /
@@ -235,7 +239,7 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
                           Container(
                               height: double.infinity,
                               width: double.infinity,
-                              color: Colors.grey[400],
+
                               child: ClipRRect(
                                 borderRadius: BorderRadius.only(
                                     topRight: Radius.circular(10),

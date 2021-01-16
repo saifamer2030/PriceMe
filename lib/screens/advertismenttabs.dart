@@ -238,7 +238,7 @@ class _AdvertismentTabsState extends State<AdvertismentTabs> with SingleTickerPr
         TabBarView(
           physics: NeverScrollableScrollPhysics(),
           children: [
-            Advertisements(mainsparsList,mainfaultsList),
+            Advertisements(mainsparsList,mainfaultsList,false),
             MyAdvertisement(),
 
           ],
