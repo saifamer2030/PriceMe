@@ -429,6 +429,28 @@ class _UserRatingPageState extends State<UserRatingPage> {
         : setState(() {
       _userId = user.uid;
       if (user != null && com != "" && Rate != 0.0 && Rate2 != 0.0 && Rate3 != 0.0) {
+        DateTime now = DateTime.now();
+        String b = now.month.toString();
+        if (b.length < 2) {
+          b = "0" + b;
+        }
+        String c = now.day.toString();
+        if (c.length < 2) {
+          c = "0" + c;
+        }
+        String d = now.hour.toString();
+        if (d.length < 2) {
+          d = "0" + d;
+        }
+        String e = now.minute.toString();
+        if (e.length < 2) {
+          e = "0" + e;
+        }
+        String f = now.second.toString();
+        if (f.length < 2) {
+          f = "0" + f;
+        }
+
         DocumentReference documentReference = Firestore.instance
             .collection('Rating')
             .document(widget.tradeid)
@@ -436,8 +458,14 @@ class _UserRatingPageState extends State<UserRatingPage> {
             .document();
         String ratingid = documentReference.documentID;
         documentReference.setData({
+          'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
+          'date': "${now.year.toString()}-${b}-${c}",
+          'rateid': documentReference.documentID,
           'Comment': _commentController.text,
-          'Rate': allRating.round(),
+          'Rate': allRating,
+          'Rate1': Rate,
+          'Rate2': Rate2,
+          'Rate3': Rate3,
           'AgreementPrice': (_character.toString().contains("done")
               ? "تم الاتفاق علي السعر"
               : "لم يتم الاتفاق علي السعر"),

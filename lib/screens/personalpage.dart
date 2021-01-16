@@ -784,7 +784,7 @@ class __PersonalPageState extends State<PersonalPage> {
               SizedBox(
                 height: 10,
               ),
-              Card(
+    (cType == "user")?Container():   Card(
                 elevation: 2,
                 margin: EdgeInsets.only(right: 10, left: 10),
                 child: Container(

@@ -6,6 +6,8 @@ import 'package:firebase_database/firebase_database.dart';
 // import 'package:flutter_ffmpeg/flutter_ffmpeg.dart';
 import 'package:flutter_video_compress/flutter_video_compress.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:percent_indicator/circular_percent_indicator.dart';
+import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:priceme/classes/ModelClass.dart';
 import 'package:toast/toast.dart';
 
@@ -58,6 +60,7 @@ class _AddVideoState extends State<AddVideo> {
   var _indyearcurrentItemSelected="";
   String model1;
   String model2;
+
   @override
   void initState() {
     super.initState();
@@ -85,7 +88,7 @@ class _AddVideoState extends State<AddVideo> {
             }else{_cphotourl=user.photoUrl;}}
           if(_cName==null){
             if(user.displayName==null||user.displayName==""){
-              _cName="ايميل غير معلوم";
+              _cName="اسم غير معلوم";
             }else{_cName=user.displayName;}}
 
         });
@@ -602,10 +605,88 @@ class _AddVideoState extends State<AddVideo> {
                     ],
                   ),
                 )),
-            new Align(
-              child: loadingIndicator,
-              alignment: FractionalOffset.center,
-            ),
+            // new Align(
+            //   child: loadingIndicator,
+            //   alignment: FractionalOffset.center,
+            // ),
+         _load2 ?  Padding(
+              padding: const EdgeInsets.all(18.0),
+              child: Center(
+                child:  Card(
+                  shape: new RoundedRectangleBorder(
+                      side: new BorderSide(color: Colors.grey[400], width: 3.0),
+                      borderRadius: BorderRadius.circular(10.0)),
+                  //borderOnForeground: true,
+                  elevation: 10.0,
+                  margin: EdgeInsets.only(right: 1, left: 1, bottom: 2),
+                  child: Container(
+                    height:100,//width:100,
+                    color: Colors.white,
+                    //alignment: Alignment(0, 0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(28.0),
+                      child: LinearPercentIndicator(
+                        animation: _load2,
+                        lineHeight: 20.0,
+                        animationDuration: 30000,
+                        percent: 1,
+                        linearStrokeCap: LinearStrokeCap.roundAll,
+                        progressColor: Colors.green,
+
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ):Container(),
+            // Container(
+            //   alignment: Alignment(0, 0),
+            //   child: Text(
+            //     "${this.progress * 100}%",
+            //     style: TextStyle(
+            //       fontSize: 30,
+            //       fontWeight: FontWeight.bold,
+            //     ),
+            //   ),
+            // ),
+            // Container(
+            //   alignment: Alignment(0.3, 0.5),
+            //   child: RaisedButton(
+            //       color: Colors.green,
+            //       onPressed: () {
+            //         final updated = ((this.progress + 0.1).clamp(0.0, 1.0) * 100);
+            //         setState(() {
+            //           this.progress = updated.round() / 100;
+            //         });
+            //         print(progress);
+            //       },
+            //       child: Text(
+            //         '+10%',
+            //         style: TextStyle(
+            //           fontWeight: FontWeight.bold,
+            //           color: Colors.white,
+            //         ),
+            //       )),
+            // ),
+            // Container(
+            //   alignment: Alignment(-0.3, 0.5),
+            //   child: RaisedButton(
+            //       color: Colors.red,
+            //       onPressed: () {
+            //         final updated = ((this.progress - 0.1).clamp(0.0, 1.0) * 100);
+            //         setState(() {
+            //           this.progress = updated.round() / 100;
+            //         });
+            //         print(progress);
+            //       },
+            //       child: Text(
+            //         '-10%',
+            //         style: TextStyle(
+            //           fontWeight: FontWeight.bold,
+            //           color: Colors.white,
+            //         ),
+            //       )),
+            // ),
           ],
         ));
   }

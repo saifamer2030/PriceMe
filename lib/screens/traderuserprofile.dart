@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:priceme/Videos/photosvideotrader.dart';
 import 'package:priceme/screens/traderinfoinuser.dart';
+import 'package:priceme/screens/tradeuserrate.dart';
 import 'package:priceme/trader/tradephotos.dart';
 
 
@@ -61,6 +62,7 @@ class _TraderUserProlileState extends State<TraderUserProlile> {
       TraderInfoInUser(widget.traderid),
       VidiosPhotoTrader(widget.traderid),
       TradePhotos(widget.traderid),
+      TradeUserRate(widget.traderid),
     ];
     return Scaffold(
       body:
@@ -76,7 +78,17 @@ class _TraderUserProlileState extends State<TraderUserProlile> {
                 child: Text(
                   name==null?"": name,textAlign: TextAlign.center,),
               ),
-              background: Image.network(photourl==null?"":photourl/**_imageUrls==null?"":_imageUrls[0]==null?"":_imageUrls[0]**/,fit: BoxFit.cover,),
+              background: photourl==null?Container(
+//                      width: _controller.value,
+//                      height: _controller.value,
+              //  height: 150.0,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/ic_logo2.png'),
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ):Image.network(photourl==null?"":photourl/**_imageUrls==null?"":_imageUrls[0]==null?"":_imageUrls[0]**/,fit: BoxFit.cover,),
 
 
             ),
@@ -101,6 +113,10 @@ class _TraderUserProlileState extends State<TraderUserProlile> {
                 BottomNavigationBarItem(
                   icon: Icon(Icons.local_offer,color: Colors.black),
                   title: Text('الصور'),
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.star,color: Colors.black),
+                  title: Text('التقيم'),
                 ),
               ],
             ),

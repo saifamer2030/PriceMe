@@ -18,6 +18,7 @@ import 'package:priceme/Videos/allvideos.dart';
 import 'package:priceme/classes/FaultsClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/SparePartsSizesClass.dart';
+import 'package:priceme/screens/homestory.dart';
 import 'package:priceme/ui_utile/myColors.dart';
 import 'package:priceme/ui_utile/myFonts.dart';
 import 'package:shimmer/shimmer.dart';
@@ -70,6 +71,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+
     _pageController_spare =
         PageController(viewportFraction: 0.3, initialPage: currentPage_spare);
     _pageController_fault =
@@ -474,7 +476,13 @@ class _HomePageState extends State<HomePage> {
               context,
               MaterialPageRoute(
                   builder: (context) =>
-                      AllVideos(document['carrange'], null, null)));
+                      HomeStory(document['seens'])));
+
+          // Navigator.push(
+          //     context,
+          //     MaterialPageRoute(
+          //         builder: (context) =>
+          //             AllVideos(document['carrange'], null, null)));
         },
         child: Container(
             height: 210,

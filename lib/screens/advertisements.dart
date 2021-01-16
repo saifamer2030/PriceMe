@@ -937,7 +937,7 @@ if(isSearching){}else{
                   padding: EdgeInsets.only(right: 10, left: 10),
                   child: Text(
                     document['pname'] != null && document['pname'].toString().length > 0 ? document['pname']:
-                    "مجهول",
+                    "اسم غير معلوم",
                     textDirection: TextDirection.rtl,
                     textAlign: TextAlign.right,
                     style: TextStyle(
@@ -948,6 +948,22 @@ if(isSearching){}else{
                         fontStyle: FontStyle.normal),
                   ),
                 ),
+                Container(
+                  padding: EdgeInsets.only(right: 10, left: 10),
+                  child: Text(
+                    document['ccar'] != null && document['ccar'].toString().length > 0 ?"${document['ccar'].toString()} - ${document['ccarversion'].toString()}":
+                    "سيارة غير معلوم",
+                    textDirection: TextDirection.rtl,
+                    textAlign: TextAlign.right,
+                    style: TextStyle(
+                        color: Colors.grey,
+//                                  fontFamily: 'Estedad-Black',
+                        fontWeight: FontWeight.normal,
+                        fontSize: 8,
+                        fontStyle: FontStyle.normal),
+                  ),
+                ),
+
                 SizedBox(
                   height: 10,
                 )

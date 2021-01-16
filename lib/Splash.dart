@@ -7,6 +7,7 @@ import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:priceme/FragmentNavigation.dart';
+import 'package:priceme/screens/Loginemailuser.dart';
 import 'package:priceme/screens/alladvertisement.dart';
 import 'package:priceme/screens/network_connection.dart';
 import 'package:priceme/screens/signinphone.dart';
@@ -288,6 +289,51 @@ String _userId,cType;
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => LoginEmailUser()));
+                    },
+                    child: Container(
+                      width: 308.0,
+                      height: 47.0,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(9.0),
+                        border: Border.all(
+                            width: 1.0, color: const Color(0xffff5423)),
+                      ),
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Icon(
+                              Icons.email,
+                              color: Colors.blue[800],
+                              size: 40,
+                            ),
+                            Text(
+                              'تسجيل الدخول بالبريد الإلكترونى',
+                              style: TextStyle(
+                                // fontFamily: 'Helvetica',
+                                  fontFamily: MyFonts.primaryFont,
+                                  fontSize: 15,
+                                  color: const Color(0xffffffff),
+                                  height: 1,
+                                  fontWeight: FontWeight.normal
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
                 Padding(
                   padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
                   child: InkWell(
