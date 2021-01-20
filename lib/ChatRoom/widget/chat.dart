@@ -16,9 +16,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Chat extends StatelessWidget {
   final String peerId;
-  final String peerAvatar;
 
-  Chat({Key key, @required this.peerId, @required this.peerAvatar})
+  Chat({Key key, @required this.peerId})
       : super(key: key);
 
   @override
@@ -45,7 +44,7 @@ class Chat extends StatelessWidget {
       ),
       body: new ChatScreen(
         peerId: peerId,
-        peerAvatar: peerAvatar,
+
       ),
     );
   }
@@ -53,27 +52,26 @@ class Chat extends StatelessWidget {
 
 class ChatScreen extends StatefulWidget {
   final String peerId;
-  final String peerAvatar;
 
-  ChatScreen({Key key, @required this.peerId, @required this.peerAvatar})
+  ChatScreen({Key key, @required this.peerId})
       : super(key: key);
 
   @override
   State createState() =>
-      new ChatScreenState(peerId: peerId, peerAvatar: peerAvatar);
+      new ChatScreenState(peerId: peerId);
 }
 
 class ChatScreenState extends State<ChatScreen> {
-  ChatScreenState({Key key, @required this.peerId, @required this.peerAvatar});
+  ChatScreenState({Key key, @required this.peerId});
 
   String peerId;
-  String peerAvatar;
-  String id;
-
+  String avatar,tradeAvatar;
+  String id,tradeId;
+  String name ,tradeName;
   var listMessage;
   String groupChatId;
   SharedPreferences prefs;
-
+String from,to;
   File imageFile;
   bool isLoading;
   bool isShowSticker;
@@ -87,20 +85,55 @@ class ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
+    tradeId=peerId.split("-")[0] ;
+    id= peerId.split("-")[1] ;
+    print("kkk$peerId////$tradeId///$id");
+    groupChatId=peerId;
+
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? null
         : setState(() {
-            id = user.uid;
+           String  uId = user.uid;
+           if(uId==id){from=id;to=tradeId;}else{from=tradeId;to=id;}
           }));
+
+    var userQuery = Firestore.instance
+        .collection('users')
+        .where('uid', isEqualTo:id)
+        .limit(1);
+    userQuery.getDocuments().then((data) {
+      if (data.documents.length > 0) {
+        setState(() {
+          name = data.documents[0].data['name'];
+          avatar = data.documents[0].data['photourl'];
+
+
+        });
+      }
+    });
+    var userQuery1 = Firestore.instance
+        .collection('users')
+        .where('uid', isEqualTo:tradeId)
+        .limit(1);
+    userQuery1.getDocuments().then((data) {
+      if (data.documents.length > 0) {
+        setState(() {
+          tradeName = data.documents[0].data['name'];
+          tradeAvatar = data.documents[0].data['photourl'];
+
+
+        });
+      }
+    });
     focusNode.addListener(onFocusChange);
 
-    groupChatId = '';
+ //   groupChatId = '';
 
     isLoading = false;
     isShowSticker = false;
     imageUrl = '';
 
-    readLocal();
+  //  readLocal();
   }
 
   void onFocusChange() {
@@ -112,15 +145,15 @@ class ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  readLocal() async {
-    prefs = await SharedPreferences.getInstance();
-    id = prefs.getString('id') ?? '';
-    if (id.hashCode <= peerId.hashCode) {
-      groupChatId = '-$peerId';
-    } else {
-      groupChatId = '-$id';
-    }
-  }
+  // readLocal() async {
+  //   prefs = await SharedPreferences.getInstance();
+  //   id = prefs.getString('id') ?? '';
+  //   if (id.hashCode <= peerId.hashCode) {
+  //     groupChatId = '-$peerId';
+  //   } else {
+  //     groupChatId = '-$id';
+  //   }
+  // }
 
   Future getImage() async {
     imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
@@ -175,14 +208,69 @@ class ChatScreenState extends State<ChatScreen> {
         await transaction.set(
           documentReference,
           {
-            'idFrom': id,
-            'idTo': peerId,
+            'idFrom': from,
+            'idTo': to,
             'timestamp': DateTime.now().millisecondsSinceEpoch.toString(),
             'content': content,
             'type': type
           },
         );
       }).whenComplete(() => setState(() {
+        DateTime now = DateTime.now();
+        String date =
+            '${now.year}-${now.month}-${now.day}-${now.hour}-${now.minute}-00-000';
+
+        String b = now.month.toString();
+        if (b.length < 2) {
+          b = "0" + b;
+        }
+        String c = now.day.toString();
+        if (c.length < 2) {
+          c = "0" + c;
+        }
+        String d = now.hour.toString();
+        if (d.length < 2) {
+          d = "0" + d;
+        }
+        String e = now.minute.toString();
+        if (e.length < 2) {
+          e = "0" + e;
+        }
+        int arrange = int.parse('${now.year}${b}${c}${d}${e}');
+
+        Firestore.instance .collection('ChatList')
+            .document(id)
+            .collection('peerid')
+            .document(peerId).setData({
+          'peerId': peerId,
+          'idTo': peerId,
+          'uid': id,
+          'arrange':arrange,
+          'name': tradeName,
+          'aboutMe': content,
+          'photourl':tradeAvatar,
+        });
+
+        Firestore.instance .collection('ChatList')
+            .document(tradeId)
+            .collection('peerid')
+            .document(id).setData({
+          'peerId': peerId,
+          'idTo': id,
+          'uid': tradeId,
+          'arrange':arrange,
+
+          'name': name,
+          'aboutMe': content,
+          'photourl':avatar,
+        });
+
+
+        Firestore.instance
+            .collection('users')
+            .document(peerId)
+            .updateData({'chattingWith': id});
+
             print("##################  id :$id");
             Firestore.instance
                 .collection('users')
@@ -306,7 +394,7 @@ class ChatScreenState extends State<ChatScreen> {
                             height: 35.0,
                             padding: EdgeInsets.all(10.0),
                           ),
-                          imageUrl: peerAvatar,
+                          imageUrl: tradeAvatar==null?"":tradeAvatar,
                           width: 35.0,
                           height: 35.0,
                           fit: BoxFit.cover,

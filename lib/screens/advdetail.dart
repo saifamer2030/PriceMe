@@ -1396,7 +1396,7 @@ print("ccc$cType");
                                    MaterialPageRoute(
                                        builder: (context) =>
                                            TraderUserProlile(
-                                               commentlist[index].traderid)));
+                                               commentlist[index].ownerId,  commentlist[index].traderid)));
                              },
                              child: Container(
                                height: 40,
@@ -2080,7 +2080,7 @@ print("ccc$cType");
                                       MaterialPageRoute(
                                           builder: (context) =>
                                               TraderUserProlile(
-                                                  traderid)));
+                                                  ownerId,  traderid)));
                                 },
                                 child: Text(
                                   "مراسلة",
