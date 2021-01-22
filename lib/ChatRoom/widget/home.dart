@@ -231,7 +231,6 @@ class HomeScreenState extends State<HomeScreen> {
     await FirebaseAuth.instance.signOut();
     await googleSignIn.disconnect();
     await googleSignIn.signOut();
-
     this.setState(() {
       isLoading = false;
     });

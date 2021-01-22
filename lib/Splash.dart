@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -13,12 +15,12 @@ import 'package:priceme/screens/network_connection.dart';
 import 'package:priceme/screens/signinphone.dart';
 import 'package:priceme/trader/Fragmenttrader.dart';
 import 'package:priceme/ui_utile/myFonts.dart';
+import 'package:http/http.dart' as http;
 
 import 'trader/Logintrader.dart';
 import 'classes/sharedpreftype.dart';
 
 class Splash extends StatefulWidget {
-
   @override
   _SplashState createState() => _SplashState();
 }
@@ -30,7 +32,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   TextEditingController _phoneController = TextEditingController();
   TextEditingController _codeController = TextEditingController();
   AnimationController _controller;
-String _userId,cType;
+  String _userId, cType;
   bool _load = false;
   bool isLoggedIn = false;
   var profileData;
@@ -80,27 +82,29 @@ String _userId,cType;
     //     }
     //   });
     // }));
-   //  _checkIfIsLogged();
-     SessionManager prefs = SessionManager();
-     Future<String> authType = prefs.getAuthType();
-     authType.then((data) {
-       print("authToken " + data.toString());
-       if (data.toString() == "user") {
-         Navigator.push(
-             context, MaterialPageRoute(builder: (context) =>FragmentPriceMe()));
-       } else if (data.toString() == "trader") {
-         Navigator.push(
-             context, MaterialPageRoute(builder: (context) => FragmentTrader()));
-       }
-     }, onError: (e) {
-       print(e);
-     });
+    //  _checkIfIsLogged();
+    SessionManager prefs = SessionManager();
+    Future<String> authType = prefs.getAuthType();
+    authType.then((data) {
+      print("authToken " + data.toString());
+      if (data.toString() == "user") {
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => FragmentPriceMe()));
+      } else if (data.toString() == "trader") {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => FragmentTrader()));
+      }
+    }, onError: (e) {
+      print(e);
+    });
   }
+
   @override
   void dispose() {
     _controller?.dispose();
     super.dispose();
   }
+
   // _checkIfIsLogged() async {
   //   final accessToken = await FacebookAuth.instance.isLogged;
   //   if (accessToken != null) {
@@ -114,17 +118,23 @@ String _userId,cType;
   Widget build(BuildContext context) {
     Widget loadingIndicator = _load
         ? new Container(
-            child: SpinKitCircle(
-              color: const Color(0xffff5423),
-            ),
-          )
+      child: SpinKitCircle(
+        color: const Color(0xffff5423),
+      ),
+    )
         : new Container();
     return Scaffold(
       body: Stack(
         children: [
           Container(
-            width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height,
+            width: MediaQuery
+                .of(context)
+                .size
+                .width,
+            height: MediaQuery
+                .of(context)
+                .size
+                .height,
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment(1.38, -0.81),
@@ -184,13 +194,12 @@ String _userId,cType;
                             Text(
                               'تسجيل الدخول بالهاتف',
                               style: TextStyle(
-                               // fontFamily: 'Helvetica',
-                                fontFamily: MyFonts.primaryFont,
-                                fontSize: 15,
-                                color: const Color(0xffffffff),
-                                height: 1,
-                                fontWeight: FontWeight.normal
-                              ),
+                                // fontFamily: 'Helvetica',
+                                  fontFamily: MyFonts.primaryFont,
+                                  fontSize: 15,
+                                  color: const Color(0xffffffff),
+                                  height: 1,
+                                  fontWeight: FontWeight.normal),
                               textAlign: TextAlign.center,
                             ),
                           ],
@@ -230,12 +239,12 @@ String _userId,cType;
                         children: [
                           Image(
                               image:
-                                  AssetImage("assets/images/google_logo.png"),
+                              AssetImage("assets/images/google_logo.png"),
                               height: 35.0),
                           Text(
                             'تسجيل الدخول جوجل',
                             style: TextStyle(
-                             // fontFamily: 'Helvetica',
+                              // fontFamily: 'Helvetica',
                               fontWeight: FontWeight.normal,
                               fontFamily: MyFonts.primaryFont,
                               fontSize: 15,
@@ -254,7 +263,7 @@ String _userId,cType;
                   child: InkWell(
                     onTap: () {
                       _login();
-                    },
+                      },
                     child: Container(
                       width: 308.0,
                       height: 47.0,
@@ -268,7 +277,7 @@ String _userId,cType;
                         children: [
                           Image(
                               image:
-                                  AssetImage("assets/images/facebook_logo.png"),
+                              AssetImage("assets/images/facebook_logo.png"),
                               height: 50.0),
                           //assets/images/facebook_logo.png
 
@@ -323,8 +332,7 @@ String _userId,cType;
                                   fontSize: 15,
                                   color: const Color(0xffffffff),
                                   height: 1,
-                                  fontWeight: FontWeight.normal
-                              ),
+                                  fontWeight: FontWeight.normal),
                               textAlign: TextAlign.center,
                             ),
                           ],
@@ -333,17 +341,15 @@ String _userId,cType;
                     ),
                   ),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
                   child: InkWell(
                     onTap: () {
-
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
                               builder: (context) => FragmentPriceMe()));
-                      },
+                    },
                     child: Container(
                       width: 308.0,
                       height: 47.0,
@@ -378,18 +384,19 @@ String _userId,cType;
                     ),
                   ),
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
                 FlatButton(
                   onPressed: () {
-                    Navigator.push(
-                        context, MaterialPageRoute(builder: (context) =>Logintrader()));
-
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Logintrader()));
                   },
-                  child:  Center(
+                  child: Center(
                     child: Text(
                       "هل انت تاجر...؟",
                       style: TextStyle(
-                       // fontFamily: 'Helvetica',
+                        // fontFamily: 'Helvetica',
                         fontFamily: MyFonts.primaryFont,
                         fontWeight: FontWeight.normal,
                         fontSize: 15,
@@ -400,7 +407,9 @@ String _userId,cType;
                     ),
                   ),
                 ),
-                SizedBox(height: 20,),
+                SizedBox(
+                  height: 20,
+                ),
               ],
             ),
           ),
@@ -417,7 +426,7 @@ String _userId,cType;
     FirebaseAuth _auth = FirebaseAuth.instance;
 
     _auth.verifyPhoneNumber(
-        //phoneNumber: "+966$phone",
+      //phoneNumber: "+966$phone",
         phoneNumber: "+2$phone",
         timeout: Duration(seconds: 60),
         verificationCompleted: (AuthCredential credential) async {
@@ -494,11 +503,11 @@ String _userId,cType;
                       onPressed: () async {
                         final code = _codeController.text.trim();
                         AuthCredential credential =
-                            PhoneAuthProvider.getCredential(
-                                verificationId: verificationId, smsCode: code);
+                        PhoneAuthProvider.getCredential(
+                            verificationId: verificationId, smsCode: code);
 
                         AuthResult result =
-                            await _auth.signInWithCredential(credential);
+                        await _auth.signInWithCredential(credential);
 
                         //FirebaseUser user = result.user;
                         //createRecord(result.user.uid);
@@ -519,7 +528,8 @@ String _userId,cType;
         final userData = await FacebookAuth.instance.getUserData();
         AuthCredential credential = FacebookAuthProvider.getCredential(
             accessToken: result.accessToken.token);
-        await FirebaseAuth.instance.signInWithCredential(credential);
+
+        // await FirebaseAuth.instance.signInWithCredential(credential);
         setState(() => _userData = userData);
 
         print("kkk" + userData['id']);
@@ -527,8 +537,8 @@ String _userId,cType;
             .collection('users')
             .document(userData['id'])
             .setData({
-          // 'uid': userData['id'],
-          // 'email': userData['email'],
+          'uid': userData['id'],
+          'email': userData['email'],
 //            'name': userData.displayName,
 //            'phone': userData.phoneNumber,
 //            'photourl': userData.photoUrl,
@@ -539,10 +549,8 @@ String _userId,cType;
 //            context,
 //            MaterialPageRoute(
 //                builder: (context) => _displayUserData(userData)));
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => FragmentPriceMe()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => FragmentPriceMe()));
         break;
       case FacebookAuthLoginResponse.cancelled:
         print("login cancelled");
@@ -560,6 +568,7 @@ String _userId,cType;
 
   void initiateFacebookLogin() async {
     var facebookLogin = FacebookLogin();
+
     var facebookLoginResult = await facebookLogin.logIn(['email']);
     switch (facebookLoginResult.status) {
       case FacebookLoginStatus.error:
@@ -572,10 +581,36 @@ String _userId,cType;
         break;
       case FacebookLoginStatus.loggedIn:
         print("LoggedIn");
+        FirebaseUser fbUser;
+        FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+        FacebookAccessToken facebookAccessToken = facebookLoginResult.accessToken;
+        AuthCredential authCredential = FacebookAuthProvider.getCredential(accessToken: facebookAccessToken.token);
+        fbUser = (await _firebaseAuth.signInWithCredential(authCredential)).user;
+        final userData = await FacebookAuth.instance.getUserData();
+        print("kkk" + userData['id']);
+        Firestore.instance
+            .collection('users')
+            .document(userData['id'])
+            .setData({
+          'uid': userData['id'],
+          'email': userData['email'],
+          // 'name': userData.displayName,
+          // 'phone': userData.phoneNumber,
+          // 'photourl': userData.photoUrl,
+          'cType': "user",
+        }).then((value) {
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => FragmentPriceMe()));
+        });
         onLoginStatusChanged(true);
         break;
     }
   }
+
+
+
+
+
 
   _displayUserData(profileData) {
     return Column(
@@ -651,7 +686,7 @@ String _userId,cType;
 
     final GoogleSignInAccount googleSignInAccount = await googleSignIn.signIn();
     final GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
+    await googleSignInAccount.authentication;
 
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleSignInAuthentication.accessToken,
@@ -714,9 +749,4 @@ String _userId,cType;
       'cType': "user",
     });
   }
-
-
-
-
-
 }
