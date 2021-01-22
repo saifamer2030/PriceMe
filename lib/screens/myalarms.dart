@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:priceme/ChatRoom/widget/chat.dart';
 import 'package:priceme/Splash.dart';
 import 'package:priceme/Videos/onevideo.dart';
 import 'package:priceme/screens/advdetail.dart';
@@ -122,26 +123,14 @@ class _MyAlarmsState extends State<MyAlarms> {
           onTap: () {
             setState(() {
               if (document['cType'] == "chat") {
-                final userdatabaseReference =
-                    FirebaseDatabase.instance.reference().child("userdata");
-                userdatabaseReference
-                    .child(document['wid'])
-                    .child("cName")
-                    .once()
-                    .then((DataSnapshot snapshot5) {
-                  setState(() {
-                    if (snapshot5.value != null) {
-                      setState(() {
-                        // Navigator.push(
-                        //   context,
-                        //   new MaterialPageRoute(
-                        //       builder: (BuildContext context) => new ChatPage(
-                        //           name: snapshot5.value, uid: document['wid'])),
-                        // );
-                      });
-                    }
-                  });
-                });
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Chat(
+                          peerId: document['advID'],
+
+
+                        )));
               }
               else if( document['cType'] == "advcomment"){
                 Navigator.push(
@@ -207,6 +196,10 @@ class _MyAlarmsState extends State<MyAlarms> {
                           ? new Icon(
                         Icons.star_rate,
                         color: Colors.black,
+                      ): document['cType'] == "chat"
+                          ? new Icon(
+                        Icons.chat,
+                        color: Colors.black,
                       ):
                       new Icon(
                               Icons.mail_outline,
@@ -258,10 +251,36 @@ class _MyAlarmsState extends State<MyAlarms> {
                                   ),
                                 )
                                     :
-                                Text(
+                                document['cType'] == "chat"
+                                    ?  _userId== document['traderid']?Text(
+                                  document['ownername'] != null &&  !document['ownername'].toString().isEmpty ?
+                                  " رسالة جديدة من ${document['ownername']}" :
+                                  "رسالة جديدة من مجهول"
+                                  ,
+                                  textAlign: TextAlign.right,
+                                  textDirection: TextDirection.rtl,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 13,
+                                    //    fontWeight: FontWeight.bold
+                                  ),
+                                ): Text(
                                   document['tradname'] != null &&  !document['tradname'].toString().isEmpty ?
                                   " رسالة جديدة من ${document['tradname']}" :
                                   "رسالة جديدة من مجهول"
+                                  ,
+                                  textAlign: TextAlign.right,
+                                  textDirection: TextDirection.rtl,
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 13,
+                                    //    fontWeight: FontWeight.bold
+                                  ),
+                                ):
+                                Text(
+                                  document['tradname'] != null &&  !document['tradname'].toString().isEmpty ?
+                                  " تعليق جديدة من ${document['tradname']}" :
+                                  "تعليق جديدة من مجهول"
                                   ,
                                   textAlign: TextAlign.right,
                                   textDirection: TextDirection.rtl,
@@ -277,7 +296,7 @@ class _MyAlarmsState extends State<MyAlarms> {
                               Padding(
                                 padding: const EdgeInsets.all(5.0),
                                 child: Text(
-                                  " ${document['cdate']}  ",
+                                  " ${document['cdate'].split(".")[0]}  ",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.black,

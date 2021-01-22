@@ -1314,7 +1314,7 @@ print("ccc$cType");
                  ],
                ),
                Text(
-                 commentlist[index].cdate,
+                 commentlist[index].cdate.split(".")[0],
                  textDirection: TextDirection.rtl,
                  textAlign: TextAlign.right,
                  style: TextStyle(

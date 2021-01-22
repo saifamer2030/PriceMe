@@ -367,7 +367,7 @@ class HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: <Widget>[
                       Container(
-                        child: Text(
+                        child: Text(document['name']==null?"اسم غير معلوم":
                           ' ${document['name']}',
                           style: TextStyle(
                               color: const Color(0xff171732),
