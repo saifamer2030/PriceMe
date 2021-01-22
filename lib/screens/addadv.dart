@@ -1190,18 +1190,37 @@ class _AddAdvState extends State<AddAdv> {
                                 shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
                                 onPressed: () async {
                                   if (_formKey.currentState.validate()) {
-                                    if (images.length == 0 ||
-                                        song == null ||
-                                        model1 == null ||
-                                        model2 == null ||
-                                        model2 == "..." ||
-                                        faultoutputsub.length == 0) {
+
+                                    if (images.length == 0)  {
                                       Toast.show(
-                                          "برجاء التأكد من إضافة كل البيانات المطلوبة",
+                                          "يجب اضافة صورة واحدة على الاقل",
                                           context,
                                           duration: Toast.LENGTH_LONG,
                                           gravity: Toast.BOTTOM);
-                                    } else {
+                                    }
+                                    else if( song == null){
+                                      Toast.show(
+                                          "برجاء اضافة ملف صوتى لوصف المشكلة",
+                                          context,
+                                          duration: Toast.LENGTH_LONG,
+                                          gravity: Toast.BOTTOM);
+                                    }
+
+                                    else if(  faultoutputsub.length == 0 ){
+                                      Toast.show(
+                                          "برجاء اضافة نوع المشكلة او قطع الغيار",
+                                          context,
+                                          duration: Toast.LENGTH_LONG,
+                                          gravity: Toast.BOTTOM);
+                                    }
+                                    else if(   model1 == null ||model2 == null ||  model2 == "..." ){
+                                      Toast.show(
+                                          "برجاء اضافة بيانات السيارة",
+                                          context,
+                                          duration: Toast.LENGTH_LONG,
+                                          gravity: Toast.BOTTOM);
+                                    }
+                                    else {
                                       try {
                                         final result = await InternetAddress.lookup(
                                             'google.com');
@@ -2811,18 +2830,36 @@ class _AddAdvState extends State<AddAdv> {
                           child: GestureDetector(
                             onTap: () async {
                               if (_formKey.currentState.validate()) {
-                                if (images.length == 0 ||
-                                    song == null ||
-                                    model1 == null ||
-                                    model2 == null ||
-                                    model2 == "..." ||
-                                    faultoutputsub.length == 0) {
+                                if (images.length == 0)  {
                                   Toast.show(
-                                      "برجاء التأكد من إضافة كل البيانات المطلوبة",
+                                      "يجب اضافة صورة واحدة على الاقل",
                                       context,
                                       duration: Toast.LENGTH_LONG,
                                       gravity: Toast.BOTTOM);
-                                } else {
+                                }
+                                else if( song == null){
+                                  Toast.show(
+                                      "برجاء اضافة ملف صوتى لوصف المشكلة",
+                                      context,
+                                      duration: Toast.LENGTH_LONG,
+                                      gravity: Toast.BOTTOM);
+                                }
+
+                                else if(  faultoutputsub.length == 0 ){
+                                  Toast.show(
+                                      "برجاء اضافة نوع المشكلة او قطع الغيار",
+                                      context,
+                                      duration: Toast.LENGTH_LONG,
+                                      gravity: Toast.BOTTOM);
+                                }
+                                else if(   model1 == null ||model2 == null ||  model2 == "..." ){
+                                  Toast.show(
+                                      "برجاء اضافة بيانات السيارة",
+                                      context,
+                                      duration: Toast.LENGTH_LONG,
+                                      gravity: Toast.BOTTOM);
+                                }
+                             else {
                                   try {
                                     final result = await InternetAddress.lookup(
                                         'google.com');

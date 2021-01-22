@@ -85,7 +85,7 @@ class __PersonalPageState extends State<PersonalPage> {
                       data.documents[0].data['workshopname'].toString();
                   traderType = data.documents[0].data['traderType'].toString();
                   selectedcars = data.documents[0].data['selectedcarstring'];
-
+print("eee$cType");
                   selectedcars == null
                       ? selectedcars = ""
                       : selectedcars = selectedcars;

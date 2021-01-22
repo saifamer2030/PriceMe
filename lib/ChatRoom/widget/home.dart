@@ -290,10 +290,14 @@ class HomeScreenState extends State<HomeScreen> {
       ),
       body: Stack(
         children: <Widget>[
-          // List
+          // List//.collection('Alarm').document(_userId).collection('Alarmid')
           Container(
             child: StreamBuilder(
-              stream: Firestore.instance.collection('users').snapshots(),
+              stream: Firestore.instance.collection('ChatList')
+          .document(currentUserId)
+          .collection('peerid') .orderBy('arrange',
+                  descending:
+                  true) .snapshots(),
               builder: (context, snapshot) {
                 if (!snapshot.hasData) {
                   return Center(
@@ -324,9 +328,9 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
   Widget buildItem(BuildContext context, DocumentSnapshot document) {
-    if (document['uid'] == currentUserId) {
-      return Container();
-    } else {
+    // if (document['uid'] == currentUserId) {
+    //   return Container();
+    // } else {
       return Container(
         child: FlatButton(
           child: Row(
@@ -362,16 +366,21 @@ class HomeScreenState extends State<HomeScreen> {
                   child: Column(
                     children: <Widget>[
                       Container(
-                        child: Text(
-                          'Nickname: ${document['name']}',
-                          style: TextStyle(color: primaryColor),
+                        child: Text(document['name']==null?"اسم غير معلوم":
+                          ' ${document['name']}',
+                          style: TextStyle(
+                              color: const Color(0xff171732),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 15.0,
+                              fontStyle: FontStyle.normal),
                         ),
                         alignment: Alignment.centerLeft,
                         margin: EdgeInsets.fromLTRB(10.0, 0.0, 0.0, 5.0),
                       ),
                       Container(
                         child: Text(
-                          'About me: ${document['aboutMe'] ?? 'Not available'}',
+                          ' ${document['aboutMe'] ?? ''}',
+                          overflow: TextOverflow.ellipsis,
                           style: TextStyle(color: primaryColor),
                         ),
                         alignment: Alignment.centerLeft,
@@ -389,8 +398,8 @@ class HomeScreenState extends State<HomeScreen> {
                 context,
                 MaterialPageRoute(
                     builder: (context) => Chat(
-                          peerId: document['uid'],
-                          peerAvatar: document['photourl'],
+                          peerId: document['peerId'],
+
 
                         )));
           },
@@ -401,7 +410,7 @@ class HomeScreenState extends State<HomeScreen> {
         ),
         margin: EdgeInsets.only(bottom: 10.0, left: 5.0, right: 5.0),
       );
-    }
+   // }
   }
 
   Future<bool> onWillPop() async {

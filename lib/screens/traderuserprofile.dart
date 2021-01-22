@@ -10,8 +10,9 @@ import 'package:priceme/trader/tradephotos.dart';
 
 
 class TraderUserProlile extends StatefulWidget {
+  String ownerId;
   String traderid;
-  TraderUserProlile(this.traderid);
+  TraderUserProlile(this.ownerId,this.traderid);
 
 
   @override
@@ -59,7 +60,7 @@ class _TraderUserProlileState extends State<TraderUserProlile> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> _children = [
-      TraderInfoInUser(widget.traderid),
+      TraderInfoInUser(widget.ownerId,widget.traderid),
       VidiosPhotoTrader(widget.traderid),
       TradePhotos(widget.traderid),
       TradeUserRate(widget.traderid),

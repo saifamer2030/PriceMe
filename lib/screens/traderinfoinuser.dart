@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:priceme/ChatRoom/widget/chat.dart';
 import 'package:toast/toast.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -11,8 +12,10 @@ Color color1 = Colors.orange;
 Color color2 = Colors.orangeAccent;
 
 class TraderInfoInUser extends StatefulWidget {
+  String ownerId;
   String traderid;
-  TraderInfoInUser(this.traderid);
+  TraderInfoInUser(this.ownerId,this.traderid);
+
   @override
   _TraderInfoInUserState createState() => _TraderInfoInUserState();
 }
@@ -97,6 +100,12 @@ class _TraderInfoInUserState extends State<TraderInfoInUser> {
                           textColor: const Color(0xff171732),
                           color: Colors.grey[400],
                           onPressed: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Chat(
+                                      peerId: "${widget.traderid}-${widget.ownerId}",
+                                    )));
                            // sortrate();
                             // if (_userId == null) {
                             //   Toast.show(
