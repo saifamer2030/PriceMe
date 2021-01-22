@@ -65,7 +65,7 @@ class _AddPhotoState extends State<AddPhoto> {
     try {
       resultList = await MultiImagePicker.pickImages(
         maxImages: 1,
-        enableCamera: false,
+        enableCamera: true,
         selectedAssets: images,
         cupertinoOptions: CupertinoOptions(takePhotoIcon: "طلب"),
         materialOptions: MaterialOptions(
