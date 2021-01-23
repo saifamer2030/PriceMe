@@ -7,6 +7,7 @@ import 'package:adobe_xd/gradient_xd_transform.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:priceme/FragmentNavigation.dart';
 import 'package:priceme/screens/Loginemailuser.dart';
@@ -82,7 +83,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     //     }
     //   });
     // }));
-    //  _checkIfIsLogged();
+     _checkIfIsLogged();
     SessionManager prefs = SessionManager();
     Future<String> authType = prefs.getAuthType();
     authType.then((data) {
@@ -105,14 +106,16 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     super.dispose();
   }
 
-  // _checkIfIsLogged() async {
-  //   final accessToken = await FacebookAuth.instance.isLogged;
-  //   if (accessToken != null) {
-  //     FacebookAuth.instance.getUserData().then((userData) {
-  //       setState(() => _userData = userData);
-  //     });
-  //   }
-  // }
+  _checkIfIsLogged() async {
+    final accessToken = await FacebookAuth.instance.isLogged;
+    if (accessToken != null) {
+      FacebookAuth.instance.getUserData().then((userData) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => FragmentPriceMe()));
+        setState(() => _userData = userData);
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -262,7 +265,10 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                   padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
                   child: InkWell(
                     onTap: () {
-                      _login();
+
+                      loginWithFacebook();
+
+                      // _login();
                       },
                     child: Container(
                       width: 308.0,
@@ -521,6 +527,53 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
         codeAutoRetrievalTimeout: null);
   }
 
+
+  String your_client_id = "1118763915193704";
+  String your_redirect_url =
+      "https://www.facebook.com/connect/login_success.html";
+  loginWithFacebook() async{
+    String result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => CustomWebView(
+              selectedUrl:
+              'https://www.facebook.com/dialog/oauth?client_id=$your_client_id&redirect_uri=$your_redirect_url&response_type=token&scope=email,public_profile,',
+            ),
+            maintainState: true),
+
+    );
+    if (result != null) {
+      try {
+        final facebookAuthCred =
+        FacebookAuthProvider.getCredential(accessToken: result);
+        FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+        final userData = await FacebookAuth.instance.getUserData();
+        final FirebaseUser currentUser = await firebaseAuth.currentUser();
+        final user =
+        await firebaseAuth.signInWithCredential(facebookAuthCred).then((value) {
+          Firestore.instance
+              .collection('users')
+              .document(currentUser.uid)
+              .setData({
+            'uid': currentUser.uid,
+            'email': userData['email'],
+//            'name': userData.displayName,
+//            'phone': userData.phoneNumber,
+//            'photourl': userData.photoUrl,
+            'cType': "user",
+          });
+
+
+
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => FragmentPriceMe()));
+
+        });
+
+      } catch (e) {}
+    }
+  }
+
   _login() async {
     final result = await FacebookAuth.instance.login();
     switch (result.status) {
@@ -528,8 +581,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
         final userData = await FacebookAuth.instance.getUserData();
         AuthCredential credential = FacebookAuthProvider.getCredential(
             accessToken: result.accessToken.token);
-
-        // await FirebaseAuth.instance.signInWithCredential(credential);
+        await FirebaseAuth.instance.signInWithCredential(credential);
         setState(() => _userData = userData);
 
         print("kkk" + userData['id']);
@@ -748,5 +800,55 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
         .updateData({
       'cType': "user",
     });
+  }
+}
+class CustomWebView extends StatefulWidget {
+  final String selectedUrl;
+
+  CustomWebView({this.selectedUrl});
+
+  @override
+  _CustomWebViewState createState() => _CustomWebViewState();
+}
+
+class _CustomWebViewState extends State<CustomWebView> {
+  final flutterWebviewPlugin = new FlutterWebviewPlugin();
+
+  @override
+  void initState() {
+    super.initState();
+
+    flutterWebviewPlugin.onUrlChanged.listen((String url) {
+      if (url.contains("#access_token")) {
+        succeed(url);
+      }
+
+      if (url.contains(
+          "https://www.facebook.com/connect/login_success.html?error=access_denied&error_code=200&error_description=Permissions+error&error_reason=user_denied")) {
+        denied();
+      }
+    });
+  }
+
+  denied() {
+    Navigator.pop(context);
+  }
+
+  succeed(String url) {
+    var params = url.split("access_token=");
+
+    var endparam = params[1].split("&");
+
+    Navigator.pop(context, endparam[0]);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WebviewScaffold(
+        url: widget.selectedUrl,
+        appBar: new AppBar(
+          backgroundColor: Color.fromRGBO(66, 103, 178, 1),
+          title: new Text("Facebook login"),
+        ));
   }
 }
