@@ -30,7 +30,7 @@ dependencies:
   cupertino_icons: ^0.1.3
   adobe_xd: ^1.0.0+1
   fluttertoast: ^3.1.3
-  firebase_auth: ^0.16.1
+  firebase_auth: ^0.15.3
   flutter_facebook_auth: ^0.2.4
   flutter_facebook_login: ^3.0.0
   firebase_core:
@@ -78,6 +78,7 @@ dependencies:
   shimmer: ^1.1.2
   percent_indicator: ^2.1.9
   story_view: ^0.12.1
+  flutter_webview_plugin: ^0.3.10+1
 
 
 
