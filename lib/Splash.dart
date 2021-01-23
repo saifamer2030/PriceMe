@@ -220,6 +220,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                       });
                       signInWithGoogle().then((val) {
                         print("////////$val");
+
                         Navigator.of(context).pushReplacement(
                           MaterialPageRoute(
                             builder: (context) {
@@ -268,7 +269,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
 
                       loginWithFacebook();
 
-                      // _login();
+                       //_login();
                       },
                     child: Container(
                       width: 308.0,
@@ -581,7 +582,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
         final userData = await FacebookAuth.instance.getUserData();
         AuthCredential credential = FacebookAuthProvider.getCredential(
             accessToken: result.accessToken.token);
-        await FirebaseAuth.instance.signInWithCredential(credential);
+        await FirebaseAuth.instance.signInWithCredential(credential).then((value) => null).catchError((e){print("kkk$e");});
         setState(() => _userData = userData);
 
         print("kkk" + userData['id']);
@@ -643,7 +644,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
         Firestore.instance
             .collection('users')
             .document(userData['id'])
-            .setData({
+            .updateData({
           'uid': userData['id'],
           'email': userData['email'],
           // 'name': userData.displayName,
@@ -653,6 +654,21 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
         }).then((value) {
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => FragmentPriceMe()));
+        }).catchError((e){
+          Firestore.instance
+              .collection('users')
+              .document(userData['id'])
+              .setData({
+            'uid': userData['id'],
+            'email': userData['email'],
+            // 'name': userData.displayName,
+            // 'phone': userData.phoneNumber,
+            // 'photourl': userData.photoUrl,
+            'cType': "user",
+          }).then((value) {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => FragmentPriceMe()));
+          });
         });
         onLoginStatusChanged(true);
         break;
@@ -792,13 +808,30 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   }
 
   void updateuser(FirebaseUser signedInUser) {
+    print("gggg${ signedInUser.email}");
     SessionManager prefs = SessionManager();
     prefs.setAuthType("user");
+    print("gggg1${ signedInUser.email}");
+
     Firestore.instance
         .collection('users')
         .document(signedInUser.uid)
         .updateData({
+      'uid': signedInUser.uid,
+      'email': signedInUser.email,
       'cType': "user",
+    }).then((value) {
+      print("gggg11${signedInUser.uid}");
+
+    }).catchError((e){
+      Firestore.instance
+          .collection('users')
+          .document(signedInUser.uid)
+          .setData({
+        'uid': signedInUser.uid,
+        'email': signedInUser.email,
+        'cType': "user",
+      });
     });
   }
 }

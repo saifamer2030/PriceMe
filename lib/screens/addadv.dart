@@ -18,6 +18,7 @@ import 'package:priceme/classes/ModelClass.dart';
 import 'package:priceme/classes/OutputClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
+import 'package:priceme/screens/FragmentNavigation1.dart';
 import 'package:priceme/screens/cur_loc.dart';
 import 'package:priceme/screens/myadvertisement.dart';
 import 'package:priceme/screens/network_connection.dart';
@@ -3040,7 +3041,7 @@ class _AddAdvState extends State<AddAdv> {
                 Navigator.push(
                     context,
                     new MaterialPageRoute(
-                        builder: (context) => MyAdvertisement()));
+                        builder: (context) => FragmentPriceMe1()));
               });
             });
           }));

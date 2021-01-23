@@ -15,6 +15,7 @@ import 'package:priceme/ui_utile/myColors.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:toast/toast.dart';
 import 'package:priceme/ui_utile/myCustomShape.dart';
+import 'advdetail.dart';
 
 import '../FragmentNavigation.dart';
 
@@ -976,6 +977,11 @@ class _BookingPageState extends State<BookingPage> {
                           });
                         }
                       }
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  AdvDetail(widget.ownerId,widget.advID)));
                     });
                   });
                 },
@@ -1206,6 +1212,8 @@ class _BookingPageState extends State<BookingPage> {
   }
 
   void getuserdata() {
+    FirebaseAuth.instance.currentUser().then((user) => user == null
+        ? setState((){}): setState(() {_userId = user.uid;
     var userQuery = Firestore.instance
         .collection('users')
         .where('uid', isEqualTo: widget.ownerId)
@@ -1219,6 +1227,32 @@ class _BookingPageState extends State<BookingPage> {
           photourlowner = data.documents[0].data['photourl'].toString();
 
           if (_cNameowner == null) {
+            if (user.displayName == null || user.displayName == "") {
+              _cNameowner = "ايميل غير معلوم";
+            } else {
+              _cNameowner = user.displayName;
+            }
+          }
+          // print("mmm$_cMobile+++${user.phoneNumber}***");
+          if (_cMobileowner == null) {
+            if (user.phoneNumber == null || user.phoneNumber == "") {
+              _cMobileowner = "لا يوجد رقم هاتف بعد";
+            } else {
+              _cMobileowner = user.phoneNumber;
+            }
+          }
+          //  if(_cEmail==null){_cEmail=user.email??"ايميل غير معلوم";}
+
+          if (photourlowner == null) {
+            if (user.photoUrl == null || user.photoUrl == "") {
+              photourlowner = "";
+            } else {
+              photourlowner = user.photoUrl;
+            }
+          }
+
+
+          if (_cNameowner == null) {
             _cNameowner = "ايميل غير معلوم";
           }
           if (_cMobileowner == null) {
@@ -1227,6 +1261,9 @@ class _BookingPageState extends State<BookingPage> {
         });
       }
     });
+
+    }));
+
   }
 
   void getadvdata() {
