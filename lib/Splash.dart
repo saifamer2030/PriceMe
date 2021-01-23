@@ -110,8 +110,8 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     final accessToken = await FacebookAuth.instance.isLogged;
     if (accessToken != null) {
       FacebookAuth.instance.getUserData().then((userData) {
-        Navigator.pushReplacement(context,
-            MaterialPageRoute(builder: (context) => FragmentPriceMe()));
+        // Navigator.pushReplacement(context,
+        //     MaterialPageRoute(builder: (context) => FragmentPriceMe()));
         setState(() => _userData = userData);
       });
     }
@@ -557,7 +557,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
               .setData({
             'uid': currentUser.uid,
             'email': userData['email'],
-//            'name': userData.displayName,
+           'name': userData['name'],
 //            'phone': userData.phoneNumber,
 //            'photourl': userData.photoUrl,
             'cType': "user",
