@@ -128,103 +128,103 @@ class _AddVideoState extends State<AddVideo> {
                         children: <Widget>[
                           InkWell(
                             onTap: () async {
-                              // showDialog(
-                              //   context: context,
-                              //   builder: (BuildContext context) =>
-                              //   new CupertinoAlertDialog(
-                              //     title: new Text("اختار الفيديو من..."),
-                              //     content: Column(
-                              //       children: [
-                              //         CupertinoDialogAction(
-                              //             isDefaultAction: false,
-                              //             child: new FlatButton(
-                              //               onPressed: () async {
+                              showDialog(
+                                context: context,
+                                builder: (BuildContext context) =>
+                                new CupertinoAlertDialog(
+                                  title: new Text("اختار الفيديو من..."),
+                                  content: Column(
+                                    children: [
+                                      CupertinoDialogAction(
+                                          isDefaultAction: false,
+                                          child: new FlatButton(
+                                            onPressed: () async {
+
+                                              videofile =  await ImagePicker.pickVideo(source: ImageSource.gallery,).whenComplete(() {
+                                                setState(()  {
+                                                  videocheck=true;
+
+                                                  Future.delayed(Duration(seconds: 0), () async {
+                                                    MediaInfo info = await FlutterVideoCompress().getMediaInfo(videofile.path).then((value) async {
+                                                      print("${(value.duration/2000).round()}");
+                                                      thumbnailurlfile = await FlutterVideoCompress().getThumbnailWithFile(
+                                                          videofile.path,
+                                                          quality: 50, // default(100)
+                                                          position: (value.duration/2000).round() // default(-1)
+                                                      );
+                                                    });
+                                                    Navigator.pop(context);
+                                                  });
+                                                });
+                                              }).catchError((e){
+                                                print("ccccc$e");Navigator.pop(context);
+                                              });
+                                            },
+                                            child: Text("متصفح الوسائط"),
+                                          )),
+                                      CupertinoDialogAction(
+                                          isDefaultAction: false,
+                                          child: new FlatButton(
+                                            onPressed: () async {
+
+                                              // videofile =  await ImagePicker.pickVideo(source: ImageSource.camera,).whenComplete(() {
+                                              //   setState(()  {
+                                              //     videocheck=true;
+                                              //
+                                              //     Future.delayed(Duration(seconds: 0), () async {
+                                              //       MediaInfo info = await FlutterVideoCompress().getMediaInfo(videofile.path).then((value) async {
+                                              //         print("${(value.duration/2000).round()}");
+                                              //         thumbnailurlfile = await FlutterVideoCompress().getThumbnailWithFile(
+                                              //             videofile.path,
+                                              //             quality: 50, // default(100)
+                                              //             position: (value.duration/2000).round() // default(-1)
+                                              //         );
+                                              //       });
+                                              //       Navigator.pop(context);
+                                              //     });
+                                              //   });
+                                              // }).catchError((e){
+                                              //   print("ccccc$e");
+                                              //   Navigator.pop(context);
+                                              // });
+                                            },
+                                            child: Text("تصوير كاميرا"),
+                                          )),
+                                    ],
+                                  ),
+                                  actions: [
+                                    CupertinoDialogAction(
+                                        isDefaultAction: false,
+                                        child: new FlatButton(
+                                          onPressed: () =>
+                                              Navigator.pop(context),
+                                          child: Text("إلغاء"),
+                                        )),
+                                  ],
+                                ),
+                              );
+
+
+
+                              // videofile =  await ImagePicker.pickVideo(source: ImageSource.gallery,).whenComplete(() {
+                              //   setState(()  {
+                              //     videocheck=true;
                               //
-                              //                 videofile =  await ImagePicker.pickVideo(source: ImageSource.gallery,).whenComplete(() {
-                              //                   setState(()  {
-                              //                     videocheck=true;
+                              //     Future.delayed(Duration(seconds: 0), () async {
+                              //       MediaInfo info = await FlutterVideoCompress().getMediaInfo(videofile.path).then((value) async {
+                              //         print("${(value.duration/2000).round()}");
+                              //         thumbnailurlfile = await FlutterVideoCompress().getThumbnailWithFile(
+                              //             videofile.path,
+                              //             quality: 50, // default(100)
+                              //             position: (value.duration/2000).round() // default(-1)
+                              //         );
+                              //       });
                               //
-                              //                     Future.delayed(Duration(seconds: 0), () async {
-                              //                       MediaInfo info = await FlutterVideoCompress().getMediaInfo(videofile.path).then((value) async {
-                              //                         print("${(value.duration/2000).round()}");
-                              //                         thumbnailurlfile = await FlutterVideoCompress().getThumbnailWithFile(
-                              //                             videofile.path,
-                              //                             quality: 50, // default(100)
-                              //                             position: (value.duration/2000).round() // default(-1)
-                              //                         );
-                              //                       });
-                              //                       Navigator.pop(context);
-                              //                     });
-                              //                   });
-                              //                 }).catchError((e){
-                              //                   print("ccccc$e");Navigator.pop(context);
-                              //                 });
-                              //               },
-                              //               child: Text("متصفح الوسائط"),
-                              //             )),
-                              //         CupertinoDialogAction(
-                              //             isDefaultAction: false,
-                              //             child: new FlatButton(
-                              //               onPressed: () async {
-                              //
-                              //                 videofile =  await ImagePicker.pickVideo(source: ImageSource.camera,).whenComplete(() {
-                              //                   setState(()  {
-                              //                     videocheck=true;
-                              //
-                              //                     Future.delayed(Duration(seconds: 0), () async {
-                              //                       MediaInfo info = await FlutterVideoCompress().getMediaInfo(videofile.path).then((value) async {
-                              //                         print("${(value.duration/2000).round()}");
-                              //                         thumbnailurlfile = await FlutterVideoCompress().getThumbnailWithFile(
-                              //                             videofile.path,
-                              //                             quality: 50, // default(100)
-                              //                             position: (value.duration/2000).round() // default(-1)
-                              //                         );
-                              //                       });
-                              //                       Navigator.pop(context);
-                              //                     });
-                              //                   });
-                              //                 }).catchError((e){
-                              //                   print("ccccc$e");
-                              //                   Navigator.pop(context);
-                              //                 });
-                              //               },
-                              //               child: Text("تصوير كاميرا"),
-                              //             )),
-                              //       ],
-                              //     ),
-                              //     actions: [
-                              //       CupertinoDialogAction(
-                              //           isDefaultAction: false,
-                              //           child: new FlatButton(
-                              //             onPressed: () =>
-                              //                 Navigator.pop(context),
-                              //             child: Text("إلغاء"),
-                              //           )),
-                              //     ],
-                              //   ),
-                              // );
-
-
-
-                              videofile =  await ImagePicker.pickVideo(source: ImageSource.gallery,).whenComplete(() {
-                                setState(()  {
-                                  videocheck=true;
-
-                                  Future.delayed(Duration(seconds: 0), () async {
-                                    MediaInfo info = await FlutterVideoCompress().getMediaInfo(videofile.path).then((value) async {
-                                      print("${(value.duration/2000).round()}");
-                                      thumbnailurlfile = await FlutterVideoCompress().getThumbnailWithFile(
-                                          videofile.path,
-                                          quality: 50, // default(100)
-                                          position: (value.duration/2000).round() // default(-1)
-                                      );
-                                    });
-
-                                  });
-                                });
-                              }).catchError((e){
-                                print("ccccc$e");
-                              });
+                              //     });
+                              //   });
+                              // }).catchError((e){
+                              //   print("ccccc$e");
+                              // });
                             },
                             child: Center(
                               child: Container(
@@ -620,19 +620,24 @@ class _AddVideoState extends State<AddVideo> {
                   elevation: 10.0,
                   margin: EdgeInsets.only(right: 1, left: 1, bottom: 2),
                   child: Container(
-                    height:100,//width:100,
+                    height:110,//width:100,
                     color: Colors.white,
                     //alignment: Alignment(0, 0),
                     child: Padding(
                       padding: const EdgeInsets.all(28.0),
-                      child: LinearPercentIndicator(
-                        animation: _load2,
-                        lineHeight: 20.0,
-                        animationDuration: 30000,
-                        percent: 1,
-                        linearStrokeCap: LinearStrokeCap.roundAll,
-                        progressColor: Colors.green,
+                      child: Column(
+                        children: [
+                          LinearPercentIndicator(
+                            animation: _load2,
+                            lineHeight: 20.0,
+                            animationDuration: 30000,
+                            percent: 1,
+                            linearStrokeCap: LinearStrokeCap.roundAll,
+                            progressColor: Colors.green,
 
+                          ),
+                          Center(child: Text("جارى تحميل الفيديو")),
+                        ],
                       ),
                     ),
                   ),

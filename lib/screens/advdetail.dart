@@ -58,7 +58,7 @@ class _AdvDetailState extends State<AdvDetail>
   var _bestRateListController = ScrollController();
   String _userId;
   String _username, cType;
-  String _userphone;
+  String _userphone,_workshoptype;
   AudioPlayer audioPlayer = AudioPlayer();
   Duration duration = new Duration();
   Duration position = new Duration();
@@ -198,6 +198,7 @@ class _AdvDetailState extends State<AdvDetail>
 print("ccc$cType");
             _username = data.documents[0].data['name'];
             _userphone = data.documents[0].data['phone'];
+            _workshoptype = data.documents[0].data['worktype'];
             String rating = (data.documents[0].data['rating']);
             int custRate = data.documents[0].data['custRate'];
             if (rating == null) {
@@ -874,7 +875,7 @@ print("ccc$cType");
 
                 Divider(thickness: 2) : SizedBox(),
 
-                cType == "trader" ?
+               ( cType == "trader"  &&  mfault.contains(_workshoptype)) ?
                 Container(
                     width: 180,
                     height: 40,

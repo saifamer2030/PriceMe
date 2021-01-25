@@ -209,10 +209,7 @@ class _SignInPhoneState extends State<SignInPhone> {
           //createRecord(result.user.uid);
           updateuser(result.user);
 
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => FragmentPriceMe()));
+
           //FirebaseUser user = result.user;
           // Navigator.of(context).pushReplacementNamed('/fragmentsouq');
 
@@ -344,6 +341,25 @@ class _SignInPhoneState extends State<SignInPhone> {
         .document(signedInUser.uid)
         .updateData({
       'cType': "user",
+      'phone':_phoneController.text,
+    }).then((value) {
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => FragmentPriceMe()));
+    }).catchError((e){
+      Firestore.instance.collection('users')
+          .document(signedInUser.uid)
+          .setData({
+        'cType': "user",
+        'phone':_phoneController.text,
+
+      }).then((value) {
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) => FragmentPriceMe()));
+      });
     });
   }
   /**void createRecord(signedInUserid) {

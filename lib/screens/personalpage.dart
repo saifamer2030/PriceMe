@@ -75,8 +75,10 @@ class __PersonalPageState extends State<PersonalPage> {
                   _cName = data.documents[0].data['name'];
                   _cMobile = data.documents[0].data['phone'];
                   _cEmail = data.documents[0].data['email'];
+                  photourl = data.documents[0].data['photourl'];
+
+
                   cType = data.documents[0].data['cType'].toString();
-                  photourl = data.documents[0].data['photourl'].toString();
                   fromPlaceLat = data.documents[0].data['fromPLat'].toString();
                   fromPlaceLng = data.documents[0].data['fromPLng'].toString();
                   fPlaceName = data.documents[0].data['fPlaceName'].toString();
@@ -130,6 +132,13 @@ print("eee$cType");
                       _cEmail = "ايميل غير معلوم";
                     } else {
                       _cEmail = user.email;
+                    }
+                  }
+                  if (photourl == null) {
+                    if (user.photoUrl == null || user.photoUrl == "") {
+                      photourl = "";
+                    } else {
+                      photourl = user.photoUrl;
                     }
                   }
                   provider = user.providerData[1].providerId;
