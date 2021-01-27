@@ -235,8 +235,7 @@ class _HomePageState extends State<HomePage> {
           SizedBox(
             height: 10,
           ),
-          Expanded(
-            child: Container(
+         Container(
               decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.only(
@@ -248,13 +247,13 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     height: 50,
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       textDirection: TextDirection.rtl,
                       children: [
                         SizedBox(
                           width: 20,
                         ),
-                        Expanded(
-                            child: InkWell(
+                        InkWell(
                           onTap: () {
                             setState(() {
                               //   faultButtonTapped = false;
@@ -294,12 +293,11 @@ class _HomePageState extends State<HomePage> {
                                             fontWeight: FontWeight.bold,
                                             fontFamily: MyFonts.primaryFont))),
                               )),
-                        )),
+                        ),
                         SizedBox(
                           width: 8,
                         ),
-                        Expanded(
-                            child: InkWell(
+                       InkWell(
                           onTap: () {
                             setState(() {
                               //faultButtonTapped = true;
@@ -339,7 +337,7 @@ class _HomePageState extends State<HomePage> {
                                             fontWeight: FontWeight.bold,
                                             fontFamily: MyFonts.primaryFont))),
                               )),
-                        )),
+                        ),
                         SizedBox(
                           width: 20,
                         ),
@@ -376,7 +374,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-          )
+
         ],
       ),
     );
