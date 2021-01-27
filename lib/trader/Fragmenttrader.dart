@@ -13,6 +13,7 @@ import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/screens/MorePriceMe.dart';
 import 'package:priceme/screens/addadv.dart';
 import 'package:priceme/screens/alladvertisement.dart';
+import 'package:priceme/screens/blockscreen.dart';
 import 'package:priceme/screens/homepage.dart';
 import 'package:priceme/screens/myadvertisement.dart';
 import 'package:priceme/screens/myalarms.dart';
@@ -52,17 +53,33 @@ class _FragmentTraderState extends State<FragmentTrader> {
   @override
   void initState() {
     super.initState();
-    // FirebaseAuth.instance.currentUser().then((user) => user == null
-    //     ? null
-    //     : setState(() {
-    //   _userId = user.uid;
-    // }));
-    // getData();
-    // setState(() {
-    //   currentScreen = AllAdvertisement();
-    // });
+    FirebaseAuth.instance.currentUser().then((user) => user == null
+        ? setState(() {})
+        : setState(() {
+      _userId = user.uid;
+      var userQuery = Firestore.instance
+          .collection('users')
+          .where('uid', isEqualTo: _userId)
+          .limit(1);
+      userQuery.getDocuments().then((data) {
+        if (data.documents.length > 0) {
+          setState(() {
+          bool  block = data.documents[0].data['block'];
 
-//    _currentIndex = widget.selectPage != null ? widget.selectPage : 4;
+            if( data.documents[0].data['block']==null){block=false;}
+            else if(block==true){
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => BlockScreen()));
+            }else {}
+
+
+          });
+        }
+      });
+
+    }));
   }
 
   @override

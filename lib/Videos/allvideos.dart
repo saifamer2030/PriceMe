@@ -12,6 +12,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:priceme/Splash.dart';
+import 'package:priceme/Videos/collapsing_tab.dart';
 import 'package:priceme/Videos/videotabs1.dart';
 import 'package:priceme/classes/AdvClass.dart';
 import 'package:toast/toast.dart';
@@ -349,10 +350,10 @@ class _VideoWidgetState extends State<VideoWidget> {
                                                       duration: Toast.LENGTH_SHORT,
                                                       gravity: Toast.BOTTOM);
 
-                                                  Navigator.pushReplacement(
+                                                  Navigator.push(
                                                       context,
                                                       MaterialPageRoute(
-                                                          builder: (context) => VideoTabs1()));
+                                                          builder: (context) => CollapsingTab()));
                                                 }));
                                           });
                                         }
@@ -515,6 +516,26 @@ class _VideoWidgetState extends State<VideoWidget> {
                                   'cType': "videofav",
 
                                 });
+                                DocumentReference documentReference1 =
+                                Firestore.instance.collection('Alarm')
+                                    .document("hp8aCGZfS8WLXTnGaUXsOIWZRot1")
+                                    .collection('Alarmid')
+                                    .document();
+                                documentReference1.setData({
+                                  'ownerId': widget.document['cuserId'],
+                                  'traderid': _userId,
+                                  'advID': widget.document['cId'],
+                                  'alarmid': documentReference.documentID,
+                                  'cdate': DateTime.now().toString(),
+                                  'tradname': widget.username,
+                                  'ownername': widget.document['cname'],
+                                  'comment': widget.document['ctitle'],
+                                  'rate': 0.0,
+                                  'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
+                                  'cType': "videofav",
+
+                                });
+
                               });
                               print("rrrrr$_userId");
                               Firestore.instance

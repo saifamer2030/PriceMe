@@ -113,7 +113,7 @@ print("eee$cType");
                   // if(_cName==null){_cName=user.displayName??"اسم غير معلوم";}
                   if (_cName == null) {
                     if (user.displayName == null || user.displayName == "") {
-                      _cName = "ايميل غير معلوم";
+                      _cName = "اسم غير معلوم";
                     } else {
                       _cName = user.displayName;
                     }

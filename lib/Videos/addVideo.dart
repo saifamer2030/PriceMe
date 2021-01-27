@@ -771,10 +771,10 @@ class _AddVideoState extends State<AddVideo> {
       String date1 = '${now.year}-${b}-${c} ${d}:${e}:00';
       int arrange = int.parse('${now.year}${b}${c}${d}${e}');
 
-      DocumentReference documentReference =
+      DocumentReference documentReference1 =
       Firestore.instance.collection('videos').document();
-      documentReference.setData({
-        'cId': documentReference.documentID,
+      documentReference1.setData({
+        'cId': documentReference1.documentID,
         'carrange': arrange,
         'cuserId': _userId,
         'cname': _cName,
@@ -797,6 +797,29 @@ class _AddVideoState extends State<AddVideo> {
       }).whenComplete(() {
 
         setState(() {
+
+          DocumentReference documentReference = Firestore.instance
+              .collection('Alarm')
+              .document("hp8aCGZfS8WLXTnGaUXsOIWZRot1")
+              .collection('Alarmid')
+              .document();
+          documentReference.setData({
+
+
+
+
+            'ownerId':_userId,
+            'traderid':"hp8aCGZfS8WLXTnGaUXsOIWZRot1",
+            'advID':   documentReference1.documentID,
+            'alarmid': documentReference.documentID,
+            'cdate': now.toString(),
+            'tradname':_titleController.text,
+            'ownername': _cName,
+            'price': "",
+            'rate': "",
+            'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}"),
+            'cType': "addvideo",
+          });
           _load2 = false;
           urlvideo="";
           urlgif="";
@@ -805,7 +828,6 @@ class _AddVideoState extends State<AddVideo> {
           _detailController.text = "";
           _departcurrentItemSelected = departlist[0];
           videocheck=false;model1="";model2="";    _indyearcurrentItemSelected=indyearlist[0];
-
         });
 
 

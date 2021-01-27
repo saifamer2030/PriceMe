@@ -75,7 +75,7 @@ class _TraderUserProlileState extends State<TraderUserProlile> {
             expandedHeight: 300.0,
             flexibleSpace: FlexibleSpaceBar(
               title:  Padding(
-                padding: const EdgeInsets.only(top:28.0, left: 170),
+                padding: const EdgeInsets.only(top:28.0, left: 5),
                 child: Text(
                   name==null?"": name,textAlign: TextAlign.center,),
               ),

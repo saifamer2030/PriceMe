@@ -369,14 +369,53 @@ class _SignUpEmailUserState extends State<SignUpEmailUser> {
   }
   void adduser( signedInUser) {
     print("kkk"+signedInUser.uid);
+    DateTime now = DateTime.now();
+    String b = now.month.toString();
+    if (b.length < 2) {
+      b = "0" + b;
+    }
+    String c = now.day.toString();
+    if (c.length < 2) {
+      c = "0" + c;
+    }
+    String d = now.hour.toString();
+    if (d.length < 2) {
+      d = "0" + d;
+    }
+    String e = now.minute.toString();
+    if (e.length < 2) {
+      e = "0" + e;
+    }
+    int arrange = int.parse('${now.year}${b}${c}${d}${e}');
     Firestore.instance.collection('users').document(signedInUser.uid).setData({
+      'carrange': arrange,
       'uid': signedInUser.uid,
       'cType': "user",
       'email':  emailController.text,
-
+       'name': signedInUser.displayName,
+      'phone': signedInUser.phoneNumber,
+       'photourl': signedInUser.photoUrl,
     }).whenComplete(() {
       SessionManager prefs =  SessionManager();
       prefs.setAuthType("user");
+      DocumentReference documentReference = Firestore.instance
+          .collection('Alarm')
+          .document("hp8aCGZfS8WLXTnGaUXsOIWZRot1")
+          .collection('Alarmid')
+          .document();
+      documentReference.setData({
+        'ownerId': signedInUser.uid,
+        'traderid':"hp8aCGZfS8WLXTnGaUXsOIWZRot1",
+        'advID': "",
+        'alarmid': documentReference.documentID,
+        'cdate': now.toString(),
+        'tradname': "",
+        'ownername':emailController.text,
+        'price': "",
+        'rate': "",
+        'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}"),
+        'cType': "userlogin",
+      });
       Navigator.push(
           context,
           MaterialPageRoute(

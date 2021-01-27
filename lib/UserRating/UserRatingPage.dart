@@ -36,7 +36,7 @@ class _UserRatingPageState extends State<UserRatingPage> {
   var Rate3 = 0.0;
   var _averageRating, _totalRate, _totalCust;
   FirebaseAuth _firebaseAuth;
-  String _userId;
+  String _userId,_name;
   SingingCharacter _character = SingingCharacter.done;
 
   // تعريف الايتم المراد ادخال قيم فيها
@@ -71,6 +71,7 @@ class _UserRatingPageState extends State<UserRatingPage> {
           setState(() {
             _totalRate = data.documents[0].data['rating']??"0";
             _totalCust = data.documents[0].data['custRate']??0;
+            _name=data.documents[0].data['name']??0;
             print("###############$_totalRate ------ $_totalCust");
           });
         }
@@ -662,17 +663,39 @@ class _UserRatingPageState extends State<UserRatingPage> {
               'rate':allRating,
               'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
               'cType': "rating",
+            }).then((value) {
+              DocumentReference documentReference1 = Firestore.instance
+                  .collection('Alarm')
+                  .document("hp8aCGZfS8WLXTnGaUXsOIWZRot1")
+                  .collection('Alarmid')
+                  .document();
+              documentReference1.setData({
+                'ownerId': _userId,
+                'traderid':widget.tradeid,
+                'advID': "",
+                'alarmid': documentReference.documentID,
+                'cdate': now.toString(),
+                'tradname': _name,
+                'ownername': "ownerName",
+                'price': _commentController.text,
+                'rate':allRating,
+                'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
+                'cType': "rating",
+              });
+            }).then((value) {
+              print('############## $allRating ###################');
+              Toast.show(
+                  "تم إرسال تقييمك بنجاح",
+                  context,
+                  duration: Toast.LENGTH_LONG,
+                  gravity: Toast.BOTTOM);
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => FragmentPriceMe()));
             });
-            print('############## $allRating ###################');
-            Toast.show(
-                "تم إرسال تقييمك بنجاح",
-                context,
-                duration: Toast.LENGTH_LONG,
-                gravity: Toast.BOTTOM);
-            Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => FragmentPriceMe()));
+
+
           });
         });
       }else{

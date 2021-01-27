@@ -555,19 +555,72 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
           Firestore.instance
               .collection('users')
               .document(currentUser.uid)
-              .setData({
+              .updateData({
             'uid': currentUser.uid,
             'email': userData['email'],
-           'name': userData['name'],
-//            'phone': userData.phoneNumber,
-//            'photourl': userData.photoUrl,
             'cType': "user",
+          }).then((value) {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => FragmentPriceMe()));
+
+          }).catchError((e){
+            DateTime now = DateTime.now();
+            String b = now.month.toString();
+            if (b.length < 2) {
+              b = "0" + b;
+            }
+            String c = now.day.toString();
+            if (c.length < 2) {
+              c = "0" + c;
+            }
+            String d = now.hour.toString();
+            if (d.length < 2) {
+              d = "0" + d;
+            }
+            String e = now.minute.toString();
+            if (e.length < 2) {
+              e = "0" + e;
+            }
+            int arrange = int.parse('${now.year}${b}${c}${d}${e}');
+            Firestore.instance
+                .collection('users')
+                .document(currentUser.uid)
+                .setData({
+              'carrange': arrange,
+              'uid': currentUser.uid,
+              'email': userData['email'],
+              'name': userData['name'],
+              // 'phone': currentUser.phoneNumber,//userData['phone'],
+              // 'photourl': currentUser.photoUrl,//userData['photoUrl'],
+              'cType': "user",
+            }).then((value) {
+              DocumentReference documentReference = Firestore.instance
+                  .collection('Alarm')
+                  .document("hp8aCGZfS8WLXTnGaUXsOIWZRot1")
+                  .collection('Alarmid')
+                  .document();
+              documentReference.setData({
+                'ownerId': currentUser.uid,
+                'traderid':"hp8aCGZfS8WLXTnGaUXsOIWZRot1",
+                'advID': "",
+                'alarmid': documentReference.documentID,
+                'cdate': now.toString(),
+                'tradname': "",
+                'ownername':userData['name'],
+                'price': "",
+                'rate': "",
+                'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}"),
+                'cType': "userlogin",
+              });
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) => FragmentPriceMe()));
+            });
           });
 
 
 
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => FragmentPriceMe()));
+
+
 
         });
 
@@ -655,17 +708,54 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
           Navigator.pushReplacement(context,
               MaterialPageRoute(builder: (context) => FragmentPriceMe()));
         }).catchError((e){
+          DateTime now = DateTime.now();
+          String b = now.month.toString();
+          if (b.length < 2) {
+            b = "0" + b;
+          }
+          String c = now.day.toString();
+          if (c.length < 2) {
+            c = "0" + c;
+          }
+          String d = now.hour.toString();
+          if (d.length < 2) {
+            d = "0" + d;
+          }
+          String e = now.minute.toString();
+          if (e.length < 2) {
+            e = "0" + e;
+          }
+          int arrange = int.parse('${now.year}${b}${c}${d}${e}');
           Firestore.instance
               .collection('users')
               .document(userData['id'])
               .setData({
+            'carrange': arrange,
             'uid': userData['id'],
             'email': userData['email'],
-            // 'name': userData.displayName,
-            // 'phone': userData.phoneNumber,
-            // 'photourl': userData.photoUrl,
             'cType': "user",
+            'name': userData['displayName'] ,
+            'phone':userData['phoneNumber'] ,
+            'photourl':userData['photoUrl'] ,
           }).then((value) {
+            DocumentReference documentReference = Firestore.instance
+                .collection('Alarm')
+                .document("hp8aCGZfS8WLXTnGaUXsOIWZRot1")
+                .collection('Alarmid')
+                .document();
+            documentReference.setData({
+              'ownerId': userData['id'],
+              'traderid':"hp8aCGZfS8WLXTnGaUXsOIWZRot1",
+              'advID': "",
+              'alarmid': documentReference.documentID,
+              'cdate': now.toString(),
+              'tradname': "",
+              'ownername':userData['name'],
+              'price': "",
+              'rate': "",
+              'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}"),
+              'cType': "userlogin",
+            });
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => FragmentPriceMe()));
           });
@@ -824,13 +914,55 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
       print("gggg11${signedInUser.uid}");
 
     }).catchError((e){
+      DateTime now = DateTime.now();
+      String b = now.month.toString();
+      if (b.length < 2) {
+        b = "0" + b;
+      }
+      String c = now.day.toString();
+      if (c.length < 2) {
+        c = "0" + c;
+      }
+      String d = now.hour.toString();
+      if (d.length < 2) {
+        d = "0" + d;
+      }
+      String e = now.minute.toString();
+      if (e.length < 2) {
+        e = "0" + e;
+      }
+      int arrange = int.parse('${now.year}${b}${c}${d}${e}');
       Firestore.instance
           .collection('users')
           .document(signedInUser.uid)
           .setData({
+        'carrange': arrange,
+
         'uid': signedInUser.uid,
         'email': signedInUser.email,
         'cType': "user",
+        'name': signedInUser.displayName,
+        'phone': signedInUser.phoneNumber,
+        'photourl': signedInUser.photoUrl,
+      }).then((value) {
+        DocumentReference documentReference = Firestore.instance
+            .collection('Alarm')
+            .document("hp8aCGZfS8WLXTnGaUXsOIWZRot1")
+            .collection('Alarmid')
+            .document();
+        documentReference.setData({
+          'ownerId': signedInUser.uid,
+          'traderid':"hp8aCGZfS8WLXTnGaUXsOIWZRot1",
+          'advID': "",
+          'alarmid': documentReference.documentID,
+          'cdate': now.toString(),
+          'tradname': "",
+          'ownername':signedInUser.displayName,
+          'price': "",
+          'rate': "",
+          'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}"),
+          'cType': "userlogin",
+        });
       });
     });
   }

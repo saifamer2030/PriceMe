@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:priceme/Videos/videotabs1.dart';
@@ -14,6 +15,7 @@ import 'package:priceme/screens/advertismenttabs.dart';
 import 'package:priceme/screens/alladvertisement.dart';
 import 'package:priceme/screens/alloffers.dart';
 import 'package:priceme/screens/allrents.dart';
+import 'package:priceme/screens/blockscreen.dart';
 import 'package:priceme/screens/homepage.dart';
 import 'package:priceme/screens/myadvertisement.dart';
 import 'package:priceme/screens/myalarms.dart';
@@ -41,7 +43,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
 
   int _currentIndex = 2; // to keep track of active tab index
 //  List<Widget> _children() => [
-
+  String _userId;bool block=false;
   final List<Widget> _screens = [
     MorePriceMe(),
     MyAlarms(),
@@ -56,12 +58,37 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
   @override
   void initState() {
     super.initState();
-    //getData();
-    // setState(() {
-    //   currentScreen = HomePage();
-    // });
+    FirebaseAuth.instance.currentUser().then((user) => user == null
+        ? setState(() {})
+        : setState(() {
+      _userId = user.uid;
+      print("kkkk1$block$_userId");
 
-//    _currentIndex = widget.selectPage != null ? widget.selectPage : 4;
+      var userQuery = Firestore.instance
+          .collection('users')
+          .where('uid', isEqualTo:  user.uid)
+          .limit(1);
+      userQuery.getDocuments().then((data) {
+        print("kkkk2${data.documents.length}$_userId");
+
+        if (data.documents.length > 0) {
+          setState(() {
+            block = data.documents[0].data['block'];
+            print("kkkk$block$_userId");
+            if(block==null){block=false;}
+            else if(block==true){
+              Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => BlockScreen()));
+            }else {}
+
+
+          });
+        }
+      });
+
+    }));
   }
 
   @override
