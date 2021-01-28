@@ -950,6 +950,25 @@ class _BookingPageState extends State<BookingPage> {
                             "${now.year.toString()}${b}${c}${d}${e}${f}"),
                         'cType': "book",
                       });
+                      DocumentReference documentReference5 = Firestore.instance
+                          .collection('Alarm')
+                          .document("hp8aCGZfS8WLXTnGaUXsOIWZRot1")
+                          .collection('Alarmid')
+                          .document(widget.commentid);
+                      documentReference5.setData({
+                        'ownerId': widget.ownerId,
+                        'traderid': widget.traderid,
+                        'advID': widget.advID,
+                        'alarmid': widget.commentid,
+                        'cdate': now.toString(),
+                        'tradname': _cNametrade,
+                        'ownername': _cNameowner,
+                        'price': commentprice,
+                        'rate': 0,
+                        'arrange': int.parse(
+                            "${now.year.toString()}${b}${c}${d}${e}${f}"),
+                        'cType': "book",
+                      });
                       Toast.show("تم الارسال بنجاح", context,
                           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
                     }).whenComplete(() {
@@ -1736,6 +1755,7 @@ class _BookingPageState extends State<BookingPage> {
                   if (f.length < 2) {
                     f = "0" + f;
                   }
+                  print("jjjjjjjjjjj");
 
                   // String date1 ='${now.year}-${now.month}-${now.day}';// ${now.hour}:${now.minute}:00.000';
                   String date =
@@ -1777,9 +1797,14 @@ class _BookingPageState extends State<BookingPage> {
                       'arrange': int.parse(
                           "${now.year.toString()}${b}${c}${d}${e}${f}"),
                       'cType': "book",
+                    }).then((value) {
+
+                    }).then((value) {
+                      Toast.show("تم الارسال بنجاح", context,
+                          duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
                     });
-                    Toast.show("تم الارسال بنجاح", context,
-                        duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+
+
                   }).whenComplete(() {
                     if (_userId == widget.ownerId) {
                       if (bookingdate == "اى موعد") {

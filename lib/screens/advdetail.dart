@@ -1207,20 +1207,20 @@ print("ccc$cType");
                  textDirection: TextDirection.rtl,
 
                  children: [
-                   Container(
-                     height: 20,
-                     width: 20,
-                     decoration: BoxDecoration(
-                       color: Colors.grey[400],
-                       shape: BoxShape.circle,
-
-                       image: DecorationImage(
-                         image: NetworkImage("https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg"
-                             ),
-                         fit: BoxFit.contain,
-                       ),
-                     ),
-                   ),
+                   // Container(
+                   //   height: 20,
+                   //   width: 20,
+                   //   decoration: BoxDecoration(
+                   //     color: Colors.grey[400],
+                   //     shape: BoxShape.circle,
+                   //
+                   //     image: DecorationImage(
+                   //       image: NetworkImage("https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg"
+                   //           ),
+                   //       fit: BoxFit.contain,
+                   //     ),
+                   //   ),
+                   // ),
                    SizedBox(width: 4,),
                    Expanded(
                        child: Container(
@@ -1911,7 +1911,24 @@ print("ccc$cType");
           'cType': "advcomment",
         }).whenComplete(() {
           print("iiii3");
-
+          DocumentReference documentReference = Firestore.instance
+              .collection('Alarm')
+              .document("hp8aCGZfS8WLXTnGaUXsOIWZRot1")
+              .collection('Alarmid')
+              .document();
+          documentReference.setData({
+            'ownerId': widget.userId,
+            'traderid': _userId,
+            'advID': widget.advid,
+            'alarmid': documentReference.documentID,
+            'cdate': now.toString(),
+            'tradname': _username,
+            'ownername': ownerName,
+            'price': _commentController.text,
+            'rate': traderating,
+            'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
+            'cType': "advcomment",
+          });
           Toast.show("تم التعليق بنجاح", context,
               duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
         });

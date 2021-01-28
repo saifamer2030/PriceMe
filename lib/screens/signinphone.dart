@@ -341,6 +341,7 @@ class _SignInPhoneState extends State<SignInPhone> {
         .document(signedInUser.uid)
         .updateData({
       'cType': "user",
+      'uid':signedInUser.uid,
       'phone':_phoneController.text,
     }).then((value) {
       Navigator.pushReplacement(
@@ -348,13 +349,54 @@ class _SignInPhoneState extends State<SignInPhone> {
           MaterialPageRoute(
               builder: (context) => FragmentPriceMe()));
     }).catchError((e){
+      DateTime now = DateTime.now();
+      String b = now.month.toString();
+      if (b.length < 2) {
+        b = "0" + b;
+      }
+      String c = now.day.toString();
+      if (c.length < 2) {
+        c = "0" + c;
+      }
+      String d = now.hour.toString();
+      if (d.length < 2) {
+        d = "0" + d;
+      }
+      String e = now.minute.toString();
+      if (e.length < 2) {
+        e = "0" + e;
+      }
+      int arrange = int.parse('${now.year}${b}${c}${d}${e}');
       Firestore.instance.collection('users')
           .document(signedInUser.uid)
           .setData({
+        'carrange': arrange,
         'cType': "user",
+        'uid':signedInUser.uid,
         'phone':_phoneController.text,
+        'email':  signedInUser.email,
+        'name': signedInUser.displayName,
+        'photourl': signedInUser.photoUrl,
 
       }).then((value) {
+        DocumentReference documentReference = Firestore.instance
+            .collection('Alarm')
+            .document("hp8aCGZfS8WLXTnGaUXsOIWZRot1")
+            .collection('Alarmid')
+            .document();
+        documentReference.setData({
+          'ownerId': signedInUser.uid,
+          'traderid':"hp8aCGZfS8WLXTnGaUXsOIWZRot1",
+          'advID': "",
+          'alarmid': documentReference.documentID,
+          'cdate': now.toString(),
+          'tradname': "",
+          'ownername':signedInUser.displayName,
+          'price': "",
+          'rate': "",
+          'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}"),
+          'cType': "userlogin",
+        });
         Navigator.pushReplacement(
             context,
             MaterialPageRoute(

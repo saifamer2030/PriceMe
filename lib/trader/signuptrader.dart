@@ -766,8 +766,27 @@ top: 13,
 
   }
   void adduser( signedInUser) {
+    DateTime now = DateTime.now();
+    String b = now.month.toString();
+    if (b.length < 2) {
+      b = "0" + b;
+    }
+    String c = now.day.toString();
+    if (c.length < 2) {
+      c = "0" + c;
+    }
+    String d = now.hour.toString();
+    if (d.length < 2) {
+      d = "0" + d;
+    }
+    String e = now.minute.toString();
+    if (e.length < 2) {
+      e = "0" + e;
+    }
+    int arrange = int.parse('${now.year}${b}${c}${d}${e}');
     print("kkk"+signedInUser.uid);
     Firestore.instance.collection('users').document(signedInUser.uid).setData({
+      'carrange': arrange,
       'uid': signedInUser.uid,
       'email': emailController.text,
       'name': nameController.text,
@@ -788,6 +807,24 @@ top: 13,
     }).whenComplete(() {
       SessionManager prefs =  SessionManager();
       prefs.setAuthType("trader");
+      DocumentReference documentReference = Firestore.instance
+          .collection('Alarm')
+          .document("hp8aCGZfS8WLXTnGaUXsOIWZRot1")
+          .collection('Alarmid')
+          .document();
+      documentReference.setData({
+        'ownerId':"hp8aCGZfS8WLXTnGaUXsOIWZRot1",
+        'traderid':signedInUser.uid,
+        'advID': "",
+        'alarmid': documentReference.documentID,
+        'cdate': now.toString(),
+        'tradname': nameController.text,
+        'ownername': workshopnameController.text,
+        'price': "",
+        'rate': "",
+        'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}"),
+        'cType': "tradelogin",
+      });
       Navigator.push(
           context,
           MaterialPageRoute(

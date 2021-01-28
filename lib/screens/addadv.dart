@@ -2970,13 +2970,13 @@ class _AddAdvState extends State<AddAdv> {
             }
             String date1 = '${now.year}-${b}-${c} ${d}:${e}:00';
             int arrange = int.parse('${now.year}${b}${c}${d}${e}');
-            DocumentReference documentReference =
+            DocumentReference documentReference1 =
                 Firestore.instance.collection('advertisments').document();
-            documentReference.setData({
+            documentReference1.setData({
               //'timestamp': FieldValue.serverTimestamp(), to arrange data using orderby
 
               'carrange': arrange,
-              'advid': documentReference.documentID,
+              'advid': documentReference1.documentID,
               'userId': _userId,
               'cdate': date1,
               'cdiscribtion': discController.text,
@@ -3013,7 +3013,24 @@ class _AddAdvState extends State<AddAdv> {
                   : null,
             }).whenComplete(() {
               setState(() {
-                // _load2 = false;
+                DocumentReference documentReference = Firestore.instance
+                    .collection('Alarm')
+                    .document("hp8aCGZfS8WLXTnGaUXsOIWZRot1")
+                    .collection('Alarmid')
+                    .document();
+                documentReference.setData({
+                  'ownerId':_userId,
+                  'traderid':"hp8aCGZfS8WLXTnGaUXsOIWZRot1",
+                  'advID':  documentReference1.documentID,
+                  'alarmid': documentReference.documentID,
+                  'cdate': now.toString(),
+                  'tradname':titleController.text,
+                  'ownername': _cName,
+                  'price': "",
+                  'rate': "",
+                  'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}"),
+                  'cType': "addadv",
+                });
                 urlList.clear();
                 images.clear();
                 song = null;

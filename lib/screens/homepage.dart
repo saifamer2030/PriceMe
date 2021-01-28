@@ -268,6 +268,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               child: Container(
                                 height: 40,
+                                width: 100,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
                                     gradient: tapedButton == "spareParts"
@@ -312,6 +313,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               child: Container(
                                 height: 40,
+                                width: 100,
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(8),
                                     gradient: tapedButton == "faults"

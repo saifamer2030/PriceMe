@@ -805,73 +805,98 @@ class _AddVideoState extends State<AddVideo> {
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? null
         : setState(() {
-            _userId = user.uid;
-            DateTime now = DateTime.now();
-            String date =
-                '${now.year}-${now.month}-${now.day}-${now.hour}-${now.minute}-00-000';
+      _userId = user.uid;
+      DateTime now = DateTime.now();
+      String date =
+          '${now.year}-${now.month}-${now.day}-${now.hour}-${now.minute}-00-000';
 
-            String b = now.month.toString();
-            if (b.length < 2) {
-              b = "0" + b;
-            }
-            String c = now.day.toString();
-            if (c.length < 2) {
-              c = "0" + c;
-            }
-            String d = now.hour.toString();
-            if (d.length < 2) {
-              d = "0" + d;
-            }
-            String e = now.minute.toString();
-            if (e.length < 2) {
-              e = "0" + e;
-            }
-            String date1 = '${now.year}-${b}-${c} ${d}:${e}:00';
-            int arrange = int.parse('${now.year}${b}${c}${d}${e}');
+      String b = now.month.toString();
+      if (b.length < 2) {
+        b = "0" + b;
+      }
+      String c = now.day.toString();
+      if (c.length < 2) {
+        c = "0" + c;
+      }
+      String d = now.hour.toString();
+      if (d.length < 2) {
+        d = "0" + d;
+      }
+      String e = now.minute.toString();
+      if (e.length < 2) {
+        e = "0" + e;
+      }
+      String date1 = '${now.year}-${b}-${c} ${d}:${e}:00';
+      int arrange = int.parse('${now.year}${b}${c}${d}${e}');
 
-            DocumentReference documentReference =
-                Firestore.instance.collection('videos').document();
-            documentReference.setData({
-              'cId': documentReference.documentID,
-              'carrange': arrange,
-              'cuserId': _userId,
-              'cname': _cName,
-              'cphotourl': _cphotourl,
-              'cdate': date1,
-              'ctitle': _titleController.text,
-              'cdepart': _departcurrentItemSelected,
-              'cdetail': _detailController.text,
-              'cpublished': false,
-              'curi': urlvideo,
-              'likes': 0,
-              'seens': 0,
-              'imgurl': urlgif,
-              'favcheck': false,
-              'ccar': model1,
-              'ccarversion': model2,
-              'cyear': _indyearcurrentItemSelected,
-            }).whenComplete(() {
-              setState(() {
-                _load2 = false;
-                urlvideo = "";
-                urlgif = "";
-                videofile = null;
-                _titleController.text = "";
-                _detailController.text = "";
-                _departcurrentItemSelected = departlist[0];
-                videocheck = false;
-                model1 = "";
-                model2 = "";
-                _indyearcurrentItemSelected = indyearlist[0];
-              });
+      DocumentReference documentReference1 =
+      Firestore.instance.collection('videos').document();
+      documentReference1.setData({
+        'cId': documentReference1.documentID,
+        'carrange': arrange,
+        'cuserId': _userId,
+        'cname': _cName,
+        'cphotourl': _cphotourl,
+        'cdate': date1,
+        'ctitle': _titleController.text,
+        'cdepart': _departcurrentItemSelected,
+        'cdetail': _detailController.text,
+        'cpublished': false,
+        'curi': urlvideo,
+        'likes': 0,
+        'seens': 0,
+        'imgurl': urlgif,
+        'favcheck': false,
+        'ccar':model1,
+        'ccarversion':model2,
+        'cyear':_indyearcurrentItemSelected,
 
-              showAlertDialog(context);
-            }).catchError((e) {
-              setState(() {
-                _load2 = false;
-              });
-            });
-          }));
+
+      }).whenComplete(() {
+
+        setState(() {
+
+          DocumentReference documentReference = Firestore.instance
+              .collection('Alarm')
+              .document("hp8aCGZfS8WLXTnGaUXsOIWZRot1")
+              .collection('Alarmid')
+              .document();
+          documentReference.setData({
+
+
+
+
+            'ownerId':_userId,
+            'traderid':"hp8aCGZfS8WLXTnGaUXsOIWZRot1",
+            'advID':   documentReference1.documentID,
+            'alarmid': documentReference.documentID,
+            'cdate': now.toString(),
+            'tradname':_titleController.text,
+            'ownername': _cName,
+            'price': "",
+            'rate': "",
+            'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}"),
+            'cType': "addvideo",
+          });
+          _load2 = false;
+          urlvideo="";
+          urlgif="";
+          videofile=null;
+          _titleController.text = "";
+          _detailController.text = "";
+          _departcurrentItemSelected = departlist[0];
+          videocheck=false;model1="";model2="";    _indyearcurrentItemSelected=indyearlist[0];
+        });
+
+
+        showAlertDialog(context);
+      }).catchError((e) {
+
+        setState(() {
+          _load2 = false;
+        });
+      });
+    }));
   }
 
   showAlertDialog(BuildContext context) {
