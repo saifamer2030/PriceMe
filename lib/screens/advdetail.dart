@@ -57,7 +57,7 @@ class _AdvDetailState extends State<AdvDetail>
   var _bestPriceListController = ScrollController();
   var _bestRateListController = ScrollController();
   String _userId;
-  String _username, cType;
+  String _username, cType,_photourl;
   String _userphone,_workshoptype;
   AudioPlayer audioPlayer = AudioPlayer();
   Duration duration = new Duration();
@@ -197,6 +197,7 @@ class _AdvDetailState extends State<AdvDetail>
             cType = data.documents[0].data['cType'];
 print("ccc$cType");
             _username = data.documents[0].data['name'];
+            _photourl = data.documents[0].data['photourl'];
             _userphone = data.documents[0].data['phone'];
             _workshoptype = data.documents[0].data['worktype'];
             String rating = (data.documents[0].data['rating']);
@@ -213,6 +214,13 @@ print("ccc$cType");
                 _username = "ايميل غير معلوم";
               } else {
                 _username = user.displayName;
+              }
+            }
+            if (_photourl == null) {
+              if (user.photoUrl == null || user.photoUrl == "") {
+                _photourl = "https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg";
+              } else {
+                _username = user.photoUrl;
               }
             }
             // print("mmm$_cMobile+++${user.phoneNumber}***");
@@ -297,6 +305,7 @@ print("ccc$cType");
           comment.data['bookingdate'],
           comment.data['ownercheck'],
           comment.data['tradercheck'],
+          comment.data['photo'],
         );
         setState(() {
           print("ggg${comment.data['rate']}");
@@ -1207,20 +1216,20 @@ print("ccc$cType");
                  textDirection: TextDirection.rtl,
 
                  children: [
-                   // Container(
-                   //   height: 20,
-                   //   width: 20,
-                   //   decoration: BoxDecoration(
-                   //     color: Colors.grey[400],
-                   //     shape: BoxShape.circle,
-                   //
-                   //     image: DecorationImage(
-                   //       image: NetworkImage("https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg"
-                   //           ),
-                   //       fit: BoxFit.contain,
-                   //     ),
-                   //   ),
-                   // ),
+                   Container(
+                     height: 20,
+                     width: 20,
+                     decoration: BoxDecoration(
+                       color: Colors.grey[400],
+                       shape: BoxShape.circle,
+
+                       image: DecorationImage(
+                         image: NetworkImage( commentlist[index].photo==null?"https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg":commentlist[index].photo
+                             ),
+                         fit: BoxFit.contain,
+                       ),
+                     ),
+                   ),
                    SizedBox(width: 4,),
                    Expanded(
                        child: Container(
@@ -1844,6 +1853,7 @@ print("ccc$cType");
         'commentid': commentid,
         'cdate': now.toString(),
         'tradname': _username,
+        'photo': _photourl,
         'ownername': ownerName,
         'details': _commentdetailController.text,
         'price': double.parse(price),
@@ -1862,7 +1872,7 @@ print("ccc$cType");
           _commentdetailController.text,
           double.parse(price),
           traderating,
-          "", false,false
+          "", false,false,_photourl
         );
         setState(() {
           commentlist.insert(0, commentclass);
@@ -1909,6 +1919,8 @@ print("ccc$cType");
           'rate': traderating,
           'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
           'cType': "advcomment",
+          'photo': _photourl,
+
         }).whenComplete(() {
           print("iiii3");
           DocumentReference documentReference = Firestore.instance
@@ -1928,6 +1940,8 @@ print("ccc$cType");
             'rate': traderating,
             'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
             'cType': "advcomment",
+            'photo': _photourl,
+
           });
           Toast.show("تم التعليق بنجاح", context,
               duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);

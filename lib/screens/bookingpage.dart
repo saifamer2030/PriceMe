@@ -930,6 +930,8 @@ class _BookingPageState extends State<BookingPage> {
                       'arrange':
                       int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
                       'cType': "book",
+                      'photo': photourltrade,
+
                     }).whenComplete(() {
                       DocumentReference documentReference = Firestore.instance
                           .collection('Alarm')
@@ -949,6 +951,8 @@ class _BookingPageState extends State<BookingPage> {
                         'arrange': int.parse(
                             "${now.year.toString()}${b}${c}${d}${e}${f}"),
                         'cType': "book",
+                        'photo': photourlowner,
+
                       });
                       DocumentReference documentReference5 = Firestore.instance
                           .collection('Alarm')
@@ -968,6 +972,7 @@ class _BookingPageState extends State<BookingPage> {
                         'arrange': int.parse(
                             "${now.year.toString()}${b}${c}${d}${e}${f}"),
                         'cType': "book",
+                        'photo': _userId== widget.ownerId?photourlowner:photourltrade,
                       });
                       Toast.show("تم الارسال بنجاح", context,
                           duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
@@ -1778,6 +1783,8 @@ class _BookingPageState extends State<BookingPage> {
                     'arrange':
                         int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
                     'cType': "book",
+                    'photo': photourlowner,
+
                   }).whenComplete(() {
                     DocumentReference documentReference = Firestore.instance
                         .collection('Alarm')
@@ -1797,6 +1804,8 @@ class _BookingPageState extends State<BookingPage> {
                       'arrange': int.parse(
                           "${now.year.toString()}${b}${c}${d}${e}${f}"),
                       'cType': "book",
+                      'photo': photourltrade,
+
                     }).then((value) {
 
                     }).then((value) {

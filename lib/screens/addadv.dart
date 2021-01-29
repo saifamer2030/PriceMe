@@ -87,7 +87,7 @@ class _AddAdvState extends State<AddAdv> {
   LatLng fromPlace, toPlace;
 
   String fromPlaceLat, fromPlaceLng, fPlaceName;
-
+  String _photourl;
   Map<String, dynamic> sendData = Map();
   String model1;
   String model2;
@@ -265,6 +265,8 @@ class _AddAdvState extends State<AddAdv> {
           _cName = data.documents[0].data['name'];
           _cMobile = data.documents[0].data['phone'];
           _cEmail=data.documents[0].data['email'];
+          _photourl = data.documents[0].data['photourl'];
+
           // if(_cName==null){_cName=user.displayName??"اسم غير معلوم";}
           if(_cName==null){
             if(user.displayName==null||user.displayName==""){
@@ -3030,6 +3032,8 @@ class _AddAdvState extends State<AddAdv> {
                   'rate': "",
                   'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}"),
                   'cType': "addadv",
+                  'photo': _photourl,
+
                 });
                 urlList.clear();
                 images.clear();

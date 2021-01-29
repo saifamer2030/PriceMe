@@ -415,6 +415,8 @@ class _SignUpEmailUserState extends State<SignUpEmailUser> {
         'rate': "",
         'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}"),
         'cType': "userlogin",
+        'photo': signedInUser.photoUrl,
+
       });
       Navigator.push(
           context,

@@ -36,9 +36,10 @@ class _UserRatingPageState extends State<UserRatingPage> {
   var Rate3 = 0.0;
   var _averageRating, _totalRate, _totalCust;
   FirebaseAuth _firebaseAuth;
-  String _userId,_name;
+  String _userId,_name,_photo;
   SingingCharacter _character = SingingCharacter.done;
-
+  String _username;
+  String _userphoto;
   // تعريف الايتم المراد ادخال قيم فيها
   TextEditingController _rateController;
   TextEditingController _commentController;
@@ -72,7 +73,23 @@ class _UserRatingPageState extends State<UserRatingPage> {
             _totalRate = data.documents[0].data['rating']??"0";
             _totalCust = data.documents[0].data['custRate']??0;
             _name=data.documents[0].data['name']??0;
+            _photo = data.documents[0].data['photourl'];
+
             print("###############$_totalRate ------ $_totalCust");
+          });
+        }
+      });
+      var userQuery1 = Firestore.instance
+          .collection('users')
+          .where('uid', isEqualTo: _userId)
+          .limit(1);
+      userQuery1.getDocuments().then((data) {
+        if (data.documents.length > 0) {
+          setState(() {
+
+            _username=data.documents[0].data['name']??0;
+            _userphoto = data.documents[0].data['photourl'];
+
           });
         }
       });
@@ -657,12 +674,14 @@ class _UserRatingPageState extends State<UserRatingPage> {
               'advID': "",
               'alarmid': documentReference.documentID,
               'cdate': now.toString(),
-              'tradname': "_username",
-              'ownername': "ownerName",
+              'tradname': _name,
+              'ownername':_username,
               'price': _commentController.text,
               'rate':allRating,
               'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
-              'cType': "rating",
+              'cType': "rating",//_photo
+              'photo': _userphoto
+
             }).then((value) {
               DocumentReference documentReference1 = Firestore.instance
                   .collection('Alarm')
@@ -676,11 +695,13 @@ class _UserRatingPageState extends State<UserRatingPage> {
                 'alarmid': documentReference.documentID,
                 'cdate': now.toString(),
                 'tradname': _name,
-                'ownername': "ownerName",
+                'ownername':_username,
                 'price': _commentController.text,
                 'rate':allRating,
                 'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
                 'cType': "rating",
+                'photo': _photo
+
               });
             }).then((value) {
               print('############## $allRating ###################');

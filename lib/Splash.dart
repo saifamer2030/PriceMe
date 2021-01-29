@@ -590,8 +590,8 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
               'uid': currentUser.uid,
               'email': userData['email'],
               'name': userData['name'],
-              // 'phone': currentUser.phoneNumber,//userData['phone'],
-              // 'photourl': currentUser.photoUrl,//userData['photoUrl'],
+             // 'phone': currentUser.phoneNumber,//userData['phone'],
+              'photourl': userData['picture'] ,
               'cType': "user",
             }).then((value) {
               DocumentReference documentReference = Firestore.instance
@@ -611,6 +611,8 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                 'rate': "",
                 'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}"),
                 'cType': "userlogin",
+                'photo':userData['picture'] ,
+
               });
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) => FragmentPriceMe()));
@@ -701,8 +703,8 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
           'uid': userData['id'],
           'email': userData['email'],
           // 'name': userData.displayName,
-          // 'phone': userData.phoneNumber,
-          // 'photourl': userData.photoUrl,
+          // 'phone': userData.phoneNumber,picture
+           'photourl': userData['picture'],
           'cType': "user",
         }).then((value) {
           Navigator.pushReplacement(context,
@@ -734,9 +736,9 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
             'uid': userData['id'],
             'email': userData['email'],
             'cType': "user",
-            'name': userData['displayName'] ,
-            'phone':userData['phoneNumber'] ,
-            'photourl':userData['photoUrl'] ,
+            'name': userData['name'] ,
+            'phone':userData['phone'] ,
+            'photourl':userData['picture'] ,
           }).then((value) {
             DocumentReference documentReference = Firestore.instance
                 .collection('Alarm')
@@ -755,6 +757,8 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
               'rate': "",
               'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}"),
               'cType': "userlogin",
+              'photo':userData['picture'] ,
+
             });
             Navigator.pushReplacement(context,
                 MaterialPageRoute(builder: (context) => FragmentPriceMe()));
@@ -962,6 +966,8 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
           'rate': "",
           'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}"),
           'cType': "userlogin",
+          'photo': signedInUser.photoUrl,
+
         });
       });
     });

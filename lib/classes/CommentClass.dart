@@ -12,7 +12,7 @@ class CommentClass {
 String bookingdate;
 bool ownercheck;
   bool tradercheck;
-
+  String photo;
 
   CommentClass(
   this.ownerId,
@@ -29,7 +29,9 @@ bool ownercheck;
       this.bookingdate,
       this.ownercheck,
       this.tradercheck,
-     );
+      this.photo,
+
+      );
 
 
 }

@@ -39,14 +39,52 @@ class _AdvertisementsState extends State<Advertisements> {
   List<String> _imageUrls;
   bool chechsearch = false;
   List<String> typelist = ["الكل", "اعطال", "قطع غيار"];
+
   var _typecurrentItemSelected = '';
   String searchtype;
   var _sparecurrentItemSelected = '';
-  String searchspare;
+  String searchspare,searchcar;
   var _faultcurrentItemSelected = '';
+  var _carscurrentItemSelected = '';
+
   var _monthcurrentItemSelected = "";
   List<String> monthlist = [];
   List<int> yearlist = [];
+  List<String> carslist =["الكل",
+"اودي", "أوبل","أنفيتيتي",
+  "ايسوزو", "بي-أم-دبليو","بورش", "بوغاتي", "بيجو", "تويوتا","جي-أم-سي",
+"جاكوار",
+"دودج",
+"دايو",
+"رولزرويس",
+ "رينو",
+"سكودا",
+ "سوزوكي",
+"سوبارو",
+ "سيتروين",
+ "سيات",
+ "شيري",
+ "شفروليه",
+ "فولكس-فاجن",
+ "فيراري",
+ "فولفو",
+ "فيات",
+"فورد",
+  "كيا",
+"كاديلاك",
+ "لينكولن",
+  "لاند-روفر",
+  "لامبورغيني",
+ "مرسيدس",
+ "مازدا",
+ "ميتشيبيشي",
+
+"ميني-كوبر",
+
+ "نيسان",
+"هوندا",
+ "هيونداي"
+  ];
 
   List<String> monthNames = [
     "يناير",
@@ -74,6 +112,7 @@ class _AdvertisementsState extends State<Advertisements> {
     _typecurrentItemSelected = typelist[0];
     _sparecurrentItemSelected = widget.mainsparsList[0];
     _faultcurrentItemSelected = widget.mainfaultsList[0];
+    _carscurrentItemSelected=carslist[0];
     DateTime now = DateTime.now();
     int a = now.month;
     List<String>.generate(12, (i) {
@@ -659,9 +698,9 @@ if(isSearching){}else{
           child: Row(
             textDirection: TextDirection.rtl,
             children: [
-              SizedBox(
-                width: 10,
-              ),
+              // SizedBox(
+              //   width: 10,
+              // ),
               Container(
                 height: 50,
                 child: Padding(
@@ -686,7 +725,7 @@ if(isSearching){}else{
                                         value,
                                         style: TextStyle(
                                             color: Colors.grey,
-                                            fontSize: 12,
+                                            fontSize: 11,
                                             fontWeight: FontWeight.w300),
                                       ));
                                 }).toList(),
@@ -701,6 +740,52 @@ if(isSearching){}else{
                               ),
                             )),
                       )),
+                ),
+              ),
+              Container(
+                height: 48,
+                child: Padding(
+                  padding: const EdgeInsets.all(4.0),
+                  child: Card(
+                      elevation: 2.0,
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          side: BorderSide(
+                              color: Colors.grey[400])),
+                      child: Directionality(
+                          textDirection: TextDirection.rtl,
+                          child: DropdownButtonHideUnderline(
+                              child: ButtonTheme(
+                                  alignedDropdown: true,
+                                  child:
+                                  DropdownButton<String>(
+                                    items:carslist
+                                        .map((String value) {
+                                      return DropdownMenuItem<
+                                          String>(
+                                        value: value,
+                                        child: Text(
+                                          value,
+                                          style: TextStyle(
+                                              fontSize: 11,
+                                              color:
+                                              Colors.grey,
+                                              fontWeight:
+                                              FontWeight
+                                                  .w300),
+                                        ),
+                                      );
+                                    }).toList(),
+                                    value:
+                                    _carscurrentItemSelected,
+                                    onChanged: (String
+                                    newValueSelected) {
+                                      // Your code to execute, when a menu item is selected from dropdown
+                                      _onDropDownItemSelectecars(
+                                          newValueSelected);
+                                    },
+                                  ))))),
                 ),
               ),
               typePressed != "all"
@@ -732,7 +817,7 @@ if(isSearching){}else{
                                         child: Text(
                                           value,
                                           style: TextStyle(
-                                              fontSize: 12,
+                                              fontSize: 11,
                                               color:
                                               Colors.grey,
                                               fontWeight:
@@ -802,6 +887,7 @@ if(isSearching){}else{
                   .collection('advertisments')
                   .orderBy('carrange', descending: true)
                   .where("cproblemtype", isEqualTo: searchtype)
+                  .where("ccar", isEqualTo: searchcar)
                   .where("mfaultarray", arrayContains: searchspare)
                   .where("ctitle", isEqualTo: filtter)
                   .where("carrange", isLessThanOrEqualTo: searchmonth)
@@ -998,7 +1084,16 @@ if(isSearching){}else{
       }
     });
   }
-
+  void _onDropDownItemSelectecars(String newValueSelected) {
+    setState(() {
+      this._carscurrentItemSelected = newValueSelected;
+      if (newValueSelected == "الكل") {
+        searchcar = null;
+      } else {
+        searchcar = newValueSelected;
+      }
+    });
+  }
   void _onDropDownItemSelectefault(String newValueSelected) {
     setState(() {
       this._faultcurrentItemSelected = newValueSelected;

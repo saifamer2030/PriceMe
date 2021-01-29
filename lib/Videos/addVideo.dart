@@ -819,6 +819,8 @@ class _AddVideoState extends State<AddVideo> {
             'rate': "",
             'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}"),
             'cType': "addvideo",
+            'photo': _cphotourl,
+
           });
           _load2 = false;
           urlvideo="";

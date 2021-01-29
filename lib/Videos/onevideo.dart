@@ -29,7 +29,7 @@ OneVideo(this.videoid);
 class _OneVideoState extends State<OneVideo> {
   List<AdvClass> advlist = [];
   bool _load = false;
-  String _userId="";
+  String _userId="";String _photourl;
   String  worktype="";
   String tradertype="";
   String cType,username;
@@ -50,7 +50,7 @@ class _OneVideoState extends State<OneVideo> {
               if (data.documents.length > 0) {
                 setState(() {
                   username = data.documents[0].data['name'];
-
+                  _photourl = data.documents[0].data['photourl'];
                   cType = data.documents[0].data['cType'];
                   tradertype = data.documents[0].data['traderType'];
                   worktype = data.documents[0].data['worktype'];
@@ -136,7 +136,8 @@ class _OneVideoState extends State<OneVideo> {
                           itr: index,
                             len:snapshot.data.documents.length,
                           cType: cType,
-                            username:username
+                            username:username,
+                            photourl:   _photourl
                         )
                     ),
                   );
@@ -292,13 +293,13 @@ class VideoWidget extends StatefulWidget {
   final DocumentSnapshot document;
   final int itr;
   final int len;
-  final String cType,username;
+  final String cType,username,photourl;
   const VideoWidget({Key key,@required this.document,@required  this.play,@required  this.itr,@required  this.len
 
-   , @required this.cType, @required this.username//, @required this.title, @required this.details
+   , @required this.cType, @required this.username, @required this.photourl,// @required this.details
   })
       : super(key: key);
-
+//   photo:   _photourl
   @override
   _VideoWidgetState createState() => _VideoWidgetState();
 }
@@ -605,6 +606,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                                   'rate': 0.0,
                                   'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
                                   'cType': "videofav",
+                                  'photo': widget.photourl,
 
                                 });
                                 DocumentReference documentReference1 =
@@ -624,6 +626,7 @@ class _VideoWidgetState extends State<VideoWidget> {
                                   'rate': 0.0,
                                   'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
                                   'cType': "videofav",
+                                  'photo': widget.photourl,
 
                                 });
                               });
