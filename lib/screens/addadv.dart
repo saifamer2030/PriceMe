@@ -3,12 +3,15 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file/local.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_video_compress/flutter_video_compress.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
 import 'package:priceme/classes/AClass.dart';
@@ -55,12 +58,15 @@ class _AddAdvState extends State<AddAdv> {
 
   String typeSelected = "faults";
   int indexSelected = 0;
-
+  String recordingSelected ;
+  File videofile,thumbnailurlfile;
+  bool videocheck=false;
   String url1;
   String imagepathes = '';
   List<String> urlList = [];
   List<String> proplemtype = ["اعطال", "قطع غيار"];
   List<String> indyearlist = [];
+  List<String> recordinglist = ["صور(مطلوب)+تسجيل صوتى(مطلوب)","فيديو(مطلوب)+تسجيل صوتى(اختيارى)"];
 
   List<bool> subcheckList1 = [];
   List<bool> subcheckList = [];
@@ -1031,10 +1037,76 @@ class _AddAdvState extends State<AddAdv> {
                             ),
                           ],
                         ),
+    SizedBox(
+    width: 6,
+    ),
+    Card(
+    elevation: 2,
+    color: Colors.white,
+    shape: RoundedRectangleBorder(
+    side: BorderSide(color: Colors.orange),
+    borderRadius: BorderRadius.only(
+    topLeft: Radius.circular(4),
+    bottomLeft: Radius.circular(4))),
+    child: Container(
+    height: 40.0,
+    width: 260,
+    child: DropdownButtonHideUnderline(
+    child: DropdownButton<String>(
+    hint: Text("وصف المطلوب"),
+    icon: Container(
+    alignment: Alignment.center,
+    height: 40,
+    width:40,
+    decoration: BoxDecoration(
 
+    gradient: LinearGradient(
+    begin: Alignment.topRight,
+    end: Alignment.bottomLeft,
+    colors: [
+    MyColors.darkPrimaryColor,
+    MyColors.primaryColor,
+    MyColors.lightPrimaryColor,
+    ],
+    // stops: [0.1, 0.8,0.6],
+    ),
+
+
+    ),
+    child: Icon(
+    Icons.keyboard_arrow_down,
+    color: Colors.white,
+    size: 20,
+    )),
+    items: recordinglist.map((String value) {
+    return DropdownMenuItem<String>(
+    value: value,
+    child: Container(
+    height: 40,
+    width:220,
+    child: Center(
+    child: Text(
+    value,
+    textDirection: TextDirection.rtl,
+    textAlign: TextAlign.center,
+    style: TextStyle(
+    color: Colors.orange,
+    fontSize: 12,
+    fontWeight: FontWeight.bold),
+    ))));
+    }).toList(),
+    value: recordingSelected,
+    onChanged: (String newValueSelected) {
+    // Your code to execute, when a menu item is selected from dropdown
+    _onDropDownItemSelectedrecord(newValueSelected);
+    },
+    )),
+    ),
+    ),
                         SizedBox(height: 16,),
+//*****************************************************************////
 
-                        Slider(
+                        recordingSelected==null?Container():   Slider(
                             value: _value ?? 0.0,
                             max: 62.0,
                             min: 0.0,
@@ -1044,12 +1116,12 @@ class _AddAdvState extends State<AddAdv> {
                                     _current?.duration.inSeconds.toString());
                               });
                             }),
-                        Center(
+                        recordingSelected==null?Container():  Center(
                           child: new Text(" ${_current?.duration.toString()}"),
                         ),
 
-                        SizedBox(height: 10,),
-                        Row(
+                        recordingSelected==null?Container():  SizedBox(height: 10,),
+                        recordingSelected==null?Container():    Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
                             Padding(
@@ -1137,9 +1209,9 @@ class _AddAdvState extends State<AddAdv> {
                           ],
                         ),
 
-                        SizedBox(height: 16,),
+                        recordingSelected==null?Container():  SizedBox(height: 16,),
 
-                        Padding(
+                        recordingSelected==null?Container():   recordingSelected==recordinglist[0]?Padding(
                           padding: EdgeInsets.only(
                               right: 16, left:10),
                           child: Row(
@@ -1180,11 +1252,127 @@ class _AddAdvState extends State<AddAdv> {
                               ),
                             ],
                           ),
+                        ):
+                        Padding(
+                          padding: EdgeInsets.only(
+                              right: 16, left:10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              InkWell(
+                                onTap: () async{
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) =>
+                                    new CupertinoAlertDialog(
+                                      title: new Text("اختار الفيديو من..."),
+                                      content: Column(
+                                        children: [
+                                          CupertinoDialogAction(
+                                              isDefaultAction: false,
+                                              child: new FlatButton(
+                                                onPressed: () async {
+
+                                                  videofile =  await ImagePicker.pickVideo(source: ImageSource.gallery,).whenComplete(() {
+                                                    setState(()  {
+                                                      videocheck=true;
+                                                      Future.delayed(Duration(seconds: 0), () async {
+                                                        MediaInfo info = await FlutterVideoCompress().getMediaInfo(videofile.path).then((value) async {
+                                                          print("${(value.duration/2000).round()}");
+                                                          thumbnailurlfile = await FlutterVideoCompress().getThumbnailWithFile(
+                                                              videofile.path,
+                                                              quality: 50, // default(100)
+                                                              position: (value.duration/2000).round() // default(-1)
+                                                          );
+                                                        });
+                                                        Navigator.pop(context);
+                                                      });
+
+                                                    });
+                                                  }).catchError((e){
+                                                    print("ccccc$e");Navigator.pop(context);
+                                                  });
+                                                },
+                                                child: Text("متصفح الوسائط"),
+                                              )),
+                                          CupertinoDialogAction(
+                                              isDefaultAction: false,
+                                              child: new FlatButton(
+                                                onPressed: () async {
+
+                                                  videofile =  await ImagePicker.pickVideo(source: ImageSource.camera,).whenComplete(() {
+                                                    setState(()  {
+                                                      videocheck=true;
+                                                      Future.delayed(Duration(seconds: 0), () async {
+                                                        MediaInfo info = await FlutterVideoCompress().getMediaInfo(videofile.path).then((value) async {
+                                                          print("${(value.duration/2000).round()}");
+                                                          thumbnailurlfile = await FlutterVideoCompress().getThumbnailWithFile(
+                                                              videofile.path,
+                                                              quality: 50, // default(100)
+                                                              position: (value.duration/2000).round() // default(-1)
+                                                          );
+                                                        });
+                                                        Navigator.pop(context);
+                                                      });
+
+                                                    });
+                                                  }).catchError((e){
+                                                    print("ccccc$e");
+                                                    Navigator.pop(context);
+                                                  });
+                                                },
+                                                child: Text("تصوير كاميرا"),
+                                              )),
+                                        ],
+                                      ),
+                                      actions: [
+                                        CupertinoDialogAction(
+                                            isDefaultAction: false,
+                                            child: new FlatButton(
+                                              onPressed: () =>
+                                                  Navigator.pop(context),
+                                              child: Text("إلغاء"),
+                                            )),
+                                      ],
+                                    ),
+                                  );
+                                },
+                                child: Icon(
+                                  videocheck
+                                      ? Icons.check_circle
+                                      : Icons.video_call,
+                                  color: Colors.greenAccent,
+                                  size: 50,
+                                ),
+                              ),
+                              SizedBox(
+                                width: 10.0,
+                              ),
+                              Expanded(
+                                child: Text(
+                                  "يرجى الضغط على الصورة لتحميل الفيديو",
+                                  textDirection: TextDirection.rtl,
+                                  style: TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ),
+                              Align(
+                                alignment: Alignment.topCenter,
+                                child: Icon(
+                                  Icons.star,
+                                  color: videocheck ?Colors.green: Colors.red,
+                                  size: 15,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
 
                         SizedBox(height: 24,),
 
-                        Padding(
+                        recordingSelected==null?Container():         Padding(
                           padding: EdgeInsets.only(
                               right: 16, left: 10, bottom: 16),
                           child:
@@ -1193,57 +1381,112 @@ class _AddAdvState extends State<AddAdv> {
                                 shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
                                 onPressed: () async {
                                   if (_formKey.currentState.validate()) {
+if(recordingSelected==recordinglist[0]){
+  if (images.length == 0)  {
+    Toast.show(
+        "يجب اضافة صورة واحدة على الاقل",
+        context,
+        duration: Toast.LENGTH_LONG,
+        gravity: Toast.BOTTOM);
+  }
+  else if( song == null){
+    Toast.show(
+        "برجاء اضافة ملف صوتى لوصف المشكلة",
+        context,
+        duration: Toast.LENGTH_LONG,
+        gravity: Toast.BOTTOM);
+  }
 
-                                    if (images.length == 0)  {
-                                      Toast.show(
-                                          "يجب اضافة صورة واحدة على الاقل",
-                                          context,
-                                          duration: Toast.LENGTH_LONG,
-                                          gravity: Toast.BOTTOM);
-                                    }
-                                    else if( song == null){
-                                      Toast.show(
-                                          "برجاء اضافة ملف صوتى لوصف المشكلة",
-                                          context,
-                                          duration: Toast.LENGTH_LONG,
-                                          gravity: Toast.BOTTOM);
-                                    }
+  else if(  faultoutputsub.length == 0 ){
+    Toast.show(
+        "برجاء اضافة نوع المشكلة او قطع الغيار",
+        context,
+        duration: Toast.LENGTH_LONG,
+        gravity: Toast.BOTTOM);
+  }
+  else if(   model1 == null ||model2 == null ||  model2 == "..." ){
+    Toast.show(
+        "برجاء اضافة بيانات السيارة",
+        context,
+        duration: Toast.LENGTH_LONG,
+        gravity: Toast.BOTTOM);
+  }
+  else {
+    try {
+      final result = await InternetAddress.lookup(
+          'google.com');
+      if (result.isNotEmpty &&
+          result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          _load1 = true;
+        });
+        uploadpp0();
+      }
+    } on SocketException catch (_) {
+      //  print('not connected');
+      Toast.show(
+          "برجاء مراجعة الاتصال بالشبكة", context,
+          duration: Toast.LENGTH_LONG,
+          gravity: Toast.BOTTOM);
+    }
+  }
+}
+else{
+  if (videofile==null)  {
+    Toast.show(
+        "برجاء اضافة الفيديو",
+        context,
+        duration: Toast.LENGTH_LONG,
+        gravity: Toast.BOTTOM);
+  }
+  // else if( song == null){
+  //   Toast.show(
+  //       "برجاء اضافة ملف صوتى لوصف المشكلة",
+  //       context,
+  //       duration: Toast.LENGTH_LONG,
+  //       gravity: Toast.BOTTOM);
+  // }
 
-                                    else if(  faultoutputsub.length == 0 ){
-                                      Toast.show(
-                                          "برجاء اضافة نوع المشكلة او قطع الغيار",
-                                          context,
-                                          duration: Toast.LENGTH_LONG,
-                                          gravity: Toast.BOTTOM);
-                                    }
-                                    else if(   model1 == null ||model2 == null ||  model2 == "..." ){
-                                      Toast.show(
-                                          "برجاء اضافة بيانات السيارة",
-                                          context,
-                                          duration: Toast.LENGTH_LONG,
-                                          gravity: Toast.BOTTOM);
-                                    }
-                                    else {
-                                      try {
-                                        final result = await InternetAddress.lookup(
-                                            'google.com');
-                                        if (result.isNotEmpty &&
-                                            result[0].rawAddress.isNotEmpty) {
-                                          setState(() {
-                                            _load1 = true;
-                                          });
-                                          uploadaudio();
-                                        }
-                                      } on SocketException catch (_) {
-                                        //  print('not connected');
-                                        Toast.show(
-                                            "برجاء مراجعة الاتصال بالشبكة", context,
-                                            duration: Toast.LENGTH_LONG,
-                                            gravity: Toast.BOTTOM);
-                                      }
-                                    }
-                                  } else
-                                    print('correct');
+  else if(  faultoutputsub.length == 0 ){
+    Toast.show(
+        "برجاء اضافة نوع المشكلة او قطع الغيار",
+        context,
+        duration: Toast.LENGTH_LONG,
+        gravity: Toast.BOTTOM);
+  }
+  else if(   model1 == null ||model2 == null ||  model2 == "..." ){
+    Toast.show(
+        "برجاء اضافة بيانات السيارة",
+        context,
+        duration: Toast.LENGTH_LONG,
+        gravity: Toast.BOTTOM);
+  }
+  else {
+    try {
+      final result = await InternetAddress.lookup(
+          'google.com');
+      if (result.isNotEmpty &&
+          result[0].rawAddress.isNotEmpty) {
+        setState(() {
+          _load1 = true;
+        });
+
+        uploadpp0v();
+      }
+    } on SocketException catch (_) {
+      //  print('not connected');
+      Toast.show(
+          "برجاء مراجعة الاتصال بالشبكة", context,
+          duration: Toast.LENGTH_LONG,
+          gravity: Toast.BOTTOM);
+    }
+  }
+}
+
+                                  }else{
+
+                                  }
+
                                 },
                                 child:
                                   Container(
@@ -2871,7 +3114,7 @@ class _AddAdvState extends State<AddAdv> {
                                       setState(() {
                                         _load1 = true;
                                       });
-                                      uploadaudio();
+                                      uploadaudio("","");
                                     }
                                   } on SocketException catch (_) {
                                     //  print('not connected');
@@ -2909,8 +3152,56 @@ class _AddAdvState extends State<AddAdv> {
       ),
     );
   }
+  Future uploadpp0v() async {
+    print("mmmmm2");
 
-  Future uploadpp0(audiourl) async {
+    DateTime now = DateTime.now();
+    print("ddddd1");
+
+    StorageReference ref = FirebaseStorage.instance.ref().child("video").child('$now.mp4');
+    print("ddddd2");
+
+    StorageUploadTask uploadTask = ref.putFile(videofile);
+    print("ddddd3");
+
+    var videourl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    final String vurl = videourl.toString();
+
+
+    // Uri downloadUrl = (await uploadTask.onComplete).downloadUrl;
+    print(vurl);
+    setState(() {
+      _load1 = true;
+    });
+    uploadpp1(vurl);
+
+
+  }
+  Future uploadpp1(vurl) async {
+    print("mmmmm3");
+
+    DateTime now = DateTime.now();
+    StorageReference ref = FirebaseStorage.instance.ref().child("thumbnail").child('$now.jpg');
+    StorageUploadTask uploadTask = ref.putFile(thumbnailurlfile);
+    var thumbnailurl = await (await uploadTask.onComplete).ref.getDownloadURL();
+    final String gurl = thumbnailurl.toString();
+
+
+    // Uri downloadUrl = (await uploadTask.onComplete).downloadUrl;
+    print(gurl);
+    setState(() {
+      _load1 = true;
+    });
+    Toast.show("تم تحميل الفيديو ", context,
+        duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
+    if( song == null){
+        createRecord("", vurl,gurl);
+        print("ddddd$vurl");
+    }else{ uploadaudio(vurl,gurl);}
+   // createRecord(vurl,gurl);
+  }
+
+  Future uploadpp0() async {
     // String url1;
     final StorageReference storageRef =
         FirebaseStorage.instance.ref().child('myimage');
@@ -2937,7 +3228,8 @@ class _AddAdvState extends State<AddAdv> {
       });
       if (i == images.length) {
         // print('gggg${images.length} ///$i');
-        createRecord(audiourl, urlList);
+      //  createRecord(audiourl, urlList);
+        uploadaudio(urlList.toString(),urlList[0]);
       }
     }
     setState(() {
@@ -2945,7 +3237,9 @@ class _AddAdvState extends State<AddAdv> {
     });
   }
 
-  void createRecord(audiourl, urlList) {
+  void createRecord(audiourl, urlList,gurl) {
+   //print("ddddd5$urlList");
+
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? null
         : setState(() {
@@ -2984,7 +3278,7 @@ class _AddAdvState extends State<AddAdv> {
               'cdiscribtion': discController.text,
               'cbody': bodyController.text,
               'cpublished': false,
-              'curi': urlList[0],
+              'curi': gurl,
               'cimagelist': urlList.toString(),
               'caudiourl': audiourl,
               'pphone': _cMobile,
@@ -3034,35 +3328,38 @@ class _AddAdvState extends State<AddAdv> {
                   'cType': "addadv",
                   'photo': _photourl,
 
-                });
-                urlList.clear();
-                images.clear();
-                song = null;
-                titleController.text = "";
-                discController.text = "";
-                bodyController.text = "";
-                // _sparecurrentItemSelected = widget.probtype0=="قطع غيار"?widget.selecteditem0:widget.sparepartsList[0];
-                // _probtypecurrentItemSelected=widget.probtype0=="قطع غيار"?widget.probtype0:proplemtype[0];
-                _indyearcurrentItemSelected = indyearlist[0];
-                model1 = null;
-                model2 = "...";
-                fault1 = null;
-                fault2 = null;
-                _value = 0;
-                //  fromPlaceLat=null; fromPlaceLng=null; fPlaceName =null;
-                _load1 = false;
-                fault1 = "";
-                faultid = "";
-                fault_s_apear = false;
-                spare_s_apear = false;
+                }).then((value) {
+print("ddddd6");
+Navigator.push(
+    context,
+    new MaterialPageRoute(
+        builder: (context) => FragmentPriceMe1()));
+                  // urlList.clear();
+                  // images.clear();
+                  // song = null;
+                  // titleController.text = "";
+                  // discController.text = "";
+                  // bodyController.text = "";
+                  // // _sparecurrentItemSelected = widget.probtype0=="قطع غيار"?widget.selecteditem0:widget.sparepartsList[0];
+                  // // _probtypecurrentItemSelected=widget.probtype0=="قطع غيار"?widget.probtype0:proplemtype[0];
+                  // _indyearcurrentItemSelected = indyearlist[0];
+                  // model1 = null;
+                  // model2 = "...";
+                  // fault1 = null;
+                  // fault2 = null;
+                  // _value = 0;
+                  // //  fromPlaceLat=null; fromPlaceLng=null; fPlaceName =null;
+                  // _load1 = false;
+                  // fault1 = "";
+                  // faultid = "";
+                  // fault_s_apear = false;
+                  // spare_s_apear = false;
+                  //
+                  // faultoutput.clear();
+                  // faultoutputsub.clear();
+                  // _init();
 
-                faultoutput.clear();
-                faultoutputsub.clear();
-                _init();
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => FragmentPriceMe1()));
+                });
               });
             });
           }));
@@ -3085,6 +3382,11 @@ class _AddAdvState extends State<AddAdv> {
     });
   }
 
+  void _onDropDownItemSelectedrecord(String newValueSelected) {
+    setState(() {
+      this.recordingSelected = newValueSelected;
+    });
+  }
   void _onDropDownItemSelectedproblem(String newValueSelected) {
     setState(() {
       this._probtypecurrentItemSelected = newValueSelected;
@@ -3298,7 +3600,7 @@ class _AddAdvState extends State<AddAdv> {
     await audioPlayer.play(_current.path, isLocal: true);
   }
 
-  uploadaudio() {
+  uploadaudio(imgurl,gulr) {
     DateTime now = DateTime.now();
 
     String filePath = _current?.path;
@@ -3324,7 +3626,8 @@ class _AddAdvState extends State<AddAdv> {
       });
       Toast.show("تم تحميل التسجيل الصوتى", context,
           duration: Toast.LENGTH_SHORT, gravity: Toast.BOTTOM);
-      uploadpp0(url2);
+      createRecord(url2, imgurl,gulr);
+
     });
   }
 }

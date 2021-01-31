@@ -81,7 +81,7 @@ String from,to;
       new TextEditingController();
   final ScrollController listScrollController = new ScrollController();
   final FocusNode focusNode = new FocusNode();
-
+  String  uId;
   @override
   void initState() {
     super.initState();
@@ -93,7 +93,7 @@ String from,to;
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? null
         : setState(() {
-           String  uId = user.uid;
+             uId = user.uid;
            if(uId==id){from=id;to=tradeId;}else{from=tradeId;to=id;}
           }));
 
@@ -254,6 +254,8 @@ String from,to;
           'rate': 0,
           'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}00"),
           'cType': "chat",
+          'photo':uId==id? avatar:tradeAvatar,
+
         });
         Firestore.instance .collection('ChatList')
             .document(id)

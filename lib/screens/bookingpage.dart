@@ -1783,7 +1783,7 @@ class _BookingPageState extends State<BookingPage> {
                     'arrange':
                         int.parse("${now.year.toString()}${b}${c}${d}${e}${f}"),
                     'cType': "book",
-                    'photo': photourlowner,
+                    'photo': photourltrade,
 
                   }).whenComplete(() {
                     DocumentReference documentReference = Firestore.instance
@@ -1804,7 +1804,7 @@ class _BookingPageState extends State<BookingPage> {
                       'arrange': int.parse(
                           "${now.year.toString()}${b}${c}${d}${e}${f}"),
                       'cType': "book",
-                      'photo': photourltrade,
+                      'photo': photourlowner,
 
                     }).then((value) {
 

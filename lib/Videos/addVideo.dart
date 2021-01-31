@@ -167,26 +167,26 @@ class _AddVideoState extends State<AddVideo> {
                                           child: new FlatButton(
                                             onPressed: () async {
 
-                                              // videofile =  await ImagePicker.pickVideo(source: ImageSource.camera,).whenComplete(() {
-                                              //   setState(()  {
-                                              //     videocheck=true;
-                                              //
-                                              //     Future.delayed(Duration(seconds: 0), () async {
-                                              //       MediaInfo info = await FlutterVideoCompress().getMediaInfo(videofile.path).then((value) async {
-                                              //         print("${(value.duration/2000).round()}");
-                                              //         thumbnailurlfile = await FlutterVideoCompress().getThumbnailWithFile(
-                                              //             videofile.path,
-                                              //             quality: 50, // default(100)
-                                              //             position: (value.duration/2000).round() // default(-1)
-                                              //         );
-                                              //       });
-                                              //       Navigator.pop(context);
-                                              //     });
-                                              //   });
-                                              // }).catchError((e){
-                                              //   print("ccccc$e");
-                                              //   Navigator.pop(context);
-                                              // });
+                                              videofile =  await ImagePicker.pickVideo(source: ImageSource.camera,).whenComplete(() {
+                                                setState(()  {
+                                                  videocheck=true;
+
+                                                  Future.delayed(Duration(seconds: 0), () async {
+                                                    MediaInfo info = await FlutterVideoCompress().getMediaInfo(videofile.path).then((value) async {
+                                                      print("${(value.duration/2000).round()}");
+                                                      thumbnailurlfile = await FlutterVideoCompress().getThumbnailWithFile(
+                                                          videofile.path,
+                                                          quality: 50, // default(100)
+                                                          position: (value.duration/2000).round() // default(-1)
+                                                      );
+                                                    });
+                                                    Navigator.pop(context);
+                                                  });
+                                                });
+                                              }).catchError((e){
+                                                print("ccccc$e");
+                                                Navigator.pop(context);
+                                              });
                                             },
                                             child: Text("تصوير كاميرا"),
                                           )),
@@ -206,25 +206,7 @@ class _AddVideoState extends State<AddVideo> {
 
 
 
-                              // videofile =  await ImagePicker.pickVideo(source: ImageSource.gallery,).whenComplete(() {
-                              //   setState(()  {
-                              //     videocheck=true;
-                              //
-                              //     Future.delayed(Duration(seconds: 0), () async {
-                              //       MediaInfo info = await FlutterVideoCompress().getMediaInfo(videofile.path).then((value) async {
-                              //         print("${(value.duration/2000).round()}");
-                              //         thumbnailurlfile = await FlutterVideoCompress().getThumbnailWithFile(
-                              //             videofile.path,
-                              //             quality: 50, // default(100)
-                              //             position: (value.duration/2000).round() // default(-1)
-                              //         );
-                              //       });
-                              //
-                              //     });
-                              //   });
-                              // }).catchError((e){
-                              //   print("ccccc$e");
-                              // });
+
                             },
                             child: Center(
                               child: Container(
@@ -609,7 +591,7 @@ class _AddVideoState extends State<AddVideo> {
             //   child: loadingIndicator,
             //   alignment: FractionalOffset.center,
             // ),
-         _load2 ?  Padding(
+            _load2 ?  Padding(
               padding: const EdgeInsets.all(18.0),
               child: Center(
                 child:  Card(
@@ -771,10 +753,10 @@ class _AddVideoState extends State<AddVideo> {
       String date1 = '${now.year}-${b}-${c} ${d}:${e}:00';
       int arrange = int.parse('${now.year}${b}${c}${d}${e}');
 
-      DocumentReference documentReference1 =
+      DocumentReference documentReference =
       Firestore.instance.collection('videos').document();
-      documentReference1.setData({
-        'cId': documentReference1.documentID,
+      documentReference.setData({
+        'cId': documentReference.documentID,
         'carrange': arrange,
         'cuserId': _userId,
         'cname': _cName,
@@ -797,31 +779,6 @@ class _AddVideoState extends State<AddVideo> {
       }).whenComplete(() {
 
         setState(() {
-
-          DocumentReference documentReference = Firestore.instance
-              .collection('Alarm')
-              .document("hp8aCGZfS8WLXTnGaUXsOIWZRot1")
-              .collection('Alarmid')
-              .document();
-          documentReference.setData({
-
-
-
-
-            'ownerId':_userId,
-            'traderid':"hp8aCGZfS8WLXTnGaUXsOIWZRot1",
-            'advID':   documentReference1.documentID,
-            'alarmid': documentReference.documentID,
-            'cdate': now.toString(),
-            'tradname':_titleController.text,
-            'ownername': _cName,
-            'price': "",
-            'rate': "",
-            'arrange': int.parse("${now.year.toString()}${b}${c}${d}${e}"),
-            'cType': "addvideo",
-            'photo': _cphotourl,
-
-          });
           _load2 = false;
           urlvideo="";
           urlgif="";
@@ -830,6 +787,7 @@ class _AddVideoState extends State<AddVideo> {
           _detailController.text = "";
           _departcurrentItemSelected = departlist[0];
           videocheck=false;model1="";model2="";    _indyearcurrentItemSelected=indyearlist[0];
+
         });
 
 

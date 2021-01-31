@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:chewie/chewie.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -25,6 +26,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:toast/toast.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:video_player/video_player.dart';
 
 import 'bookingpage.dart';
 
@@ -220,7 +222,7 @@ print("ccc$cType");
               if (user.photoUrl == null || user.photoUrl == "") {
                 _photourl = "https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg";
               } else {
-                _username = user.photoUrl;
+                _photourl = user.photoUrl;
               }
             }
             // print("mmm$_cMobile+++${user.phoneNumber}***");
@@ -272,12 +274,15 @@ print("ccc$cType");
             if (_cWorkshopname == null || _cWorkshopname == "") {
               _cWorkshopname = data.documents[0].data['pname'];
             }
+            if( cimagelist.contains("jpg")){
+              _imageUrls = cimagelist
+                  .replaceAll(" ", "")
+                  .replaceAll("[", "")
+                  .replaceAll("]", "")
+                  .split(",");
+            }
 
-            _imageUrls = cimagelist
-                .replaceAll(" ", "")
-                .replaceAll("[", "")
-                .replaceAll("]", "")
-                .split(",");
+
           });
         }
       });
@@ -373,13 +378,13 @@ print("ccc$cType");
               children: [
                 Container(
                   height: 300,
-                  color: Colors.blue,
+                  color: Colors.orangeAccent,
                   child: Stack(
                     children: [
                       Container(
-                          height: 300,
+                          height:cimagelist.contains("jpg")?300: 265,
                           color: Colors.grey[200],
-                          child: Swiper(
+                          child:cimagelist.contains("jpg")? Swiper(
                             loop: false,
                             pagination: new SwiperPagination(
                                 builder: DotSwiperPaginationBuilder(
@@ -406,7 +411,13 @@ print("ccc$cType");
 
                               );
                             },
-                          )),
+                          ):
+                          VideoWidget1(
+                              play: false,
+                              document:cimagelist,
+
+                          )
+                      ),
                       Positioned(
                         top: 264,
                         child: Container(
@@ -422,7 +433,7 @@ print("ccc$cType");
                                   topRight: Radius.circular(20))),
                         ),
                       ),
-                      Positioned(
+                      ( caudiourl==null||caudiourl=="")?Container():    Positioned(
                         top: 264,
                         left: 45,
                         child: Container(
@@ -469,7 +480,7 @@ print("ccc$cType");
                                       }),
                                 ))),
                       ),
-                      Positioned(
+                      ( caudiourl==null||caudiourl=="")?Container():     Positioned(
                           top: 240,
                           left: 16,
                           child: InkWell(
@@ -523,7 +534,7 @@ print("ccc$cType");
                                   });
                                 });
                               })),
-                      Positioned(
+                      ( caudiourl==null||caudiourl=="")?Container():   Positioned(
                           top: 245,
                           right: 18,
                           child: Container(
@@ -3123,6 +3134,102 @@ print("ccc$cType");
               ),
             ],
           )),
+    );
+  }
+}
+//}
+class VideoWidget1 extends StatefulWidget {
+
+  final bool play;
+  final String document;
+
+ // final String cType,username,photourl;
+  const VideoWidget1({Key key,@required this.document,@required  this.play,
+
+
+  })
+      : super(key: key);
+  @override
+  _VideoWidget1State createState() => _VideoWidget1State();
+}
+
+
+class _VideoWidget1State extends State<VideoWidget1> {
+  VideoPlayerController videoPlayerController ;
+  Future<void> _initializeVideoPlayerFuture;
+
+  bool autoplay=true;
+
+  @override
+  void initState() {
+    super.initState();
+    videoPlayerController = new VideoPlayerController.network(widget.document);
+
+
+    _initializeVideoPlayerFuture = videoPlayerController.initialize().then((_) {
+      //       Ensure the first frame is shown after the video is initialized, even before the play button has been pressed.
+      setState(() {});
+    });
+    videoPlayerController.addListener(() {
+      if (  videoPlayerController.value.isPlaying)
+        autoplay=false;
+
+    });
+  }
+  @override
+  void dispose() {
+    videoPlayerController.dispose();
+    //    widget.videoPlayerController.dispose();
+    super.dispose();
+  }
+
+
+  @override
+  Widget build(BuildContext context) {
+
+    return FutureBuilder(
+      future: _initializeVideoPlayerFuture,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.done) {
+          return new Container(
+            // width: MediaQuery.of(context).size.width,
+            // height:200,// MediaQuery.of(context).size.height,
+            child: Padding(
+              padding: const EdgeInsets.all(0.0),
+              child: Chewie(
+                key: new PageStorageKey(widget.document),
+                controller: ChewieController(
+                  videoPlayerController: videoPlayerController,
+                  aspectRatio: 6 / 4,
+                  // Prepare the video to be played and display the first frame
+                  autoInitialize: true,
+                  looping: false,
+                  autoPlay:autoplay,
+
+                  // Errors can occur for example when trying to play a video
+                  // from a non-existent URL
+                  errorBuilder: (context, errorMessage) {
+                    return Center(
+                      child: Text(
+                        errorMessage,
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          );
+        }
+        else {
+          return Container(
+            width: MediaQuery.of(context).size.width,
+            height: MediaQuery.of(context).size.height,
+            child: Center(
+              child: CircularProgressIndicator(),),
+          );
+        }
+      },
     );
   }
 }
