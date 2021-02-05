@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -9,6 +10,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
+import 'package:priceme/ChatRoom/widget/const.dart';
 import 'package:priceme/Splash.dart';
 import 'package:priceme/classes/AdvClass.dart';
 import 'package:priceme/screens/editadv.dart';
@@ -973,14 +975,51 @@ if(isSearching){}else{
                             borderRadius: BorderRadius.only(
                                 topRight: Radius.circular(8),
                                 topLeft: Radius.circular(8)),
-                            child: document['curi'] == null
-                                ? new Image.asset(
-                                    "assets/images/ic_logo2.png",
-                                  )
-                                : new Image.network(
-                                    document['curi'],
-                                    fit: BoxFit.cover,
+                            child:
+                            CachedNetworkImage(
+                              placeholder: (context, url) => Container(
+                                child: Image.asset(
+                                  "assets/images/ic_logo2.png",
+                                  width: 150.0,
+                                  height: 150.0,
+                                  fit: BoxFit.contain,color: Colors.orange,
+                                ),
+                                width:100.0,
+                                height: 100.0,
+                                padding: EdgeInsets.all(70.0),
+                                decoration: BoxDecoration(
+                                  color: greyColor2,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8.0),
                                   ),
+                                ),
+                              ),
+                              errorWidget: (context, url, error) => Material(
+                                child: Image.asset(
+                                  "assets/images/ic_logo2.png",
+                                  width: 200.0,
+                                  height: 200.0,
+                                  fit: BoxFit.cover,color: Colors.orange,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8.0),
+                                ),
+                                clipBehavior: Clip.hardEdge,
+                              ),
+                              imageUrl:document['curi'],
+                              width: 200.0,
+                              height: 200.0,
+                              fit: BoxFit.cover,
+                            ),
+
+                            // document['curi'] == null
+                            //     ? new Image.asset(
+                            //         "assets/images/ic_logo2.png",
+                            //       )
+                            //     : new Image.network(
+                            //         document['curi'],
+                            //         fit: BoxFit.cover,
+                            //       ),
                           )),
                       Positioned(
                         right: 0,

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:audioplayers/audioplayers.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chewie/chewie.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -12,6 +13,7 @@ import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:priceme/ChatRoom/widget/const.dart';
 import 'package:priceme/UserRating/RatingClass.dart';
 import 'package:priceme/UserRating/UserRatingPage.dart';
 import 'package:priceme/classes/CommentClass.dart';
@@ -394,22 +396,65 @@ print("ccc$cType");
                                 size: 30, color: Colors.orange),
                             itemCount: _imageUrls.length,
                             itemBuilder: (BuildContext context, int itemIndex) {
-                              return Container(
-                                height: 300,
-                                width: MediaQuery
-                                    .of(context)
-                                    .size
-                                    .width,
-                                decoration: BoxDecoration(
-                                    image:
-                                    DecorationImage(
-                                        image: NetworkImage(_imageUrls[itemIndex]),
-                                        fit: BoxFit.cover
-                                        )
-                                    )
+                              return
+                                CachedNetworkImage(
+                                  placeholder: (context, url) => Container(
+                                    child: Image.asset(
+                                      "assets/images/ic_logo2.png",
+                                      width: 150.0,
+                                      height: 150.0,
+                                      fit: BoxFit.contain,color: Colors.orange,
+                                    ),
+                                    width:100.0,
+                                    height: 100.0,
+                                    padding: EdgeInsets.all(70.0),
+                                    decoration: BoxDecoration(
+                                      color: greyColor2,
+                                      borderRadius: BorderRadius.all(
+                                        Radius.circular(8.0),
+                                      ),
+                                    ),
+                                  ),
+                                  errorWidget: (context, url, error) => Material(
+                                    child: Image.asset(
+                                      "assets/images/ic_logo2.png",
+                                      height: 300,
+                                      width: MediaQuery
+                                          .of(context)
+                                          .size
+                                          .width,
+                                      fit: BoxFit.cover,color: Colors.orange,
+                                    ),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(8.0),
+                                    ),
+                                    clipBehavior: Clip.hardEdge,
+                                  ),
+                                  imageUrl:_imageUrls[itemIndex],
+                                  height: 300,
+                                  width: MediaQuery
+                                      .of(context)
+                                      .size
+                                      .width,
+                                  fit: BoxFit.cover,
+                                );
 
-
-                              );
+                              //   Container(
+                              //   height: 300,
+                              //   width: MediaQuery
+                              //       .of(context)
+                              //       .size
+                              //       .width,
+                              //   decoration: BoxDecoration(
+                              //       image:
+                              //       DecorationImage(
+                              //           image: NetworkImage(_imageUrls[itemIndex]),
+                              //           fit: BoxFit.cover
+                              //           )
+                              //       )
+                              //
+                              //
+                              // );
                             },
                           ):
                           VideoWidget1(
@@ -1227,20 +1272,65 @@ print("ccc$cType");
                  textDirection: TextDirection.rtl,
 
                  children: [
-                   Container(
-                     height: 20,
-                     width: 20,
-                     decoration: BoxDecoration(
-                       color: Colors.grey[400],
-                       shape: BoxShape.circle,
-
-                       image: DecorationImage(
-                         image: NetworkImage( commentlist[index].photo==null?"https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg":commentlist[index].photo
-                             ),
-                         fit: BoxFit.contain,
+                   Material(
+                     child: commentlist[index].photo!=null
+                         ? CachedNetworkImage(
+                       placeholder: (context, url) => Container(
+                         child: Image.asset(
+                           "assets/images/ic_logo2.png",
+                           width: 20.0,
+                           height: 20.0,
+                           fit: BoxFit.contain,color: Colors.orange,
+                         ),
+                         width:20.0,
+                         height: 20.0,
+                         padding: EdgeInsets.all(70.0),
+                         decoration: BoxDecoration(
+                           color: greyColor2,
+                           borderRadius: BorderRadius.all(
+                             Radius.circular(8.0),
+                           ),
+                         ),
                        ),
+                       errorWidget: (context, url, error) => Material(
+                         child: Image.asset(
+                           "assets/images/ic_logo2.png",
+                           width: 200.0,
+                           height: 200.0,
+                           fit: BoxFit.cover,color: Colors.orange,
+                         ),
+                         borderRadius: BorderRadius.all(
+                           Radius.circular(8.0),
+                         ),
+                         clipBehavior: Clip.hardEdge,
+                       ),                       imageUrl: commentlist[index].photo,
+                       width: 20.0,
+                       height: 20.0,
+                       fit: BoxFit.cover,
+                     )
+                         : Icon(
+                       Icons.account_circle,
+                       size: 20.0,
+                       color: greyColor,
                      ),
+                     borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                     clipBehavior: Clip.hardEdge,
                    ),
+
+                   // Container(
+                   //   height: 20,
+                   //   width: 20,
+                   //   decoration: BoxDecoration(
+                   //     color: Colors.grey[400],
+                   //     shape: BoxShape.circle,
+                   //
+                   //     image: DecorationImage(
+                   //       image: NetworkImage( commentlist[index].photo==null?"https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg":commentlist[index].photo
+                   //           ),
+                   //       fit: BoxFit.contain,
+                   //     ),
+                   //   ),
+                   // ),
                    SizedBox(width: 4,),
                    Expanded(
                        child: Container(

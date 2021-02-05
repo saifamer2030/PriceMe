@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:ui';
 
 import 'package:adobe_xd/gradient_xd_transform.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -14,6 +15,7 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 //import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:priceme/ChatRoom/widget/const.dart';
 import 'package:priceme/Videos/addVideo.dart';
 
 import 'package:priceme/classes/FaultsClass.dart';
@@ -578,25 +580,67 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
         padding: const EdgeInsets.all(1.0),
         child: Stack(
           children: [
-            Container(
-              //   height: 200,
-              decoration: BoxDecoration(
-                border: new Border.all(
-                  color: Colors.white,
-                  width: 0,
+            document['imgurl'] ==null?Image.asset(
+              "assets/images/ic_logo2.png",
+              width: 250.0,
+              height: 350.0,
+              fit: BoxFit.contain,color: Colors.orange,
+            ):
+            CachedNetworkImage(
+              placeholder: (context, url) => Container(
+                child: Image.asset(
+                  "assets/images/ic_logo2.png",
+                  width: 250.0,
+                  height: 350.0,
+                  fit: BoxFit.contain,color: Colors.orange,
                 ),
-                image: document['imgurl'] == null
-                    ? DecorationImage(
-                  image: AssetImage("assets/images/ic_background.png"),
-                  fit: BoxFit.fill,
-                )
-                    : DecorationImage(
-                  image: NetworkImage(document['imgurl']),
-                  fit: BoxFit.fill,
+                width:100.0,
+                height: 100.0,
+                padding: EdgeInsets.all(70.0),
+                decoration: BoxDecoration(
+                  color: greyColor2,
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(8.0),
+                  ),
                 ),
-                borderRadius: BorderRadius.circular(0.0),
               ),
+              errorWidget: (context, url, error) => Material(
+                child: Image.asset(
+                  "assets/images/ic_logo2.png",
+                  width: 200.0,
+                  height: 200.0,
+                  fit: BoxFit.cover,color: Colors.orange,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(8.0),
+                ),
+                clipBehavior: Clip.hardEdge,
+              ),
+              imageUrl:document['imgurl'] ,
+              width: 250.0,
+              height: 350.0,
+              fit: BoxFit.cover,
             ),
+
+            // Container(
+            //   //   height: 200,
+            //   decoration: BoxDecoration(
+            //     border: new Border.all(
+            //       color: Colors.white,
+            //       width: 0,
+            //     ),
+            //     image: document['imgurl'] == null
+            //         ? DecorationImage(
+            //       image: AssetImage("assets/images/ic_background.png"),
+            //       fit: BoxFit.fill,
+            //     )
+            //         : DecorationImage(
+            //       image: NetworkImage(document['imgurl']),
+            //       fit: BoxFit.fill,
+            //     ),
+            //     borderRadius: BorderRadius.circular(0.0),
+            //   ),
+            // ),
 
 
 
@@ -614,23 +658,62 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
               child: Container(
                 height: 26,
                 width: 26,
-                // child: Text(
-                //   sparepartsList[index].sName, style: TextStyle(color: Colors.red,fontSize: 20
-                // ),textAlign: TextAlign.center,
-                //
-                // ),
-                decoration: BoxDecoration(
-                  border: new Border.all(
-                    color: Colors.black,
-                    width: 1.0,
+              child:  Material(
+                  child: document['cphotourl']!=null
+                      ? CachedNetworkImage(
+                    placeholder: (context, url) => Container(
+                      child: Image.asset(
+                        "assets/images/ic_logo2.png",
+                        width: 20.0,
+                        height: 20.0,
+                        fit: BoxFit.contain,color: Colors.orange,
+                      ),
+                      width:20.0,
+                      height: 20.0,
+                      padding: EdgeInsets.all(70.0),
+                      decoration: BoxDecoration(
+                        color: greyColor2,
+                        borderRadius: BorderRadius.all(
+                          Radius.circular(8.0),
+                        ),
+                      ),
+                    ),
+                    errorWidget: (context, url, error) => Material(
+                      child: Image.asset(
+                        "assets/images/ic_logo2.png",
+                        width: 200.0,
+                        height: 200.0,
+                        fit: BoxFit.cover,color: Colors.orange,
+                      ),
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(8.0),
+                      ),
+                      clipBehavior: Clip.hardEdge,
+                    ),                       imageUrl:document['cphotourl'],
+                    width: 20.0,
+                    height: 20.0,
+                    fit: BoxFit.cover,
+                  )
+                      : Icon(
+                    Icons.account_circle,
+                    size: 26.0,
+                    color: greyColor,
                   ),
-                  image: DecorationImage(
-                    image: NetworkImage(document['cphotourl']==null||document['cphotourl']==""?
-                    "https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg"  :document['cphotourl']),
-                    fit: BoxFit.fill,
-                  ),
-                  shape: BoxShape.circle,
+                  borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                  clipBehavior: Clip.hardEdge,
                 ),
+                // decoration: BoxDecoration(
+                //   border: new Border.all(
+                //     color: Colors.black,
+                //     width: 1.0,
+                //   ),
+                //   image: DecorationImage(
+                //     image: NetworkImage(document['cphotourl']==null||document['cphotourl']==""?
+                //     "https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg"  :document['cphotourl']),
+                //     fit: BoxFit.fill,
+                //   ),
+                //   shape: BoxShape.circle,
+                // ),
               ),
 
             ),

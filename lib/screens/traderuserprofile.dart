@@ -1,8 +1,10 @@
 import 'dart:ui' as prefix0;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:priceme/ChatRoom/widget/const.dart';
 import 'package:priceme/Videos/photosvideotrader.dart';
 import 'package:priceme/screens/traderinfoinuser.dart';
 import 'package:priceme/screens/tradeuserrate.dart';
@@ -89,7 +91,50 @@ class _TraderUserProlileState extends State<TraderUserProlile> {
                     fit: BoxFit.contain,
                   ),
                 ),
-              ):Image.network(photourl==null?"":photourl/**_imageUrls==null?"":_imageUrls[0]==null?"":_imageUrls[0]**/,fit: BoxFit.cover,),
+              ):
+              CachedNetworkImage(
+                placeholder: (context, url) => Container(
+                  child: Image.asset(
+                    "assets/images/ic_logo2.png",
+                    width: 150.0,
+                    height: 150.0,
+                    fit: BoxFit.contain,color: Colors.orange,
+                  ),
+                  width:100.0,
+                  height: 100.0,
+                  padding: EdgeInsets.all(70.0),
+                  decoration: BoxDecoration(
+                    color: greyColor2,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(8.0),
+                    ),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Material(
+                  child: Image.asset(
+                    "assets/images/ic_logo2.png",
+                    height: 300,
+                    width: MediaQuery
+                        .of(context)
+                        .size
+                        .width,
+                    fit: BoxFit.cover,color: Colors.orange,
+                  ),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(8.0),
+                  ),
+                  clipBehavior: Clip.hardEdge,
+                ),
+                imageUrl:photourl,
+                height: 300,
+                width: MediaQuery
+                    .of(context)
+                    .size
+                    .width,
+                fit: BoxFit.cover,
+              ),
+
+              // Image.network(photourl==null?"":photourl/**_imageUrls==null?"":_imageUrls[0]==null?"":_imageUrls[0]**/,fit: BoxFit.cover,),
 
 
             ),

@@ -1,4 +1,5 @@
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -6,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:priceme/ChatRoom/widget/chat.dart';
+import 'package:priceme/ChatRoom/widget/const.dart';
 import 'package:priceme/Splash.dart';
 import 'package:priceme/Videos/onevideo.dart';
 import 'package:priceme/screens/advdetail.dart';
@@ -349,20 +351,66 @@ class _MyAlarmsState extends State<MyAlarms> {
 
                         ],
                       ),
-                          Container(
-                            height: 40,
-                            width: 40,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[400],
-                              shape: BoxShape.circle,
-
-                              image: DecorationImage(
-                                image: NetworkImage( document['photo']==null?"https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg": document['photo']
+                          Material(
+                            child:document['photo'] !=null
+                                ? CachedNetworkImage(
+                              placeholder: (context, url) => Container(
+                                child: Image.asset(
+                                  "assets/images/ic_logo2.png",
+                                  width: 40.0,
+                                  height: 40.0,
+                                  fit: BoxFit.contain,color: Colors.orange,
                                 ),
-                                fit: BoxFit.contain,
+                                width:40.0,
+                                height: 40.0,
+                                padding: EdgeInsets.all(70.0),
+                                decoration: BoxDecoration(
+                                  color: greyColor2,
+                                  borderRadius: BorderRadius.all(
+                                    Radius.circular(8.0),
+                                  ),
+                                ),
                               ),
+                              errorWidget: (context, url, error) => Material(
+                                child: Image.asset(
+                                  "assets/images/ic_logo2.png",
+                                  width: 40.0,
+                                  height: 40.0,
+                                  fit: BoxFit.cover,color: Colors.orange,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(8.0),
+                                ),
+                                clipBehavior: Clip.hardEdge,
+                              ),
+                              imageUrl: document['photo'],
+                              width: 40.0,
+                              height: 40.0,
+                              fit: BoxFit.cover,
+                            )
+                                : Icon(
+                              Icons.account_circle,
+                              size: 40.0,
+                              color: greyColor,
                             ),
-                          )
+                            borderRadius: BorderRadius.all(Radius.circular(25.0)),
+                            clipBehavior: Clip.hardEdge,
+                          ),
+
+                          // Container(
+                          //   height: 40,
+                          //   width: 40,
+                          //   decoration: BoxDecoration(
+                          //     color: Colors.grey[400],
+                          //     shape: BoxShape.circle,
+                          //
+                          //     image: DecorationImage(
+                          //       image: NetworkImage( document['photo']==null?"https://i.pinimg.com/564x/0c/3b/3a/0c3b3adb1a7530892e55ef36d3be6cb8.jpg": document['photo']
+                          //       ),
+                          //       fit: BoxFit.contain,
+                          //     ),
+                          //   ),
+                          // )
                         ],
                       ),
                     ),
