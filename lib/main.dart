@@ -16,6 +16,7 @@ import 'Splash.dart';
 import 'adminscreens/FragmentNavigationadmin.dart';
 import 'adminscreens/faultsadmin.dart';
 import 'adminscreens/sparepartsadmin.dart';
+import 'cloudMessaging/firebaseMessaging.dart';
 
 void main() {
   runApp(MyApp());
@@ -34,7 +35,7 @@ class MyApp extends StatelessWidget {
         fontFamily: MyFonts.primaryFont
       ),
       home:
-      //Logintrader(),
+     // MessagingWidget(),
       Splash(),
       //FragmentTrader()
       // FragmentNavigationAdmin(),//SparePartsAdmin(),//UserRatingPage("6XQuwAo5xPY40LqdnAqL5zqcc1v1"),Splash(),

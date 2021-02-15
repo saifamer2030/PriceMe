@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file/local.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_audio_recorder/flutter_audio_recorder.dart';
@@ -14,6 +16,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:multi_image_picker/multi_image_picker.dart';
 import 'package:persian_number_utility/persian_number_utility.dart';
+import 'package:priceme/FragmentNavigation.dart';
 import 'package:priceme/classes/AClass.dart';
 import 'package:priceme/classes/FaultStringClass.dart';
 import 'package:priceme/classes/FaultsClass.dart';
@@ -21,6 +24,7 @@ import 'package:priceme/classes/ModelClass.dart';
 import 'package:priceme/classes/OutputClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
+import 'package:priceme/cloudMessaging/message.dart';
 import 'package:priceme/screens/FragmentNavigation1.dart';
 import 'package:priceme/screens/cur_loc.dart';
 import 'package:priceme/screens/myadvertisement.dart';
@@ -30,12 +34,13 @@ import 'package:priceme/ui_utile/myColors.dart';
 import 'package:priceme/ui_utile/myCustomShape.dart';
 import 'package:shimmer/shimmer.dart';
 import 'dart:io' as io;
-
 import 'package:toast/toast.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:math' as Math;
-
 import '../Splash.dart';
+
+import 'package:flutter_local_notifications/flutter_local_notifications.dart' as localNotify;
+import 'package:http/http.dart' as http;
 
 class AddAdv extends StatefulWidget {
   final LocalFileSystem localFileSystem;
@@ -52,6 +57,24 @@ class AddAdv extends StatefulWidget {
 enum SingingCharacter4 { used, New, NO }
 
 class _AddAdvState extends State<AddAdv> {
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  final List<Message> messages = [];
+  localNotify.FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+  localNotify.FlutterLocalNotificationsPlugin();
+  final String serverToken =
+      'AAAAdGCnXb0:APA91bH3NxBGCLtotEOYByKD7jNSNxs6oNd0BpLrlHla6hOV4_1aLvIOBZnkEXUln2zG4robwhBgUbCrZdHnpgXMOUgbSqQMTy1yIWFMP8so7HUudDrQjIyKjdqSoaGci1gOxQKfAwk8';
+  final FirebaseMessaging firebaseMessaging = FirebaseMessaging();
+// localNotify.NotificationAppLaunchDetails flutterLocalNotificationsPlugin;
+ String usertoken=
+     "ePWJwkPAe8c:APA91bH_K-90Rm_HfntK3P3m6BzoVXwpE1FPDUC65lKesvw13HvSNY4ClUqRmCDbcIHAy10lN97cLg6Xt-MZ6dKkaU6AoIiszN7JcGKo5GKVPufl0d2BwAhSxBGCY3Yp5jVQUvxHhAdr";
+
+  List<String> tokens = [
+    "ePWJwkPAe8c:APA91bH_K-90Rm_HfntK3P3m6BzoVXwpE1FPDUC65lKesvw13HvSNY4ClUqRmCDbcIHAy10lN97cLg6Xt-MZ6dKkaU6AoIiszN7JcGKo5GKVPufl0d2BwAhSxBGCY3Yp5jVQUvxHhAdr"
+    //"edKfRBp4W2E:APA91bHtZlC0eWfJqxacSJNOFZCw3Tus__pe6HoWXJlizU5deQ0DlbZ2GkP7mFsWlJcBYE-Xtgls9z5XWUCP7CdwJF-ZcFqc-rMQlonJHms4HmSmEX6d-PrC6b1_EGpUQ9l5xsObDBTo"
+  ];
+  /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
   bool _load1 = false;
   bool fault_s_apear = false;
   bool spare_s_apear = false;
@@ -244,10 +267,211 @@ class _AddAdvState extends State<AddAdv> {
               }));
     }
   }
+  Future<Map<String, dynamic>> sendAndRetrieveMessage(title,body,id,payload1,payload2) async {
+    await firebaseMessaging.requestNotificationPermissions(
+      const IosNotificationSettings(
+          sound: true, badge: true, alert: true, provisional: false),
+    );
+    // _firebaseMessaging.subscribeToTopic("all");
+  //  for (int i = 0; i < tokens.length; i++) {
+      await http.post(
+        'https://fcm.googleapis.com/fcm/send',
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'key=$serverToken',
+        },
+        body: jsonEncode(
+          <String, dynamic>{
+            'notification': <String, dynamic>{
+              'body':body,
+              'title': title
+            },
+            'priority': 'high',
+            'data': <String, dynamic>{
+              'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+              'id': '$id',
+              'status': 'done'
+            },
+            'to': usertoken,
+          },
+        ),
+      );
+  //  }
 
+    //   await http.post(
+    //     'https://fcm.googleapis.com/fcm/notification',
+    //     headers: <String, String>{
+    //       'Content-Type': 'application/json',
+    //       'Authorization': 'key=$serverToken',
+    //       "project_id":
+    //           "eR5NEalZ2rs:APA91bHLcivHpNX7ktKkXt8zJTEM0_ls6EhMpSTEnvhiONFs3zNIRVUNNVja1t98HD9tiOKhSEv5MNJ0J9tdGHfcVHroJ7l2T9eS_W-k8ZkXWQ0RRMa8eePW1AdZfuJaeGfVFtvdyjhC"
+    //     },
+    //     body: jsonEncode(
+    //       <String, dynamic>{
+    //         'notification': <String, dynamic>{
+    //           'body': bodyController.text,
+    //           'title': titleController.text
+    //         },
+    //         "operation": "create",
+    //  "notification_key_name": "appUser-Chris",
+    //         // 'priority': 'high',
+    //         // 'data': <String, dynamic>{
+    //         //   'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+    //         //   'id': '1',
+    //         //   'status': 'done'
+    //         // },
+    //         "registration_ids": [token]
+    //         // 'to': token,
+    //       },
+    //     ),
+    //   );
+    final Completer<Map<String, dynamic>> completer =
+    Completer<Map<String, dynamic>>();
+
+    firebaseMessaging.configure(
+      onLaunch:  (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+
+        final notification = message['data'];
+        print("uuu${notification['title']}");print("uuu${message['id']}");
+
+        setState(() {
+          messages.add(Message(
+            title: '${notification['title']}',
+            body: '${notification['body']}',
+          ));
+        });
+        print("uuu1${notification['title']}");print("uuu1${message['id']}");
+
+        await _showNotification();
+        // Navigator.of(context).push(MaterialPageRoute(builder: (context)=> new Splash()));
+      },
+      onMessage: (Map<String, dynamic> message) async {
+        completer.complete(message);
+        await _showNotification();
+      },
+    );
+
+    return completer.future;
+  }
+
+  Future onDidReceiveLocalNotification(int id, String title, String body, String payload) async {
+    // display a dialog with the notification details, tap ok to go to another page
+    showDialog(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: Text(title),
+        content: Text(body),
+        actions: [
+          CupertinoDialogAction(
+            isDefaultAction: true,
+            child: Text('Ok'),
+            onPressed: () async {
+              //  Navigator.of(context, rootNavigator: true).pop();
+              // await Navigator.push(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => SecondScreen(payload),
+              //   ),
+              // );
+            },
+          )
+        ],
+      ),
+    );
+  }
+
+  void localNotificationInitialize() async {
+    localNotify.FlutterLocalNotificationsPlugin
+    flutterLocalNotificationsPlugin =
+    localNotify.FlutterLocalNotificationsPlugin();
+    var initializationSettingsAndroid =
+    localNotify.AndroidInitializationSettings(
+        'icon1'); // <- default icon name is @mipmap/ic_launcher
+    var initializationSettingsIOS = localNotify.IOSInitializationSettings(
+        onDidReceiveLocalNotification: onDidReceiveLocalNotification);
+    var initializationSettings = localNotify.InitializationSettings(
+        initializationSettingsAndroid, initializationSettingsIOS);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: (String payload) async {
+          if (payload != null) {
+            debugPrint('notification payload: ' + payload);
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => FragmentPriceMe()),);
+          }
+          // selectNotificationSubject.add(payload);
+        });
+  }
+
+  Future<void> _showNotification() async {
+    var androidPlatformChannelSpecifics =
+    localNotify.AndroidNotificationDetails(
+        'your channel id', 'your channel name', 'your channel description',
+        importance: localNotify.Importance.Max,
+        priority: localNotify.Priority.High,
+        ticker: 'ticker');
+    var iOSPlatformChannelSpecifics = localNotify.IOSNotificationDetails();
+    var platformChannelSpecifics = localNotify.NotificationDetails(
+        androidPlatformChannelSpecifics, iOSPlatformChannelSpecifics);
+    setState(() {
+      messages
+          .add(Message(title: titleController.text, body: bodyController.text));
+    });
+
+    await flutterLocalNotificationsPlugin.show(
+        0, titleController.text, bodyController.text, platformChannelSpecifics,
+        payload: 'x');
+  }
   @override
   void initState() {
     super.initState();
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("kkkonMessage: $message");
+        final notification = message['notification'];
+        final data = message['data'];
+
+        setState(() {
+          messages.add(Message(
+              title: notification['title'], body: notification['body']));
+        });
+
+        await _showNotification();
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("kkkonLaunch: $message");
+
+        final notification = message['data'];
+        setState(() {
+          messages.add(Message(
+            title: '${notification['title']}',
+            body: '${notification['body']}',
+          ));
+        });
+        // await _showNotification();
+        //////////////////////////////////////
+        //Navigator.of(context).push(MaterialPageRoute(builder: (context)=> new FragmentPriceMe()));
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("kkonResume: $message");
+        setState(() {
+          messages.add(Message(
+            title: '${message['title']}',
+            body: '${message['body']}',
+          ));
+        });
+        await _showNotification();
+      },
+    );
+    _firebaseMessaging.requestNotificationPermissions(
+        const IosNotificationSettings(sound: true, badge: true, alert: true));
+
+    localNotificationInitialize();
+
+
+
     _init();
 
     //_userId = "aK1Vizu0TWgUaUdGVe53Gn96UAI2";
@@ -3329,6 +3553,7 @@ else{
                   'photo': _photourl,
 
                 }).then((value) {
+                  sendAndRetrieveMessage("اضافة تسعيرة","اضافة تسعيرة من ${_cName} بعنوان ${titleController.text}",int.parse("${now.year.toString()}${b}${c}${d}${e}"),_userId,documentReference1.documentID);
 print("ddddd6");
 Navigator.push(
     context,

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:priceme/Videos/videotabs1.dart';
@@ -36,11 +37,8 @@ class FragmentPriceMe extends StatefulWidget {
 }
 
 class _FragmentPriceMeState extends State<FragmentPriceMe> {
-  // Properties & Variables needed
-  // List<String> subfaultsList = [];
-  // List<ModelClass> faultsList = [];
-  // List<String> sparepartsList = [];
-
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  String token;
   int _currentIndex = 2; // to keep track of active tab index
 //  List<Widget> _children() => [
   String _userId;bool block=false;
@@ -63,7 +61,19 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
         : setState(() {
       _userId = user.uid;
       print("kkkk1$block$_userId");
+      _firebaseMessaging.getToken().then((value) {
+        setState(() {
+          token = value;
+          Firestore.instance
+              .collection('users')
+              .document(_userId)
+              .updateData({
+            "token": token,
 
+          });
+        });
+        print("token: $token");
+      });
       var userQuery = Firestore.instance
           .collection('users')
           .where('uid', isEqualTo:  user.uid)

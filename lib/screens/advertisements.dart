@@ -561,7 +561,7 @@ class _AdvertisementsState extends State<Advertisements> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(14),
                                   color: typePressed == "all"
-                                      ? Colors.grey
+                                      ? Color(0xff008D95)
                                       : Colors.white),
                               child: Text(
                                 "الكل",
@@ -591,7 +591,7 @@ class _AdvertisementsState extends State<Advertisements> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(14),
                                   color: typePressed == "faults"
-                                      ? Colors.grey
+                                      ? Color(0xff008D95)
                                       : Colors.white),
                               child: Text(
                                 "الأعطال",
@@ -621,7 +621,7 @@ class _AdvertisementsState extends State<Advertisements> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(14),
                                   color: typePressed == "spareParts"
-                                      ? Colors.grey
+                                      ?Color(0xff008D95)
                                       : Colors.white),
                               child: Text(
                                 "قطع الغيار",

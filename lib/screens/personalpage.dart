@@ -905,38 +905,38 @@ print("eee$cType");
                 height: 16,
               ),
 
-              InkWell(
-                onTap: () {
-                  // Navigator.pushReplacement(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => PrivcyPolicy()));
-                },
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Center(
-                        child: Text(
-                          "سياسة الاستخدام",
-                          style: TextStyle(
-                            fontSize: 10,
-                            color: MyColors.secondaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 5),
-                        child: Text(
-                          "*",
-                          style: TextStyle(color: Colors.red),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              // InkWell(
+              //   onTap: () {
+              //     // Navigator.pushReplacement(
+              //     //     context,
+              //     //     MaterialPageRoute(
+              //     //         builder: (context) => PrivcyPolicy()));
+              //   },
+              //   child: Center(
+              //     child: Row(
+              //       mainAxisAlignment: MainAxisAlignment.center,
+              //       children: <Widget>[
+              //         Center(
+              //           child: Text(
+              //             "سياسة الاستخدام",
+              //             style: TextStyle(
+              //               fontSize: 10,
+              //               color: MyColors.secondaryColor,
+              //               fontWeight: FontWeight.bold,
+              //             ),
+              //           ),
+              //         ),
+              //         Padding(
+              //           padding: const EdgeInsets.only(left: 5),
+              //           child: Text(
+              //             "*",
+              //             style: TextStyle(color: Colors.red),
+              //           ),
+              //         )
+              //       ],
+              //     ),
+              //   ),
+              // ),
 
               SizedBox(
                 height: 16,
