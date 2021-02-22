@@ -9,6 +9,7 @@ import 'package:priceme/ChatRoom/widget/home.dart';
 import 'package:priceme/Videos/photosvideomine.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
+import 'package:priceme/screens/PrivcyPolicy.dart';
 import 'package:priceme/screens/advertisements.dart';
 import 'package:priceme/screens/alloffers.dart';
 import 'package:priceme/screens/allrents.dart';
@@ -824,10 +825,10 @@ class _MorePriceMeState extends State<MorePriceMe> {
                     ),
                     InkWell(
                       onTap: () {
-                        // Navigator.push(
-                        //     context,
-                        //     new MaterialPageRoute(
-                        //         builder: (context) => PrivcyPolicy()));
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => PrivcyPolicy()));
                       },
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
