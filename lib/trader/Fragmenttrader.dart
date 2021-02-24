@@ -8,6 +8,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:priceme/ChatRoom/widget/home.dart';
 import 'package:priceme/Videos/allvideos.dart';
+import 'package:priceme/Videos/photosvideocomercial1.dart';
 import 'package:priceme/Videos/videotabs1.dart';
 import 'package:priceme/classes/ModelClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
@@ -46,7 +47,7 @@ class _FragmentTraderState extends State<FragmentTrader> {
     MorePriceMe(),
     MyAlarms(),
     HomeScreen(),
-    CollapsingTab(),
+    VidiosPhotoComercial1(),
     AllAdvertisement(),
       ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();

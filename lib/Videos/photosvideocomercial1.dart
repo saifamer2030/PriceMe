@@ -27,16 +27,15 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'allvideos.dart';
 
-class VidiosPhotoComercial extends StatefulWidget {
-
-  bool enableFilter;
-  VidiosPhotoComercial(this.enableFilter);
+class VidiosPhotoComercial1 extends StatefulWidget {
 
   @override
-  _VidiosPhotoComercialState createState() => _VidiosPhotoComercialState();
+  _VidiosPhotoComercialState1 createState() => _VidiosPhotoComercialState1();
 }
 
-class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
+class _VidiosPhotoComercialState1 extends State<VidiosPhotoComercial1> {
+  String filtter;
+  TextEditingController searchcontroller = TextEditingController();
 
   String filePath;
   List<String> sortlist = ["الاحدث", "الاكثر شهرة"];
@@ -80,7 +79,7 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
   var _carcurrentItemSelected = '';
   String filt;
   bool chechsearch = false;
-  bool enableFilter = false;
+  bool isSearching = false;
 
   @override
   void initState() {
@@ -103,387 +102,276 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
     double height = MediaQuery.of(context).size.height;
     return Scaffold(
 
-        /*
-        floatingActionButton: Container(
+        floatingActionButton:
 
-        child: FloatingActionButton(
-          heroTag: "unique55",
-          onPressed: () {
-            setState(() {
-              chechsearch=!chechsearch;
-            });
-          },
-          backgroundColor: Colors.orange,
-          elevation: 20.0,
-          child: Icon(
-            Icons.search,
-            size: 30,
-            color: const Color(0xff171732),
-          ),
-        ),
-      ),
-      */
+        Align(
+            alignment: Alignment.bottomLeft,
+            child:
+
+            Padding(
+                padding: EdgeInsets.only(left: 28),
+                child: FloatingActionButton(
+                  backgroundColor: MyColors.secondaryColor,
+                  heroTag: "unique159",
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                AddVideo()));
+                  },
+                  //backgroundColor: Colors.white,
+                  // elevation: 20.0,
+                  child: Container(
+                    height: 100,
+                    child: Icon(
+                      Icons.video_call,
+                      size: 32,
+                      color: Colors.white,
+                    ),
+                  ),
+                )
+            )
+
+        )
+        ,
         backgroundColor: Colors.white,
+        appBar: AppBar(
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                    colors: <Color>[
+                      const Color(0xffff2121),
+                      const Color(0xffff5423),
+                      const Color(0xffff7024),
+                      const Color(0xffff904a),
+                    ])),
+          ),
+          title: Text(
+            'فيديوهات اصلاح الاعطال',
+            style: TextStyle(color: Colors.white,fontSize: 14, fontWeight: FontWeight.bold),
+          ),
+          centerTitle: true,
+          // actions: <Widget>[
+          //   PopupMenuButton<Choice>(
+          //     onSelected: onItemMenuPress,
+          //     itemBuilder: (BuildContext context) {
+          //       return choices.map((Choice choice) {
+          //         return PopupMenuItem<Choice>(
+          //             value: choice,
+          //             child: Row(
+          //               children: <Widget>[
+          //                 Icon(
+          //                   choice.icon,
+          //                   color: primaryColor,
+          //                 ),
+          //                 Container(
+          //                   width: 10.0,
+          //                 ),
+          //                 Text(
+          //                   choice.title,
+          //                   style: TextStyle(color: primaryColor),
+          //                 ),
+          //               ],
+          //             ));
+          //       }).toList();
+          //     },
+          //   ),
+          // ],
+        ),
+
         body: commercialVideosScreen()
 
-        /*
-      ListView(
-        children: [
-
-          /*
-          chechsearch?   Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                height: 50,width: 150,
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Card(
-                    elevation: 0.0,
-                    color: const Color(0xff171732),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                        child: ButtonTheme(
-                          alignedDropdown: true,
-                          child: DropdownButton<String>(
-                            items: sortlist
-                                .map((String value) {
-                              return new DropdownMenuItem<String>(
-                                value: value,
-                                child: new Text(value),
-                              );
-                            }).toList(),
-                            value: _sortcurrentItemSelected,
-                            onChanged: (String newValueSelected) {
-                              // Your code to execute, when a menu item is selected from dropdown
-                              _onDropDownItemSelectedsort(
-                                  newValueSelected);
-                            },
-                            style: new TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                        )),
-                  ),
-                ),
-              ),
-              Container(
-                height: 50,width: 150,
-                child: Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: Card(
-                    elevation: 0.0,
-                    color: const Color(0xff171732),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                        child: ButtonTheme(
-                          alignedDropdown: true,
-                          child: DropdownButton<String>(
-                            items: carlist
-                                .map((String value) {
-                              return new DropdownMenuItem<String>(
-                                value: value,
-                                child: new Text(value),
-                              );
-                            }).toList(),
-                            value: _carcurrentItemSelected,
-                            onChanged: (String newValueSelected) {
-                              // Your code to execute, when a menu item is selected from dropdown
-                              _onDropDownItemSelectedcar(
-                                  newValueSelected);
-                            },
-                            style: new TextStyle(
-                              color: Colors.grey,
-                            ),
-                          ),
-                        )),
-                  ),
-                ),
-              ),
-
-            ],
-          ):Container(),
-
-          */
-          Container(
-            height: 48,
-            child: Row(
-              textDirection: TextDirection.rtl,
-              children: [
-
-
-                Container(
-                    margin: EdgeInsets.only(right: 10),
-                    height: 40,
-                   // width: 100,
-                    child: Card(
-                      elevation: 0.0,
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(5),
-                          side: BorderSide(color: Colors.grey[400])
-                      ),
-                      child:
-                      Directionality(
-                        textDirection: TextDirection.rtl,
-                      child: DropdownButtonHideUnderline(
-                          child: ButtonTheme(
-                            alignedDropdown: true,
-                            child: DropdownButton<String>(
-                              items: sortlist
-                                  .map((String value) {
-                                return new DropdownMenuItem<String>(
-                                  value: value,
-                                  child: new Text(value),
-                                );
-                              }).toList(),
-                              value: _sortcurrentItemSelected,
-                              onChanged: (String newValueSelected) {
-                                // Your code to execute, when a menu item is selected from dropdown
-                                _onDropDownItemSelectedsort(
-                                    newValueSelected);
-                              },
-                              style: new TextStyle(
-                                color: Colors.grey,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w300,
-                                fontFamily: 'Cairo'
-                              ),
-                            ),
-                          )),
-                      )
-
-                    )
-                ),
-                Container(
-                    margin: EdgeInsets.only(right: 10),
-                    height: 40,
-                    //width: 100,
-                    child: Card(
-                      elevation: 0.0,
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5),
-                        side: BorderSide(color: Colors.grey[400])
-                      ),
-                      child:
-
-                      Directionality(
-                        textDirection: TextDirection.rtl,
-                       child: DropdownButtonHideUnderline(
-                           child: ButtonTheme(
-                             alignedDropdown: true,
-                             child: DropdownButton<String>(
-                               items: carlist
-                                   .map((String value) {
-                                 return new DropdownMenuItem<String>(
-                                   value: value,
-                                   child: new Text(value),
-                                 );
-                               }).toList(),
-                               value: _carcurrentItemSelected,
-                               onChanged: (String newValueSelected) {
-                                 // Your code to execute, when a menu item is selected from dropdown
-                                 _onDropDownItemSelectedcar(
-                                     newValueSelected);
-                               },
-                               style: new TextStyle(
-                                 color: Colors.grey,
-                                   fontSize: 12,
-                                   fontWeight: FontWeight.w300,
-                                   fontFamily: 'Cairo'
-                               ),
-                             ),
-                           )),
-    )
-
-                    )
-                  ),
-
-
-
-              ],
-            )
-          ),
-          SizedBox(height: 10,),
-
-          Container(
-            width: width,
-            height: height,
-            child:
-            StreamBuilder(
-                stream: _sortcurrentItemSelected==sortlist[0]? Firestore.instance
-                    .collection('videos')
-                    .where("cdepart", isEqualTo:"تجارى")
-                    .where("ccar", isEqualTo:filt)
-                    .orderBy('carrange',
-                    descending:
-                    true)
-                    .snapshots():Firestore.instance
-                    .collection('videos')
-                    .where("cdepart", isEqualTo:"تجارى")
-                    .where("ccar", isEqualTo:filt)
-                    .orderBy('seens',
-                    descending:
-                    true)
-                    .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.data?.documents == null || !snapshot.hasData)
-                  return Center(child: Text("لا يوجد بيانات...",));
-                return Hero(
-                  tag: 'imageHero',
-                  child: Container(
-                    child: StaggeredGridView.countBuilder(
-                        itemCount: snapshot.data.documents.length,
-                        crossAxisCount: 2,
-                        itemBuilder: (context, index) {
-                          return firebasedata(
-                              context, index, snapshot.data.documents[index]);
-                        },
-                        staggeredTileBuilder: (index) =>
-                            StaggeredTile.count(1, index.isEven ? 1.2 : 1.8)),
-                  ),
-                );
-              },
-            ),
-
-            // StreamBuilder(
-            //   stream: _sortcurrentItemSelected==sortlist[0]? Firestore.instance
-            //       .collection('videos')
-            //       .where("cdepart", isEqualTo:"تجارى")
-            //       .where("ccar", isEqualTo:filt)
-            //       .orderBy('carrange',
-            //       descending:
-            //       true)
-            //       .snapshots():Firestore.instance
-            //       .collection('videos')
-            //       .where("cdepart", isEqualTo:"تجارى")
-            //       .where("ccar", isEqualTo:filt)
-            //       .orderBy('seens',
-            //       descending:
-            //       true)
-            //       .snapshots(),
-            //   builder: (context, snapshot) {
-            //     if (!snapshot.hasData) {
-            //       return Center(child: Text("لا يوجد بيانات...",));
-            //     }
-            //     print("kkk1$filt");
-            //
-            //     return new GridView.builder(
-            //         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            //             crossAxisCount:2,
-            //             //crossAxisCount: (orientation == Orientation.portrait) ? 2 : 3
-            //         ),
-            //         //add item count depending on your list
-            //         //itemCount: list.length,
-            //
-            //         //added scrolldirection
-            //         //reverse: true,
-            //         physics: BouncingScrollPhysics(),
-            //         shrinkWrap: true,
-            //        // controller: _controller,
-            //         itemCount: snapshot.data.documents.length,
-            //         itemBuilder: (context, index) {
-            //           return firebasedata(
-            //               context, index, snapshot.data.documents[index]);
-            //         });
-            //   },
-            // ),
-          ),
-        ],
-      ),
-
-    */
         );
   }
 
   Widget commercialVideosScreen() {
     return Column(
       children: [
-
-        widget.enableFilter?
         Container(
-            height: 48,
-            child: Row(
-              textDirection: TextDirection.rtl,
+            height: 46,
+            width: MediaQuery.of(context).size.width,
+            decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(color: Colors.grey[300]),
+                boxShadow: [
+                  BoxShadow(
+                      blurRadius: 4, color: Colors.grey, offset: Offset(1, 2))
+                ]),
+            child: Stack(
               children: [
-                Container(
-                    margin: EdgeInsets.only(right: 10),
-                    height: 40,
-                    // width: 100,
-                    child: Card(
-                        elevation: 0.0,
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            side: BorderSide(color: Colors.grey[400])),
-                        child: Directionality(
+            Positioned(
+                    right: 40,
+                    left:40,
+                    top: 2,
+                    child: Container(
+                      height: 40,
+                      padding: EdgeInsets.only(right: 8),
+                      decoration: BoxDecoration(
+                          color: Colors.grey[100],
+                          borderRadius: BorderRadius.only(
+                              topRight: Radius.circular(10),
+                              bottomRight: Radius.circular(10)),
+                          border: Border.all(color: Colors.grey[400])),
+                      width: MediaQuery.of(context).size.width - 40,
+                      child: Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: TextField(
+                          keyboardType: TextInputType.emailAddress,
+                          controller: searchcontroller,
+                          onChanged: (value) {
+                            setState(() {
+                              if(value==""||value.isEmpty||value==null){
+                                setState(() {
+                                  filtter=null;
+                                });
+
+                              }
+                              filtter = value;
+                            });
+                          },
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 12.0,
+                          ),
                           textDirection: TextDirection.rtl,
-                          child: DropdownButtonHideUnderline(
-                              child: ButtonTheme(
-                            alignedDropdown: true,
-                            child: DropdownButton<String>(
-                              items: sortlist.map((String value) {
-                                return new DropdownMenuItem<String>(
-                                  value: value,
-                                  child: new Text(value),
-                                );
-                              }).toList(),
-                              value: _sortcurrentItemSelected,
-                              onChanged: (String newValueSelected) {
-                                // Your code to execute, when a menu item is selected from dropdown
-                                _onDropDownItemSelectedsort(newValueSelected);
-                              },
-                              style: new TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w300,
-                                  fontFamily: 'Cairo'),
+                          decoration: InputDecoration(
+                            hintText: "البحث",
+                            hintStyle: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12.0,
+                              fontWeight: FontWeight.bold,
                             ),
-                          )),
-                        ))),
-                Container(
-                    margin: EdgeInsets.only(right: 10),
-                    height: 40,
-                    //width: 100,
-                    child: Card(
-                        elevation: 0.0,
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5),
-                            side: BorderSide(color: Colors.grey[400])),
-                        child: Directionality(
-                          textDirection: TextDirection.rtl,
-                          child: DropdownButtonHideUnderline(
-                              child: ButtonTheme(
-                            alignedDropdown: true,
-                            child: DropdownButton<String>(
-                              items: carlist.map((String value) {
-                                return new DropdownMenuItem<String>(
-                                  value: value,
-                                  child: new Text(value),
-                                );
-                              }).toList(),
-                              value: _carcurrentItemSelected,
-                              onChanged: (String newValueSelected) {
-                                // Your code to execute, when a menu item is selected from dropdown
-                                _onDropDownItemSelectedcar(newValueSelected);
-                              },
-                              style: new TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w300,
-                                  fontFamily: 'Cairo'),
+                            border: InputBorder.none,
+                            labelStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 12.0,
                             ),
-                          )),
-                        ))),
+                          ),
+                        ),
+                      ),
+                    ))
+                  ,
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: Container(
+                    alignment: Alignment.center,
+                    height: 46,
+                    width: 46,
+                    child: Icon(
+                      Icons.search,
+                      color: Colors.grey,
+                      size: 24,
+                    ),
+                  ),
+                ),
+               Align(
+                    alignment: Alignment.centerLeft,
+                    child: InkWell(
+                        onTap: () {
+                          setState(() {
+                            isSearching = !isSearching;
+                          });
+                        },
+                        child: Container(
+                          height: 46,
+                          width: 46,
+                          alignment: Alignment.center,
+                          child: Icon(
+                            Icons.filter_list,
+                            size: 24,
+                            color: isSearching == true
+                                ? Colors.deepOrange
+                                : Colors.grey,
+                          ),
+                        )))
               ],
-            )):
-        SizedBox(),
+            )),
+        isSearching
+            ? Container(
+          height: 46,
+          child: Row(
+            textDirection: TextDirection.rtl,
+            children: [
+              Container(
+                  margin: EdgeInsets.only(right: 10),
+                  height: 40,
+                  // width: 100,
+                  child: Card(
+                      elevation: 0.0,
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          side: BorderSide(color: Colors.grey[400])),
+                      child: Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: DropdownButtonHideUnderline(
+                            child: ButtonTheme(
+                              alignedDropdown: true,
+                              child: DropdownButton<String>(
+                                items: sortlist.map((String value) {
+                                  return new DropdownMenuItem<String>(
+                                    value: value,
+                                    child: new Text(value),
+                                  );
+                                }).toList(),
+                                value: _sortcurrentItemSelected,
+                                onChanged: (String newValueSelected) {
+                                  // Your code to execute, when a menu item is selected from dropdown
+                                  _onDropDownItemSelectedsort(newValueSelected);
+                                },
+                                style: new TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w300,
+                                    fontFamily: 'Cairo'),
+                              ),
+                            )),
+                      ))),
+              Container(
+                  margin: EdgeInsets.only(right: 10),
+                  height: 40,
+                  //width: 100,
+                  child: Card(
+                      elevation: 0.0,
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(5),
+                          side: BorderSide(color: Colors.grey[400])),
+                      child: Directionality(
+                        textDirection: TextDirection.rtl,
+                        child: DropdownButtonHideUnderline(
+                            child: ButtonTheme(
+                              alignedDropdown: true,
+                              child: DropdownButton<String>(
+                                items: carlist.map((String value) {
+                                  return new DropdownMenuItem<String>(
+                                    value: value,
+                                    child: new Text(value),
+                                  );
+                                }).toList(),
+                                value: _carcurrentItemSelected,
+                                onChanged: (String newValueSelected) {
+                                  // Your code to execute, when a menu item is selected from dropdown
+                                  _onDropDownItemSelectedcar(newValueSelected);
+                                },
+                                style: new TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w300,
+                                    fontFamily: 'Cairo'),
+                              ),
+                            )),
+                      ))),
+            ],
+          ),
+        )
+            : SizedBox(),
+        SizedBox(
+          height: 8,
+        ),
 
 
         SizedBox(
@@ -497,14 +385,16 @@ class _VidiosPhotoComercialState extends State<VidiosPhotoComercial> {
               stream: _sortcurrentItemSelected == sortlist[0]
                   ? Firestore.instance
                       .collection('videos')
-                      .where("cdepart", isEqualTo: "تجارى")
+                     .where("cdepart", isEqualTo: "تجارى")
+                  .where("ctitle", isEqualTo: filtter)
                       .where("ccar", isEqualTo: filt)
                       .orderBy('carrange', descending: true)
                       .snapshots()
                   : Firestore.instance
                       .collection('videos')
-                      .where("cdepart", isEqualTo: "تجارى")
-                      .where("ccar", isEqualTo: filt)
+                     .where("cdepart", isEqualTo: "تجارى")
+                  .where("ctitle", isEqualTo: filtter)
+                  .where("ccar", isEqualTo: filt)
                       .orderBy('seens', descending: true)
                       .snapshots(),
               builder: (context, snapshot) {

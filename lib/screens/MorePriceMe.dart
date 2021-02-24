@@ -651,7 +651,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
                         ),
                      **/
 
-                    InkWell(
+                    ( _cType =="trader")?    InkWell(
                       onTap: () {
                         Navigator.push(
                             context,
@@ -700,12 +700,12 @@ class _MorePriceMeState extends State<MorePriceMe> {
                           ),
                         ],
                       ),
-                    ),
-                    Container(
+                    ):Container(),
+                    ( _cType =="trader")?  Container(
                       width: MediaQuery.of(context).size.width,
                       height: .2,
                       color: Colors.grey,
-                    ),
+                    ):Container(),
 
 
 

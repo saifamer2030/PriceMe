@@ -26,6 +26,7 @@ import 'package:priceme/Videos/collapsing_tab.dart';
 //import 'file:///F:/android%20train/applications/1%20a%20flutter%20projects/priceme/priceMe20201010/PriceMe/lib/Videos/collapsing_tab.dart';
 
 import 'Videos/allvideos.dart';
+import 'Videos/photosvideocomercial1.dart';
 import 'classes/ModelClass.dart';
 import 'classes/SparePartsClass.dart';
 
@@ -46,7 +47,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
     MorePriceMe(),
     MyAlarms(),
     HomePage(),
-    CollapsingTab(),
+    VidiosPhotoComercial1(),
     AdvertismentTabs(),
       ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
@@ -363,26 +364,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
       _currentIndex = index;
     });
   }
-  // void getData() {
-  //   setState(() {
-  //     final SparePartsReference = Firestore.instance;
-  //     SparePartsReference.collection("spareparts")
-  //         .getDocuments()
-  //         .then((QuerySnapshot snapshot) {
-  //       snapshot.documents.forEach((sparepart) {
-  //         SparePartsClass spc = SparePartsClass(
-  //           sparepart.data['sid'],
-  //           sparepart.data['sName'],
-  //           sparepart.data['surl'],
-  //         );
-  //         setState(() {
-  //           sparepartsList.add(sparepart.data['sName']);
-  //           // print(sparepartsList.length.toString() + "llll");
-  //         });
-  //       });
-  //     });
-  //   });
-  // }
+
 }
 
 class MyFloatingButton extends StatefulWidget {

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:priceme/Videos/addVideo.dart';
 import 'package:priceme/Videos/allvideos.dart';
@@ -19,7 +20,7 @@ class _CollapsingTabState extends State<CollapsingTab> with SingleTickerProvider
   bool exbandedsliver=false;
   bool enableFilter = false;
   int tapIndex = 0;
-
+String _cType;
 
   @override
   void dispose() {
@@ -120,6 +121,19 @@ class _CollapsingTabState extends State<CollapsingTab> with SingleTickerProvider
     scrollController = new ScrollController();
     scrollController.addListener(() => setState(() {}));
     _tabController = new TabController(length: 2, vsync: this);
+    FirebaseAuth.instance.currentUser().then((user) => user == null
+        ? null
+        : setState(() {
+     String _userId = user.uid;
+      var userQuery = Firestore.instance.collection('users').where('uid', isEqualTo: _userId).limit(1);
+      userQuery.getDocuments().then((data){
+        if (data.documents.length > 0){
+          setState(() {
+            _cType = data.documents[0].data['cType'];
+          });
+        }
+      });
+    }));
   }
 
   @override
@@ -201,7 +215,7 @@ class _CollapsingTabState extends State<CollapsingTab> with SingleTickerProvider
 
     return Scaffold(
       backgroundColor: Colors.white,
-      floatingActionButton: Align(
+      floatingActionButton: ( _cType =="trader")? Align(
         alignment: Alignment.bottomLeft,
         child: Padding(
           padding: const EdgeInsets.only(left:25),
@@ -228,7 +242,7 @@ class _CollapsingTabState extends State<CollapsingTab> with SingleTickerProvider
             ),
           ),
         ),
-      ),
+      ):Container(),
 
       body:
       videosTabsScreen()
