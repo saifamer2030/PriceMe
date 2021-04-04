@@ -7,6 +7,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:priceme/classes/sharedpreftype.dart';
 import 'package:toast/toast.dart';
+import 'package:priceme/ui_utile/myColors.dart';
 
 import '../FragmentNavigation.dart';
 
@@ -53,142 +54,168 @@ class _SignInPhoneState extends State<SignInPhone> {
 
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment(1.38, -0.81),
-            end: Alignment(-1.38, 0.67),
-            colors: [const Color(0xff008D95), const Color(0xff15494A)],
-            stops: [0.0, 1.0],
+      body: SafeArea(
+              child: Container(
+          width: MediaQuery.of(context).size.width,
+          height: MediaQuery.of(context).size.height,
+     /*   decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment(1.38, -0.81),
+              end: Alignment(-1.38, 0.67),
+              colors: [const Color(0xff008D95), const Color(0xff15494A)],
+              stops: [0.0, 1.0],
+            ),
           ),
-        ),
-        child: Stack(
-          children: <Widget>[
+          */
+          child: Stack(
+            children: <Widget>[
 
-            Form(
-              key: _formKey,
-              child: Padding(
-                  padding: EdgeInsets.only(
-                      top: _minimumPadding * 50,
-                      bottom: _minimumPadding * 2,
-                      right: _minimumPadding * 2,
-                      left: _minimumPadding * 2),
-                  child: ListView(
-                    physics: BouncingScrollPhysics(),
-                    children: <Widget>[
-                      Padding(
-                          padding: EdgeInsets.only(
-                              top: _minimumPadding, bottom: _minimumPadding,right: _minimumPadding,left: _minimumPadding),
-                          child: Directionality(
-                            textDirection: TextDirection.rtl,
-                            child: TextFormField(
-                              //style: TextStyle(fontSize: 22.0, color: Colors.red),
-                              textAlign: TextAlign.right,
-                              keyboardType: TextInputType.number,
-                              //style: textStyle,
-                              //textDirection: TextDirection.rtl,
-                              controller: _phoneController,
-                              validator: (String value) {
-                                if (value.isEmpty) {
-                                  return "برجاء إدخال رقم الجوال"; //Translations.of(context).translate('please_enter_the_phone_number');
-                                }
-                                if (value.length < 9) {
-                                  return "رقم هاتف غير صحيح"; //Translations.of(context).translate('phone_number_is_incorrect');
-                                }
-                              },
-                              autofocus: false,
-                              style: textStyle,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: Colors.white,
-                                labelText: "رقم الجوال",
-                                //Translations.of(context).translate('telephone_number'),
-                                hintText: 'مثل:0512345678',
-                                prefixIcon: Padding(
-                                  padding: const EdgeInsets.only(right: 10),
-                                  child: Icon(Icons.phone_android),
-                                ),
-                                contentPadding:
-                                const EdgeInsets.only(left: 14.0, bottom: 8.0, top: 8.0),
-//                                focusedBorder: OutlineInputBorder(
-//                                  borderSide: BorderSide(color: Colors.white),
-//                                  borderRadius: BorderRadius.circular(5.7),
-//                                ),
-                                enabledBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.white),
-                                  borderRadius: BorderRadius.circular(5.7),
+              Positioned(
+                top: 22,
+                right: 20,
+                child: IconButton(
+                  onPressed: (){
+                    Navigator.pop(context);
+                  },
+                  icon: Icon(Icons.arrow_forward, )),
+              ),  
+              Form(
+                key: _formKey,
+                child: Padding(
+                    padding: EdgeInsets.only(
+                        top: _minimumPadding * 40,
+                        bottom: _minimumPadding * 2,
+                        right: _minimumPadding * 2,
+                        left: _minimumPadding * 2),
+                    child: ListView(
+                      physics: BouncingScrollPhysics(),
+                      children: <Widget>[
+
+                        Center(
+                          child: Text("تسجيل الدخول برقم الهاتف", style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),),
+                        ),
+
+                        SizedBox(height: 20 ),   
+                        Padding(
+                            padding: EdgeInsets.only(
+                                top: _minimumPadding, bottom: _minimumPadding,right: _minimumPadding,left: _minimumPadding),
+                            child: Container(
+                              decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(14.0),
+                         
+                          ),
+                              child: Directionality(
+                                textDirection: TextDirection.rtl,
+                                child: TextFormField(
+                                  
+                                  //style: TextStyle(fontSize: 22.0, color: Colors.red),
+                                  textAlign: TextAlign.right,
+                                  keyboardType: TextInputType.number,
+                                  //style: textStyle,
+                                  //textDirection: TextDirection.rtl,
+                                  controller: _phoneController,
+                                  validator: (String value) {
+                                    if (value.isEmpty) {
+                                      return "برجاء إدخال رقم الهاتف"; //Translations.of(context).translate('please_enter_the_phone_number');
+                                    }
+                                    if (value.length < 9) {
+                                      return "رقم هاتف غير صحيح"; //Translations.of(context).translate('phone_number_is_incorrect');
+                                    }
+                                  },
+                                 // autofocus: false,
+                                  style: textStyle,
+                                  decoration: InputDecoration(
+                                    isDense: true,
+                                    
+                                    filled: true,
+                                    fillColor: Colors.white,
+                                    hintText: 'رقم الهاتف',
+                                    hintStyle: TextStyle(fontSize: 12),
+                                    prefixIcon:Icon(Icons.phone_android),
+                                     border: new OutlineInputBorder(
+                                    borderRadius: const BorderRadius.all(
+                                      const Radius.circular(14.0),
+                                    ),
+                                    
+                                  ),
+                                   errorStyle: TextStyle(
+                                      color: Colors.red,
+                                      fontSize: 12.0),
+                                    contentPadding:
+                                    const EdgeInsets.only(left: 10.0, bottom: 6.0, top:6.0),
+
+
+                                  
+                                  ),
                                 ),
                               ),
+                            )),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 30, right: 10, left: 10, bottom: 16),
+                          child: Container(
+                            width: 300 /*MediaQuery.of(context).size.width*/,
+                            height: 45,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(9.0),
+                              color: MyColors.thirdColor
                             ),
-                          )),
-                      Padding(
-                        padding: const EdgeInsets.all(30.0),
-                        child: Container(
-                          width: 300 /*MediaQuery.of(context).size.width*/,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(9.0),
-                            border: Border.all(
-                                width: 1.0, color: const Color(0xffff5423)),
-                          ),
-                          child: new InkWell(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                new Text("دخول",style: TextStyle(color: Colors.white),),
-                                SizedBox(
-                                  height: _minimumPadding,
-                                  width: _minimumPadding,
-                                ),
-                                Icon(
-                                  Icons.check,
-                                  color: Colors.white,
-                                ),
-                              ],
-                            ),
+                            child: new InkWell(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  new Text("دخول",style: TextStyle(color: Colors.white),),
+                                  SizedBox(
+                                    height: _minimumPadding,
+                                    width: _minimumPadding,
+                                  ),
+                                  Icon(
+                                    Icons.check,
+                                    color: Colors.white,
+                                  ),
+                                ],
+                              ),
 
 
-                            onTap: () async {
-                              if (_formKey.currentState.validate()) {
-                                try {
-                                  final result = await InternetAddress.lookup(
-                                      'google.com');
-                                  if (result.isNotEmpty &&
-                                      result[0].rawAddress.isNotEmpty) {
-                                    //  print('connected');
-                                    loginUserphone(
-                                        _phoneController.text.trim(), context);
-                                    setState(() {
-                                      _load = true;
-                                    });
+                              onTap: () async {
+                                if (_formKey.currentState.validate()) {
+                                  try {
+                                    final result = await InternetAddress.lookup(
+                                        'google.com');
+                                    if (result.isNotEmpty &&
+                                        result[0].rawAddress.isNotEmpty) {
+                                      //  print('connected');
+                                      loginUserphone(
+                                          _phoneController.text.trim(), context);
+                                      setState(() {
+                                        _load = true;
+                                      });
+                                    }
+                                  } on SocketException catch (_) {
+                                    //  print('not connected');
+                                    Toast.show(
+                                        "برجاء مراجعة الاتصال بالشبكة", context,
+                                        duration: Toast.LENGTH_LONG,
+                                        gravity: Toast.BOTTOM);
                                   }
-                                } on SocketException catch (_) {
-                                  //  print('not connected');
-                                  Toast.show(
-                                      "برجاء مراجعة الاتصال بالشبكة", context,
-                                      duration: Toast.LENGTH_LONG,
-                                      gravity: Toast.BOTTOM);
-                                }
-                                //loginUserphone(_phoneController.text.trim(), context);
+                                  //loginUserphone(_phoneController.text.trim(), context);
 
-                              } else
-                                print('correct');
-                            },
+                                } else
+                                  print('correct');
+                              },
 //
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  )),
-            ),
-            new Align(
-              child: loadingIndicator,
-              alignment: FractionalOffset.center,
-            ),
-            // new Align(child: loadingIndicator,alignment: FractionalOffset.center,),
-          ],
+                      ],
+                    )),
+              ),
+              new Align(
+                child: loadingIndicator,
+                alignment: FractionalOffset.center,
+              ),
+              // new Align(child: loadingIndicator,alignment: FractionalOffset.center,),
+            ],
+          ),
         ),
       ),
     );

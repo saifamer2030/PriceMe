@@ -67,8 +67,8 @@ class _SignUptraderState extends State<SignUptrader> {
     super.initState();
 
      _typecurrentItemSelected = _typearray[0];
-    _faultcurrentItemSelected = widget.faultsList[0];
-    _sparecurrentItemSelected = widget.sparesList[0];
+    _faultcurrentItemSelected =widget.faultsList[0];
+    _sparecurrentItemSelected =widget.sparesList[0];
 workshoptype=_faultcurrentItemSelected;
   }
 
@@ -88,6 +88,7 @@ workshoptype=_faultcurrentItemSelected;
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
+/*
           gradient: LinearGradient(
             begin: Alignment(1.38, -0.81),
             end: Alignment(-1.38, 0.67),
@@ -98,16 +99,18 @@ workshoptype=_faultcurrentItemSelected;
             ],
             stops: [0.0, 0.0, 1.0],
           ),
+          */
         ),
         child: Stack(
           children: <Widget>[
             Form(
               key: _formKey,
               child: Padding(
-                  padding: EdgeInsets.all(_minimumPadding * 2),
+                  padding: EdgeInsets.all(10),
                   child: ListView(
                     physics: BouncingScrollPhysics(),
                     children: <Widget>[
+                      /*
                       Padding(
                         padding: const EdgeInsets.only(top: 0),
                         child: Container(
@@ -120,15 +123,16 @@ workshoptype=_faultcurrentItemSelected;
                           ),
                         ),
                       ),
+                      */
                       //getImageAsset(),
                       Padding(
                         padding: EdgeInsets.only(
-                            top: _minimumPadding, bottom: _minimumPadding),
+                            top: _minimumPadding * 8, bottom: _minimumPadding),
                         child: Center(
                           child: Text(
                             "إنشاء حساب جديد",
                             style: TextStyle(
-                                color: const Color(0xffff904a),
+                                color: MyColors.thirdColor,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -146,7 +150,7 @@ workshoptype=_faultcurrentItemSelected;
                             "برجاء إدخال المعلومات صحيحة لتجنب أى مسألة قانونية",
                             style: TextStyle(
                               color: Colors.red,
-                              fontSize: 15,
+                              fontSize: 12,
                               //fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -174,10 +178,11 @@ workshoptype=_faultcurrentItemSelected;
                               },
                               decoration: InputDecoration(
                                 labelText: 'اسم التاجر',
+                                prefixIcon: Icon(Icons.person, color: Colors.grey,),
                                 //hintText: 'Name',
-                                labelStyle: TextStyle(color: Colors.white),
+                                labelStyle: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w600),
                                 errorStyle: TextStyle(
-                                    color: Colors.red, fontSize: 15.0),
+                                    color: Colors.red, fontSize: 12.0),
                                 // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
                               ),
                             ),
@@ -210,8 +215,9 @@ workshoptype=_faultcurrentItemSelected;
                               },
                               decoration: InputDecoration(
                                 labelText: 'البريد الإلكترونى',
+                                prefixIcon: Icon(Icons.alternate_email, color: Colors.grey,),
                                 //hintText: 'Name',
-                                labelStyle: TextStyle(color: Colors.white),
+                                labelStyle: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w600,),
                                 errorStyle: TextStyle(
                                     color: Colors.red, fontSize: 15.0),
                                 // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
@@ -244,10 +250,11 @@ workshoptype=_faultcurrentItemSelected;
                               },
                               decoration: InputDecoration(
                                 labelText: 'كلمة السر',
+                                prefixIcon: Icon(Icons.lock, color: Colors.grey,),
                                 //hintText: 'Name',
-                                labelStyle: TextStyle(color: Colors.white),
+                                labelStyle: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w600),
                                 errorStyle: TextStyle(
-                                    color: Colors.red, fontSize: 15.0),
+                                    color: Colors.red, fontSize: 12.0),
                                 // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
                               ),
                             ),
@@ -281,10 +288,11 @@ workshoptype=_faultcurrentItemSelected;
                               },
                               decoration: InputDecoration(
                                 labelText: 'تأكيد كلمة السر',
+                                prefixIcon: Icon(Icons.check_box, color: Colors.grey,),
                                 //hintText: 'Name',
-                                labelStyle: TextStyle(color: Colors.white),
+                                labelStyle: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w600),
                                 errorStyle: TextStyle(
-                                    color: Colors.red, fontSize: 15.0),
+                                    color: Colors.red, fontSize: 12.0),
                                 // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
                               ),
                             ),
@@ -295,20 +303,20 @@ workshoptype=_faultcurrentItemSelected;
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                            top: _minimumPadding * 5, bottom: _minimumPadding),
-                        child: Center(
-                          child: Text(
+                            top: _minimumPadding * 2,),
+                        child: Text(
                             "معلومات إضافية",
+                            textDirection: TextDirection.rtl,
                             style: TextStyle(
-                                color:const Color(0xffff904a),
-                                fontSize: 20,
+                                color:Colors.black,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold),
                           ),
-                        ),
+                       
                       ),
                       SizedBox(
                         height: _minimumPadding,
-                        width: _minimumPadding,
+                        
                       ),
                       Padding(
                           padding: EdgeInsets.only(
@@ -328,10 +336,11 @@ workshoptype=_faultcurrentItemSelected;
                               },
                               decoration: InputDecoration(
                                 labelText: 'اسم المحل',
+                                prefixIcon: Icon(Icons.store, color: Colors.grey,),
                                 //hintText: 'Name',
-                                labelStyle: TextStyle(color: Colors.white),
+                                labelStyle: TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w600),
                                 errorStyle: TextStyle(
-                                    color: Colors.red, fontSize: 15.0),
+                                    color: Colors.red, fontSize: 12.0),
                                 // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
                               ),
                             ),
@@ -361,10 +370,11 @@ workshoptype=_faultcurrentItemSelected;
                               },
                               decoration: InputDecoration(
                                 labelText: 'رقم الهاتف',
+                                prefixIcon: Icon(Icons.phone_android, color: Colors.grey,),
                                 //hintText: 'Name',
-                                labelStyle:TextStyle(color: Colors.white),
+                                labelStyle:TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w600),
                                 errorStyle: TextStyle(
-                                    color: Colors.red, fontSize: 15.0),
+                                    color: Colors.red, fontSize: 12.0, ),
                                 // border: OutlineInputBorder(borderRadius: BorderRadius.circular(5.0))
                               ),
                             ),
@@ -384,20 +394,25 @@ workshoptype=_faultcurrentItemSelected;
                           "العمل",
                           textDirection: TextDirection.rtl,
                           style: TextStyle(
-                              color:const Color(0xffff904a),
-                              fontSize: 20,
+                              color:Colors.black,
+                              fontSize: 16,
                               fontWeight: FontWeight.bold),
                         ),
                       ),
                       Padding(
                         padding: EdgeInsets.only(
-                            top: _minimumPadding, bottom: _minimumPadding),
+                            top: _minimumPadding * 4, bottom: _minimumPadding),
                         child: Container(
+                          
                           height: 40.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(width: 1, color: Colors.grey)
+                          ),
                           child: Material(
                               borderRadius: BorderRadius.circular(5.0),
                               shadowColor: const Color(0xffdddddd),
-                              color: const Color(0xffe7e7e7),
+                              color:  Colors.white,                  //const Color(0xffe7e7e7),
                               elevation: 2.0,
                               child: Align(
                                 alignment: Alignment.centerRight,
@@ -436,11 +451,15 @@ workshoptype=_faultcurrentItemSelected;
                              top: _minimumPadding, bottom: _minimumPadding),
                          child: Container(
                            height: 40.0,
+                           decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(width: 1, color: Colors.grey)
+                          ),
                          //  width: MediaQuery.of(context).size.width/2.3,
                            child: Material(
                                borderRadius: BorderRadius.circular(5.0),
                                shadowColor: const Color(0xffdddddd),
-                               color: const Color(0xffe7e7e7),
+                               color: Colors.white,
                                elevation: 2.0,
                                child: Align(
                                  alignment: Alignment.centerRight,
@@ -475,12 +494,16 @@ workshoptype=_faultcurrentItemSelected;
                             top: _minimumPadding, bottom: _minimumPadding),
                         child: Container(
                           height: 40.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            border: Border.all(width: 1, color: Colors.grey)
+                          ),
                           // width: MediaQuery.of(context).size.width/2.3,
                           child:
                           Material(
                             borderRadius: BorderRadius.circular(5.0),
                             shadowColor: const Color(0xffdddddd),
-                            color: const Color(0xffe7e7e7),
+                            color: Colors.white,
                             elevation: 2.0,
                             child:  Align(
                                 alignment: Alignment.centerRight,
@@ -531,13 +554,14 @@ workshoptype=_faultcurrentItemSelected;
                           },
                           child: Card(
                             elevation: 0.0,
-                            color: const Color(0xffe7e7e7),
+                            color: Colors.white,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5),
+                              side: BorderSide(width: 1, color: Colors.grey)
                             ),
                             child:
                             Container(
-                              height: 46,
+                              height: 40,
                               child: Stack(
                                 children: [
                                   Align(alignment: Alignment.center,
@@ -554,7 +578,7 @@ workshoptype=_faultcurrentItemSelected;
                                   ),
 
                                   Positioned(
-top: 13,
+                                    top: 8,
                                     right: 8,
                                     child: Icon(Icons.keyboard_arrow_down),
                                   )
@@ -612,8 +636,8 @@ top: 13,
                                 "يرجى الضغط على الصورة لتحديد موقع المحل",
                                 textDirection: TextDirection.rtl,
                                 style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 15,
+                                    color: Colors.black,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.bold),
                               ),
                             ),
@@ -667,6 +691,8 @@ top: 13,
                             height: 46.0,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.0),
+                              color: MyColors.thirdColor
+/*
                               gradient: RadialGradient(
                                 center: Alignment(-0.93, 0.0),
                                 radius: 1.092,
@@ -680,7 +706,7 @@ top: 13,
                                 transform: GradientXDTransform(1.0, 0.0, 0.0, 1.837,
                                     0.0, -0.419, Alignment(-0.93, 0.0)),
                               ),
-
+*/
 
                             ),
                             child: Center(
@@ -705,21 +731,14 @@ top: 13,
 
 
             Positioned(
-                top: 36,
-                right: 22,
+                top: 24,
+                right: 20,
                 child:
-                InkWell(
-                  onTap: (){
+                 IconButton(
+                  onPressed: (){
                     Navigator.pop(context);
                   },
-                  child: Container(
-                      height: 40,
-                      width: 40,
-                      alignment: Alignment.center,
-                      child: Icon( Icons.arrow_forward, color: Colors.white,)
-
-                  ),
-                )
+                  icon: Icon(Icons.arrow_forward,)),
             ),
 
             new Align(

@@ -4,10 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:adobe_xd/gradient_xd_transform.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:priceme/FragmentNavigation.dart';
 import 'package:priceme/screens/Loginemailuser.dart';
@@ -15,6 +17,7 @@ import 'package:priceme/screens/alladvertisement.dart';
 import 'package:priceme/screens/network_connection.dart';
 import 'package:priceme/screens/signinphone.dart';
 import 'package:priceme/trader/Fragmenttrader.dart';
+import 'package:priceme/ui_utile/myColors.dart';
 import 'package:priceme/ui_utile/myFonts.dart';
 import 'package:http/http.dart' as http;
 
@@ -49,6 +52,11 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     ///////*****************************************
+    /// 
+    
+    /// hide status bar
+     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+
     _controller = AnimationController(
         duration: Duration(seconds: 5),
 //        lowerBound: 200,
@@ -127,7 +135,9 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     )
         : new Container();
     return Scaffold(
-      body: Stack(
+      body: loginWidget()
+      /*
+       Stack(
         children: [
           Container(
             width: MediaQuery
@@ -426,6 +436,202 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
           ),
         ],
       ),
+     */
+    ); 
+  }
+
+
+    Widget loginWidget(){
+       Widget loadingIndicator = _load
+        ? new Container(
+      child: SpinKitCircle(
+        color: const Color(0xffff5423),
+      ),
+    )
+        : new Container();
+    return Stack(
+      children: [
+        Container(
+          width: double.infinity,
+          child: SingleChildScrollView(
+                  child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+             children: [
+              
+               SizedBox(height: 50,),
+
+               Container(
+                    width: 150,
+                    height: 150,
+                    
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                     color: MyColors.thirdColor.withOpacity(0.5),
+                    
+                    //  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(100), bottomRight: Radius.circular(100))
+                    ),
+                    child:  Image(
+                    image: AssetImage('assets/images/ic_logo2.png'),
+                    fit: BoxFit.fill,
+                 ),
+                  ),
+            
+                SizedBox(height: 50,),
+
+               FlatButton(
+                 
+                 onPressed: (){
+                    loginWithFacebook();
+                 },
+                 color: Colors.blue,
+                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                 child: 
+                 Container(
+                   width: 280,
+                   height: 40,
+                              child: Row(
+                     textDirection: TextDirection.rtl,
+                     mainAxisSize: MainAxisSize.min,
+                     children: [
+                       Icon(FontAwesomeIcons.facebook, color: Colors.white,),
+                       SizedBox(height: 8,),
+                       Expanded(child: Center(child: Text("تسجيل الدخول بالفايسبوك", style: TextStyle(color: Colors.white, fontSize: 14, fontFamily: "Cairo" ),))),],),
+                 )
+                    ),
+SizedBox(height: 2,),
+               FlatButton(
+                 onPressed: (){
+                   setState(() {
+                            _load = true;
+                          });
+                          signInWithGoogle().then((val) {
+                            print("////////$val");
+
+                            Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                builder: (context) {
+                                  return FragmentPriceMe();
+                                },
+                              ),
+                            );
+                          });
+                 },
+                 color: Colors.deepOrange[600],
+                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                 child:
+                 Container(
+                   width: 280,
+                   height: 40,
+                              child: Row(
+                     textDirection: TextDirection.rtl,
+                     mainAxisSize: MainAxisSize.min,
+                     children: [
+                       Icon(FontAwesomeIcons.google, color: Colors.white,),
+                       SizedBox(height: 8,),
+                        Expanded(child: Center(child: Text(" تسجيل الدخول بغوغل", style: TextStyle(color: Colors.white,  fontSize: 14, fontFamily: "Cairo" ),))),],),
+                 
+                 
+                 )
+               ),
+               SizedBox(height: 2,),
+               FlatButton(
+                 onPressed: (){
+                   Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SignInPhone()));
+                 },
+            
+                 
+                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24), side: BorderSide(width: 2, color: Colors.lightBlue)),
+                 child: 
+                  Container(
+                   width: 280,
+                   height: 40,
+                              child: Row(
+                     textDirection: TextDirection.rtl,
+                     mainAxisSize: MainAxisSize.min,
+                     children: [
+                       Icon(Icons.phone_android,color: Colors.grey,),
+                       SizedBox(height: 8,),
+                       Expanded(child: Center(child: Text("تسجيل الدخول برقم الهاتف", style: TextStyle(color: Colors.black, fontSize: 14, fontFamily: "Cairo" ),))),],),
+                 
+                 
+                 )
+                 
+                
+                 
+               ),
+               SizedBox(height: 2,),
+               FlatButton(
+                 onPressed: (){
+                   Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => LoginEmailUser()));
+                 },
+               
+                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24), side: BorderSide(width: 2, color: Colors.lightBlue)),
+                 child:
+                 Container(
+                   width: 280,
+                   height: 40,
+                              child: Row(
+                     textDirection: TextDirection.rtl,
+                     mainAxisSize: MainAxisSize.min,
+                     children: [
+                       Icon(Icons.alternate_email, color: Colors.grey,),
+                       
+                      Expanded(child: Center(child: Text("تسجيل الدخول بالبريد الإلكتروني", style: TextStyle(color: Colors.black, fontSize: 14, fontFamily: "Cairo" ),))),],),
+                 
+                 
+                 )
+                  
+                 
+               ),
+               SizedBox(height: 2,),
+               FlatButton(
+                 onPressed: (){
+                    Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FragmentPriceMe()));
+                 },
+         
+                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24), side: BorderSide(width: 2, color: Colors.lightBlue)),
+                 child: Container(
+                   width: 280,
+                   height: 40,
+                   alignment: Alignment.center,
+                   child: Text("تسجيل الدخول كزائر", style: TextStyle(color: Colors.black, fontSize: 14, fontFamily: "Cairo" ),)),
+                 
+               ),
+
+               SizedBox(height: 10,),
+               FlatButton(
+                 onPressed: (){
+                   Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Logintrader()));
+                 },
+               
+
+                 child: Text("هل أنت تاجر ؟", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 14, fontFamily: "Cairo" ),),
+                 
+               )
+               
+
+
+             ],
+            ),
+          ),
+        ),
+
+        Align(
+            child: loadingIndicator,
+            alignment: FractionalOffset.center,
+          ),
+      ],
     );
   }
 
