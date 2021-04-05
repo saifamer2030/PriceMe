@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'PriceMe',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
+        primarySwatch: Colors.cyan,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: MyFonts.primaryFont
       ),

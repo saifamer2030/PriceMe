@@ -91,7 +91,7 @@ class _LoginEmailUser extends State<LoginEmailUser> {
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                         color: MyColors.thirdColor.withOpacity(0.6),
+                         color: MyColors.primaryColor.withOpacity(0.6),
                          
                         //  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(100), bottomRight: Radius.circular(100))
                         ),
@@ -272,7 +272,7 @@ class _LoginEmailUser extends State<LoginEmailUser> {
                                 
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8.0),
-                                  color: MyColors.thirdColor
+                                  color: MyColors.primaryColor
                              /*
                                   gradient: RadialGradient(
                                     center: Alignment(-0.93, 0.0),

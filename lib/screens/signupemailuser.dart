@@ -127,7 +127,7 @@ class _SignUpEmailUserState extends State<SignUpEmailUser> {
                             child: Text(
                               "إنشاء حساب جديد",
                               style: TextStyle(
-                                  color: MyColors.thirdColor,
+                                  color: MyColors.primaryColor,
                                   fontSize: 20,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -299,7 +299,7 @@ class _SignUpEmailUserState extends State<SignUpEmailUser> {
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8.0),
                                
-                                color: MyColors.thirdColor
+                                color: MyColors.primaryColor
                               /*
                                 gradient: RadialGradient(
                                   center: Alignment(-0.93, 0.0),

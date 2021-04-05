@@ -132,7 +132,7 @@ workshoptype=_faultcurrentItemSelected;
                           child: Text(
                             "إنشاء حساب جديد",
                             style: TextStyle(
-                                color: MyColors.thirdColor,
+                                color: MyColors.primaryColor,
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold),
                           ),
@@ -691,7 +691,7 @@ workshoptype=_faultcurrentItemSelected;
                             height: 46.0,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8.0),
-                              color: MyColors.thirdColor
+                              color: MyColors.primaryColor
 /*
                               gradient: RadialGradient(
                                 center: Alignment(-0.93, 0.0),

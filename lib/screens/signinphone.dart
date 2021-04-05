@@ -157,7 +157,7 @@ class _SignInPhoneState extends State<SignInPhone> {
                             height: 45,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(9.0),
-                              color: MyColors.thirdColor
+                              color: MyColors.primaryColor
                             ),
                             child: new InkWell(
                               child: Row(

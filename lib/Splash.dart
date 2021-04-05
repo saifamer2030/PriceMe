@@ -54,8 +54,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
     ///////*****************************************
     /// 
     
-    /// hide status bar
-     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+
 
     _controller = AnimationController(
         duration: Duration(seconds: 5),
@@ -467,7 +466,7 @@ class _SplashState extends State<Splash> with SingleTickerProviderStateMixin {
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                     color: MyColors.thirdColor.withOpacity(0.5),
+                     color: MyColors.primaryColor.withOpacity(0.5),
                     
                     //  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(100), bottomRight: Radius.circular(100))
                     ),

@@ -131,7 +131,7 @@ class _Logintrader extends State<Logintrader> {
                         alignment: Alignment.center,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                         color: MyColors.thirdColor.withOpacity(0.6),
+                         color: MyColors.primaryColor.withOpacity(0.6),
                         ),
                         child:  Image(
                         image: AssetImage('assets/images/ic_logo2.png'),
@@ -305,7 +305,7 @@ class _Logintrader extends State<Logintrader> {
                                 height: 46.0,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(8.0),
-                                  color: MyColors.thirdColor
+                                  color: MyColors.primaryColor
                                /* 
                                   gradient: RadialGradient(
                                     center: Alignment(-0.93, 0.0),
@@ -366,10 +366,8 @@ class _Logintrader extends State<Logintrader> {
                                       context,
                                       MaterialPageRoute(
                                           builder: (context) => 
-                                         // SignUptrader(faultsList,sparesList)
-                                          SignUptrader(["عمر, أحمد, علي, رضا"],
-                                          ["سامي","عمر, نبيل"])
-                                          ));
+                                         SignUptrader(faultsList,sparesList)
+                                       ));
 
                                 },
                                 child: Padding(
