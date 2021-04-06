@@ -7,6 +7,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:priceme/ChatRoom/widget/home.dart';
 import 'package:priceme/Videos/videotabs1.dart';
 import 'package:priceme/screens/MorePriceMe.dart';
 import 'package:priceme/screens/ProfileAdv.dart';
@@ -14,6 +15,7 @@ import 'package:priceme/screens/addRequestPage.dart';
 import 'package:priceme/screens/addadv.dart';
 import 'package:priceme/screens/addoffer.dart';
 import 'package:priceme/screens/addrent.dart';
+import 'package:priceme/screens/advertisements.dart';
 import 'package:priceme/screens/advertismenttabs.dart';
 import 'package:priceme/screens/alladvertisement.dart';
 import 'package:priceme/screens/alloffers.dart';
@@ -48,10 +50,12 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
   String _userId;bool block=false;
   final List<Widget> _screens = [
     MorePriceMe(),
-    MyAlarms(),
-    HomePage(),
+    //MyAlarms(),
+    HomeScreen(),
+   // HomePage(),
+   Advertisements(),
     VidiosPhotoComercial1(),
-   // AdvertismentTabs(),
+   // 
     AddRequestPage()
       ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();

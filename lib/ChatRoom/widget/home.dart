@@ -50,7 +50,9 @@ class HomeScreenState extends State<HomeScreen> {
             currentUserId = user.uid;
           }));
     registerNotification();
-    configLocalNotification();
+
+    
+   // configLocalNotification();
   }
 
   void registerNotification() {
@@ -81,6 +83,9 @@ class HomeScreenState extends State<HomeScreen> {
     });
   }
 
+
+ //// removed temporarly
+/*
   void configLocalNotification() {
     var initializationSettingsAndroid =
         new AndroidInitializationSettings('app_icon');
@@ -89,6 +94,7 @@ class HomeScreenState extends State<HomeScreen> {
         initializationSettingsAndroid, initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
+*/
 
   void onItemMenuPress(Choice choice) {
     if (choice.title == 'Log out') {
@@ -243,6 +249,7 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      /*
       appBar: AppBar(
         flexibleSpace: Container(
           decoration: BoxDecoration(
@@ -288,6 +295,7 @@ class HomeScreenState extends State<HomeScreen> {
         //   ),
         // ],
       ),
+      */
       body: Stack(
         children: <Widget>[
           // List//.collection('Alarm').document(_userId).collection('Alarmid')

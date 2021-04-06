@@ -2701,9 +2701,7 @@ print("ccc$cType");
                                                                 MaterialPageRoute(
                                                                     builder: (
                                                                         context) =>
-                                                                        Advertisements(
-                                                                            mainsparsList,
-                                                                            mainfaultsList, false)));
+                                                                        Advertisements()));
                                                           }));
                                                 });
                                               },

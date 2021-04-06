@@ -14,17 +14,13 @@ import 'package:priceme/ChatRoom/widget/const.dart';
 import 'package:priceme/Splash.dart';
 import 'package:priceme/classes/AdvClass.dart';
 import 'package:priceme/screens/editadv.dart';
+import 'package:priceme/screens/filterRequestsPage.dart';
 import 'package:toast/toast.dart';
 
 import 'advdetail.dart';
 
 class Advertisements extends StatefulWidget {
-  List<String> mainfaultsList = [];
-  List<String> mainsparsList = [];
-  bool isFromMyAccount;  /////// check if user came from "more" page to increase top padding
-
-  Advertisements(this.mainsparsList, this.mainfaultsList, this.isFromMyAccount);
-
+  
   @override
   _AdvertisementsState createState() => _AdvertisementsState();
 }
@@ -111,10 +107,10 @@ class _AdvertisementsState extends State<Advertisements> {
   @override
   void initState() {
     super.initState();
-    _typecurrentItemSelected = typelist[0];
-    _sparecurrentItemSelected = widget.mainsparsList[0];
-    _faultcurrentItemSelected = widget.mainfaultsList[0];
-    _carscurrentItemSelected=carslist[0];
+  //  _typecurrentItemSelected = typelist[0];
+   // _sparecurrentItemSelected = widget.mainsparsList[0];
+   // _faultcurrentItemSelected = widget.mainfaultsList[0];
+   // _carscurrentItemSelected=carslist[0];
     DateTime now = DateTime.now();
     int a = now.month;
     List<String>.generate(12, (i) {
@@ -192,10 +188,7 @@ class _AdvertisementsState extends State<Advertisements> {
 
       */
       body:
-         Padding(
-           padding: const EdgeInsets.only(top:18.0),
-           child: advertisementsScreen(),
-         )
+         advertisementsScreen()
       /*
       Column(
         children: [
@@ -475,12 +468,9 @@ class _AdvertisementsState extends State<Advertisements> {
     return Column(
       children: [
         SizedBox(
-          height:
-          widget.isFromMyAccount? 28
-          :
-           10,
+          height:10,
         ),
-        Container(
+   /*     Container(
             height: 46,
             width: MediaQuery.of(context).size.width,
             decoration: BoxDecoration(
@@ -694,6 +684,8 @@ if(isSearching){}else{
                         )))
               ],
             )),
+     */   
+    /*    
         enableFilter
             ? Container(
           height: 46,
@@ -876,6 +868,62 @@ if(isSearching){}else{
           ),
         )
             : SizedBox(),
+
+       */
+      Container(height: 45,
+       padding: EdgeInsets.symmetric(horizontal: 10),
+       child: Row(
+         textDirection: TextDirection.rtl,
+         children: [
+           Expanded(
+             child: Container(
+                     decoration: BoxDecoration(
+                       color: Colors.grey[200],
+                       borderRadius: BorderRadius.circular(16)
+                     ),
+                     child: Directionality(
+                                        textDirection: TextDirection.rtl,
+                                        child: TextFormField(
+                                         textAlign: TextAlign.right,
+                                         keyboardType: TextInputType.text,
+                                        style: TextStyle(fontSize: 12),
+                                         decoration: InputDecoration(
+                                            isDense: true,
+                                            prefixIcon: Icon(Icons.search, color: Colors.grey[400], size:20),
+                                           // filled: true,
+                                          // fillColor: Colors.grey[200],
+                                            
+                                            hintText: 'البحث',
+                                            hintStyle: TextStyle(fontSize: 12, color: Colors.grey[400]),
+                                            border: InputBorder.none,
+                                            
+                                           errorStyle: TextStyle(
+                                              color: Colors.red,
+                                              fontSize: 12.0),
+                                            contentPadding:
+                                            const EdgeInsets.only(left: 10.0, bottom: 8.0, top:8.0, right: 10),
+
+
+                                          
+                                          ),
+                                        ),
+                                      ),
+                   ),
+           ),
+        
+         IconButton(
+           onPressed: (){
+             Navigator.of(context).push(MaterialPageRoute(
+               builder: (ctx)=> FilterRequestsPage()));
+           },
+           icon: Icon(Icons.filter_alt, size: 25, color: Colors.grey,)
+         )  
+         ],
+       ),
+      ),
+
+      Divider(thickness: 0.8),
+
         SizedBox(
           height: 8,
         ),

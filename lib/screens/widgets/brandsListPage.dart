@@ -32,7 +32,7 @@ class _BrandsListPageState extends State<BrandsListPage> {
                      onPressed: (){
                        Navigator.pop(context);
                      },
-                     icon: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 25,),
+                     icon: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 20,),
                    ),
 
                    Expanded(

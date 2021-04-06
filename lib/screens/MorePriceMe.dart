@@ -13,10 +13,12 @@ import 'package:priceme/screens/PrivcyPolicy.dart';
 import 'package:priceme/screens/advertisements.dart';
 import 'package:priceme/screens/alloffers.dart';
 import 'package:priceme/screens/allrents.dart';
+import 'package:priceme/screens/myalarms.dart';
 import 'package:priceme/screens/myoffers.dart';
 import 'package:priceme/screens/myrents.dart';
 import 'package:priceme/screens/personalpage.dart';
 import 'package:priceme/trader/myphotos.dart';
+import 'package:priceme/ui_utile/myColors.dart';
 import 'package:priceme/ui_utile/myCustomShape2.dart';
 import '../Splash.dart';
 import 'homepage.dart';
@@ -38,6 +40,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
   String _cType = "";
   List<String> mainfaultsList = [];
   List<String> mainsparsList = [];
+  bool enableNotification = false;
 
   void getDataf() {
     setState(() {
@@ -101,7 +104,8 @@ class _MorePriceMeState extends State<MorePriceMe> {
   void initState() {
     super.initState();
 
-    getDatas(); getDataf();
+    getDatas(); 
+    getDataf();
     _firebaseAuth = FirebaseAuth.instance;
     FirebaseAuth.instance.currentUser().then((user) => user == null
         ? null
@@ -128,7 +132,20 @@ class _MorePriceMeState extends State<MorePriceMe> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
-      body: Form(
+      appBar: AppBar(
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        elevation: 2,
+        title: Text("إعدادات عامة", textAlign: TextAlign.right, textDirection: TextDirection.rtl,
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        )
+      ),
+      body:
+      
+      moreWidget()
+      /*
+       Form(
         child: Padding(
           padding: EdgeInsets.only(
               top: _minimumPadding * 23,
@@ -172,7 +189,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
                         Navigator.push(
                             context,
                             new MaterialPageRoute(
-                                builder: (context) => Advertisements(mainsparsList,mainfaultsList, true)));
+                                builder: (context) => Advertisements()));
 
                       },
                       child: Row(
@@ -1051,10 +1068,376 @@ class _MorePriceMeState extends State<MorePriceMe> {
           ),
         ),
       )
+      */
     );
   }
 
+ Widget moreWidget(){
+   return SingleChildScrollView(
+        child: Column(
+                 crossAxisAlignment: CrossAxisAlignment.start,
+                 textDirection: TextDirection.rtl,
+                  children: <Widget>[
 
+                  SizedBox(height: 10,),  
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: Text("حسابي", textAlign: TextAlign.right,
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: MyColors.primaryColor),
+                      ),
+                  ),
+
+                  Divider(thickness: 0.8, height: 0.8,), 
+                  ListTile(
+                    onTap:(){
+                      if (_userId != null) {
+                          Navigator.push(
+                              context,
+                              new MaterialPageRoute(
+                                  builder: (context) => PersonalPage()));
+                        } else {
+                          Navigator.push(
+                              context,
+                              new MaterialPageRoute(
+                                  builder: (context) => Splash()));
+                        }
+                    },                   
+                     title: Text("الصفحة الشخصية", textAlign: TextAlign.right,
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    trailing: Icon(Icons.account_circle, color: Colors.grey,),
+                    leading: Icon(Icons.arrow_back_ios, color: Colors.grey, size: 16,),
+                  ),
+               
+               Divider(thickness: 0.8, height: 0.8,),
+
+             ListTile(
+                    onTap:(){
+                       Navigator.of(context).push(MaterialPageRoute(
+                         builder: (_) => MyAdvertisement()
+                       ));
+                    },                   
+                     title: Text("طلباتي", textAlign: TextAlign.right,
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    trailing: Icon(Icons.featured_play_list, color: Colors.grey,),
+                    leading: Icon(Icons.arrow_back_ios, color: Colors.grey, size: 16,),
+                  ),
+
+                Divider(thickness: 0.8, height: 0.8,),
+
+                  ListTile(
+                    onTap:(){
+                    
+                    },                   
+                     title: Text("المفضلة", textAlign: TextAlign.right,
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    trailing: Icon(Icons.favorite, color: Colors.grey,),
+                    leading: Icon(Icons.arrow_back_ios, color: Colors.grey, size: 16,),
+                  ),
+
+                  Divider(thickness: 0.8, height: 0.8,),
+
+                     ListTile(
+                    onTap:(){
+                    if (_userId == null) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Splash()));
+                        } else {
+                          Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => MyAdvertisement()));
+
+                        }
+                    },                   
+                     title: Text("تسعيراتي", textAlign: TextAlign.right,
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    trailing: Icon(Icons.monetization_on, color: Colors.grey,),
+                    leading: Icon(Icons.arrow_back_ios, color: Colors.grey, size: 16,),
+                  ),
+
+                  Divider(thickness: 0.8, height: 0.8,),
+
+                  ( _cType =="trader")?
+                  ListTile(
+                    onTap:(){
+                       
+                         if (_userId == null) {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Splash()));
+                        } else {
+                          if (_userId != null && _cType =="trader") {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MyPhotos()));
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                              new CupertinoAlertDialog(
+                                title: new Text(
+                                  "تنبية",
+                                  style: TextStyle(
+//                                      fontFamily: 'Estedad-Black',
+                                  ),
+                                ),
+                                content: new Text(
+                                  "برجاء تسجيل الدخول اولا",
+                                  style: TextStyle(
+//                                      fontFamily: 'Estedad-Black',
+                                  ),
+                                ),
+                                actions: [
+                                  CupertinoDialogAction(
+                                      isDefaultAction: false,
+                                      child: new FlatButton(
+                                        onPressed: () {
+                                          Navigator.pop(context, false);
+                                          Navigator.push(
+                                              context,
+                                              new MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      Splash()));
+                                        },
+                                        child: Text(
+                                          "موافق",
+                                          style: TextStyle(
+//                                              fontFamily: 'Estedad-Black',
+                                          ),
+                                        ),
+                                      )),
+                                ],
+                              ),
+                            );
+                          }
+                        }
+                    },                   
+                     title: Text("صوري", textAlign: TextAlign.right,
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    trailing: Icon(Icons.image, color: Colors.grey,),
+                    leading: Icon(Icons.arrow_back_ios, color: Colors.grey, size: 16,),
+                  ) : SizedBox(),
+                   
+               ( _cType =="trader")?   Divider(thickness: 0.8, height: 0.8,) : SizedBox(),
+
+                                      SizedBox(height: 10,),  
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text("التنبيهات", textAlign: TextAlign.right,
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: MyColors.primaryColor),
+                      ),
+                  ),
+
+                    SizedBox(height: 10,), 
+
+                   Divider(thickness: 0.8, height: 0.8,), 
+                   ListTile(
+                    onTap:(){
+                        Navigator.push(
+                                              context,
+                                              new MaterialPageRoute(
+                                                  builder: (context) => MyAlarms()));
+                    },                   
+                     title: Text("تنبيهاتي", textAlign: TextAlign.right,
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    trailing: Icon(Icons.notifications, color: Colors.grey,),
+                    leading: Icon(Icons.arrow_back_ios, color: Colors.grey, size: 16,),
+                  ),
+
+                  Divider(thickness: 0.8, height: 0.8,),
+                  ListTile(
+                                     
+                     title: Text("تفعيل التنبيهات", textAlign: TextAlign.right,
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),),
+                    subtitle: Text("تلقي جميع التنبيهات على الهاتف", textAlign: TextAlign.right,
+                                style: TextStyle(fontSize: 10,),),            
+                   
+                    trailing: Icon(Icons.notifications_on, color: Colors.grey,),
+                    leading: Switch(
+                      value: enableNotification,
+                      onChanged: (value){
+                        setState(() {
+                           enableNotification = value;
+                        });
+                      
+                      },
+                      activeColor: MyColors.primaryColor,
+                    )
+                  ),
+
+                  Divider(thickness: 0.8, height: 0.8,),
+
+                                 SizedBox(height: 10,),  
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Text("حول التطبيق", textAlign: TextAlign.right,
+                                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: MyColors.primaryColor),
+                      ),
+                  ),
+
+                    SizedBox(height: 10,), 
+
+               Divider(thickness: 0.8, height: 0.8,), 
+
+               ListTile(
+                    onTap:(){
+                      Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => PrivcyPolicy()));
+                    },                   
+                     title: Text("سياسة الخصوصية", textAlign: TextAlign.right,
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    trailing: Icon(Icons.privacy_tip, color: Colors.grey,),
+                    leading: Icon(Icons.arrow_back_ios, color: Colors.grey, size: 16,),
+                  ),
+
+                  Divider(thickness: 0.8, height: 0.8,),
+
+                   ListTile(
+                    onTap:(){
+                      Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => PrivcyPolicy()));
+                    },                   
+                     title: Text("حول التطبيق", textAlign: TextAlign.right,
+                                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                    trailing: Icon(Icons.info, color: Colors.grey,),
+                    leading: Icon(Icons.arrow_back_ios, color: Colors.grey, size: 16,),
+                  ),
+
+                  Divider(thickness: 0.8, height: 0.8,),
+
+                  SizedBox(height: 10,),
+                  FlatButton(
+                    onPressed: (){
+                      FirebaseAuth.instance.signOut();
+                        SessionManager prefs = SessionManager();
+                        prefs.setAuthType("");
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Splash()));
+                    },
+                    child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+
+                          _userId == null
+                              ? Text(
+                            'تسجيل الدخول',
+                            style: TextStyle(
+//                                        fontFamily: 'Estedad-Black',
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                              height: 1.2307692307692308,
+                            ),
+                            textAlign: TextAlign.right,
+                          )
+                              : Text(
+                            'تسجيل خروج',
+                            style: TextStyle(
+//                                        fontFamily: 'Estedad-Black',
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                              height: 1.2307692307692308,
+                            ),
+                            textAlign: TextAlign.right,
+                          ),
+
+                          // Adobe XD layer: 'world-wide-web-icon…' (shape)
+                          Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child:
+                              _userId == null?
+                              Icon(
+                                Icons.login,
+                                color: Colors.green,
+                              ) :
+                              Icon(
+                                Icons.logout,
+                                color: Colors.red,
+                              )// Adobe XD layer: 'terms' (shape)
+                          ),
+                        ],
+                      ),
+                  ),
+
+                  SizedBox(height: 10,),
+
+/*
+                    InkWell(
+                      onTap: () {
+                        FirebaseAuth.instance.signOut();
+                        SessionManager prefs = SessionManager();
+                        prefs.setAuthType("");
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => Splash()));
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+
+                          _userId == null
+                              ? Text(
+                            'تسجيل الدخول',
+                            style: TextStyle(
+//                                        fontFamily: 'Estedad-Black',
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.green,
+                              height: 1.2307692307692308,
+                            ),
+                            textAlign: TextAlign.right,
+                          )
+                              : Text(
+                            'تسجيل خروج',
+                            style: TextStyle(
+//                                        fontFamily: 'Estedad-Black',
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.red,
+                              height: 1.2307692307692308,
+                            ),
+                            textAlign: TextAlign.right,
+                          ),
+
+                          // Adobe XD layer: 'world-wide-web-icon…' (shape)
+                          Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child:
+                              _userId == null?
+                              Icon(
+                                Icons.login,
+                                color: Colors.green,
+                              ) :
+                              Icon(
+                                Icons.logout,
+                                color: Colors.red,
+                              )// Adobe XD layer: 'terms' (shape)
+                          ),
+                        ],
+                      ),
+                    ),
+                    */
+                  ],
+                ),
+   );
+ }
 
 
 }

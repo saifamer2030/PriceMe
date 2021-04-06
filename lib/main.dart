@@ -4,6 +4,7 @@ import 'package:priceme/UserRating/UserRatingPage.dart';
 import 'package:priceme/Videos/addVideo.dart';
 import 'package:priceme/screens/addadv.dart';
 import 'package:priceme/screens/advdetail.dart';
+import 'package:priceme/screens/filterRequestsPage.dart';
 import 'package:priceme/screens/homepage.dart';
 import 'package:priceme/screens/myadvertisement.dart';
 import 'package:priceme/screens/personalpage.dart';
@@ -32,13 +33,15 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'PriceMe',
       theme: ThemeData(
+        
         primarySwatch: Colors.cyan,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: MyFonts.primaryFont
       ),
       home:
      // MessagingWidget(),
-      Splash(),
+     Splash(),
+   
       //FragmentTrader()
       // FragmentNavigationAdmin(),//SparePartsAdmin(),//UserRatingPage("6XQuwAo5xPY40LqdnAqL5zqcc1v1"),Splash(),
     );

@@ -23,7 +23,7 @@ class YearsListPage extends StatelessWidget {
                      onPressed: (){
                        Navigator.pop(context);
                      },
-                     icon: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 25,),
+                     icon: Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 20,),
                    ),
 
                    Expanded(
