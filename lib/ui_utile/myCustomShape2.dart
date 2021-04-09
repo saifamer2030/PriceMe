@@ -14,7 +14,8 @@ class MyCustomShape2 extends CustomPainter {
     ..strokeWidth = 1;
     paint.shader = ui.Gradient.linear(
     Offset(size.width*0.8,0),Offset(size.width*0.2,size.height),
-    [Color(0xfffe7210),Color(0xffff8b14),Color(0xffffbc16)],
+   // [Color(0xfffe7210),Color(0xffff8b14),Color(0xffffbc16)],
+   [MyColors.primaryColor,MyColors.lightPrimaryColor,MyColors.lightPrimaryColor.withOpacity(0.8)],
     [0.00,0.53,1.00]);
 
     Path path = Path();

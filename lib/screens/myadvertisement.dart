@@ -58,6 +58,26 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
     TextStyle textStyle = Theme.of(context).textTheme.subtitle;
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
+      appBar: AppBar(
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        elevation: 2,
+        title: Text("طلباتي", textAlign: TextAlign.right, textDirection: TextDirection.rtl,
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          IconButton(
+            onPressed: (){
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.arrow_forward)
+          ),
+
+        SizedBox(width: 10,)
+
+        ],
+      ),
       floatingActionButton: Container(
         height: 30.0,
         width: 30.0,

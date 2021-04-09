@@ -386,7 +386,8 @@ print("ccc$cType");
                       Container(
                           height:cimagelist.contains("jpg")?300: 265,
                           color: Colors.grey[200],
-                          child:cimagelist.contains("jpg")? Swiper(
+                          child:cimagelist.contains("jpg")? 
+                          Swiper(
                             loop: false,
                             pagination: new SwiperPagination(
                                 builder: DotSwiperPaginationBuilder(
@@ -721,6 +722,29 @@ print("ccc$cType");
                       )),
                 ),
                 SizedBox(height: 16),
+
+                Row(
+              children: [
+                  Expanded(
+                   child: Divider(thickness: 0.8, height: 16),
+                  ),
+                  Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      side: BorderSide(color: Colors.grey, width: 0.8)
+                    ),
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+                      child:
+                       Text("معلومات حول القطعة",textDirection: TextDirection.rtl, textAlign: TextAlign.right,
+                        style: TextStyle(fontSize: 12, color: Colors.grey, fontWeight: FontWeight.bold,),),
+                        )),
+                        Expanded(
+                   child: Divider(thickness: 0.8, height: 16),
+                  ),
+              ],
+            ),
+/*
                 Container(
                     height: 40,
                     padding: EdgeInsets.only(right: 20),
@@ -753,7 +777,8 @@ print("ccc$cType");
                           fontWeight: FontWeight.bold,
                           fontFamily: MyFonts.primaryFont),
                     )),
-                SizedBox(height: 16),
+                    */
+                SizedBox(height: 10),
                 Container(
                   margin: EdgeInsets.only(
                     right: 20,
@@ -765,7 +790,7 @@ print("ccc$cType");
                       Container(
                         width: 116,
                         child: Text(
-                          "إسم السيارة",
+                          "إسم الماركة",
                           textDirection: TextDirection.rtl,
                           style: TextStyle(
                               color: Colors.grey,
@@ -839,7 +864,7 @@ print("ccc$cType");
                       Container(
                         width: 116,
                         child: Text(
-                          "رقم الإصدار",
+                          "الموديل",
                           textDirection: TextDirection.rtl,
                           textAlign: TextAlign.right,
                           style: TextStyle(
@@ -875,7 +900,7 @@ print("ccc$cType");
                       Container(
                         width: 116,
                         child: Text(
-                          "الطراز",
+                          "سنة الصنع",
                           textDirection: TextDirection.rtl,
                           style: TextStyle(
                               color: Colors.grey,
@@ -947,11 +972,11 @@ print("ccc$cType");
                     margin: EdgeInsets.only(top: 10, bottom: 10),
                     child: RaisedButton(
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6)),
+                          borderRadius: BorderRadius.circular(20)),
                       onPressed: () {
                         displayBottomSheet();
                       },
-                      color: MyColors.secondaryColor,
+                      color: MyColors.primaryColor,
                       child: Center(
                         child: Text(
                           "أضف عرضك",
@@ -978,16 +1003,8 @@ print("ccc$cType");
                       height: 48,
                       width: 250,
                       decoration: BoxDecoration(
-                        //color: Colors.grey[400],
-                          gradient: LinearGradient(
-                            begin: Alignment.topRight,
-                            end: Alignment.bottomLeft,
-                            colors: [
-                              MyColors.darkPrimaryColor,
-                              MyColors.primaryColor,
-                              MyColors.lightPrimaryColor,
-                            ],
-                          ),
+                       color: MyColors.primaryColor,
+                        
                           borderRadius: BorderRadius.circular(24)),
                       child: Row(
                         textDirection: TextDirection.rtl,
@@ -1485,7 +1502,7 @@ print("ccc$cType");
                                  textDirection: TextDirection.rtl,
                                  textAlign: TextAlign.center,
                                  style: TextStyle(
-                                   color: Colors.green,
+                                   color: MyColors.primaryColor,
 
                                  ),
 

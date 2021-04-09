@@ -13,13 +13,17 @@ import 'package:priceme/Videos/videotabs1.dart';
 import 'package:priceme/classes/ModelClass.dart';
 import 'package:priceme/classes/SparePartsClass.dart';
 import 'package:priceme/screens/MorePriceMe.dart';
+import 'package:priceme/screens/addRequestPage.dart';
 import 'package:priceme/screens/addadv.dart';
+import 'package:priceme/screens/advertisements.dart';
 import 'package:priceme/screens/alladvertisement.dart';
 import 'package:priceme/screens/blockscreen.dart';
 import 'package:priceme/screens/homepage.dart';
+import 'package:priceme/screens/marketPage.dart';
 import 'package:priceme/screens/myadvertisement.dart';
 import 'package:priceme/screens/myalarms.dart';
 import 'package:priceme/Videos/collapsing_tab.dart';
+import 'package:priceme/ui_utile/myColors.dart';
 //import 'file:///F:/android%20train/applications/1%20a%20flutter%20projects/priceme/priceMe20201010/PriceMe/lib/Videos/collapsing_tab.dart';
 
 class FragmentTrader extends StatefulWidget {
@@ -38,17 +42,19 @@ class _FragmentTraderState extends State<FragmentTrader> {
   // List<ModelClass> faultsList = [];
   // List<String> sparepartsList = [];
   String _userId;
-  int _currentIndex=4;
+  int _currentIndex=2;
 
   int currentTab = 4; // to keep track of active tab index
 //  List<Widget> _children() => [
 
   final List<Widget> _screens = [
     MorePriceMe(),
-    MyAlarms(),
+   // MyAlarms(),
     HomeScreen(),
-    VidiosPhotoComercial1(),
-    AllAdvertisement(),
+    Advertisements(),
+   //AllAdvertisement(),
+    MarketPage(),
+    AddRequestPage()
       ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
   final GlobalKey<NavigatorState> navigatorKey =
@@ -102,224 +108,226 @@ class _FragmentTraderState extends State<FragmentTrader> {
   Widget build(BuildContext context) {
     // final List<Widget> children = screens( );
 
-    return Scaffold(
-      body: _screens[_currentIndex],
+    return SafeArea(
+          child: Scaffold(
+        body: _screens[_currentIndex],
 
-      // PageStorage(
-      //   child: currentScreen,
-      //   bucket: bucket,
-      // ),
-      // key: navigatorKey,
-      // floatingActionButton: MyFloatingButton(sparepartsList),
-      //
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      bottomNavigationBar: BottomNavigationBar(
-        showUnselectedLabels: true,
-        items: [
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.account_circle,
-              ),
-              title: Text(
-                "حسابي",
-                style: TextStyle(
-                    fontSize: 12,
-                    //fontFamily: MyFonts.fontFamily,
-                    fontWeight: FontWeight.bold),
-              )),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.notifications_active,
-              ),
-              title: Text(
-                "التنبيهات",
-                style: TextStyle(
-                    fontSize: 12,
-                    //fontFamily: MyFonts.fontFamily,
-                    fontWeight: FontWeight.bold),
-              )),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.chat,
-              ),
-              title: Text(
-                "المحادثات",
-                style: TextStyle(
-                    fontSize: 12,
+        // PageStorage(
+        //   child: currentScreen,
+        //   bucket: bucket,
+        // ),
+        // key: navigatorKey,
+        // floatingActionButton: MyFloatingButton(sparepartsList),
+        //
+        // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: BottomNavigationBar(
+          showUnselectedLabels: true,
+          items: [
+            BottomNavigationBarItem(
+                icon: Icon(
+                 Icons.more_vert,
+                ),
+                title: Text(
+                  "المزيد",
+                  style: TextStyle(
+                      fontSize: 12,
+                      //fontFamily: MyFonts.fontFamily,
+                      fontWeight: FontWeight.bold),
+                )),
+            BottomNavigationBarItem(
+                icon: Icon(
+                Icons.chat
+                ),
+                title: Text(
+                  "المحادثة",
+                  style: TextStyle(
+                      fontSize: 12,
+                      //fontFamily: MyFonts.fontFamily,
+                      fontWeight: FontWeight.bold),
+                )),
+            BottomNavigationBarItem(
+                icon: Icon(
+                   Icons.list_alt,
+                ),
+                title: Text(
+                  "الطلبات",
+                  style: TextStyle(
+                      fontSize: 12,
 
-                    fontWeight: FontWeight.bold),
-              )),
-          BottomNavigationBarItem(
-              icon: Icon(
-        Icons.video_library,
-              ),
-              title: Text(
-                "الفيديوهات",
-                style: TextStyle(
-                    fontSize: 12,
-                    //fontFamily: MyFonts.fontFamily,
-                    fontWeight: FontWeight.bold),
-              )),
-          BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-              ),
-              title: Text(
-                "الرئيسية",
-                style: TextStyle(
-                    fontSize: 12,
-                    //fontFamily: MyFonts.fontFamily,
-                    fontWeight: FontWeight.bold),
-              )),
-        ],
-        currentIndex: _currentIndex,
-        onTap: (int index) => _onItemTapped(index),
-        type: BottomNavigationBarType.fixed,
-     //   fixedColor:  const Color(0xff15494A),
-       fixedColor: Colors.orange,
-        unselectedItemColor: Colors.grey,
+                      fontWeight: FontWeight.bold),
+                )),
+            BottomNavigationBarItem(
+                icon: Icon(
+          Icons.shopping_cart,
+                ),
+                title: Text(
+                  "التسوق",
+                  style: TextStyle(
+                      fontSize: 12,
+                      //fontFamily: MyFonts.fontFamily,
+                      fontWeight: FontWeight.bold),
+                )),
+            BottomNavigationBarItem(
+                icon: Icon(
+                    Icons.add_box
+                  ),
+                title: Text(
+                  "أطلب",
+                  style: TextStyle(
+                      fontSize: 12,
+                      //fontFamily: MyFonts.fontFamily,
+                      fontWeight: FontWeight.bold),
+                )),
+          ],
+          currentIndex: _currentIndex,
+          onTap: (int index) => _onItemTapped(index),
+          type: BottomNavigationBarType.fixed,
+       //   fixedColor:  const Color(0xff15494A),
+         fixedColor: MyColors.primaryColor,
+          unselectedItemColor: Colors.grey,
+        ),
+
+
+
+        // BottomAppBar(
+        //   shape: CircularNotchedRectangle(),
+        //   notchMargin: 10,
+        //   child: Container(
+        //     height: 60,
+        //     child: Row(
+        //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        //       children: <Widget>[
+        //         Row(
+        //           crossAxisAlignment: CrossAxisAlignment.start,
+        //           children: <Widget>[
+        //             MaterialButton(
+        //               minWidth: 40,
+        //               onPressed: () {
+        //                 print("kkkkkkkkk");
+        //                 setState(() {
+        //                   currentScreen = MorePriceMe(); // if user taps on this dashboard tab will be active
+        //                   currentTab = 0;
+        //                 });
+        //               },
+        //               child: Column(
+        //                 mainAxisAlignment: MainAxisAlignment.center,
+        //                 children: <Widget>[
+        //                   Icon(
+        //                     Icons.account_circle,
+        //                     color: currentTab == 0
+        //                         ? const Color(0xff15494A)
+        //                         : Colors.grey,
+        //                   ),
+        //                   Text(
+        //                     'حسابي',
+        //                     style: TextStyle(
+        //                       color: currentTab == 0
+        //                           ? const Color(0xff15494A)
+        //                           : Colors.grey,
+        //                     ),
+        //                   ),
+        //                 ],
+        //               ),
+        //             ),
+        //             MaterialButton(
+        //               minWidth: 40,
+        //               onPressed: () {
+        //                 setState(() {
+        //                   currentScreen = MyAlarms(); // if user taps on this dashboard tab will be active
+        //                   currentTab = 2;
+        //                 });
+        //               },
+        //               child: Column(
+        //                 mainAxisAlignment: MainAxisAlignment.center,
+        //                 children: <Widget>[
+        //                   Icon(
+        //                     Icons.notifications_active,
+        //                     color: currentTab == 2
+        //                         ? const Color(0xff15494A)
+        //                         : Colors.grey,
+        //                   ),
+        //                   Text(
+        //                     'التنبيهات',
+        //                     style: TextStyle(
+        //                       color: currentTab == 2
+        //                           ?  const Color(0xff15494A)
+        //                           : Colors.grey,
+        //                     ),
+        //                   ),
+        //                 ],
+        //               ),
+        //             ),
+        //           ],
+        //         ),
+        //
+        //         // Right Tab bar icons
+        //
+        //         Row(
+        //           crossAxisAlignment: CrossAxisAlignment.start,
+        //           children: <Widget>[
+        //             MaterialButton(
+        //               minWidth: 40,
+        //               onPressed: () {
+        //                 setState(() {
+        //                   currentScreen = CollapsingTab(); // if user taps on this dashboard tab will be active
+        //                   currentTab = 1;
+        //                 });
+        //               },
+        //               child: Column(
+        //                 mainAxisAlignment: MainAxisAlignment.center,
+        //                 children: <Widget>[
+        //                   Icon(
+        //                     Icons.video_library,
+        //                     color: currentTab == 1
+        //                         ?  const Color(0xff15494A)
+        //                         : Colors.grey,
+        //                   ),
+        //                   Text(
+        //                     'الفيديوهات',
+        //                     style: TextStyle(
+        //                       color: currentTab == 1
+        //                           ?  const Color(0xff15494A)
+        //                           : Colors.grey,
+        //                     ),
+        //                   ),
+        //                 ],
+        //               ),
+        //             ),
+        //             MaterialButton(
+        //               minWidth: 40,
+        //               onPressed: () {
+        //                 setState(() {
+        //                   currentScreen = AllAdvertisement(); // if user taps on this dashboard tab will be active
+        //                   currentTab = 3;
+        //                 });
+        //               },
+        //               child: Column(
+        //                 mainAxisAlignment: MainAxisAlignment.center,
+        //                 children: <Widget>[
+        //                   Icon(
+        //                     Icons.home,
+        //                     color: currentTab == 3
+        //                         ?  const Color(0xff15494A)
+        //                         : Colors.grey,
+        //                   ),
+        //                   Text(
+        //                     'الرئيسية',
+        //                     style: TextStyle(
+        //                       color: currentTab == 3
+        //                           ?  const Color(0xff15494A)
+        //                           : Colors.grey,
+        //                     ),
+        //                   ),
+        //                 ],
+        //               ),
+        //             )
+        //           ],
+        //         )
+        //       ],
+        //     ),
+        //   ),
+        // ),
       ),
-
-
-
-      // BottomAppBar(
-      //   shape: CircularNotchedRectangle(),
-      //   notchMargin: 10,
-      //   child: Container(
-      //     height: 60,
-      //     child: Row(
-      //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //       children: <Widget>[
-      //         Row(
-      //           crossAxisAlignment: CrossAxisAlignment.start,
-      //           children: <Widget>[
-      //             MaterialButton(
-      //               minWidth: 40,
-      //               onPressed: () {
-      //                 print("kkkkkkkkk");
-      //                 setState(() {
-      //                   currentScreen = MorePriceMe(); // if user taps on this dashboard tab will be active
-      //                   currentTab = 0;
-      //                 });
-      //               },
-      //               child: Column(
-      //                 mainAxisAlignment: MainAxisAlignment.center,
-      //                 children: <Widget>[
-      //                   Icon(
-      //                     Icons.account_circle,
-      //                     color: currentTab == 0
-      //                         ? const Color(0xff15494A)
-      //                         : Colors.grey,
-      //                   ),
-      //                   Text(
-      //                     'حسابي',
-      //                     style: TextStyle(
-      //                       color: currentTab == 0
-      //                           ? const Color(0xff15494A)
-      //                           : Colors.grey,
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //             MaterialButton(
-      //               minWidth: 40,
-      //               onPressed: () {
-      //                 setState(() {
-      //                   currentScreen = MyAlarms(); // if user taps on this dashboard tab will be active
-      //                   currentTab = 2;
-      //                 });
-      //               },
-      //               child: Column(
-      //                 mainAxisAlignment: MainAxisAlignment.center,
-      //                 children: <Widget>[
-      //                   Icon(
-      //                     Icons.notifications_active,
-      //                     color: currentTab == 2
-      //                         ? const Color(0xff15494A)
-      //                         : Colors.grey,
-      //                   ),
-      //                   Text(
-      //                     'التنبيهات',
-      //                     style: TextStyle(
-      //                       color: currentTab == 2
-      //                           ?  const Color(0xff15494A)
-      //                           : Colors.grey,
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //           ],
-      //         ),
-      //
-      //         // Right Tab bar icons
-      //
-      //         Row(
-      //           crossAxisAlignment: CrossAxisAlignment.start,
-      //           children: <Widget>[
-      //             MaterialButton(
-      //               minWidth: 40,
-      //               onPressed: () {
-      //                 setState(() {
-      //                   currentScreen = CollapsingTab(); // if user taps on this dashboard tab will be active
-      //                   currentTab = 1;
-      //                 });
-      //               },
-      //               child: Column(
-      //                 mainAxisAlignment: MainAxisAlignment.center,
-      //                 children: <Widget>[
-      //                   Icon(
-      //                     Icons.video_library,
-      //                     color: currentTab == 1
-      //                         ?  const Color(0xff15494A)
-      //                         : Colors.grey,
-      //                   ),
-      //                   Text(
-      //                     'الفيديوهات',
-      //                     style: TextStyle(
-      //                       color: currentTab == 1
-      //                           ?  const Color(0xff15494A)
-      //                           : Colors.grey,
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             ),
-      //             MaterialButton(
-      //               minWidth: 40,
-      //               onPressed: () {
-      //                 setState(() {
-      //                   currentScreen = AllAdvertisement(); // if user taps on this dashboard tab will be active
-      //                   currentTab = 3;
-      //                 });
-      //               },
-      //               child: Column(
-      //                 mainAxisAlignment: MainAxisAlignment.center,
-      //                 children: <Widget>[
-      //                   Icon(
-      //                     Icons.home,
-      //                     color: currentTab == 3
-      //                         ?  const Color(0xff15494A)
-      //                         : Colors.grey,
-      //                   ),
-      //                   Text(
-      //                     'الرئيسية',
-      //                     style: TextStyle(
-      //                       color: currentTab == 3
-      //                           ?  const Color(0xff15494A)
-      //                           : Colors.grey,
-      //                     ),
-      //                   ),
-      //                 ],
-      //               ),
-      //             )
-      //           ],
-      //         )
-      //       ],
-      //     ),
-      //   ),
-      // ),
     );
   }
   // void getData() {

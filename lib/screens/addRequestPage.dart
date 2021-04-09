@@ -192,8 +192,9 @@ SizedBox(
               shape:RoundedRectangleBorder(
                 
                 borderRadius: BorderRadius.circular(5.0)),
-             onPressed: spBrand != null? (){
-               Navigator.push(context, MaterialPageRoute(
+             onPressed: (){
+               if(spBrand != null){
+                  Navigator.push(context, MaterialPageRoute(
                  builder: (ctx) => ModelsListPage()
                )).then((value){
                  if(value != null){
@@ -202,7 +203,13 @@ SizedBox(
                    });
                  }
                });
-             }: null,
+               }else{
+                 Scaffold.of(context).showSnackBar(
+                   SnackBar(content: Text("الرجاء تحديد اسم الماركة", 
+                   style: TextStyle(fontSize: 12, color: Colors.white),)));
+               }
+              
+             },
              color: Colors.white,
              child: Container(
                height: 46.0,
@@ -244,8 +251,9 @@ SizedBox(
               shape:RoundedRectangleBorder(
                 
                 borderRadius: BorderRadius.circular(5.0)),
-             onPressed: spModel != null? (){
-               Navigator.push(context, MaterialPageRoute(
+             onPressed: (){
+               if(spModel != null){
+ Navigator.push(context, MaterialPageRoute(
                  builder: (ctx) => YearsListPage()
                )).then((value){
                  if(value != null){
@@ -254,7 +262,13 @@ SizedBox(
                    });
                  }
                });
-             }: null,
+               }else{
+                       Scaffold.of(context).showSnackBar(
+                   SnackBar(content: Text("الرجاء تحديد الموديل ", 
+                   style: TextStyle(fontSize: 12, color: Colors.white),)));
+               }
+              
+             },
              color: Colors.white,
              child: Container(
                height: 46.0,
@@ -461,8 +475,10 @@ SizedBox(
                     shape:RoundedRectangleBorder(
                       
                       borderRadius: BorderRadius.circular(5.0)),
-                   onPressed: carBrand != null? (){
-               Navigator.push(context, MaterialPageRoute(
+                   onPressed: (){
+
+                     if(carBrand != null){
+  Navigator.push(context, MaterialPageRoute(
                  builder: (ctx) => ModelsListPage()
                )).then((value){
                  if(value != null){
@@ -471,7 +487,15 @@ SizedBox(
                    });
                  }
                });
-             }: null,
+                     }else{
+                               Scaffold.of(context).showSnackBar(
+                   SnackBar(content: Text("الرجاء تحديد اسم الماركة", textAlign: TextAlign.center,
+                   style: TextStyle(fontSize: 12, color: Colors.white, fontFamily: "Cairo"),),
+                   duration: Duration(seconds: 2),
+                   ));
+                     }
+             
+             },
                    color: Colors.white,
                    child: Container(
                      height: 46.0,
@@ -514,8 +538,9 @@ SizedBox(
                     shape:RoundedRectangleBorder(
                       
                       borderRadius: BorderRadius.circular(5.0)),
-                   onPressed: carModel != null? (){
-               Navigator.push(context, MaterialPageRoute(
+                   onPressed: (){
+                     if(carModel != null){
+ Navigator.push(context, MaterialPageRoute(
                  builder: (ctx) => YearsListPage()
                )).then((value){
                  if(value != null){
@@ -524,7 +549,18 @@ SizedBox(
                    });
                  }
                });
-             }: null,
+                     }else{
+                            Scaffold.of(context).showSnackBar(
+                   SnackBar(content: Text("الرجاء تحديد الموديل ", textAlign: TextAlign.center,
+                   style: TextStyle(fontSize: 12, color: Colors.white, fontFamily: "Cairo"),),
+                   duration: Duration(seconds: 2),
+
+                   ),
+                   
+                   );
+                     }
+              
+             },
                    color: Colors.white,
                    child: Container(
                      height: 46.0,

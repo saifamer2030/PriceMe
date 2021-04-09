@@ -22,6 +22,7 @@ import 'package:priceme/screens/alloffers.dart';
 import 'package:priceme/screens/allrents.dart';
 import 'package:priceme/screens/blockscreen.dart';
 import 'package:priceme/screens/homepage.dart';
+import 'package:priceme/screens/marketPage.dart';
 import 'package:priceme/screens/myadvertisement.dart';
 import 'package:priceme/screens/myalarms.dart';
 import 'package:priceme/screens/myoffers.dart';
@@ -45,7 +46,7 @@ class FragmentPriceMe extends StatefulWidget {
 class _FragmentPriceMeState extends State<FragmentPriceMe> {
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   String token;
-  int _currentIndex = 4; // to keep track of active tab index
+  int _currentIndex = 3; // to keep track of active tab index
 //  List<Widget> _children() => [
   String _userId;bool block=false;
   final List<Widget> _screens = [
@@ -54,8 +55,8 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
     HomeScreen(),
    // HomePage(),
    Advertisements(),
-    VidiosPhotoComercial1(),
-   // 
+    //VidiosPhotoComercial1(),
+    MarketPage(),
     AddRequestPage()
       ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();

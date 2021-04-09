@@ -1,0 +1,3 @@
+enum FilterType{
+ Requests, Market
+}

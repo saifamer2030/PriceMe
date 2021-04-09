@@ -806,7 +806,7 @@ print("eee$cType");
                         child: Container(
                           height: 108,
                           width: 5,
-                          color: Colors.orange[200],
+                          color: MyColors.primaryColor.withOpacity(0.5)
                         ),
                       ),
                       Positioned(
@@ -853,7 +853,7 @@ print("eee$cType");
                                   "تغيير العنوان الحالي",
                                   textDirection: TextDirection.rtl,
                                   style: TextStyle(
-                                      color: MyColors.secondaryColor,
+                                      color: MyColors.primaryColor,
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -889,7 +889,7 @@ print("eee$cType");
                                   "إظهار العنوان على الخريطة",
                                   textDirection: TextDirection.rtl,
                                   style: TextStyle(
-                                      color: MyColors.secondaryColor,
+                                      color: MyColors.primaryColor,
                                       fontSize: 10,
                                       fontWeight: FontWeight.bold),
                                 ),

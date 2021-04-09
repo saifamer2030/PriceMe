@@ -13,8 +13,9 @@ import 'package:persian_number_utility/persian_number_utility.dart';
 import 'package:priceme/ChatRoom/widget/const.dart';
 import 'package:priceme/Splash.dart';
 import 'package:priceme/classes/AdvClass.dart';
+import 'package:priceme/classes/filterType.dart';
 import 'package:priceme/screens/editadv.dart';
-import 'package:priceme/screens/filterRequestsPage.dart';
+import 'package:priceme/screens/filterPage.dart';
 import 'package:toast/toast.dart';
 
 import 'advdetail.dart';
@@ -914,7 +915,7 @@ if(isSearching){}else{
          IconButton(
            onPressed: (){
              Navigator.of(context).push(MaterialPageRoute(
-               builder: (ctx)=> FilterRequestsPage()));
+               builder: (ctx)=> FilterPage(filterType: FilterType.Requests,)));
            },
            icon: Icon(Icons.filter_alt, size: 25, color: Colors.grey,)
          )  

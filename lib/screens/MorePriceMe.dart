@@ -116,6 +116,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
               if (data.documents.length > 0){
                 setState(() {
                   _cType = data.documents[0].data['cType'];
+                 
                 });
               }
             });
@@ -126,6 +127,8 @@ class _MorePriceMeState extends State<MorePriceMe> {
 //        : setState(() {
 //            _userId = user.uid;
 //          }));
+
+ 
   }
 
   @override

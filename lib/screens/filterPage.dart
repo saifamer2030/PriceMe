@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:priceme/classes/filterType.dart';
 import 'package:priceme/screens/widgets/brandsListPage.dart';
 import 'package:priceme/screens/widgets/modelsListPage.dart';
 import 'package:priceme/screens/widgets/yearsListPage.dart';
 import 'package:priceme/ui_utile/myColors.dart';
 
-class FilterRequestsPage extends StatefulWidget {
+class FilterPage extends StatefulWidget {
+
+  FilterType filterType;   
+  FilterPage({@required this.filterType});
   @override
-  _FilterRequestsPageState createState() => _FilterRequestsPageState();
+  _FilterPageState createState() => _FilterPageState();
 }
 
-class _FilterRequestsPageState extends State<FilterRequestsPage> {
+class _FilterPageState extends State<FilterPage> {
 
     List<String> partsName = [
     "محرك",
@@ -188,7 +192,12 @@ Navigator.push(context, MaterialPageRoute(
                  }
                });
                  }else{
-                
+                          Scaffold.of(context).showSnackBar(
+                   SnackBar(content: Text("الرجاء تحديد اسم الماركة", textAlign: TextAlign.center,
+                   style: TextStyle(fontSize: 12, color: Colors.white, fontFamily: "Cairo"),),
+                   duration: Duration(seconds: 2)
+                   ));
+
                  }     
                
 
@@ -233,7 +242,11 @@ Navigator.push(context, MaterialPageRoute(
                  }
                });
                   }else{
-
+           Scaffold.of(context).showSnackBar(
+                   SnackBar(content: Text("الرجاء تحديد الموديل ", textAlign: TextAlign.center, 
+                   style: TextStyle(fontSize: 12, color: Colors.white, fontFamily: "Cairo"),),
+                   duration: Duration(seconds: 2)
+                   ));
                   }    
                     
                     },
@@ -397,6 +410,37 @@ Navigator.push(context, MaterialPageRoute(
                    
                ),
                 ),
+                widget.filterType == FilterType.Market?
+                Directionality(
+                  textDirection: TextDirection.rtl,
+                                child: RadioListTile(
+                   title: Text("الأكبر سعرا", style: TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.w600),),
+                   value: 3,
+                   groupValue: sortRadioValue,
+                   onChanged: (value){
+                     setState.call(() {
+                      sortRadioValue = value; 
+                     });
+                   },
+                   
+               ),
+                ): SizedBox(),
+
+                    widget.filterType == FilterType.Market?
+                Directionality(
+                  textDirection: TextDirection.rtl,
+                                child: RadioListTile(
+                   title: Text("الأقل سعرا", style: TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.w600),),
+                   value: 4,
+                   groupValue: sortRadioValue,
+                   onChanged: (value){
+                     setState.call(() {
+                      sortRadioValue = value; 
+                     });
+                   },
+                   
+               ),
+                ): SizedBox(),
 
               
 
@@ -412,7 +456,8 @@ Divider(thickness: 0.8,),
     switch(sortRadioValue){
       case 1: sortBy = "الأحدث"; break;
       case 2: sortBy = "الأقدم"; break;
-     
+      case 3: sortBy = "الأكبر سعرا"; break;
+      case 4: sortBy = "الأقل سعرا"; break;
       default: sortBy = "الأحدث";
     }
     
