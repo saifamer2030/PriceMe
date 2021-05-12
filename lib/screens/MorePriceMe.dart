@@ -13,6 +13,7 @@ import 'package:priceme/screens/PrivcyPolicy.dart';
 import 'package:priceme/screens/advertisements.dart';
 import 'package:priceme/screens/alloffers.dart';
 import 'package:priceme/screens/allrents.dart';
+import 'package:priceme/screens/favoritePage.dart';
 import 'package:priceme/screens/myalarms.dart';
 import 'package:priceme/screens/myoffers.dart';
 import 'package:priceme/screens/myrents.dart';
@@ -1131,7 +1132,9 @@ class _MorePriceMeState extends State<MorePriceMe> {
 
                   ListTile(
                     onTap:(){
-                    
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (_) => FavoritePage()
+                      ));
                     },                   
                      title: Text("المفضلة", textAlign: TextAlign.right,
                                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
@@ -1150,10 +1153,12 @@ class _MorePriceMeState extends State<MorePriceMe> {
                               MaterialPageRoute(
                                   builder: (context) => Splash()));
                         } else {
+                           /*
                           Navigator.push(
                                   context,
                                   MaterialPageRoute(
                                       builder: (context) => MyAdvertisement()));
+                                      */
 
                         }
                     },                   
@@ -1310,10 +1315,7 @@ class _MorePriceMeState extends State<MorePriceMe> {
 
                    ListTile(
                     onTap:(){
-                      Navigator.push(
-                            context,
-                            new MaterialPageRoute(
-                                builder: (context) => PrivcyPolicy()));
+
                     },                   
                      title: Text("حول التطبيق", textAlign: TextAlign.right,
                                 style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),

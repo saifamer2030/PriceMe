@@ -16,6 +16,7 @@ import 'package:priceme/ChatRoom/widget/const.dart';
 import 'package:priceme/ChatRoom/widget/loading.dart';
 import 'package:priceme/ChatRoom/widget/settings.dart';
 import 'package:priceme/main.dart';
+import 'package:priceme/ui_utile/myColors.dart';
 
 class HomeScreen extends StatefulWidget {
   HomeScreen({Key key}) : super(key: key);
@@ -84,8 +85,7 @@ class HomeScreenState extends State<HomeScreen> {
   }
 
 
- //// removed temporarly
-/*
+
   void configLocalNotification() {
     var initializationSettingsAndroid =
         new AndroidInitializationSettings('app_icon');
@@ -94,7 +94,7 @@ class HomeScreenState extends State<HomeScreen> {
         initializationSettingsAndroid, initializationSettingsIOS);
     flutterLocalNotificationsPlugin.initialize(initializationSettings);
   }
-*/
+
 
   void onItemMenuPress(Choice choice) {
     if (choice.title == 'Log out') {
@@ -327,7 +327,7 @@ class HomeScreenState extends State<HomeScreen> {
 
           // Loading
           Positioned(
-            child: isLoading ? const Loading() : Container(),
+            child: isLoading ? const Loading() : Center(child: noMessages()),
           )
         ],
       ),
@@ -436,6 +436,39 @@ class HomeScreenState extends State<HomeScreen> {
       return false;
     }
     return true;
+  }
+
+  Widget noMessages(){
+    return Container(
+      width: 250,
+      height: 250,
+      child: Stack(
+
+        children: [
+          Opacity(
+            opacity: 0.5,
+            child: Image.asset("assets/images/no_messages.png"),
+          ),
+
+
+          Positioned(
+            top: 190,
+            left: 85,
+
+            child: Text("لا توجد رسائل", textDirection: TextDirection.rtl,
+              style: TextStyle(fontSize: 12, color: MyColors.primaryColor, fontWeight: FontWeight.bold ),),
+          ),
+
+          Positioned(
+            top: 212,
+            left: 60,
+
+            child: Text("لم تتلقى أي رسائل لحد الآن", textDirection: TextDirection.rtl,
+              style: TextStyle(fontSize: 12, color: Colors.grey[600], ),),
+          ),
+        ],
+      ),
+    );
   }
 }
 

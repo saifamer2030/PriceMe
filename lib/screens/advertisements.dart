@@ -15,7 +15,9 @@ import 'package:priceme/Splash.dart';
 import 'package:priceme/classes/AdvClass.dart';
 import 'package:priceme/classes/filterType.dart';
 import 'package:priceme/screens/editadv.dart';
+import 'package:priceme/screens/favoritePage.dart';
 import 'package:priceme/screens/filterPage.dart';
+import 'package:priceme/ui_utile/myColors.dart';
 import 'package:toast/toast.dart';
 
 import 'advdetail.dart';
@@ -911,14 +913,46 @@ if(isSearching){}else{
                                       ),
                    ),
            ),
-        
-         IconButton(
-           onPressed: (){
-             Navigator.of(context).push(MaterialPageRoute(
-               builder: (ctx)=> FilterPage(filterType: FilterType.Requests,)));
-           },
-           icon: Icon(Icons.filter_alt, size: 25, color: Colors.grey,)
-         )  
+           InkWell(
+
+               onTap: (){
+                 Navigator.of(context).push(MaterialPageRoute(
+                     builder: (ctx)=> FilterPage(filterType: FilterType.Market,)));
+               },
+               child: Container(
+                 width: 48,
+                 height: 48,
+                 child: Column(
+                   mainAxisAlignment: MainAxisAlignment.center,
+                   children: [
+                     Icon(Icons.filter_alt, size: 20, color: Colors.grey,),
+                     Text("فلتر", textDirection: TextDirection.rtl,
+                       style: TextStyle(fontSize: 8, color: Colors.grey ),)
+                   ],
+                 ),
+               )
+           ),
+           SizedBox(width: 2,),
+           InkWell(
+
+               onTap: (){
+                 Navigator.of(context).push(MaterialPageRoute(
+                     builder: (ctx)=> FavoritePage()));
+               },
+               child: Container(
+                 width: 48,
+                 height: 48,
+                 child: Column(
+                   mainAxisAlignment: MainAxisAlignment.center,
+                   children: [
+                     Icon(Icons.favorite, size: 20, color: Colors.grey,),
+                     Text("المفضلة", textDirection: TextDirection.rtl,
+                       style: TextStyle(fontSize: 8, color: Colors.grey ),)
+                   ],
+                 ),
+               )
+           ),
+
          ],
        ),
       ),
@@ -946,9 +980,7 @@ if(isSearching){}else{
               builder: (context, snapshot) {
                 if (snapshot.data?.documents == null || !snapshot.hasData)
                   return Center(
-                      child: Text(
-                        "لا يوجد بيانات...",
-                      ));
+                      child: noRequests());
                 return Container(
                     child:
                     Container(
@@ -1147,6 +1179,42 @@ if(isSearching){}else{
                 )
               ],
             )),
+      ),
+    );
+  }
+
+  Widget noRequests(){
+    return Container(
+      width: 250,
+      height: 254,
+      child: Stack(
+
+        children: [
+          Opacity(
+            opacity: 0.5,
+            child: Image.asset("assets/images/no_requests.png"),
+          ),
+
+
+          Positioned(
+            top: 190,
+            left: 85,
+
+            child: Text("لا توجد طلبات", textDirection: TextDirection.rtl,
+              style: TextStyle(fontSize: 12, color: MyColors.primaryColor, fontWeight: FontWeight.bold ),),
+          ),
+
+          Positioned(
+            top: 212,
+            left: 20,
+
+            child: Text("لم يتم إضافة أي طلبات لحد الآن, \n قم بإضافة طلب جديد و كن صاحب أول طلب",
+              textDirection: TextDirection.rtl,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              style: TextStyle(fontSize: 12, color: Colors.grey[600], ),),
+          ),
+        ],
       ),
     );
   }

@@ -13,6 +13,7 @@ import 'package:priceme/ChatRoom/widget/const.dart';
 import 'package:priceme/Splash.dart';
 import 'package:priceme/classes/AdvClass.dart';
 import 'package:priceme/screens/editadv.dart';
+import 'package:priceme/ui_utile/myColors.dart';
 import 'package:toast/toast.dart';
 
 import 'advdetail.dart';
@@ -104,7 +105,7 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
         //print an integer every 2secs, 10 times
         builder: (context, snapshot) {
           if (snapshot.data?.documents == null || !snapshot.hasData)
-            return Center(child: Text("لا يوجد بيانات...",));
+            return Center(child: noRequests());
           return Container(
             child: ListView(
               shrinkWrap: true,
@@ -662,7 +663,41 @@ class _MyAdvertisementState extends State<MyAdvertisement> {
     );
   }
 
+  Widget noRequests(){
+    return Container(
+      width: 250,
+      height: 254,
+      child: Stack(
 
+        children: [
+          Opacity(
+            opacity: 0.5,
+            child: Image.asset("assets/images/no_requests.png"),
+          ),
+
+
+          Positioned(
+            top: 190,
+            left: 85,
+
+            child: Text("لا توجد طلبات", textDirection: TextDirection.rtl,
+              style: TextStyle(fontSize: 12, color: MyColors.primaryColor, fontWeight: FontWeight.bold ),),
+          ),
+
+          Positioned(
+            top: 212,
+            left: 40,
+
+            child: Text("لم تقم بإضافة أي طلب لحد الآن",
+              textDirection: TextDirection.rtl,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              style: TextStyle(fontSize: 12, color: Colors.grey[600], ),),
+          ),
+        ],
+      ),
+    );
+  }
   ///////////////////////////////////////// Previous widgets ///////////////////////////////
 
   Widget firebasedata(BuildContext context,int index, DocumentSnapshot document) {

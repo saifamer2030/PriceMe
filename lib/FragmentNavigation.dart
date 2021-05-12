@@ -54,10 +54,9 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
     //MyAlarms(),
     HomeScreen(),
    // HomePage(),
+   MarketPage(),
    Advertisements(),
-    //VidiosPhotoComercial1(),
-    MarketPage(),
-    AddRequestPage()
+   AddRequestPage()
       ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
   final GlobalKey<NavigatorState> navigatorKey =
@@ -118,9 +117,7 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
     return SafeArea(
           child: Scaffold(
         body: _screens[_currentIndex],
-       // key: navigatorKey,
-       // floatingActionButton: MyFloatingButton(sparepartsList),
-       // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
         bottomNavigationBar: BottomNavigationBar(
           showUnselectedLabels: true,
           items: [
@@ -132,15 +129,52 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                   "المزيد",
                   style: TextStyle(
                       fontSize: 12,
-                      //fontFamily: MyFonts.fontFamily,
+                      
                       fontWeight: FontWeight.bold),
                 )),
             BottomNavigationBarItem(
-                icon: Icon(
+                icon: 
+                Stack(children: <Widget>[
+                Icon(
                   Icons.chat
                 ),
+                 Positioned(
+                    // draw a red marble
+                    top: 0,
+                    right: 0,
+                    child: Container(
+                        height: 11,
+                        width: 11,
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        child:  Center(
+                                child: Text(
+                                "2",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 7,
+                                    fontWeight: FontWeight.bold,
+                                   ),
+                              ))
+                           ))
+              ]),
+                
                 title: Text(
                   "المحادثة",
+                  style: TextStyle(
+                      fontSize: 12,
+                      //fontFamily: MyFonts.fontFamily,
+                      fontWeight: FontWeight.bold),
+                )),
+
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.shopping_cart,
+                ),
+                title: Text(
+                  "التسوق",
                   style: TextStyle(
                       fontSize: 12,
                       //fontFamily: MyFonts.fontFamily,
@@ -152,17 +186,6 @@ class _FragmentPriceMeState extends State<FragmentPriceMe> {
                 ),
                 title: Text(
                   "الطلبات",
-                  style: TextStyle(
-                      fontSize: 12,
-                      //fontFamily: MyFonts.fontFamily,
-                      fontWeight: FontWeight.bold),
-                )),
-            BottomNavigationBarItem(
-                icon: Icon(
-                  Icons.shopping_cart,
-                ),
-                title: Text(
-                  "التسوق",
                   style: TextStyle(
                       fontSize: 12,
                       //fontFamily: MyFonts.fontFamily,

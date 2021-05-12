@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:priceme/ChatRoom/widget/chat.dart';
+import 'package:priceme/screens/widgets/commentsList.dart';
 import 'package:priceme/ui_utile/myColors.dart';
+import 'package:priceme/ui_utile/myFonts.dart';
 
 class PartDetailPage extends StatefulWidget {
   @override
@@ -11,11 +14,13 @@ class PartDetailPage extends StatefulWidget {
 class _PartDetailPageState extends State<PartDetailPage> {
 
   bool isAddedFavorite = false;
+  TextEditingController _commentInputController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        resizeToAvoidBottomInset: true,
          appBar: AppBar(
         centerTitle: true,
         automaticallyImplyLeading: false,
@@ -285,9 +290,84 @@ class _PartDetailPageState extends State<PartDetailPage> {
 
                 Padding(
                 padding: EdgeInsets.only(right: 16,),
-                child: Text("الج ووو مممم كككك كككك كككك لمن باب تجريبي تجريبي تجريبي تجريبي تجريبي تجريبي تجريبي تجريبي ",maxLines: null, textDirection: TextDirection.rtl, textAlign: TextAlign.right, style: TextStyle(fontSize: 10, color: Colors.grey,),),
+                child: Text("الج ووو مممم كككك كككك كككك لمن باب تجريبي تجريبي تجريبي تجريبي تجريبي تجريبي تجريبي تجريبي ",
+                  maxLines: null,
+                  textDirection: TextDirection.rtl,
+                  textAlign: TextAlign.right,
+                  style: TextStyle(fontSize: 10, color: Colors.grey,),),
 
               ),
+
+              SizedBox(height: 16,),
+
+            Row(
+             textDirection: TextDirection.rtl,
+              children: [
+                SizedBox(width: 16,),
+                Text("التعليقات",textDirection: TextDirection.rtl, textAlign: TextAlign.right,
+                  style: TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.w600,),),
+                SizedBox(width: 5,),
+                Text("10",textDirection: TextDirection.rtl, textAlign: TextAlign.right,
+                  style: TextStyle(fontSize: 12, color: Colors.black, fontWeight: FontWeight.bold,),),
+                SizedBox(width: 10,),
+                Expanded(
+                  child: Divider(thickness: 0.8, height: 0.8,),
+                )
+
+              ],
+            ),
+
+              SizedBox(height: 10,),
+
+            InkWell(
+              onTap: (){
+                showAddCommentBottomSheet();
+              },
+                child: Container(
+                  height: 54,
+                  margin: EdgeInsets.symmetric(horizontal: 16),
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: Colors.grey[300], width: 0.5)
+                  ),
+                  alignment: Alignment.centerRight,
+                  child:  Text("أضف تعليقك الآن ...",textDirection: TextDirection.rtl, textAlign: TextAlign.right,
+                    style: TextStyle(fontSize: 12, color: Colors.grey,),),
+                ),
+              ),
+
+
+
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
+                  padding:  EdgeInsets.only(right: 10),
+                  child: Container(
+                    width: 150,
+                    child: FlatButton(
+                      onPressed: (){
+                        showCommentsBottomSheet();
+                      },
+                      child:  Row(
+                        textDirection: TextDirection.rtl,
+                        children: [
+                          Text("إظهار التعليقات",textDirection: TextDirection.rtl, textAlign: TextAlign.right,
+                            style: TextStyle(fontSize: 10, color: Colors.black, fontWeight: FontWeight.w600,),),
+                          SizedBox(width: 4,),
+                          Icon(Icons.arrow_drop_down,size: 15,)
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+/*
+              Center(
+                child: Text("لا توجد أي تعليقات",textDirection: TextDirection.rtl, textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 10, color: Colors.grey,),),
+              ),
+            */
               SizedBox(height: 64,)
             ],
             ),),
@@ -300,33 +380,64 @@ class _PartDetailPageState extends State<PartDetailPage> {
             child: StatefulBuilder(
                 builder: (ctx, setState){
                   return Container(
-                width: 180,
+
                 
-                child: RaisedButton(
-                  onPressed: (){
-                   
-                    setState.call(() {
-                       isAddedFavorite = !isAddedFavorite;
-                    });
-                  },
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                    
-                    ),
-                  padding: EdgeInsets.symmetric(vertical: 10),
-                  color: MyColors.primaryColor,
-                  elevation: 2,
-                  child: Row(
-                    textDirection: TextDirection.rtl,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(isAddedFavorite ? Icons.favorite  : Icons.favorite_border, color: Colors.white, ),
-                      SizedBox(width: 8),
-                      Text( isAddedFavorite ? "إزالة من المفضلة" : "أضف للمفضلة", textDirection: TextDirection.rtl, textAlign: TextAlign.right,
-                      style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  )),
+                child: Row(
+                  textDirection: TextDirection.rtl,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    RaisedButton(
+
+                      onPressed: (){
+
+                        setState.call(() {
+                           isAddedFavorite = !isAddedFavorite;
+                        });
+                      },
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(topRight: Radius.circular(20),
+                        bottomRight: Radius.circular(20)),
+
+                        ),
+                      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                      color: MyColors.primaryColor,
+                      elevation: 2,
+                      child: Row(
+                        textDirection: TextDirection.rtl,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(isAddedFavorite ? Icons.favorite  : Icons.favorite_border, color: Colors.white,size: 20,),
+                          SizedBox(width: 8),
+                          Text( isAddedFavorite ? "إزالة من المفضلة" : "أضف للمفضلة", textDirection: TextDirection.rtl, textAlign: TextAlign.right,
+                          style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                          ),
+                        ],
+                      )),
+
+                    RaisedButton(
+                        onPressed: (){
+                         },
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(topLeft: Radius.circular(20),
+                              bottomLeft: Radius.circular(20)),
+
+                        ),
+                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                        color: Colors.white,
+                        elevation: 2,
+                        child: Row(
+                          textDirection: TextDirection.rtl,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.chat, color: MyColors.primaryColor, size: 20, ),
+                            SizedBox(width: 8),
+                            Text(  "مراسلة البائع" , textDirection: TextDirection.rtl, textAlign: TextAlign.right,
+                              style: TextStyle(color: MyColors.primaryColor, fontSize: 12, fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        )),
+                  ],
+                ),
               );
                 },
                           
@@ -337,5 +448,139 @@ class _PartDetailPageState extends State<PartDetailPage> {
         
       ],
     );
+  }
+
+  showAddCommentBottomSheet(){
+    showModalBottomSheet(context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.grey[100],
+        builder: (BuildContext bc) {
+           return Padding(
+            padding: EdgeInsets.fromLTRB(16,16,16,MediaQuery.of(context).viewInsets.bottom, ),
+             child: SingleChildScrollView(
+               child: Column(
+                 mainAxisSize: MainAxisSize.min,
+                 children: [
+                   Container(
+
+                     decoration: BoxDecoration(
+                         borderRadius: BorderRadius.circular(10),
+                         border: Border.all(color: Colors.grey[400], width: 0.6),
+                         color: Colors.white),
+                     child:
+
+                     Directionality(
+                       textDirection: TextDirection.rtl,
+                       child: TextField(
+                         textAlignVertical: TextAlignVertical.top,
+                         maxLines: 2,
+                         controller:
+                         _commentInputController,
+
+                         style: TextStyle(
+                             color: Colors.black,
+                             fontSize: 14.0,
+                             fontFamily: MyFonts.primaryFont),
+                         textDirection: TextDirection.rtl,
+                         decoration: InputDecoration(
+                           errorStyle: TextStyle(
+                               color: Colors.red,
+                               fontSize: 15.0),
+                           contentPadding: EdgeInsets.all(10),
+                           hintText: "أضف تعليقك ...",
+                           hintStyle: TextStyle(
+                               color: Colors.grey,
+                               fontSize: 12.0,
+                               fontWeight: FontWeight.w300,
+                               fontFamily: MyFonts.primaryFont),
+                           border: InputBorder.none,
+                           labelStyle: TextStyle(
+                               color: Colors.black,
+                               fontSize: 12.0,
+                               fontFamily: MyFonts.primaryFont),
+                         ),
+                       ),
+                     ),
+                   ),
+
+                   SizedBox(height: 20,),
+
+                   Container(
+                     height: 36,
+                     width: 150,
+                     decoration: BoxDecoration(
+                         borderRadius: BorderRadius.circular(16),
+                         color: MyColors.primaryColor),
+                     child: RaisedButton(
+                       elevation: 2,
+                       shape: RoundedRectangleBorder(
+                         borderRadius: BorderRadius.circular(12),
+                       ),
+                       onPressed: ()  {
+
+                       },
+                       color: MyColors.primaryColor,
+                       child: Center(
+                         child: Text(
+                           'أضف تعليقك',
+                           textAlign: TextAlign.center,
+                           style: TextStyle(
+                               color: Colors.white,
+                               fontSize: 12,
+                               fontWeight: FontWeight.bold,
+                               fontFamily: MyFonts.primaryFont),
+                         ),
+                       ),
+                     ),
+                   ),
+                   SizedBox(height: 16,),
+                 ],
+               ),
+             ),
+           );
+        });
+  }
+
+  showCommentsBottomSheet(){
+    showModalBottomSheet(context: context,
+        isScrollControlled: true,
+        isDismissible: false,
+        backgroundColor: Colors.grey[100],
+        builder: (BuildContext bc) {
+          return Container(
+            height: MediaQuery.of(context).size.height - 34,
+            child: Padding(
+              padding: EdgeInsets.only( bottom: MediaQuery.of(context).viewInsets.bottom, ),
+              child: Column(
+
+                children: [
+                  AppBar(
+
+                    centerTitle: true,
+                    automaticallyImplyLeading: false,
+                    backgroundColor: Colors.white,
+                    elevation: 2,
+                    title: Text("التعليقات", textAlign: TextAlign.right, textDirection: TextDirection.rtl,
+                      style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                    ),
+                    actions: [
+                      IconButton(
+                          onPressed: (){
+                            Navigator.pop(bc);
+                          },
+                          icon: Icon(Icons.close)
+                      ),
+
+                      SizedBox(width: 10,)
+
+                    ],
+                  ),
+                  Expanded(
+                      child: CommentsList())
+],
+              ),
+            ),
+          );
+        });
   }
 }

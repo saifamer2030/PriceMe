@@ -630,20 +630,24 @@ class _HomePageState extends State<HomePage> {
   _backFromStoriesAlert() {
     showDialog(
       context: context,
-      child: SimpleDialog(
-        title: Text(
-          "User have looked stories and closed them.",
-          style: TextStyle(fontWeight: FontWeight.normal, fontSize: 18.0),
-        ),
-        children: <Widget>[
-          SimpleDialogOption(
-            child: Text("Dismiss"),
-            onPressed: () {
-              Navigator.pop(context);
-            },
+      builder:
+      (ctx){
+        return SimpleDialog(
+          title: Text(
+            "User have looked stories and closed them.",
+            style: TextStyle(fontWeight: FontWeight.normal, fontSize: 18.0),
           ),
-        ],
-      ),
+          children: <Widget>[
+            SimpleDialogOption(
+              child: Text("Dismiss"),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        );
+      }
+
     );
   }
 

@@ -56,111 +56,131 @@ class _MyPhotosState extends State<MyPhotos> {
     // final double itemWidth = size.width / 2;
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        heroTag: "unique19",
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AddPhoto()));
-        },
-        backgroundColor: MyColors.secondaryColor,
-        elevation: 20.0,
-        child: Icon(
-          Icons.add_photo_alternate,
-          size: 30,
-          color: Colors.white,
+    return SafeArea(
+          child: Scaffold(
+         appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 2,
+            centerTitle: true,
+            title: Text("صوري", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+            automaticallyImplyLeading: false,
+            actions: [
+              IconButton(
+                onPressed: (){
+                  Navigator.pop(context);
+                },
+                icon: Icon(Icons.arrow_forward, color: Colors.grey,),
+              ),
+
+              SizedBox(width: 10,),
+            ],
+           
+          ),
+        floatingActionButton: FloatingActionButton(
+          heroTag: "unique19",
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => AddPhoto()));
+          },
+          backgroundColor: MyColors.primaryColor,
+          elevation: 20.0,
+          child: Icon(
+            Icons.add_photo_alternate,
+            size: 30,
+            color: Colors.white,
+          ),
         ),
-      ),
 
-      backgroundColor: const Color(0xffffffff),
-      body: Container(
-        width: width,
-        height: height,
-        child:
-        StreamBuilder(
-          stream: Firestore.instance
-                  .collection('photos')
-                  .orderBy('carrange',
-                  descending:
-                  true).where("cuserId", isEqualTo:_userId)
-                  .snapshots(), //imgColRef.snapshots(includeMetadataChanges: true),
-          builder: (context, snapshot) {
-            if (snapshot.data?.documents == null || !snapshot.hasData)
-              return Center(child: Text("لا يوجد بيانات...",));
+        backgroundColor: const Color(0xffffffff),
+        body: Container(
+          width: width,
+          height: height,
+          child:
+          StreamBuilder(
+            stream: Firestore.instance
+                    .collection('photos')
+                    .orderBy('carrange',
+                    descending:
+                    true).where("cuserId", isEqualTo:_userId)
+                    .snapshots(), //imgColRef.snapshots(includeMetadataChanges: true),
+            builder: (context, snapshot) {
+              if (snapshot.data?.documents == null || !snapshot.hasData)
+                return Center(child: noPictures());
 
-            return Hero(
-              tag: 'imageHero',
-              child: Container(
-                child: StaggeredGridView.countBuilder(
-                    itemCount: snapshot.data.documents.length,
-                    crossAxisCount: 2,
-    itemBuilder: (context, index) {
-              return Slidable(
-                actionPane: SlidableDrawerDismissal(),
-                actions: <Widget>[
-                  Container(
-                      padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
-                      child: IconSlideAction(
-                        caption: 'Delete',
-                        color: Colors.red,
-                        icon: Icons.delete,
-                        onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (BuildContext context) =>
-                            new CupertinoAlertDialog(
-                              title: new Text("تنبية"),
-                              content: new Text("تبغي تحذف اعلانك؟"),
-                              actions: [
-                                CupertinoDialogAction(
-                                    isDefaultAction: false,
-                                    child: new FlatButton(
-                                      onPressed: () {
+              return Hero(
+                tag: 'imageHero',
+                child: Container(
+                  child: StaggeredGridView.countBuilder(
+                      itemCount: snapshot.data.documents.length,
+                      crossAxisCount: 2,
+      itemBuilder: (context, index) {
+                return Slidable(
+                  actionPane: SlidableDrawerDismissal(),
+                  actions: <Widget>[
+                    Container(
+                        padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                        child: IconSlideAction(
+                          caption: 'Delete',
+                          color: Colors.red,
+                          icon: Icons.delete,
+                          onTap: () {
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) =>
+                              new CupertinoAlertDialog(
+                                title: new Text("تنبية"),
+                                content: new Text("تبغي تحذف اعلانك؟"),
+                                actions: [
+                                  CupertinoDialogAction(
+                                      isDefaultAction: false,
+                                      child: new FlatButton(
+                                        onPressed: () {
 
-                                        setState(() {
-                                          Firestore.instance.collection("photos")
-                                              .document(snapshot.data.documents[index]["cId"])
-                                              .delete().whenComplete(() =>
-                                              setState(()  {
-                                                Navigator.pop(context);
-                                                Toast.show("تم الحذف", context,
-                                                    duration: Toast.LENGTH_SHORT,
-                                                    gravity: Toast.BOTTOM);
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            MyPhotos()));
-                                              }));
-                                        });
-                                      }
-                                      ,
-                                      child: Text("موافق"),
-                                    )),
-                                CupertinoDialogAction(
-                                    isDefaultAction: false,
-                                    child: new FlatButton(
-                                      onPressed: () =>
-                                          Navigator.pop(context),
-                                      child: Text("إلغاء"),
-                                    )),
-                              ],
-                            ),
-                          );
-                        },
-                      )),
-                ],
-                child: firebasedata(
-                    context, index, snapshot.data.documents[index]),
+                                          setState(() {
+                                            Firestore.instance.collection("photos")
+                                                .document(snapshot.data.documents[index]["cId"])
+                                                .delete().whenComplete(() =>
+                                                setState(()  {
+                                                  Navigator.pop(context);
+                                                  Toast.show("تم الحذف", context,
+                                                      duration: Toast.LENGTH_SHORT,
+                                                      gravity: Toast.BOTTOM);
+                                                  Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              MyPhotos()));
+                                                }));
+                                          });
+                                        }
+                                        ,
+                                        child: Text("موافق"),
+                                      )),
+                                  CupertinoDialogAction(
+                                      isDefaultAction: false,
+                                      child: new FlatButton(
+                                        onPressed: () =>
+                                            Navigator.pop(context),
+                                        child: Text("إلغاء"),
+                                      )),
+                                ],
+                              ),
+                            );
+                          },
+                        )),
+                  ],
+                  child: firebasedata(
+                      context, index, snapshot.data.documents[index]),
+                );
+              },
+                      staggeredTileBuilder: (index) =>
+                          StaggeredTile.count(1, index.isEven ? 1.2 : 1.8)),
+                ),
               );
             },
-                    staggeredTileBuilder: (index) =>
-                        StaggeredTile.count(1, index.isEven ? 1.2 : 1.8)),
-              ),
-            );
-          },
+          ),
         ),
       ),
     );
@@ -216,6 +236,42 @@ Navigator.push(
                 )),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget noPictures(){
+    return Container(
+      width: 250,
+      height: 254,
+      child: Stack(
+
+        children: [
+          Opacity(
+            opacity: 0.5,
+            child: Image.asset("assets/images/no_pictures.png"),
+          ),
+
+
+          Positioned(
+            top: 190,
+            left: 85,
+
+            child: Text("لا توجد صور", textDirection: TextDirection.rtl,
+              style: TextStyle(fontSize: 12, color: MyColors.primaryColor, fontWeight: FontWeight.bold ),),
+          ),
+
+          Positioned(
+            top: 212,
+            left: 20,
+
+            child: Text("لم تقم بإضافة أي صور لحد الآن",
+              textDirection: TextDirection.rtl,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              style: TextStyle(fontSize: 12, color: Colors.grey[600], ),),
+          ),
+        ],
       ),
     );
   }

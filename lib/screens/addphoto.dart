@@ -8,6 +8,7 @@ import 'package:flutter_video_compress/flutter_video_compress.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:priceme/classes/ModelClass.dart';
 import 'package:priceme/trader/myphotos.dart';
+import 'package:priceme/ui_utile/myColors.dart';
 import 'package:toast/toast.dart';
 
 import 'package:multi_image_picker/multi_image_picker.dart';
@@ -103,241 +104,253 @@ class _AddPhotoState extends State<AddPhoto> {
           )
         : new Container();
 
-    return Scaffold(
-        backgroundColor: const Color(0xffffffff),
-        body: Stack(
-          children: <Widget>[
-            Form(
-                key: _formKey,
-                child: Padding(
-                  padding: EdgeInsets.only(
-                      top: _minimumPadding * 15,
-                      bottom: _minimumPadding * 2,
-                      right: _minimumPadding * 2,
-                      left: _minimumPadding * 2),
-                  child: ListView(
-                    physics: BouncingScrollPhysics(),
-                    children: <Widget>[
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: <Widget>[
-                          InkWell(
-                            onTap: () async {
-                              loadAssets();
-                            },
-                            child: Center(
-                              child: Container(
-                                width: 200,
-                                height: 150,
-                                color: Colors.grey[300],
-                                child:Padding(
-                                  padding: const EdgeInsets.only(top: 25.0),
-                                  child: Column(
-                                    children: <Widget>[
-                                      Padding(
-                                         padding:
-                                         const EdgeInsets.all( 0.0),
-                                         child: Icon(
-                                           Icons.add_photo_alternate,
-                                           color: Colors.grey,
-                                           size: 70,
-                                         ),
-                                       ),
-                                      Padding(
-                                        padding:
-                                        const EdgeInsets.only(top: 10.0),
-                                        child: images.length==0?Icon(
-                                          Icons.add_circle,
-                                          color: Colors.grey,
-                                        ):Icon(
-                                          Icons.check_circle,
-                                          color: Colors.green,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+    return SafeArea(
+          child: Scaffold(
+          backgroundColor: const Color(0xffffffff),
+            appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 2,
+            centerTitle: true,
+            title: Text("إضافة صورة", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+            automaticallyImplyLeading: false,
+            actions: [
+              IconButton(
+                onPressed: (){
+                  Navigator.pop(context);
+                },
+                icon: Icon(Icons.arrow_forward,color: Colors.grey,),
+              ),
 
-                          SizedBox(
-                            height: _minimumPadding,
-                            width: _minimumPadding,
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 10),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 10, left: 10),
-                                  child: Text(
-                                    "عنوان الصورة",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18,
-//                                      fontFamily: 'Estedad-Black',
+              SizedBox(width: 10,),
+            ],
+           
+          ),
+          body: Stack(
+            children: <Widget>[
+              Form(
+                  key: _formKey,
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                        top: _minimumPadding * 15,
+                        bottom: _minimumPadding * 2,
+                        right: _minimumPadding * 2,
+                        left: _minimumPadding * 2),
+                    child: ListView(
+                      physics: BouncingScrollPhysics(),
+                      children: <Widget>[
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: <Widget>[
+                            InkWell(
+                              onTap: () async {
+                                loadAssets();
+                              },
+                              child: Center(
+                                child: Container(
+                                  width: 200,
+                                  height: 150,
+                                  color: Colors.grey[300],
+                                  child:Padding(
+                                    padding: const EdgeInsets.only(top: 25.0),
+                                    child: Column(
+                                      children: <Widget>[
+                                        Padding(
+                                           padding:
+                                           const EdgeInsets.all( 0.0),
+                                           child: Icon(
+                                             Icons.add_photo_alternate,
+                                             color: Colors.grey,
+                                             size: 70,
+                                           ),
+                                         ),
+                                        Padding(
+                                          padding:
+                                          const EdgeInsets.only(top: 10.0),
+                                          child: images.length==0?Icon(
+                                            Icons.add_circle,
+                                            color: Colors.grey,
+                                          ):Icon(
+                                            Icons.check_circle,
+                                            color: Colors.green,
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 10, left: 10),
-                                  child: Icon(
-                                    Icons.rate_review,
-                                    color: const Color(0xff171732),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: _minimumPadding,
-                            width: _minimumPadding,
-                          ),
-                          Container(
-                            height: 80,
-                            child: Padding(
-                              padding: const EdgeInsets.all(5.0),
-                              child: Card(
-                                elevation: 0.0,
-                                color: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: TextFormField(
-                                    textAlign: TextAlign.right,
-                                    keyboardType: TextInputType.text,
-                                    textDirection: TextDirection.rtl,
-                                    controller: _titleController,
-                                    validator: (String value) {
-                                      if ((value.isEmpty)) {
-                                        return "اكتب عنوان الصورة";
-                                      }
-                                    },
-                                    decoration: InputDecoration(
-                                        errorStyle: TextStyle(
-                                            color: Colors.red, fontSize: 15.0),
-                                        labelText: "ادخل عنوان الفيديو....",
-                                        hintText: "ادخل عنوان الفيديو....",
-                                        border: OutlineInputBorder(
-                                            borderRadius: BorderRadius.all(
-                                                Radius.circular(5.0)))),
-                                  ),
-                                ),
                               ),
                             ),
-                          ),
-                          Container(
-                            width: MediaQuery.of(context).size.width,
-                            height: 50,
-                          ),
-                          Container(
-                            /*MediaQuery.of(context).size.width*/
 
-                            height: 46,
-                            child: new RaisedButton(
-                              padding: EdgeInsets.zero,
-                              child:
-
-                              Container(
-                                  height: 46,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(10),
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topRight,
-                                    end: Alignment.bottomLeft,
-                                    colors: [
-                                      const Color(0xfffe7210),
-                                      const Color(0xffff8b14),
-                                      const Color(0xffffbc16),
-                                    ],
-                                    // stops: [0.1, 0.8,0.6],
-                                  ),
-
-
-                                ),
-                                child:  Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-
-                                  children: <Widget>[
-                                    new Text(
-                                      "إضافة",
+                            SizedBox(
+                              height: _minimumPadding,
+                              width: _minimumPadding,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 16),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 10, left: 10),
+                                    child: Text(
+                                      "عنوان الصورة",
                                       style: TextStyle(
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 18,
+                                        fontSize: 14,
 //                                      fontFamily: 'Estedad-Black',
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 10),
-                                      child: Icon(
-                                        Icons.check,
-                                        color: Colors.white,
-                                      ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                        right: 10, left: 10),
+                                    child: Icon(
+                                      Icons.rate_review,
+                                      color: const Color(0xff171732),
                                     ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: _minimumPadding,
+                              width: _minimumPadding,
+                            ),
+                            Container(
+                             // height: 80,
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Card(
+                                  elevation: 0.0,
+                                  color: Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                  child: Directionality(
+                                    textDirection: TextDirection.rtl,
+                                    child: TextFormField(
+                                      textAlign: TextAlign.right,
+                                      keyboardType: TextInputType.text,
+                                      textDirection: TextDirection.rtl,
+                                      controller: _titleController,
+                                      validator: (String value) {
+                                        if ((value.isEmpty)) {
+                                          return "اكتب عنوان الصورة";
+                                        }
+                                      },
+                                      decoration: InputDecoration(
+                                        isDense: true,
+                                        contentPadding: EdgeInsets.all(10),
+                                          errorStyle: TextStyle(
+                                              color: Colors.red, fontSize: 15.0),
+                                          labelText: "عنوان الصورة",
+                                          hintText: "ادخل عنوان الصورة....",
+                                          labelStyle: TextStyle(fontSize: 12),
+                                          hintStyle: TextStyle(fontSize: 12),
+                                          border: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(5.0)))),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            SizedBox(
+                              height: 50
+                            ),
+                            Container(
+                              /*MediaQuery.of(context).size.width*/
 
-                                  ],
+                              height: 46,
+                              child: new RaisedButton(
+                                padding: EdgeInsets.zero,
+                                child:
+
+                                Container(
+                                    height: 46,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(8),
+                                    color: MyColors.primaryColor
+                                    ),
+                                  child:  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+
+                                    children: <Widget>[
+                                      new Text(
+                                        "إضافة",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14,
+//                                      fontFamily: 'Estedad-Black',
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.only(left: 10),
+                                        child: Icon(
+                                          Icons.check,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+
+                                    ],
+                                  )
                                 )
-                              )
-                             ,
-                              textColor: Colors.white,
-                              color: const Color(0xff171732),
-                              onPressed: () async {
-                                if (_formKey.currentState.validate()) {
-                                  if (images.length > 0 ) {
-                                    try {
-                                      final result =
-                                          await InternetAddress.lookup(
-                                              'google.com');
-                                      if (result.isNotEmpty &&
-                                          result[0].rawAddress.isNotEmpty) {
-                                        print("mmmmm1");
+                               ,
+                                textColor: Colors.white,
+                                color: const Color(0xff171732),
+                                onPressed: () async {
+                                  if (_formKey.currentState.validate()) {
+                                    if (images.length > 0 ) {
+                                      try {
+                                        final result =
+                                            await InternetAddress.lookup(
+                                                'google.com');
+                                        if (result.isNotEmpty &&
+                                            result[0].rawAddress.isNotEmpty) {
+                                          print("mmmmm1");
 
-                                        uploadpp0();
-                                        //uploadToFirebase();
+                                          uploadpp0();
+                                          //uploadToFirebase();
 
-                                        setState(() {
-                                          _load2 = true;
-                                        });
+                                          setState(() {
+                                            _load2 = true;
+                                          });
+                                        }
+                                      } on SocketException catch (_) {
+                                        Toast.show(
+                                            "انت غير متصل بشبكة إنترنت",
+                                            context,
+                                            duration: Toast.LENGTH_LONG,
+                                            gravity: Toast.BOTTOM);
                                       }
-                                    } on SocketException catch (_) {
+                                    } else {
                                       Toast.show(
-                                          "انت غير متصل بشبكة إنترنت",
+                                          "ضيف صورة علي الاقل",
                                           context,
-                                          duration: Toast.LENGTH_LONG,
+                                          duration: Toast.LENGTH_SHORT,
                                           gravity: Toast.BOTTOM);
                                     }
-                                  } else {
-                                    Toast.show(
-                                        "ضيف صورة علي الاقل",
-                                        context,
-                                        duration: Toast.LENGTH_SHORT,
-                                        gravity: Toast.BOTTOM);
                                   }
-                                }
-                              },
-                              shape: new RoundedRectangleBorder(
-                                  borderRadius:
-                                      new BorderRadius.circular(10.0)),
+                                },
+                                shape: new RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(10.0)),
+                              ),
                             ),
-                          ),
 
-                        ],
-                      ),
-                    ],
-                  ),
-                )),
-            new Align(
-              child: loadingIndicator,
-              alignment: FractionalOffset.center,
-            ),
-          ],
-        ));
+                          ],
+                        ),
+                      ],
+                    ),
+                  )),
+              new Align(
+                child: loadingIndicator,
+                alignment: FractionalOffset.center,
+              ),
+            ],
+          )),
+    );
   }
 
 

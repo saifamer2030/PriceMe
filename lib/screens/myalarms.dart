@@ -60,6 +60,26 @@ class _MyAlarmsState extends State<MyAlarms> {
     TextStyle textStyle = Theme.of(context).textTheme.subtitle;
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
+      appBar:AppBar(
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
+        elevation: 2,
+        title: Text("التنبيهات", textAlign: TextAlign.right, textDirection: TextDirection.rtl,
+          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+        ),
+        actions: [
+          IconButton(
+              onPressed: (){
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.arrow_forward)
+          ),
+
+          SizedBox(width: 10,)
+
+        ],
+      ),
       floatingActionButton: Container(
         height: 30.0,
         width: 30.0,
@@ -91,11 +111,16 @@ class _MyAlarmsState extends State<MyAlarms> {
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) {
-              return Center(child: Text("Loading.."));
+              return Center(child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(MyColors.primaryColor),
+              ),);
             }
             print("mmmm${snapshot.data.documents}");
 
-            return new ListView.builder(
+            return
+              snapshot.data.documents.length == 0?
+               Center(child: noNotifications(),):
+              new ListView.builder(
                 physics: BouncingScrollPhysics(),
                 shrinkWrap: true,
                 controller: _controller,
@@ -418,6 +443,39 @@ class _MyAlarmsState extends State<MyAlarms> {
                 ),
               )),
         ),
+      ),
+    );
+  }
+
+  Widget noNotifications(){
+    return Container(
+      width: 250,
+      height: 250,
+      child: Stack(
+
+        children: [
+          Opacity(
+            opacity: 0.5,
+            child: Image.asset("assets/images/no_items.png"),
+          ),
+
+
+          Positioned(
+            top: 190,
+            left: 85,
+
+            child: Text("لا توجد تنبيهات", textDirection: TextDirection.rtl,
+              style: TextStyle(fontSize: 12, color: MyColors.primaryColor, fontWeight: FontWeight.bold ),),
+          ),
+
+          Positioned(
+            top: 212,
+            left: 60,
+
+            child: Text("لم تتلقى أي تنبيهات لحد الآن", textDirection: TextDirection.rtl,
+              style: TextStyle(fontSize: 12, color: Colors.grey[600], ),),
+          ),
+        ],
       ),
     );
   }

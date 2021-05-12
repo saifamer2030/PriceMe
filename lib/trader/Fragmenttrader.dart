@@ -51,9 +51,9 @@ class _FragmentTraderState extends State<FragmentTrader> {
     MorePriceMe(),
    // MyAlarms(),
     HomeScreen(),
-    Advertisements(),
-   //AllAdvertisement(),
+   // Advertisements(),
     MarketPage(),
+    Advertisements(),
     AddRequestPage()
       ]; // to store nested tabs
   final PageStorageBucket bucket = PageStorageBucket();
@@ -135,9 +135,35 @@ class _FragmentTraderState extends State<FragmentTrader> {
                       fontWeight: FontWeight.bold),
                 )),
             BottomNavigationBarItem(
-                icon: Icon(
-                Icons.chat
+                icon:   Stack(children: <Widget>[
+                Icon(
+                  Icons.chat
                 ),
+                 Positioned(
+                    // draw a red marble
+                    top: 0,
+                    right: 0,
+                    child: Container(
+                        height: 11,
+                        width: 11,
+                       
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        child:  Center(
+                               child: Text(
+                                "2",
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    
+                                    color: Colors.white,
+                                    fontSize: 7,
+                                    fontWeight: FontWeight.bold,
+                                   ),
+                              ))
+                           ))
+              ]),
                 title: Text(
                   "المحادثة",
                   style: TextStyle(
@@ -145,6 +171,19 @@ class _FragmentTraderState extends State<FragmentTrader> {
                       //fontFamily: MyFonts.fontFamily,
                       fontWeight: FontWeight.bold),
                 )),
+
+            BottomNavigationBarItem(
+                icon: Icon(
+                  Icons.shopping_cart,
+                ),
+                title: Text(
+                  "التسوق",
+                  style: TextStyle(
+                      fontSize: 12,
+                      //fontFamily: MyFonts.fontFamily,
+                      fontWeight: FontWeight.bold),
+                )),
+
             BottomNavigationBarItem(
                 icon: Icon(
                    Icons.list_alt,
@@ -156,17 +195,7 @@ class _FragmentTraderState extends State<FragmentTrader> {
 
                       fontWeight: FontWeight.bold),
                 )),
-            BottomNavigationBarItem(
-                icon: Icon(
-          Icons.shopping_cart,
-                ),
-                title: Text(
-                  "التسوق",
-                  style: TextStyle(
-                      fontSize: 12,
-                      //fontFamily: MyFonts.fontFamily,
-                      fontWeight: FontWeight.bold),
-                )),
+
             BottomNavigationBarItem(
                 icon: Icon(
                     Icons.add_box

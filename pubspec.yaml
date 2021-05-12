@@ -80,6 +80,7 @@ dependencies:
   video_player: ^0.10.12+4
   image_picker: ^0.5.4+3 # ^0.6.7+11
   webview_flutter: ^1.0.7
+  # flutter_svg: ^0.20.0-nullsafety.3
 
 
 
@@ -106,6 +107,11 @@ flutter:
     - assets/images/antenna.png
     - assets/images/ic_confirmephone.png
     - assets/images/ic_background.png
+    - assets/images/no_items.png
+    - assets/images/no_messages.png
+    - assets/images/no_requests.png
+    - assets/images/empty_favorite.png
+    - assets/images/no_pictures.png
     - images/img_not_available.jpeg
     - images/mimi1.gif
     - images/mimi2.gif

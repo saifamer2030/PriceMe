@@ -9,6 +9,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:priceme/ChatRoom/widget/const.dart';
 import 'package:priceme/Splash.dart';
 import 'package:priceme/classes/AdvClass.dart';
+import 'package:priceme/ui_utile/myColors.dart';
 import 'package:priceme/ui_utile/myCustomShape.dart';
 import 'package:toast/toast.dart';
 
@@ -101,6 +102,13 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
     TextStyle textStyle = Theme.of(context).textTheme.subtitle;
     return Scaffold(
       backgroundColor: const Color(0xffffffff),
+      appBar: AppBar(
+            backgroundColor: Colors.white,
+            elevation: 2,
+            centerTitle: true,
+            title: Text("طلبات المحل", style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),),
+            automaticallyImplyLeading: false,
+          ),
       floatingActionButton: Container(
         height: 30.0,
         width: 30.0,
@@ -121,56 +129,13 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
           ),
         ),
       ),
-      body: Stack(
-        children: [
-          CustomPaint(
-            size: Size(MediaQuery.of(context).size.width,140), //You can Replace this with your desired WIDTH and HEIGHT
-            painter: MyCustomShape(),
-          ),
-/*
-          Positioned(
-              top: 48,
-              right: 20,
-              child:
-              InkWell(
-                onTap: (){
-                  Navigator.pop(context);
-                },
-                child: Container(
-                  height: 30,
-                  width: 30,
-                  child: Icon(Icons.arrow_forward, color: Colors.white),
-                ),
-              )
-
-          ),
-*/
-
-          Positioned(
-            top: 42,
-            child: Container(
-              alignment: Alignment.center,
-              height: 40,
-              width: MediaQuery.of(context).size.width,
-              child: Text(
-                "طلبات المحل",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold
-                ),
-              ),
-            ),
-          ),
-
-
-          Padding(
+      body:           Padding(
             padding: const EdgeInsets.only(top:88.0),
             child: StreamBuilder(
               stream: _stream,
               builder: (context, snapshot) {
                 if (snapshot.data?.documents == null || !snapshot.hasData)
-                  return Center(child: Text("لا يوجد بيانات...",));
+                  return Center(child: noRequests());
                 return Container(
                   child: ListView(
                     shrinkWrap: true,
@@ -202,8 +167,6 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
               },
             ),
           ),
-        ],
-      ),
     );
   }
 
@@ -355,6 +318,41 @@ class _AllAdvertisementState extends State<AllAdvertisement> {
     ));
   }
 
+  Widget noRequests(){
+    return Container(
+      width: 250,
+      height: 254,
+      child: Stack(
+
+        children: [
+          Opacity(
+            opacity: 0.5,
+            child: Image.asset("assets/images/no_requests.png"),
+          ),
+
+
+          Positioned(
+            top: 190,
+            left: 85,
+
+            child: Text("لا توجد طلبات", textDirection: TextDirection.rtl,
+              style: TextStyle(fontSize: 12, color: MyColors.primaryColor, fontWeight: FontWeight.bold ),),
+          ),
+
+          Positioned(
+            top: 212,
+            left: 20,
+
+            child: Text("لم يتم إضافة أي طلبات لحد الآن, \n قم بإضافة طلب جديد و كن صاحب أول طلب",
+              textDirection: TextDirection.rtl,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              style: TextStyle(fontSize: 12, color: Colors.grey[600], ),),
+          ),
+        ],
+      ),
+    );
+  }
 
 /////////////////////////////////////////// Previous widgets /////////////////////////////////
   ///////////////// This function is not used

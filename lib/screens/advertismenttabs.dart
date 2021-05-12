@@ -102,7 +102,8 @@ class _AdvertismentTabsState extends State<AdvertismentTabs> with SingleTickerPr
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      resizeToAvoidBottomPadding: false,
+
+
       body:
            advertisementsScreen()
 /*

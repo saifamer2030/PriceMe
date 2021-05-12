@@ -16,6 +16,7 @@ class _MarketPageState extends State<MarketPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: marketWidget()
+      //marketWidget()
     );
   }
 
@@ -77,13 +78,54 @@ Widget marketWidget(){
                    ),
            ),
         
-         IconButton(
-           onPressed: (){
+         InkWell(
+
+           onTap: (){
                Navigator.of(context).push(MaterialPageRoute(
                builder: (ctx)=> FilterPage(filterType: FilterType.Market,)));
            },
-           icon: Icon(Icons.filter_alt, size: 25, color: Colors.grey,)
-         )  
+           child: Container(
+             width: 48,
+             height: 48,
+             child: Column(
+               mainAxisAlignment: MainAxisAlignment.center,
+               children: [
+                 Icon(Icons.filter_alt, size: 20, color: Colors.grey,),
+                 Text("فلتر", textDirection: TextDirection.rtl,
+                   style: TextStyle(fontSize: 8, color: Colors.grey ),)
+               ],
+             ),
+           )
+         ),
+             SizedBox(width: 2,),
+           InkWell(
+
+               onTap: (){
+                 Navigator.of(context).push(MaterialPageRoute(
+                     builder: (ctx)=> FilterPage(filterType: FilterType.Market,)));
+               },
+               child: Container(
+                 width: 48,
+                 height: 48,
+                 child: Column(
+                   mainAxisAlignment: MainAxisAlignment.center,
+                   children: [
+                     Icon(Icons.favorite, size: 20, color: Colors.grey,),
+                     Text("المفضلة", textDirection: TextDirection.rtl,
+                       style: TextStyle(fontSize: 8, color: Colors.grey ),)
+                   ],
+                 ),
+               )
+           ),
+/*
+           IconButton(
+               onPressed: (){
+                 Navigator.of(context).push(MaterialPageRoute(
+                     builder: (ctx)=> FilterPage(filterType: FilterType.Market,)));
+               },
+               icon: Icon(Icons.favorite, size: 22, color: Colors.grey,)
+           ),
+           */
          ],
        ),
       ),
@@ -177,4 +219,44 @@ Widget marketWidget(){
        ),
      );
    }
+
+
+
+  Widget noOffers(){
+    return Container(
+      width: 250,
+      height: 254,
+      child: Stack(
+
+        children: [
+          Opacity(
+            opacity: 0.5,
+            child: Image.asset("assets/images/no_requests.png"),
+          ),
+
+
+          Positioned(
+            top: 190,
+            left: 85,
+
+            child: Text("لا توجد عروض", textDirection: TextDirection.rtl,
+              style: TextStyle(fontSize: 12, color: MyColors.primaryColor, fontWeight: FontWeight.bold ),),
+          ),
+
+          Positioned(
+            top: 212,
+            left: 20,
+
+            child: Text("لم يتم إضافة أي عروض لحد الآن, \n قم بإضافة عرض جديد و كن صاحب أول عرض",
+              textDirection: TextDirection.rtl,
+              textAlign: TextAlign.center,
+              maxLines: 2,
+              style: TextStyle(fontSize: 12, color: Colors.grey[600], ),),
+          ),
+        ],
+      ),
+    );
+  }
+
+
 }
